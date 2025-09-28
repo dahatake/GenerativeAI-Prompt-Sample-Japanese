@@ -42,22 +42,26 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
 @copilot 
 ```
-
-
 Microsoft Azure のSDKを使う場合は、GitHub Copilot for Azure を使います。
 
 https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduction
 
 
-# 0. 要求定義などビジネス面のドキュメントの整備
+# 1. 要求定義などビジネス面のドキュメントの整備
 
 こちらのドキュメントを参考にしてください。
 
-[要求定義の作成](Documentation-and-design.md)
+[要求定義の作成](Documentation.md)
 
-## 0.1. 作成結果のドキュメントの保存場所
+# 2. 論理設計
 
-要求定義で作成をしたドキュメントを入力データとして、プロトタイプの開発を行っていきます。
+こちらのドキュメントを参考にしてください。
+
+[アプリケーション設計](applicationDesign.md)
+
+# 3. Prompt用のドキュメント作成
+
+## 作成結果のドキュメントの保存場所
 
 幾つかのファイルはGitHubのRepositoryにUploadして、そのURLを参照させる形で、GitHub Copilot Coding Agentに作業をしてもらいます。
 
@@ -66,27 +70,23 @@ https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduct
 - ユースケース
   - コードの元となるドキュメント。画面一覧、サービス一覧、マッピング表なども、強い関連性を考慮するとこのファイルに入れておくのが良いかと思います。
   - ファイル名の例: UC-001.md
-  - [Prompt](..Documentation-and-design.md#step22-ユースケース作成)
+  - [Prompt](applicationDesign.md#step12-ユースケース作成)
 - マイクロサービス定義書
   - REST APIのエンドポイント
   - ファイル名の例: UC-001_DashboardService.md
-  - [Prompt](..Documentation-and-design.md#step-33-マッピング表の作成)
+  - [Prompt](applicationDesign.md#step32-マイクロサービスの作成)
 - データモデル
   - データの定義。アプリケーションの場合は、Azure Cosmos DBのSQL API (ドキュメント型)のモデルがおススメ
   - ファイル名の例: UC-001-DataModel.md
-  - [Prompt](..Documentation-and-design.md#step-31-データモデル作成)
+  - [Prompt](applicationDesign.md#step-23-データモデル作成)
 
 
-Microsoft 365 Copilot Chatでドキュメントを作成した場合には、チャットの出力結果の下のコマンドのアイコンの、**応答をコピー**で出力結果が取得できます。
-Visual Studio CodeなどMarkdownのプレビューが出来るツールを使って、Markdown形式で保存してください。
-
-
-# 1. GitHubのRepositoryの作成
+# 3. GitHubのRepositoryの作成
 
 GitHubのRepositoryを作成します。GitHub Sparkや、GitHub Copilot Coding Agentが作業をするためのリポジトリーです。
 
 
-# 2. Custom Instructionsの作成
+# 4. Custom Instructionsの作成
 
 GitHubのRepositoryに、GitHub Copilot Coding Agentがより正確にタスクを実行できるような`.github/copilot-instructions.md`ファイルを作成します。
 
@@ -131,23 +131,6 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 - `infra/`: インフラストラクチャのコードを格納します。
 
 ## アーキテクチャとデザイン原則
-
-### マイクロサービスアーキテクチャ
-- すべての新しいアプリケーションとAPIは、マイクロサービスパターンで設計してください
-- 各サービスは疎結合で、独立してデプロイ可能であることを確保してください
-- サービス間の通信はHTTP REST API、メッセージキュー、またはイベントドリブンパターンを使用してください
-
-### フォルダ構造とプロジェクト構成
-- アプリケーションとAPIは専用のフォルダに分離して作成してください
-- 各プロジェクトのルートには適切なREADME.mdファイルを含めてください
-- Infrastructure as Code (IaC) ファイルは `infra/` フォルダに配置してください
-- 設定ファイルやドキュメントは適切なサブフォルダに整理してください
-
-## Microsoft Azure開発ガイドライン
-
-### Azure サービスの仕様参照
-Microsoft Azureの各サービスの仕様や最新情報は、以下の公式ドキュメントから必ず参照してください：
-- Azure ドキュメント: https://learn.microsoft.com/ja-jp/azure/?product=popular
 
 ### 認証とセキュリティ
 - **絶対に資格情報をハードコーディングしないでください**
@@ -266,7 +249,6 @@ Microsoft Azureの各サービスの仕様や最新情報は、以下の公式�
 - 日本の法規制とコンプライアンス要件を考慮してください
 - 日本語特有の自然言語処理の課題を理解してください
 - 文化的な文脈とビジネス慣行を反映してください
-
 ```
 
 Copilot を使用してタスクに取り組むためのベスト プラクティス:
@@ -274,9 +256,9 @@ Copilot を使用してタスクに取り組むためのベスト プラクテ�
 https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks#adding-custom-instructions-to-your-repository
 
 
-# 3. UI 作成
+# 5. UI 作成
 
-**サンプルデータ**と、**機能要件のドキュメント**をリポジトリーにUploadして、そのファイルのURLを参照させます。
+**サンプルデータ**と、**画面定義のドキュメント**をリポジトリーにUploadして、そのファイルのURLを参照させます。
 
 GitHub Sparkを使う場合は、全てのサンプルデータとドキュメントを、そのままPromptの中に書き込みます。
 
@@ -285,7 +267,7 @@ GitHub Sparkを使う場合は、全てのサンプルデータとドキュメ�
 
 GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容を書いてください。
 
-## 3.1. Webアプリケーションのプロトタイプ作成
+## 5.1. Webアプリケーションのプロトタイプ作成
 
 ```text
 # 役割
@@ -299,48 +281,24 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - フィードバックを迅速に反映し、継続的に改善する
 
 # 目的
-{画面定義書}に基づいて、Webアプリケーションの画面を作成の実行計画を作成してください。
+- {画面定義書}に基づいて、Webアプリケーションの画面を作成の実行計画を作成してください。
+  - {画面定義}.md
 
 # 実行計画
 - 最初に画面定義書を実行計画を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、画面定義書の網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
 
-## 作業範囲
-- {画面ID: 画面名}
-
 ## 作成フォルダ
-- `{app}` ディレクトリ配下へ全ての成果物を設置
+- `{app/フォルダ名}`
 
 ## 技術仕様
 - HTML5のみ使用
 - JavaScript
 
-# 画面定義書
-{}
-
 ## 注意事項
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に記載する。
 ```
 
-## 3.1.1. 妥当性チェック
-
-実施後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
-
-```text
-実行計画で作成した手順が全て完了した後で、妥当性チェックを行ってください。その際には、作成された全てが高精度に分析し、目的に整合しているかを検証してください。
-もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
-最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
-その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
-```
-
-完成したら、Azure Static Web Appsにデプロイをします。これはAzureのPortalから行うのが簡単です。プロトタイプだという事もありまして。
-
-クイック スタート: 静的 Web アプリを初めてビルドする:
-
-https://learn.microsoft.com/ja-jp/azure/static-web-apps/get-started-portal?tabs=vanilla-javascript&pivots=github
-
-- 最初の[リポジトリを作成する]は**不要**です。私たちはすでにGitHubのリポジトリを持っていますので。
-
-## 3.2. 複数のWeb画面を一度に表示
+## 5.1.1. (Option) 複数のWeb画面を一度に表示
 
 複数のWeb画面を一度に表示させる際には、以下の様なIssueを作成して、GitHub Copilot Coding Agentに作業をしてもらいます。
 
@@ -348,7 +306,9 @@ https://learn.microsoft.com/ja-jp/azure/static-web-apps/get-started-portal?tabs=
 以下のアプリケーションの画面を一度に見る事ができる、[生産調整アプリケーション]を作成する
 
 # 作成フォルダ
- - /
+## 作成フォルダ
+- `{app/フォルダ名}`
+
 
 # 技術仕様
 - 参照されるアプリケーション
@@ -366,7 +326,7 @@ https://learn.microsoft.com/ja-jp/azure/static-web-apps/get-started-portal?tabs=
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-## 3.3. マルチエージェントのグループチャットのサンプル
+## 5.1.2. (Option) マルチエージェントのグループチャットのサンプル
 
 マルチエージェントのグループチャットのサンプルです。
 
@@ -397,122 +357,15 @@ https://learn.microsoft.com/ja-jp/azure/static-web-apps/get-started-portal?tabs=
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-# 4. REST API 作成
+## 5.2. 妥当性チェック
 
-Azure Functionsを使う場合は、事前にMicrosoft Learnの**MCP Server**を参照できるようであれば、設定を行うことを強くお勧めします。
-
-Github Copilot Coding Agentに**API**のプロトタイプを作成してもらいます。ただし、Azure FunctionsのSDKのコードは不正確なことが多いです。
-ひな形まで作ってもらって。
-そのあとは、Visual Studio Codeなどで、GitHub Copilot for Azureを使って、実装を進めます。
-
-終了後は、Visual Studio Codeで、**自分で実行確認をする**ことを強くお勧めします。GitHub Codespaceだと、GitHub Copilotで幾つか使えるモデルが少なかったり、SDKのインストールが追加で必要だったりするので、開発を継続することを考えると、**自分のPCやMacのVisual Studio Code**での開発・テストの実施をお勧めします。
-
-Azure Functions でサポートされている言語:
-https://learn.microsoft.com/ja-jp/azure/azure-functions/supported-languages?tabs=isolated-process%2Cv4&pivots=programming-language-csharp
-
-## 4.1. 要求定義のドキュメントで定義したAPIからの作成
-
-画面内の処理について、以下のドキュメントを作成済みの場合は、そちらを優先します。このPromptにAPI部分のみを記載して、GitHub Copilot Coding Agentに作業をしてもらいます。
-
-[マッピング表](Documentation-and-design.md#step-35-マッピング表の作成)
-
-[マイクロサービスの定義書](Documentation-and-design.md#step42-マイクロサービスの作成)
+実施後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
 
 ```text
-{マイクロサービスの定義書}を参考にして、マクロサービスのREST APIを、{作成フォルダー}に作成してください。
-
-# マイクロサービス定義
-{マイクロサービス定書の文字列}
-
-# 作成フォルダー
-- api/{Service名}
-
-# 技術仕様
-- Azure Functions v4
-- C#
-- .NET9.0
-- Trigger: HTTP
-- Bind: inもoutもHTTP
-
-## 注意事項
-- このREST APIは、{ユースケース}の一部分となります。
-  - docs/UC-{001}.md
-- {技術仕様}の詳細については、以下のMCP Serverを使って必要な情報を入手してください。
-  - MicrosoftDocs
-- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
-```
-
-Coding Agentの作業が終了するまで待ちます。終了後のbranchは**削除せずに**残しておいてください**。後で、Visual Studio Codeでの開発に使います。
-
-
-## 4.2. Azure Functionsへデプロイ
-
-REST APIのエンドポイント(FQDN)を作るために、Azure Functionsへデプロイをします。**Visual Studio Code**から行うのが簡単です。
-
-- Visual Studio CodeやGitHub Desktopなどを使って、Coding Agentが作成したコードをローカルにクローンします。
-- Visual Studio Codeで、Azure Functions Toolsなどを使って、ローカルでの動作確認をします。
-
-クイックスタート: Visual Studio Code を使用して Azure に C# 関数を作成する:
-
-https://learn.microsoft.com/ja-jp/azure/azure-functions/create-first-function-vs-code-csharp
-
-
-開発言語に応じて、周辺からドキュメントを探してみてください。
-
-## 4.3. 仕様書としてのユースケースのドキュメントにAPIの情報を追記
-
-## 4.3.1. Azure上で動作しているAPIの一覧取得
-
-Azure CLIを使用して、Azure上で動作しているAPIの一覧を取得します。実行場所は、**Visual Studio Code**の**ターミナル**がおススメです。
-
-```cmd
-az functionapp function list --name <Azure Functionsのインスタンス名> --resource-group <Azure Functionsのリソースグループ名> --query "[].{Name:name, Endpoint:invokeUrlTemplate}" --output table > docs/functions-list.md
-```
-先に作成したAPIのURLを取得して、**テキストファイル**に出力します。ここでは`functions-list.md`ファイルにしています。複数回実施されても問題がないように、ファイル名はサービス名を付けるなど一意になるようにしてください。
-
-このテキストファイルは、マッピングファイルに反映されたら、削除しても構いません。
-
-## 4.3.2. Azure FunctionsにデプロイされたURLのドキュメントへの記載
-
-
-マッピング表のファイルと取得結果のファイルの双方を参照させて、マイクロサービスの一覧に追記します。
-
-
-```text
-詳細マッピング表のSCR-02の当該API IDのエンドポイントを、`docs/kpi-cat-url.txt`の当該EndPointで置き換えてください。
-```
-
-正しく反映されたら、GitHubのリポジトリにPushします。
-
-
-# 5. HTMLの画面とREST APIの連携
-GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
-
-
-## 5.2. REST APIの呼び出し
-
-> [!WARNING]
-> 作業中です。
-
-
-タスクとしてGitHubのIssueとして管理したい事もあり。GitHub Copilot Coding AgentにAPIの呼び出しを作成してもらいます。
-
-```text
-画面を制御するコード内でREST APIのエンドポイント呼び出しを実装します。現状はスタブ呼び出しとなっています。
-スタブ呼び出しから、REST APIのエンドポイントを呼び出す実装に変更してください。
-
-# 対象コードファイル
-- `app/js/api.js`
-
-# マッピング情報
-- `docs/uc-01_mapping.md`
-  - エンドポイントURL: Azure FunctionsのHTTPエンドポイントのURL
-
-# 置き換え対象画面と機能・サービス
-- 画面ID: `SCR-02`
-- SoT: `KPI-01`
-
-編集は対象ファイル内に限定し、リポジトリのコーディングスタイルに従い、レビューしやすい差分を作成してください。
+実行計画で作成した手順が全て完了した後で、妥当性チェックを行ってください。その際には、作成された全てが高精度に分析し、目的に整合しているかを検証してください。
+もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
+最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
+その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
 ```
 
 # 6. データ
@@ -601,7 +454,7 @@ Microsoft Azureのサービスやアーキテクチャについては、以下�
 
 データをAzure Cosmos DBへ保存をします。
 
-## 6.1. Azure Cosmos DBの作成
+## 6.2. Azure Cosmos DBの作成
 
 Azure Portalから、Azure Cosmos DBを作成します。NoSQL APIを選択してください。
 Serverlessプランを選択するのがおススメです。
@@ -613,7 +466,55 @@ https://learn.microsoft.com/ja-jp/azure/cosmos-db/nosql/quickstart-portal
 > [!WARNING]
 > 作業中です。
 
-## 6.1. Azure Functionsのアカウントから、Azure Cosmos DBのNoSQL APIへ接続するための
+
+# 7. REST API 作成
+
+Azure Functionsを使う場合は、事前にMicrosoft Learnの**MCP Server**を参照できるようであれば、設定を行うことを強くお勧めします。
+
+Github Copilot Coding Agentに**API**のプロトタイプを作成してもらいます。ただし、Azure FunctionsのSDKのコードは不正確なことが多いです。
+ひな形まで作ってもらって。
+そのあとは、Visual Studio Codeなどで、GitHub Copilot for Azureを使って、実装を進めます。
+
+終了後は、Visual Studio Codeで、**自分で実行確認をする**ことを強くお勧めします。GitHub Codespaceだと、GitHub Copilotで幾つか使えるモデルが少なかったり、SDKのインストールが追加で必要だったりするので、開発を継続することを考えると、**自分のPCやMacのVisual Studio Code**での開発・テストの実施をお勧めします。
+
+Azure Functions でサポートされている言語:
+https://learn.microsoft.com/ja-jp/azure/azure-functions/supported-languages?tabs=isolated-process%2Cv4&pivots=programming-language-csharp
+
+## 7.1. 要求定義のドキュメントで定義したAPIからの作成
+
+画面内の処理について、以下のドキュメントを作成済みの場合は、そちらを優先します。このPromptにAPI部分のみを記載して、GitHub Copilot Coding Agentに作業をしてもらいます。
+
+[マッピング表](Documentation-and-design.md#step-35-マッピング表の作成)
+
+[マイクロサービスの定義書](Documentation-and-design.md#step42-マイクロサービスの作成)
+
+```text
+{マイクロサービスの定義書}を参考にして、マクロサービスのREST APIを、{作成フォルダー}に作成してください。
+
+# マイクロサービス定義
+{マイクロサービス定書の文字列}
+
+# 作成フォルダー
+- api/{Service名}
+
+# 技術仕様
+- Azure Functions v4
+- C#
+- .NET9.0
+- Trigger: HTTP
+- Bind: inもoutもHTTP
+
+## 注意事項
+- このREST APIは、{ユースケース}の一部分となります。
+  - docs/UC-{001}.md
+- {技術仕様}の詳細については、以下のMCP Serverを使って必要な情報を入手してください。
+  - MicrosoftDocs
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
+```
+
+Coding Agentの作業が終了するまで待ちます。終了後のbranchは**削除せずに**残しておいてください**。後で、Visual Studio Codeでの開発に使います。
+
+## 7.2. Azure Functionsのアカウントから、Azure Cosmos DBのNoSQL APIへ接続するための
 認証・認可設定 - マネージドIDの設定
 
 Azure Functionsから、Azure Cosmos DBへの認証を、マネージドIDを使って行います。
@@ -631,7 +532,7 @@ https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-bindings-cosmo
 
 
 
-## 6.2. Azure Comsmos DBへのデータ登録処理の実装
+## 7.3. Azure Comsmos DBへのデータ登録処理の実装
 
 Azure FunctionsのREST APIの中に、Azure Cosmos DBへデータを登録する処理を実装します。
 
@@ -655,7 +556,77 @@ Azure FunctionsのREST APIの中に、Azure Cosmos DBのNoSQL APIへデータを
 - https://learn.microsoft.com/ja-jp/azure/cosmos-db/nosql/quickstart-dotnet
 ```
 
-## 7. Azure への展開
+## 7.4. Azure Functionsへデプロイ
+
+REST APIのエンドポイント(FQDN)を作るために、Azure Functionsへデプロイをします。**Visual Studio Code**から行うのが簡単です。
+
+- Visual Studio CodeやGitHub Desktopなどを使って、Coding Agentが作成したコードをローカルにクローンします。
+- Visual Studio Codeで、Azure Functions Toolsなどを使って、ローカルでの動作確認をします。
+
+クイックスタート: Visual Studio Code を使用して Azure に C# 関数を作成する:
+
+https://learn.microsoft.com/ja-jp/azure/azure-functions/create-first-function-vs-code-csharp
+
+
+開発言語に応じて、周辺からドキュメントを探してみてください。
+
+## 7.5. Azure上で動作しているAPIの一覧取得
+
+Azure CLIを使用して、Azure上で動作しているAPIの一覧を取得します。実行場所は、**Visual Studio Code**の**ターミナル**がおススメです。
+
+```cmd
+az functionapp function list --name <Azure Functionsのインスタンス名> --resource-group <Azure Functionsのリソースグループ名> --query "[].{Name:name, Endpoint:invokeUrlTemplate}" --output table > docs/functions-list.md
+```
+先に作成したAPIのURLを取得して、**テキストファイル**に出力します。ここでは`functions-list.md`ファイルにしています。複数回実施されても問題がないように、ファイル名はサービス名を付けるなど一意になるようにしてください。
+
+このテキストファイルは、マッピングファイルに反映されたら、削除しても構いません。
+
+## 7.5.1. Azure FunctionsにデプロイされたURLのドキュメントへの記載
+
+
+マッピング表のファイルと取得結果のファイルの双方を参照させて、マイクロサービスの一覧に追記します。
+
+
+```text
+詳細マッピング表のSCR-02の当該API IDのエンドポイントを、`docs/kpi-cat-url.txt`の当該EndPointで置き換えてください。
+```
+
+正しく反映されたら、GitHubのリポジトリにPushします。
+
+
+# 8. HTMLの画面とREST APIの連携
+GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
+
+
+## 8.1. REST APIの呼び出し
+
+> [!WARNING]
+> 作業中です。
+
+
+タスクとしてGitHubのIssueとして管理したい事もあり。GitHub Copilot Coding AgentにAPIの呼び出しを作成してもらいます。
+
+```text
+画面を制御するコード内でREST APIのエンドポイント呼び出しを実装します。現状はスタブ呼び出しとなっています。
+スタブ呼び出しから、REST APIのエンドポイントを呼び出す実装に変更してください。
+
+# 対象コードファイル
+- `app/js/api.js`
+
+# マッピング情報
+- `docs/uc-01_mapping.md`
+  - エンドポイントURL: Azure FunctionsのHTTPエンドポイントのURL
+
+# 置き換え対象画面と機能・サービス
+- 画面ID: `SCR-02`
+- SoT: `KPI-01`
+
+編集は対象ファイル内に限定し、リポジトリのコーディングスタイルに従い、レビューしやすい差分を作成してください。
+```
+
+
+
+## 9. Azure への展開
 
 > [!WARNING]
 > 作業中です。
