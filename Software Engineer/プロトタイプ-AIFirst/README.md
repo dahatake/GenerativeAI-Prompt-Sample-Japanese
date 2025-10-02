@@ -24,15 +24,39 @@
   - GitHub Copilotが作成したコードのテストや修正
   - GitHub Copilot Agentモードによるコーディング支援
 
-## 必読ドキュメント!!!
+  - Microsoft Azure のSDKを使う場合は、GitHub Copilot for Azure を使います。
+
+    https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduction
+
+
+## はじめに
 
 Copilot を使用してタスクに取り組むためのベスト プラクティス
 
 https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks
 
 
-- 現時点でプレビューです。プロダクション環境での利用には十二分に注意をしてください。Pull Requestをマージするかどうかは、**人**の判断ですので!
-- AzureとCDで連携した後は、CopilotがPRを実行している際にGitHub Actionsでのジョブ実行を行います。その際に私たち人によるApprovalが必要です。ただ、そのGitHub Actionsのジョブがエラーになることがあります。
+- プロダクション環境での利用には十二分に注意をしてください。Pull Requestをマージするかどうかは、**人**の判断ですので!
+
+
+以下は、作成する**量**や**タスクの複雑さ**に応じて。
+
+- 作業が終わらないのにCopilotがタスクを終了することがあります。その場合はCopilotに残作業を実施するように指示します。
+
+```text
+@copilot 残っている作業を続けてください。
+```
+
+- また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
+
+```text
+妥当性チェックを行ってください。その際には、作成された全てを高精度に分析し、目的に整合しているかを検証してください。
+もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
+最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
+その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
+```
+
+- Azureと連携した後は、CopilotがPRを実行している際にGitHub Actionsでのジョブ実行を行います。その際に私たち人によるApprovalが必要です。ただ、そのGitHub Actionsのジョブがエラーになることがあります。
 
 ![Job Errorの例](/Software%20Engineer/プロトタイプ-AIFirst//images/image.png)
 
@@ -42,51 +66,32 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
 @copilot 
 ```
-Microsoft Azure のSDKを使う場合は、GitHub Copilot for Azure を使います。
 
-https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduction
-
-
-# 1. 要求定義などビジネス面のドキュメントの整備
+## Step.1. 要求定義などビジネス面のドキュメントの整備
 
 こちらのドキュメントを参考にしてください。
 
 [要求定義の作成](Documentation.md)
 
-# 2. 論理設計
+## Step.2. アプリケーション設計
 
 こちらのドキュメントを参考にしてください。
 
 [アプリケーション設計](applicationDesign.md)
 
-# 3. Prompt用のドキュメント作成
+## Step.3. アプリケーション実装用のPrompt
 
-## 作成結果のドキュメントの保存場所
+-  作成結果のドキュメントの保存場所
 
-幾つかのファイルはGitHubのRepositoryにUploadして、そのURLを参照させる形で、GitHub Copilot Coding Agentに作業をしてもらいます。
-
-
-### /docs フォルダーに置きたいドキュメント
-- ユースケース
-  - コードの元となるドキュメント。画面一覧、サービス一覧、マッピング表なども、強い関連性を考慮するとこのファイルに入れておくのが良いかと思います。
-  - ファイル名の例: UC-001.md
-  - [Prompt](applicationDesign.md#step12-ユースケース作成)
-- マイクロサービス定義書
-  - REST APIのエンドポイント
-  - ファイル名の例: UC-001_DashboardService.md
-  - [Prompt](applicationDesign.md#step32-マイクロサービスの作成)
-- データモデル
-  - データの定義。アプリケーションの場合は、Azure Cosmos DBのSQL API (ドキュメント型)のモデルがおススメ
-  - ファイル名の例: UC-001-DataModel.md
-  - [Prompt](applicationDesign.md#step-23-データモデル作成)
+    ファイルはGitHubのRepositoryにUploadして、そのURLを参照させる形で、GitHub Copilot Coding Agentに作業をしてもらいます。
 
 
-# 3. GitHubのRepositoryの作成
+### Step.3.1. GitHubのRepositoryの作成
 
 GitHubのRepositoryを作成します。GitHub Sparkや、GitHub Copilot Coding Agentが作業をするためのリポジトリーです。
 
 
-# 4. Custom Instructionsの作成
+### Step.3.2. Custom Instructionsの作成
 
 GitHubのRepositoryに、GitHub Copilot Coding Agentがより正確にタスクを実行できるような`.github/copilot-instructions.md`ファイルを作成します。
 
@@ -256,18 +261,17 @@ Copilot を使用してタスクに取り組むためのベスト プラクテ�
 https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks#adding-custom-instructions-to-your-repository
 
 
-# 5. UI 作成
+### Step.3.3. UI 作成
 
 **サンプルデータ**と、**画面定義のドキュメント**をリポジトリーにUploadして、そのファイルのURLを参照させます。
 
-GitHub Sparkを使う場合は、全てのサンプルデータとドキュメントを、そのままPromptの中に書き込みます。
+`GitHub Spark`を使う場合は、全てのサンプルデータとドキュメントを、そのままPromptの中に書き込みます。
 
 > [!IMPORTANT]
 > GitHub Sparkは**React**と**TypeScript**しか対応していません。
 
-GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容を書いてください。
 
-## 5.1. Webアプリケーションのプロトタイプ作成
+GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容を書いてください。
 
 ```text
 # 役割
@@ -281,24 +285,48 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - フィードバックを迅速に反映し、継続的に改善する
 
 # 目的
-- {画面定義書}に基づいて、Webアプリケーションの画面を作成の実行計画を作成してください。
-  - {画面定義}.md
+- 全ての{画面定義書}に基づいて、Webアプリケーションの画面を作成してください。
 
-# 実行計画
-- 最初に画面定義書を実行計画を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、画面定義書の網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
+# ガイダンス
+- 最初に**全て**の{画面定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、画面定義書の網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。その後、タスクを実行してください。
+- 必ず{画面遷移図}に基づいて、各画面のコンポーネントを設計してください。画面の遷移がスムーズに出来るように、分類された折り畳み式のメニューも作成してください。
+- ペルソナによって画面構成を別にしてください。例えばユーザーとシステム管理者とは異なる画面を表示してください。
+- 認証画面は何を入力してもログインできるようにしてください。後で実装をします。
+
+## 画面一覧
+- docs/usecase/{ユースケースID}/screen-list.md
+  - {画面遷移図}も記載されている
+
+## 画面定義書
+- docs/usecase/{ユースケースID}/{画面ID}-description.md
+
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/screen-list.md
+- docs/usecase/{ユースケースID}/service-mapping.md
+- data/{ユースケースID}-sample-data.json
 
 ## 作成フォルダ
-- `{app/フォルダ名}`
+- `app`
 
 ## 技術仕様
 - HTML5のみ使用
 - JavaScript
 
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
+
 ## 注意事項
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に記載する。
 ```
 
-## 5.1.1. (Option) 複数のWeb画面を一度に表示
+以下、複数のパターンの例を示します。全てを使う必要はありません。
+
+#### Step.3.3.1. (Option) 複数のWeb画面を一度に表示
 
 複数のWeb画面を一度に表示させる際には、以下の様なIssueを作成して、GitHub Copilot Coding Agentに作業をしてもらいます。
 
@@ -308,7 +336,6 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 # 作成フォルダ
 ## 作成フォルダ
 - `{app/フォルダ名}`
-
 
 # 技術仕様
 - 参照されるアプリケーション
@@ -326,7 +353,7 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-## 5.1.2. (Option) マルチエージェントのグループチャットのサンプル
+#### Step.3.3.2. (Option) マルチエージェントのグループチャットのサンプル
 
 マルチエージェントのグループチャットのサンプルです。
 
@@ -357,48 +384,52 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-## 5.2. 妥当性チェック
 
-実施後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
-
-```text
-実行計画で作成した手順が全て完了した後で、妥当性チェックを行ってください。その際には、作成された全てが高精度に分析し、目的に整合しているかを検証してください。
-もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
-最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
-その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
-```
-
-# 6. データ
+## Step.4. データ
 
 > [!WARNING]
 > 作業中です。
 
-それぞれのエンティティの適切なデータの保存を行います。Microsoft Azureの中で最適なサービスの候補を作成します。
-Microsoft LearnのMCP Serverを参照します。
+### Step.4.1. データ保存先の選択
 
-## 6.1. データサービスの選定
+それぞれのエンティティの適切なデータの保存を行います。Microsoft Azureの中で最適なサービスの候補を作成します。
+``Microsoft Learn``の``MCP Server``を参照します。
 
 GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいかと思います。
 
-ここではCloud利用に最適な、Polyglot Persistenceのアーキテクチャを採用します。
+ここではCloud利用に最適な、**Polyglot Persistence**のアーキテクチャを採用します。
 
 ```text
+# 役割
+あなたは世界最高峰のソフトウェアアーキテクトです。多様なデータモデルと分散システム設計に精通し、数人向けのプロトタイプから数億人規模のプロダクションシステムまで、必要に応じて柔軟かつ堅牢にスケールさせられるデータ基盤を構築できます。
+
+## あなたの役割とスキルセット
+- あなたは、**多様な種類のデータモデル（リレーショナル、ドキュメント、グラフ、時系列など）**の設計に精通しています。
+- **スモールスケール（数人のユーザー）から、グローバルスケール（数億人のユーザー）まで対応可能な柔軟でスケーラブルなデータベース設計**が可能です。
+- **パフォーマンス、可用性、拡張性、保守性**を考慮したアーキテクチャ設計が求められます。
+- ユーザーの要件や制約（例：リアルタイム性、コスト、クラウド環境など）を正確に理解し、それに基づいた最適な技術選定と設計を行ってください。
+
+# 目的
 全てのエンティティの保存先のMicrosoft Azureのサービスを決定します。ユースケースを分析・解析して、{実行プラン}を必ず参照して、エンティティ毎に、データをどのMicrosoft Azureのサービスを使用すべきかを決定してください。なぜ、そのMicrosoft Azureのサービスにしたのかの具体的で説得力のある説明もしてください。
 
 Microsoft Azureのサービスやアーキテクチャについては、以下のMCP Serverから得られる情報も参考にしてください。
 
-# MCP Server
+## MCP Server
 - MicrosoftDocs
 
-# 対象エンティティ
-- docs/uc-01-entities.md
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/service-list.md
 
-# ユースケース
-- docs/uc-01-usercase.md
+# 作成ファイル
+- docs/usecase/{ユースケースID}/data-AzureServices.md
 
-# 実行プラン
-- Polyglot Persistenceのアーキテクチャを採用します
-- Polyglot Persistence（ポリグロット・パーシステンス）とは、**アプリケーションの異なる部分に最適なデータストアを選択して使い分けるアーキテクチャ**です。これにより、性能、スケーラビリティ、開発効率などを最適化できます。
+# ガイドライン
+- 最初に**全て**の{参考ドキュメント}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。その後、タスクを実行してください。
+- 複数の設計案が考えられる場合は、それぞれのメリット・デメリットを比較して提示してください。
+- `Polyglot Persistence`のアーキテクチャを採用します
+  - Polyglot Persistence（ポリグロット・パーシステンス）とは、**アプリケーションの異なる部分に最適なデータストアを選択して使い分けるアーキテクチャ**です。これにより、性能、スケーラビリティ、開発効率などを最適化できます。
 
 以下に、Polyglot Persistenceを設計する際の**詳細な手順**をステップバイステップで解説します。
 
@@ -449,53 +480,121 @@ Microsoft Azureのサービスやアーキテクチャについては、以下�
 - 各データストアの用途と設計理由を明記
 - 開発者向けのガイドライン整備
 - 運用手順書の作成
+
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
+## 4.2. Azure Data Services の作成
 
-データをAzure Cosmos DBへ保存をします。
+作成したAzureのサービスを参考にして、Azureのサービスを作成していきます。
+`Microsoft Learn`の`MCP Server`を参照して、Azure CLIコマンドを作成します。
 
-## 6.2. Azure Cosmos DBの作成
+```text
+Microsoft Azure に、以下の{アーキテクチャ}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
+Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
 
-Azure Portalから、Azure Cosmos DBを作成します。NoSQL APIを選択してください。
-Serverlessプランを選択するのがおススメです。
+Azureのサービスの作成後に、サンプルデータを適切な形式に変換をしてデータの登録用のスクリプトを作成して、それを実行してください。作成したスクリプトは、{データの登録用のスクリプトの保存場所}に保存してください。
 
-クイックスタート: Azure portal を使用して Azure Cosmos DB for NoSQL アカウントを作成する
+Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
 
-https://learn.microsoft.com/ja-jp/azure/cosmos-db/nosql/quickstart-portal
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+
+
+# 実行計画
+- 最初にアーキテクチャを高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
+
+## MCP Server
+- MicrosoftDocs
+
+## アーキテクチャ
+- docs/usecase/{ユースケースID}/data-AzureServices.md
+
+## サンプルデータ
+- data/{ユースケースID}-sample-data.json
+
+## Azure CLIのスクリプトの保存場所
+- infra/{ユースケースID}-create-azure-data-resources.sh
+
+## データの登録用のスクリプトの保存場所
+- data/{ユースケースID}-data-registration-script.sh
+
+## サービスマッピング
+- docs/usecase/{ユースケースID}/service-mapping.md
+
+## 技術仕様
+- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
+  - `{サービス名}`は、アーキテクチャのドキュメントで指定されているサービス名を使用してください。
+- リージョン: Japan East
+  - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
+- スケール設定は、最小構成で作成してください。
+  - サーバーレスがあるサービスは、それを選択してください。
+  - オートスケールがあるサービスは、それを選択してください。
+- インスタンス名は{サービス名}を使用します。
+
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
+```
+
+## Step.5. API 作成
 
 > [!WARNING]
 > 作業中です。
 
+REST APIのエンドポイントを作成します。
 
-# 7. REST API 作成
+作成したデータベースを参照して、REST APIのエンドポイントを作成します。Azure Functions上に作成します。Azure Functionsは、殆どのシナリオでのREST APIの実行環境に適しています。
 
-Azure Functionsを使う場合は、事前にMicrosoft Learnの**MCP Server**を参照できるようであれば、設定を行うことを強くお勧めします。
-
-Github Copilot Coding Agentに**API**のプロトタイプを作成してもらいます。ただし、Azure FunctionsのSDKのコードは不正確なことが多いです。
-ひな形まで作ってもらって。
-そのあとは、Visual Studio Codeなどで、GitHub Copilot for Azureを使って、実装を進めます。
-
-終了後は、Visual Studio Codeで、**自分で実行確認をする**ことを強くお勧めします。GitHub Codespaceだと、GitHub Copilotで幾つか使えるモデルが少なかったり、SDKのインストールが追加で必要だったりするので、開発を継続することを考えると、**自分のPCやMacのVisual Studio Code**での開発・テストの実施をお勧めします。
-
-Azure Functions でサポートされている言語:
-https://learn.microsoft.com/ja-jp/azure/azure-functions/supported-languages?tabs=isolated-process%2Cv4&pivots=programming-language-csharp
-
-## 7.1. 要求定義のドキュメントで定義したAPIからの作成
-
-画面内の処理について、以下のドキュメントを作成済みの場合は、そちらを優先します。このPromptにAPI部分のみを記載して、GitHub Copilot Coding Agentに作業をしてもらいます。
-
-[マッピング表](Documentation-and-design.md#step-35-マッピング表の作成)
-
-[マイクロサービスの定義書](Documentation-and-design.md#step42-マイクロサービスの作成)
+### Step.5.1. Azure Functions用のコードの作成
 
 ```text
-{マイクロサービスの定義書}を参考にして、マクロサービスのREST APIを、{作成フォルダー}に作成してください。
+# 役割
+あなたは、マイクロサービスアーキテクチャに関する高度な専門知識と実務経験を持つソフトウェアアーキテクトです。
+以下のような視点とスキルを持ち、技術的な意思決定を論理的かつ実践的に行うことが求められます：
 
-# マイクロサービス定義
-{マイクロサービス定書の文字列}
+- **システム全体の構造設計**：ドメイン駆動設計（DDD）やClean Architectureの原則に基づき、サービスの責務分離と依存関係の最適化を行う。
+- **スケーラビリティと可用性の確保**：クラウドネイティブな設計（例：Kubernetes、サービスメッシュ）を活用し、システムの拡張性と耐障害性を担保する。
+- **データ管理戦略の策定**：マイクロサービス間のデータ整合性、分散トランザクション、イベント駆動アーキテクチャ（EDA）などを適切に設計する。
+- **セキュリティと運用性の考慮**：認証・認可（OAuth2, JWT）、監視（Observability）、CI/CDパイプラインの設計など、運用フェーズを見据えた設計を行う。
+- **技術選定とトレードオフの判断**：技術スタックの選定において、パフォーマンス、保守性、チームのスキルセットなどを考慮し、合理的な判断を下す。
 
-# 作成フォルダー
-- api/{Service名}
+あなたの役割は、これらの観点を踏まえて、与えられた目的に対して最適なアーキテクチャ設計や技術的提案を行うことです。
+
+# 目的
+- {マイクロサービス定義書}を参考にして、全てのREST APIのプログラムのコードを、{作成フォルダー}に作成してください。
+- 最初に{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
+- {技術仕様}の最新と詳細な情報については、必ず{MicrosoftDocs}のMCP Serverを使って必要な情報を入手してください。
+- {サービスマッピング}の情報を基にして、必ずそれぞれのAzure のデータサービスと接続してください。Microsoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソースの}Azureにアクセスして取得してください。Azureの接続情報は{Azureデータサービス}のドキュメントも参照してください。
+- 単体テストのプログラムコードも必ず作成してください。
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+
+# マイクロサービス定義書
+- docs/usecase/{ユースケースID}/{サービスID}-[サービス名]-description.md
+
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/service-list.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/data-AzureServices.md
+
+## サービスマッピング
+- docs/usecase/{ユースケースID}/service-mapping.md
+
+## Azureデータサービス
+- docs/usecase/{ユースケースID}/data-AzureServices.md
+
+# REST API作成フォルダー
+- api/{ユースケースID}
+
+# 単体テスト作成フォルダー
+- test/{ユースケースID}
 
 # 技術仕様
 - Azure Functions v4
@@ -504,107 +603,68 @@ https://learn.microsoft.com/ja-jp/azure/azure-functions/supported-languages?tabs
 - Trigger: HTTP
 - Bind: inもoutもHTTP
 
-## 注意事項
-- このREST APIは、{ユースケース}の一部分となります。
-  - docs/UC-{001}.md
-- {技術仕様}の詳細については、以下のMCP Serverを使って必要な情報を入手してください。
-  - MicrosoftDocs
-- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
+## Microsoft Azureのリソース
+- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
+
 ```
 
-Coding Agentの作業が終了するまで待ちます。終了後のbranchは**削除せずに**残しておいてください**。後で、Visual Studio Codeでの開発に使います。
-
-## 7.2. Azure Functionsのアカウントから、Azure Cosmos DBのNoSQL APIへ接続するための
-認証・認可設定 - マネージドIDの設定
-
-Azure Functionsから、Azure Cosmos DBへの認証を、マネージドIDを使って行います。
-
-チュートリアル: マネージ ID と SQL バインドを使用して Azure SQL に関数アプリを接続する:
-
-https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-identity-access-azure-sql-with-managed-identity
-
-- このドキュメントは、Azure SQL Databaseを使っていますが、Azure Cosmos DBのNoSQL APIでも同様の手順で設定が可能です。
-
-
-Azure Functions 2.x 以降での Azure Cosmos DB のトリガー:
-
-https://learn.microsoft.com/ja-jp/azure/azure-functions/functions-bindings-cosmosdb-v2-trigger?tabs=python-v2%2Cisolated-process%2Cextensionv4%2Cnodejs-v4&pivots=programming-language-csharp#identity-based-connections
-
-
-
-## 7.3. Azure Comsmos DBへのデータ登録処理の実装
-
-Azure FunctionsのREST APIの中に、Azure Cosmos DBへデータを登録する処理を実装します。
-
-GitHub Copilot Coding AgentのIssueです。
-
-```text
-Azure FunctionsのREST APIの中に、Azure Cosmos DBのNoSQL APIへデータを登録する処理を実装してください。
-
-# Applicationの場所
-- api/{api-name}
-
-# タスク
-- 既存のコードの中のデータモデルで定義されているデータ構造を参照します。Azure Cosmos DBのNoSQL APIのドキュメントを参照して、データ登録の処理を実装してください。
-- 適切なデータベース、コンテナの作成もしてください。
-- 既存のサンプルデータ作成の処理はコメントアウトしてください。
-
-# Azure Cosmos DBのNoSQL APIのURI
-- {Azure Cosmos DBのNoSQL APIのURIをここに貼り付ける}
-
-# 参考ドキュメント:
-- https://learn.microsoft.com/ja-jp/azure/cosmos-db/nosql/quickstart-dotnet
-```
-
-## 7.4. Azure Functionsへデプロイ
-
-REST APIのエンドポイント(FQDN)を作るために、Azure Functionsへデプロイをします。**Visual Studio Code**から行うのが簡単です。
-
-- Visual Studio CodeやGitHub Desktopなどを使って、Coding Agentが作成したコードをローカルにクローンします。
-- Visual Studio Codeで、Azure Functions Toolsなどを使って、ローカルでの動作確認をします。
-
-クイックスタート: Visual Studio Code を使用して Azure に C# 関数を作成する:
-
-https://learn.microsoft.com/ja-jp/azure/azure-functions/create-first-function-vs-code-csharp
-
-
-開発言語に応じて、周辺からドキュメントを探してみてください。
-
-## 7.5. Azure上で動作しているAPIの一覧取得
-
-Azure CLIを使用して、Azure上で動作しているAPIの一覧を取得します。実行場所は、**Visual Studio Code**の**ターミナル**がおススメです。
-
-```cmd
-az functionapp function list --name <Azure Functionsのインスタンス名> --resource-group <Azure Functionsのリソースグループ名> --query "[].{Name:name, Endpoint:invokeUrlTemplate}" --output table > docs/functions-list.md
-```
-先に作成したAPIのURLを取得して、**テキストファイル**に出力します。ここでは`functions-list.md`ファイルにしています。複数回実施されても問題がないように、ファイル名はサービス名を付けるなど一意になるようにしてください。
-
-このテキストファイルは、マッピングファイルに反映されたら、削除しても構いません。
-
-## 7.5.1. Azure FunctionsにデプロイされたURLのドキュメントへの記載
-
-
-マッピング表のファイルと取得結果のファイルの双方を参照させて、マイクロサービスの一覧に追記します。
-
-
-```text
-詳細マッピング表のSCR-02の当該API IDのエンドポイントを、`docs/kpi-cat-url.txt`の当該EndPointで置き換えてください。
-```
-
-正しく反映されたら、GitHubのリポジトリにPushします。
-
-
-# 8. HTMLの画面とREST APIの連携
-GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
-
-
-## 8.1. REST APIの呼び出し
+### Step.5.2. Azure Functionsの作成
 
 > [!WARNING]
 > 作業中です。
 
+作成したコードをAzure Functionsにデプロイします。
 
-タスクとしてGitHubのIssueとして管理したい事もあり。GitHub Copilot Coding AgentにAPIの呼び出しを作成してもらいます。
+```text
+Microsoft Azure に、以下の{REST API}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
+Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
+
+Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+
+# REST API
+- api/{ユースケースID}
+
+## Azure CLIのスクリプトの保存場所
+- infra/{ユースケースID}-create-azure-api-resources.sh
+
+## サービスマッピング
+- docs/usecase/{ユースケースID}/service-mapping.md
+
+
+# 技術仕様
+- Azure Functions v4
+- C#
+- .NET9.0
+- Trigger: HTTP
+- Bind: inもoutもHTTP
+
+- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
+  - `{サービス名}`は、アーキテクチャのドキュメントで指定されているサービス名を使用してください。
+- リージョン: Japan East
+  - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
+- SKU: Flex Consumption Plan
+
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
+```
+## Step.6.画面とREST APIの連携
+
+GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
+
+> [!WARNING]
+> 作業中です。
 
 ```text
 画面を制御するコード内でREST APIのエンドポイント呼び出しを実装します。現状はスタブ呼び出しとなっています。
@@ -624,26 +684,28 @@ GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成しても�
 編集は対象ファイル内に限定し、リポジトリのコーディングスタイルに従い、レビューしやすい差分を作成してください。
 ```
 
-
-
-## 9. Azure への展開
+## Step.7. アーキテクチャレビュー
 
 > [!WARNING]
 > 作業中です。
 
-Azure Developer CLI (azd)を使用して、作成したコードをAzureにデプロイするスクリプトを作成します。
 
-どのフォルダーのアプリを、Azure上のどのサービスにデプロイするかを明示します。
-
-Microsoft LearnのMCP Serverを参照するように指摘もします。 
+Microsoftの公式ドキュメントの情報を活用して、展開されたアーキテクチャのレビューを行います。
 
 ```text
-指定したアプリケーションフォルダ内のファイルを、指定したMicrosoft Azureの各サービス（例：Azure Static Web Apps）にデプロイするためのAzure Developer CLIコマンドを生成してください。コマンドの実行手順も日本語で、`README.md`ファイルに作成してください。
+# 目的
+- {レビューの対象のMicrosoft Azureのリソース}の全ての構成要素を高度に解析をしてください。
+- Microsoftのベストプラクティスに基づいたアーキテクチャのレビューを行ってください。
+- Microsoftのベストプラクティスに基づいたセキュリティのレビューを行ってください。
+- 必ず`MicrosoftDocs`のMCP Serverから得られる情報を参考にしてください。
+- レビューの結果は{レビュー結果の保存場所}に保存してください。
+- 最初に目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
+- 複数のレビュー案が考えられる場合は、それぞれのメリット・デメリットを比較して提示してください。
 
-**MicrosoftDocs**のMCP Serverを**必ず**使って、Azure Developer CLIの仕様を注意深く確認してください。Microsoft Azureの各サービスの仕様も、注意深く確認をしてください。
+## レビューの対象のMicrosoft Azureのリソース
+- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
 
-# 対象アプリケーションのデプロイ設定
-- フォルダ: {/}
-  - 作成するAzureサービス: {Azure Static Web App}
-
+## レビュー結果の保存場所
+- docs/usecase/{ユースケースID}/ArchitectureReview-Azure.md
 ```
