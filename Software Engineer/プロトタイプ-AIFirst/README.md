@@ -513,9 +513,6 @@ Azureのサービスの作成が成功したら、{サービスマッピング}�
 ## アーキテクチャ
 - docs/usecase/{ユースケースID}/data-AzureServices.md
 
-## サンプルデータ
-- data/{ユースケースID}-sample-data.json
-
 ## Azure CLIのスクリプトの保存場所
 - infra/{ユースケースID}-create-azure-data-resources.sh
 
@@ -572,7 +569,7 @@ REST APIのエンドポイントを作成します。
 - 最初に{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
 - {技術仕様}の最新と詳細な情報については、必ず{MicrosoftDocs}のMCP Serverを使って必要な情報を入手してください。
 - {サービスマッピング}の情報を基にして、必ずそれぞれのAzure のデータサービスと接続してください。Microsoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソースの}Azureにアクセスして取得してください。Azureの接続情報は{Azureデータサービス}のドキュメントも参照してください。
-- 単体テストのプログラムコードも必ず作成してください。
+- 単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
 # マイクロサービス定義書
@@ -614,7 +611,7 @@ REST APIのエンドポイントを作成します。
 
 ```
 
-### Step.5.2. Azure Functionsの作成
+### Step.5.2. Azure Functions の作成
 
 > [!WARNING]
 > 作業中です。
@@ -622,10 +619,16 @@ REST APIのエンドポイントを作成します。
 作成したコードをAzure Functionsにデプロイします。
 
 ```text
-Microsoft Azure に、以下の{REST API}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
-Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
+- Microsoft Azure に、以下の{REST API}で指定されている全てのサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
+- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
+- 継続的デリバリーを実装します。GitHub Actionsのワークフローを作成して、Azure Functionsにデプロイしてください。GitHub Actionsの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。
 
-Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+
+- Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+
+- 作成した全てのAzure Functionsの単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
+
+- 作業の進捗状況を、`/README.md`に日本語で追記してください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
@@ -633,22 +636,16 @@ Azureのサービスの作成が成功したら、{サービスマッピング}�
 - api/{ユースケースID}
 
 ## Azure CLIのスクリプトの保存場所
-- infra/{ユースケースID}-create-azure-api-resources.sh
+- infra/{ユースケースID}/create-azure-api-resources.sh
 
 ## サービスマッピング
 - docs/usecase/{ユースケースID}/service-mapping.md
 
+# 単体テスト作成フォルダー
+- test/{ユースケースID}
 
 # 技術仕様
-- Azure Functions v4
-- C#
-- .NET9.0
-- Trigger: HTTP
-- Bind: inもoutもHTTP
-
-- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
-  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
-  - `{サービス名}`は、アーキテクチャのドキュメントで指定されているサービス名を使用してください。
+- リソースグループ名: `dahatake20250929`
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - SKU: Flex Consumption Plan
