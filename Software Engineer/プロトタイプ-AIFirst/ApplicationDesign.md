@@ -78,6 +78,8 @@ Step.1 で作成したLoopのファイルを**作業コンテンツ** (添付フ
 - ユースケースの一覧を参考にして全てのユースケースについて、ソフトウェアとして独自に実装するための、できる限り詳細かつ具体的で深い、ユースケースを作成してください。
 - 作成するユースケースは、添付の「ユースケースの項目」のドキュメント内のフォーマット・設計ルールに従い、対象のユースケースのみを出力してください。
 
+- 作業の進捗状況を、`work/{ユースケースID}/usecase-design-status.md`に日本語で追記してください。
+
 ## 参考ドキュメント
   - docs/<要求定義>.md
   - docs/usecase/usecase-list.md
@@ -236,6 +238,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 ```text
 このユースケースにおいて、リストアップされた、全ての業務ドメインを深くかつ慎重に分析・解析をして、マイクロサービスとして実装するためのサービスの候補をリストアップしてください。{サービス候補一覧}のフォーマットに従ってください。
 
+- 作業の進捗状況を、`work/{ユースケースID}/service-design-work-status.md`に日本語で追記してください。
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/domain-analytics.md
@@ -328,6 +332,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 ```text
 このユースケースで使用する、全てのエンティティを深くかつ慎重に分析・解析をして、リストアップしてください。全てのエンティティを対象にしてデータモデル図をmermaid記法で図式化してください。
 
+- 作業の進捗状況を、`work/{ユースケースID}/data-model-design-work-status.md`に日本語で追記してください。
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/domain-analytics.md
@@ -362,6 +368,9 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 # 目的
 このユースケースにおいて、ユーザーが利用する画面の一覧と画面遷移図を、深くかつ慎重に分析・解析をして、作成してください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/screen-design-work-status.md`に日本語で追記してください。
+
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
@@ -470,6 +479,9 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 - 作成の対象は、全ての画面です。
 - 作成する内容は、{指示書のガイドライン}をチェックリストとしてだけ**必ず**遵守して、深く分析・解釈してください。
 - 先に作成した{日本語のサンプルデータ}の全てのデータを、データとして必ず追記してください。データが入っている事で、画面の作成後に、即座に利用することができるようにしてください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/screen-doc-implementation-work-status.md`に日本語で追記してください。
+
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
@@ -593,6 +605,8 @@ Prompt:
 
 ```text
 ユースケースの全てのサービスを対象として、{マイクロサービス定義書}に準拠したマイクロサービスのドキュメントを作成してください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/service-doc-implementation-work-status.md`に日本語で追記してください。
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
