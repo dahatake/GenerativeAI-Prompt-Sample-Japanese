@@ -11,11 +11,11 @@
   https://github.blog/news-insights/product-news/github-copilot-meet-the-new-coding-agent/
 
 - GitHub Copilot Spark
-  Reactでの画面作成とGitHubのRepositryとの同期による、プレビューが秀逸です。
+  Reactでの画面作成とGitHubのRepositryとの同期による、プレビューが秀逸です。リポジトリーにクローンすることで、リポジトリー側での作業結果のプレビューとしても利用できます。
 
   https://github.com/features/spark?locale=ja
 
-- Visual Studio Code
+- Visual Studio Code + GitHub Copilot Agent Mode
 
   **Visual Studio Code**の利用も強くおススメします。
   - Markdownのプレビュー機能を活用して、ドキュメントの確認や編集
@@ -59,6 +59,7 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 - また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
 
 ```text
+@copilot
 妥当性チェックを行ってください。その際には、作成された全てを高精度に分析し、目的に整合しているかを検証してください。
 もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
 最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
@@ -88,7 +89,7 @@ reviewのチェックで、github actionsのジョブがエラーになりまし
 
 こちらのドキュメントを参考にしてください。
 
-[アプリケーション設計](applicationDesign.md)
+[アプリケーション設計](ApplicationDesign-microservice-polyglotpersistence.md)
 
 ## Step.3. アプリケーション実装用のPrompt
 
@@ -123,7 +124,7 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 
 ## Microsoft Azureのリソースの検索
 
-あなたは **Azure** という MCP サーバーにアクセスすることができます。このツールを使用することで、Azure Model Context Protocol (MCP) サーバーには、自然言語プロンプトを使用して Azure サービスを操作するために既存のクライアントから使用できる多くのツールが公開されています。 たとえば、Azure MCP サーバーを使用して、Visual Studio Code の GitHub Copilot エージェント モードまたは次のようなコマンドを使用して他の AI エージェントから Azure リソースと対話できます。
+あなたは **Azure** という MCP サーバーにアクセスすることができます。このツールを使用することで、Microsoft Azureのリソースの作成・更新・削除・読み取りが可能であり、あなたの「学習データセットに含まれている情報よりも正しいです。例えば次のようなコマンドを使用して他の AI エージェントから Azure リソースと対話できます。
 
 - "すべてのリソース グループを表示する"
 - "'documents' という名前のストレージ コンテナー内の BLOB を一覧表示する"
@@ -133,14 +134,12 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 
 ## リポジトリ構成
 
-- `internal/`: 他の GitHub サービスとの連携に関するロジックを含みます。  
 - `lib/`: 主要なライブラリパッケージを格納します。  
 - `admin/`: 管理者向けインターフェースのコンポーネントを含みます。  
 - `config/`: 設定ファイルおよびテンプレートを格納します。  
 - `docs/`: ドキュメントを格納します。  
 - `data/`: アプリケーションで使用するデータファイルを格納します。  
 - `test/`: テスト用のヘルパーおよびフィクスチャを格納します。  
-- `labs/`: 実験的なコードやプロトタイプを格納します。
 - `src/`: WebアプリケーションのBuild前のコードを格納します。  
 - `app/`: WebアプリケーションのBuild後コードを格納します。
 - `api/`: apiのコードを格納します。
@@ -305,7 +304,6 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-implementation-work-status.md`に日本語で追記してください。
 
-
 ## 画面一覧
 - docs/usecase/{ユースケースID}/screen-list.md
   - {画面遷移図}も記載されている
@@ -341,6 +339,9 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 
 #### Step.3.3.1. (Option) 複数のWeb画面を一度に表示
 
+> [!NOTE]
+> あくまで画面作成の例です。スキップして構いません。
+
 複数のWeb画面を一度に表示させる際には、以下の様なIssueを作成して、GitHub Copilot Coding Agentに作業をしてもらいます。
 
 ```text
@@ -367,6 +368,10 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 ```
 
 #### Step.3.3.2. (Option) マルチエージェントのグループチャットのサンプル
+
+> [!NOTE]
+> あくまで画面作成の例です。スキップして構いません。
+
 
 マルチエージェントのグループチャットのサンプルです。
 
@@ -397,18 +402,11 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-
 ## Step.4. データ
-
-> [!WARNING]
-> 作業中です。
 
 ### Step.4.1. データ保存先の選択
 
 それぞれのエンティティの適切なデータの保存を行います。Microsoft Azureの中で最適なサービスの候補を作成します。
-``Microsoft Learn``の``MCP Server``を参照します。
-
-GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいかと思います。
 
 ここではCloud利用に最適な、**Polyglot Persistence**のアーキテクチャを採用します。
 
@@ -423,20 +421,12 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - ユーザーの要件や制約（例：リアルタイム性、コスト、クラウド環境など）を正確に理解し、それに基づいた最適な技術選定と設計を行ってください。
 
 # 目的
-- 全てのエンティティの保存先のMicrosoft Azureのサービスを決定します。ユースケースを分析・解析して、{実行プラン}を必ず参照して、エンティティ毎に、データをどのMicrosoft Azureのサービスを使用すべきかを決定してください。なぜ、そのMicrosoft Azureのサービスにしたのかの具体的で説得力のある説明もしてください。
+- 全てのエンティティの保存先のMicrosoft Azureのサービスを決定します。ユースケースを高度に分析・解析して、{実行計画}と{ガイドライン}を必ず参照して、エンティティのどのデータを、どのMicrosoft Azureのサービスを使用すべきかを決定してください。なぜ、そのMicrosoft Azureのサービスにしたのかの具体的で説得力のある説明も作成してください。
 
-- Microsoft Azureのサービスやアーキテクチャについては、以下のMCP Serverから得られる情報も参考にしてください。
+- Microsoft Azureのサービスやアーキテクチャについては、以下の`MCP Server`から得られる情報も参考にしてください。
   - MicrosoftDocs
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-implementation-work-status.md`に日本語で追記してください。
-
-## 参考ドキュメント
-- docs/usecase/{ユースケースID}/usecase-description.md
-- docs/usecase/{ユースケースID}/data-model.md
-- docs/usecase/{ユースケースID}/service-list.md
-
-# 作成ファイル
-- docs/usecase/{ユースケースID}/data-AzureServices.md
 
 # ガイドライン
 - 最初に**全て**の{参考ドキュメント}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。その後、タスクを実行してください。
@@ -444,9 +434,18 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - `Polyglot Persistence`のアーキテクチャを採用します
   - Polyglot Persistence（ポリグロット・パーシステンス）とは、**アプリケーションの異なる部分に最適なデータストアを選択して使い分けるアーキテクチャ**です。これにより、性能、スケーラビリティ、開発効率などを最適化できます。
 
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/service-list.md
+
+## 作成ファイル
+- docs/usecase/{ユースケースID}/data-AzureServices.md
+
+## 実行計画
 以下に、Polyglot Persistenceを設計する際の**詳細な手順**をステップバイステップで解説します。
 
-## 1. 要件の整理とデータの分類
+### 1. 要件の整理とデータの分類
 
 まずは、アプリケーション全体の要件を整理し、扱うデータを以下の観点で分類します：
 
@@ -456,7 +455,7 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - **スケーラビリティ**：水平スケーリングが必要か
 - **トランザクションの必要性**：ACID特性が必要か
 
-## 2. データストアの選定
+### 2. データストアの選定
 
 分類したデータごとに、最適なデータストアを選定します。以下は代表的な選択肢です：
 
@@ -469,7 +468,7 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 | 時系列 | InfluxDB, TimescaleDB | IoTデータ、ログ |
 | 検索エンジン | Azure AI Search | フルテキスト検索、ログ分析 |
 
-## 3. データモデルの設計
+### 3. データモデルの設計
 
 各データストアに対して、以下を設計します：
 
@@ -477,7 +476,6 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - インデックス
 - リレーション（または参照）
 - データの正規化／非正規化の方針
-
 ---
 
 ## 4. データの整合性と同期戦略
@@ -488,7 +486,7 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - **CDC（Change Data Capture）**：変更を検知して他のストアに反映
 - **デュアルライト**：アプリケーションが複数のストアに同時に書き込む（要注意）
 
-## 5. ドキュメントとナレッジ共有
+### 5. ドキュメントとナレッジ共有
 
 - 各データストアの用途と設計理由を明記
 - 開発者向けのガイドライン整備
@@ -508,25 +506,21 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 
 ```text
 # タスク
-- Microsoft Azure に、以下の{アーキテクチャ}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
-- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。
+- Microsoft Azure に、以下の{データストア}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
+- 最初に{データストア}のドキュメントを高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。
+
+- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様とサンプルコードは、必ず{MicrosoftDocs}のMCP Serverを参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。
 - Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-data-resources-prep.sh`に保存してください。
 
-- Azureのサービスの作成後に、サンプルデータを適切な形式に変換をしてデータの登録用のスクリプトを作成して、それを実行してください。作成したスクリプトは、{データの登録用のスクリプトの保存場所}に保存してください。
+- Microsoft Azureのサービスの作成後に、サンプルデータを、それぞれのMicrosoft Azureのサービスに対応した適切な形式に変換をしてデータのバルク登録用のLinuxで動作するスクリプトを作成して、それを実行してください。作成したスクリプトは、{データの登録用のスクリプトの保存場所}に保存してください。
 
-- Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+- Microsoft Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-azure-deploy-work-status.md`に日本語で追記してください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
-# 実行計画
-- 最初にアーキテクチャを高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
-
-## MCP Server
-- MicrosoftDocs
-
-## アーキテクチャ
+## データストア
 - docs/usecase/{ユースケースID}/data-AzureServices.md
 
 ## Azure CLIのスクリプトの保存場所
@@ -539,12 +533,10 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - docs/usecase/{ユースケースID}/service-mapping.md
 
 ## 技術仕様
-- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
-  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
-  - `{サービス名}`は、アーキテクチャのドキュメントで指定されているサービス名を使用してください。
+- リソースグループ名: `dahatake-{ユースケースID}`
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
-- スケール設定は、最小構成で作成してください。
+- スケール設定は、必ず最小構成で作成してください。
   - サーバーレスがあるサービスは、それを選択してください。
   - オートスケールがあるサービスは、それを選択してください。
 - インスタンス名は{サービス名}を使用します。
@@ -565,32 +557,16 @@ REST APIのエンドポイントを作成します。
 ### Step.5.1. Azure Functions用のコードの作成
 
 ```text
-# 役割
-あなたは、マイクロサービスアーキテクチャに関する高度な専門知識と実務経験を持つソフトウェアアーキテクトです。
-以下のような視点とスキルを持ち、技術的な意思決定を論理的かつ実践的に行うことが求められます：
-
-- **システム全体の構造設計**：ドメイン駆動設計（DDD）やClean Architectureの原則に基づき、サービスの責務分離と依存関係の最適化を行う。
-- **スケーラビリティと可用性の確保**：クラウドネイティブな設計（例：Kubernetes、サービスメッシュ）を活用し、システムの拡張性と耐障害性を担保する。
-- **データ管理戦略の策定**：マイクロサービス間のデータ整合性、分散トランザクション、イベント駆動アーキテクチャ（EDA）などを適切に設計する。
-- **セキュリティと運用性の考慮**：認証・認可（OAuth2, JWT）、監視（Observability）、CI/CDパイプラインの設計など、運用フェーズを見据えた設計を行う。
-- **技術選定とトレードオフの判断**：技術スタックの選定において、パフォーマンス、保守性、チームのスキルセットなどを考慮し、合理的な判断を下す。
-
-あなたの役割は、これらの観点を踏まえて、与えられた目的に対して最適なアーキテクチャ設計や技術的提案を行うことです。
-
 # 目的
-- {マイクロサービス定義書}を参考にして、全てのREST APIのプログラムのコードを、{作成フォルダー}に作成してください。
+- {マイクロサービス定義書}を参考にして、**全て**のREST APIのプログラムのコードを、{作成フォルダー}に作成してください。
 - 最初に{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
 - {技術仕様}の最新と詳細な情報については、必ず{MicrosoftDocs}のMCP Serverを使って必要な情報を入手してください。
-- {サービスマッピング}の情報を基にして、必ずそれぞれのAzure のデータサービスと接続してください。Microsoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソースの}Azureにアクセスして取得してください。Azureの接続情報は{Azureデータサービス}のドキュメントも参照してください。
+- {サービスマッピング}の情報を基にして、必ず全てのMicrosoft Azure のデータサービスと接続してください。すべてのMicrosoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソース}にアクセスして取得してください。それぞれのMicrosoft Azureのサービスあるいはインスタンスへの接続情報は{Azureデータサービス}のドキュメントも参照してください。
 - 単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/api-implementation-work-status.md`に日本語で追記してください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
-
-# 実行計画
-- それぞれの{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
-
 
 # マイクロサービス定義書
 - docs/usecase/{ユースケースID}/{サービスID}-[サービス名]-description.md
@@ -599,7 +575,6 @@ REST APIのエンドポイントを作成します。
 - docs/usecase/{ユースケースID}/usecase-description.md
 - docs/usecase/{ユースケースID}/service-list.md
 - docs/usecase/{ユースケースID}/data-model.md
-- docs/usecase/{ユースケースID}/data-AzureServices.md
 
 ## サービスマッピング
 - docs/usecase/{ユースケースID}/service-mapping.md
@@ -607,28 +582,27 @@ REST APIのエンドポイントを作成します。
 ## Azureデータサービス
 - docs/usecase/{ユースケースID}/data-AzureServices.md
 
-# REST API作成フォルダー
+## REST API作成フォルダー
 - api/{ユースケースID}
 
-# 単体テスト作成フォルダー
-- test/{ユースケースID}
+## 単体テスト作成フォルダー
+- test/{ユースケースID}/api
 
-# 技術仕様
-- 最新のAzure Functions
-- C#。バージョンは、Azure Functionsの最新のバージョンでサポートされているもの
-- .NETのランタイムは、Azure Functionsの最新のバージョンでサポートされているもの
+## 技術仕様
+- Azure Functions
+- C#
+  - バージョンは、Azure Functionsでサポートされている最新のもの
 - Trigger: HTTP
 - Bind: inもoutもHTTP
 
 ## Microsoft Azureのリソース
-- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+- リソースグループ名: `dahatake-{ユースケースID}`
 
 # 行動規範
 - 不確定な情報は推測せず、仮定と前提条件を明示する。
 - ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
 - 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
-
 ```
 
 ### Step.5.2. Azure Functions の作成
@@ -636,7 +610,8 @@ REST APIのエンドポイントを作成します。
 作成したコードをAzure Functionsにデプロイします。
 
 ```text
-- apiで実装されたAzure FunctionsのコードをMicrosoft Azureへデプロイします。
+# 目的
+- {REST API}で実装されたAzure FunctionsのコードをMicrosoft Azureへデプロイします。既存のコードを変更しないでください。
 - Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。
 - Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-api-resources-prep.sh`に保存してください。
 
@@ -650,7 +625,7 @@ REST APIのエンドポイントを作成します。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
-# REST API
+## REST API
 - api/{ユースケースID}
 
 ## Azure CLIのスクリプトの保存場所
@@ -659,11 +634,11 @@ REST APIのエンドポイントを作成します。
 ## サービスマッピング
 - docs/usecase/{ユースケースID}/service-mapping.md
 
-# 単体テスト作成フォルダー
+## 単体テスト作成フォルダー
 - test/{ユースケースID}
 
-# 技術仕様
-- リソースグループ名: `dahatakeYYYYMMDD`
+## 技術仕様
+- リソースグループ名: `dahatake-{ユースケースID}`
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - SKU: Flex Consumption Plan
@@ -679,11 +654,10 @@ REST APIのエンドポイントを作成します。
 
 GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
 
-> [!WARNING]
-> 作業中です。
-
 ```text
-Webアプリケーションでの、REST APIのエンドポイント呼び出しを実装します。{サービスマッピング}の{画面 → 機能 → API → データ マッピング表}と{デプロイ済みAzureサービス詳細マッピング}を参考にして、変更をしてください。
+# 目的
+- 全てのWebアプリケーションの画面から、Azure Functionsにデプロイ済みのREST APIのエンドポイント呼び出しを実装します。{サービスマッピング}を参考にして、必ず全てのAzure FunctionsのHTTPエンドポイント接続してください。
+- 全てのMicrosoft Azureの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソース}にアクセスして取得してください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/WebUI-api-call-work-status.md`に日本語で追記してください。
 
@@ -692,6 +666,9 @@ Webアプリケーションでの、REST APIのエンドポイント呼び出し
 
 ## サービスマッピング
 - docs/usecase/{ユースケースID}/service-mapping.md
+
+## Microsoft Azureのリソース
+- リソースグループ名: `dahatake-{ユースケースID}`
 
 # 行動規範
 - 不確定な情報は推測せず、仮定と前提条件を明示する。
@@ -705,8 +682,8 @@ Webアプリケーションでの、REST APIのエンドポイント呼び出し
 
 ```text
 # タスク
-- WebアプリケーションのコードをMicrosoft AzureのAzure Static Web Appsへデプロイします。
-- Azure Static Web Appsのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。 
+- WebアプリケーションのコードをMicrosoft Azureの`Azure Static Web Apps`へデプロイします。
+- `Azure Static Web Apps`のサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。 
 - Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-webui-resources-prep.sh`に保存してください。
 
 - 継続的デリバリーを実装します。GitHub Actionsのワークフローを作成して、Azure Static Web Appsにデプロイしてください。GitHub Actionsの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。
@@ -724,7 +701,7 @@ Webアプリケーションでの、REST APIのエンドポイント呼び出し
 - docs/usecase/{ユースケースID}/service-mapping.md
 
 ## 技術仕様
-- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+- リソースグループ名: `dahatake{YYYYMMDD}`
 - リージョン: East Asia
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - スケール設定は、最小構成で作成してください。
@@ -757,6 +734,7 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 ```text
 # 目的
 - {レビューの対象のMicrosoft Azureのリソース}の全ての構成要素を高度に解析をしてください。
+- どのサービスが、どのMicrosoft Azureのサービスにデプロイされているのかを高度に解析をして、Mermaid記法と詳細な文章で記述してください。{参考ドキュメント}も参考にしてください。
 - Microsoftのベストプラクティスに基づいたアーキテクチャのレビューを行ってください。
 - Microsoftのベストプラクティスに基づいたセキュリティのレビューを行ってください。
 - 必ず`MicrosoftDocs`のMCP Serverから得られる情報を参考にしてください。
@@ -767,6 +745,13 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 ## レビューの対象のMicrosoft Azureのリソース
 - リソースグループ名: `dahatake{YYYYMMDD}`
 
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/service-list.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/data-AzureServices.md
+- docs/usecase/{ユースケースID}/service-mapping.md
+
 ## レビュー結果の保存場所
-- docs/usecase/{ユースケースID}/ArchitectureReview-Azure.md
+- docs/usecase/{ユースケースID}/ArchitectureReview-Azure-Report.md
 ```
