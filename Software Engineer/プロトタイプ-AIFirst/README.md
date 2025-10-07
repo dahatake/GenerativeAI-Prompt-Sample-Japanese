@@ -2,7 +2,7 @@
 
 ここでは、ユーザーを早期に巻き込むフィードバックループを目的に以下の順番で進めていきます。
 
-# ツール
+## ツール
 
 - GitHub Copilot Coding Agent
 
@@ -41,11 +41,20 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 以下は、作成する**量**や**タスクの複雑さ**に応じて。
 
-- 作業が終わらないのにCopilotがタスクを終了することがあります。その場合はCopilotに残作業を実施するように指示します。
+### 1.1. タスクが途中で終了する
+
+> [!WARNING]
+> 指示したタスクがすべて完了していないのに、GitHub Copilotがタスクを終了することがあります。その場合は、コメントでCopilotに指示を出して、再度Copilotにコードを生成してもらってください。あるいは、自分で作業を継続してください。
+
+> 作業継続のPromptの例:
 
 ```text
-@copilot 残っている作業を続けてください。
+@copilot
+以下の作業の進捗状況のドキュメントも参考にして、残作業を実行してください。
+- work/{ユースケースID}/api-azure-deploy-work-status.md
 ```
+
+### 1.2. 結果の妥当性チェック
 
 - また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
 
@@ -56,6 +65,8 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
 ```
 
+### 1.3. CI/CDのジョブがエラーになる
+
 - Azureと連携した後は、CopilotがPRを実行している際にGitHub Actionsでのジョブ実行を行います。その際に私たち人によるApprovalが必要です。ただ、そのGitHub Actionsのジョブがエラーになることがあります。
 
 ![Job Errorの例](/Software%20Engineer/プロトタイプ-AIFirst//images/image.png)
@@ -63,8 +74,8 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 - その際には、PRのコメントに以下の様な指示をして、GitHub Copilotに修正をさせるのも手です。
 
 ```text
-reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
 @copilot 
+reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
 ```
 
 ## Step.1. 要求定義などビジネス面のドキュメントの整備
@@ -134,6 +145,7 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 - `app/`: WebアプリケーションのBuild後コードを格納します。
 - `api/`: apiのコードを格納します。
 - `infra/`: インフラストラクチャのコードを格納します。
+- `work/`: 作業の進捗状況を記録します。
 
 ## アーキテクチャとデザイン原則
 
@@ -286,12 +298,13 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 
 # 目的
 - 全ての{画面定義書}に基づいて、Webアプリケーションの画面を作成してください。
-
-# ガイダンス
 - 最初に**全て**の{画面定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、画面定義書の網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。その後、タスクを実行してください。
 - 必ず{画面遷移図}に基づいて、各画面のコンポーネントを設計してください。画面の遷移がスムーズに出来るように、分類された折り畳み式のメニューも作成してください。
 - ペルソナによって画面構成を別にしてください。例えばユーザーとシステム管理者とは異なる画面を表示してください。
 - 認証画面は何を入力してもログインできるようにしてください。後で実装をします。
+
+- 作業の進捗状況を、`work/{ユースケースID}/screen-implementation-work-status.md`に日本語で追記してください。
+
 
 ## 画面一覧
 - docs/usecase/{ユースケースID}/screen-list.md
@@ -410,12 +423,12 @@ GitHub Copilot でもいいですし。Microsoft 365 Copilot Chatでもいいか
 - ユーザーの要件や制約（例：リアルタイム性、コスト、クラウド環境など）を正確に理解し、それに基づいた最適な技術選定と設計を行ってください。
 
 # 目的
-全てのエンティティの保存先のMicrosoft Azureのサービスを決定します。ユースケースを分析・解析して、{実行プラン}を必ず参照して、エンティティ毎に、データをどのMicrosoft Azureのサービスを使用すべきかを決定してください。なぜ、そのMicrosoft Azureのサービスにしたのかの具体的で説得力のある説明もしてください。
+- 全てのエンティティの保存先のMicrosoft Azureのサービスを決定します。ユースケースを分析・解析して、{実行プラン}を必ず参照して、エンティティ毎に、データをどのMicrosoft Azureのサービスを使用すべきかを決定してください。なぜ、そのMicrosoft Azureのサービスにしたのかの具体的で説得力のある説明もしてください。
 
-Microsoft Azureのサービスやアーキテクチャについては、以下のMCP Serverから得られる情報も参考にしてください。
+- Microsoft Azureのサービスやアーキテクチャについては、以下のMCP Serverから得られる情報も参考にしてください。
+  - MicrosoftDocs
 
-## MCP Server
-- MicrosoftDocs
+- 作業の進捗状況を、`work/{ユースケースID}/data-implementation-work-status.md`に日本語で追記してください。
 
 ## 参考ドキュメント
 - docs/usecase/{ユースケースID}/usecase-description.md
@@ -488,21 +501,24 @@ Microsoft Azureのサービスやアーキテクチャについては、以下�
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
-## 4.2. Azure Data Services の作成
+### Step.4.2. Azure Data Services の作成
 
 作成したAzureのサービスを参考にして、Azureのサービスを作成していきます。
 `Microsoft Learn`の`MCP Server`を参照して、Azure CLIコマンドを作成します。
 
 ```text
-Microsoft Azure に、以下の{アーキテクチャ}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
-Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
+# タスク
+- Microsoft Azure に、以下の{アーキテクチャ}で指定されているサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
+- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。
+- Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-data-resources-prep.sh`に保存してください。
 
-Azureのサービスの作成後に、サンプルデータを適切な形式に変換をしてデータの登録用のスクリプトを作成して、それを実行してください。作成したスクリプトは、{データの登録用のスクリプトの保存場所}に保存してください。
+- Azureのサービスの作成後に、サンプルデータを適切な形式に変換をしてデータの登録用のスクリプトを作成して、それを実行してください。作成したスクリプトは、{データの登録用のスクリプトの保存場所}に保存してください。
 
-Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+- Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/data-azure-deploy-work-status.md`に日本語で追記してください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
-
 
 # 実行計画
 - 最初にアーキテクチャを高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
@@ -514,10 +530,10 @@ Azureのサービスの作成が成功したら、{サービスマッピング}�
 - docs/usecase/{ユースケースID}/data-AzureServices.md
 
 ## Azure CLIのスクリプトの保存場所
-- infra/{ユースケースID}-create-azure-data-resources.sh
+- infra/{ユースケースID}/create-azure-data-resources.sh
 
 ## データの登録用のスクリプトの保存場所
-- data/{ユースケースID}-data-registration-script.sh
+- data/{ユースケースID}/data-registration-script.sh
 
 ## サービスマッピング
 - docs/usecase/{ユースケースID}/service-mapping.md
@@ -541,9 +557,6 @@ Azureのサービスの作成が成功したら、{サービスマッピング}�
 ```
 
 ## Step.5. API 作成
-
-> [!WARNING]
-> 作業中です。
 
 REST APIのエンドポイントを作成します。
 
@@ -570,7 +583,14 @@ REST APIのエンドポイントを作成します。
 - {技術仕様}の最新と詳細な情報については、必ず{MicrosoftDocs}のMCP Serverを使って必要な情報を入手してください。
 - {サービスマッピング}の情報を基にして、必ずそれぞれのAzure のデータサービスと接続してください。Microsoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソースの}Azureにアクセスして取得してください。Azureの接続情報は{Azureデータサービス}のドキュメントも参照してください。
 - 単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/api-implementation-work-status.md`に日本語で追記してください。
+
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+
+# 実行計画
+- それぞれの{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。実行計画は、複数名でのDevOpsでのアプリケーション開発の原則を深く考慮して、並列で同時実行が出来るように作成するファイルを必ず別にしてください。
+
 
 # マイクロサービス定義書
 - docs/usecase/{ユースケースID}/{サービスID}-[サービス名]-description.md
@@ -594,9 +614,9 @@ REST APIのエンドポイントを作成します。
 - test/{ユースケースID}
 
 # 技術仕様
-- Azure Functions v4
-- C#
-- .NET9.0
+- 最新のAzure Functions
+- C#。バージョンは、Azure Functionsの最新のバージョンでサポートされているもの
+- .NETのランタイムは、Azure Functionsの最新のバージョンでサポートされているもの
 - Trigger: HTTP
 - Bind: inもoutもHTTP
 
@@ -613,22 +633,20 @@ REST APIのエンドポイントを作成します。
 
 ### Step.5.2. Azure Functions の作成
 
-> [!WARNING]
-> 作業中です。
-
 作成したコードをAzure Functionsにデプロイします。
 
 ```text
-- Microsoft Azure に、以下の{REST API}で指定されている全てのサービスを作成してください。Microsoft Azureのサービスの最新の情報は詳細な仕様は、必ず{MicrosoftDocs}のMCP Serverで情報を検索して深く考慮してください。
-- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、{Azure CLIのスクリプトの保存場所}に保存してください。
-- 継続的デリバリーを実装します。GitHub Actionsのワークフローを作成して、Azure Functionsにデプロイしてください。GitHub Actionsの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。
+- apiで実装されたAzure FunctionsのコードをMicrosoft Azureへデプロイします。
+- Microsoft Azureのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。
+- Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-api-resources-prep.sh`に保存してください。
 
+- 継続的デリバリーを実装します。GitHub Actionsのワークフローを作成して、Azure Functionsにデプロイしてください。GitHub Actionsの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。
 
 - Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、サービス名、サービスの種類、サービスのURL、サービスのID、サービスのリージョンを追記してください。
 
-- 作成した全てのAzure Functionsの単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
+- 作成した全てのAzure Functionsの単体テストのプログラムコードも必ず作成してください。Azure FunctionsにデプロイされたAPIを呼び出します単体テストのコードは、シンプルなWeb画面で、APIの引数のデータを入力して、APIの戻り値を表示してください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
 
-- 作業の進捗状況を、`/README.md`に日本語で追記してください。
+- 作業の進捗状況を、`work/{ユースケースID}/api-azure-deploy-work-status.md`に日本語で追記してください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
@@ -645,7 +663,7 @@ REST APIのエンドポイントを作成します。
 - test/{ユースケースID}
 
 # 技術仕様
-- リソースグループ名: `dahatake20250929`
+- リソースグループ名: `dahatakeYYYYMMDD`
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - SKU: Flex Consumption Plan
@@ -656,6 +674,7 @@ REST APIのエンドポイントを作成します。
 - 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
+
 ## Step.6.画面とREST APIの連携
 
 GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
@@ -664,28 +683,74 @@ GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成しても�
 > 作業中です。
 
 ```text
-画面を制御するコード内でREST APIのエンドポイント呼び出しを実装します。現状はスタブ呼び出しとなっています。
-スタブ呼び出しから、REST APIのエンドポイントを呼び出す実装に変更してください。
+Webアプリケーションでの、REST APIのエンドポイント呼び出しを実装します。{サービスマッピング}の{画面 → 機能 → API → データ マッピング表}と{デプロイ済みAzureサービス詳細マッピング}を参考にして、変更をしてください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/WebUI-api-call-work-status.md`に日本語で追記してください。
 
 # 対象コードファイル
-- `app/js/api.js`
+- `app/{ユースケースID}`
 
-# マッピング情報
-- `docs/uc-01_mapping.md`
-  - エンドポイントURL: Azure FunctionsのHTTPエンドポイントのURL
+## サービスマッピング
+- docs/usecase/{ユースケースID}/service-mapping.md
 
-# 置き換え対象画面と機能・サービス
-- 画面ID: `SCR-02`
-- SoT: `KPI-01`
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
+```
+## Step.6.1. Webアプリケーションのデプロイ
 
-編集は対象ファイル内に限定し、リポジトリのコーディングスタイルに従い、レビューしやすい差分を作成してください。
+作成したWebアプリケーションをAzure Static Web Appsにデプロイします。
+
+```text
+# タスク
+- WebアプリケーションのコードをMicrosoft AzureのAzure Static Web Appsへデプロイします。
+- Azure Static Web Appsのサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。 
+- Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-webui-resources-prep.sh`に保存してください。
+
+- 継続的デリバリーを実装します。GitHub Actionsのワークフローを作成して、Azure Static Web Appsにデプロイしてください。GitHub Actionsの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。
+
+- Azureのサービスの作成が成功したら、{サービスマッピング}のドキュメントに、WebアプリケーションのURLを追記してください。
+
+- 作業の進捗状況を、`work/{ユースケースID}/WebUI-azure-deploy-work-status.md`に日本語で追記してください。
+
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+
+## Azure CLIのスクリプトの保存場所
+- infra/{ユースケースID}/create-azure-webui-resources.sh
+
+## サービスマッピング
+- docs/usecase/{ユースケースID}/service-mapping.md
+
+## 技術仕様
+- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
+- リージョン: East Asia
+  - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
+- スケール設定は、最小構成で作成してください。
+  - サーバーレスがあるサービスは、それを選択してください。
+  - オートスケールがあるサービスは、それを選択してください。
+
+# 行動規範
+- 不確定な情報は推測せず、仮定と前提条件を明示する。
+- ユーザーの意図を誤解しないため、重大な意思決定の前には確認を求める。
+- 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
+- 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
+Azure Static Web Appsの作成ができない場合があります。その場合は、以下の手順を試してください。
+
+> ### ステップ1: Azureリソース作成
+> cd infra/{ユースケースID}
+> ./create-azure-webui-resources.sh
+> ### ステップ2: デプロイトークンをコピー（スクリプト出力から）
+> ### ステップ3: GitHub Secretsに設定
+> #### 1. Settings > Secrets and variables > Actions
+> #### 2. New repository secret
+> #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN_UC005
+> #### 4. Value: コピーしたトークン
+
 ## Step.7. アーキテクチャレビュー
-
-> [!WARNING]
-> 作業中です。
-
 
 Microsoftの公式ドキュメントの情報を活用して、展開されたアーキテクチャのレビューを行います。
 
@@ -700,8 +765,7 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 - 複数のレビュー案が考えられる場合は、それぞれのメリット・デメリットを比較して提示してください。
 
 ## レビューの対象のMicrosoft Azureのリソース
-- リソースグループ名: `dahatake{YYYYMMDD}-{サービス名}`
-  - `{YYYYMMDD}`は本日の日付（年・月・日）を使用してください。
+- リソースグループ名: `dahatake{YYYYMMDD}`
 
 ## レビュー結果の保存場所
 - docs/usecase/{ユースケースID}/ArchitectureReview-Azure.md
