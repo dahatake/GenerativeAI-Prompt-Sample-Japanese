@@ -29,7 +29,7 @@
     https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduction
 
 
-## はじめに
+# はじめに
 
 Copilot を使用してタスクに取り組むためのベスト プラクティス
 
@@ -38,72 +38,12 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 - プロダクション環境での利用には十二分に注意をしてください。Pull Requestをマージするかどうかは、**人**の判断ですので!
 
-
-以下は、作成する**量**や**タスクの複雑さ**に応じて。
-
-### 1.1. タスクが途中で終了する
-
-> [!WARNING]
-> 指示したタスクがすべて完了していないのに、GitHub Copilotがタスクを終了することがあります。その場合は、コメントでCopilotに指示を出して、再度Copilotにコードを生成してもらってください。あるいは、自分で作業を継続してください。
-
-> 作業継続のPromptの例:
-
-```text
-@copilot
-以下の作業の進捗状況のドキュメントも参考にして、残作業を実行してください。
-- work/{ユースケースID}/api-azure-deploy-work-status.md
-```
-
-### 1.2. 結果の妥当性チェック
-
-- また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
-
-```text
-@copilot
-妥当性チェックを行ってください。その際には、作成された全てを高精度に分析し、目的に整合しているかを検証してください。
-もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
-最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
-その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
-```
-
-### 1.3. CI/CDのジョブがエラーになる
-
-- Azureと連携した後は、CopilotがPRを実行している際にGitHub Actionsでのジョブ実行を行います。その際に私たち人によるApprovalが必要です。ただ、そのGitHub Actionsのジョブがエラーになることがあります。
-
-![Job Errorの例](/Software%20Engineer/プロトタイプ-AIFirst//images/image.png)
-
-- その際には、PRのコメントに以下の様な指示をして、GitHub Copilotに修正をさせるのも手です。
-
-```text
-@copilot 
-reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
-```
-
-## Step.1. 要求定義などビジネス面のドキュメントの整備
-
-こちらのドキュメントを参考にしてください。
-
-[要求定義の作成](Documentation.md)
-
-## Step.2. アプリケーション設計
-
-こちらのドキュメントを参考にしてください。
-
-[アプリケーション設計](ApplicationDesign-microservice-polyglotpersistence.md)
-
-## Step.3. アプリケーション実装用のPrompt
-
--  作成結果のドキュメントの保存場所
-
-    ファイルはGitHubのRepositoryにUploadして、そのURLを参照させる形で、GitHub Copilot Coding Agentに作業をしてもらいます。
-
-
-### Step.3.1. GitHubのRepositoryの作成
+# Step.1. GitHubのRepositoryの作成
 
 GitHubのRepositoryを作成します。GitHub Sparkや、GitHub Copilot Coding Agentが作業をするためのリポジトリーです。
 
 
-### Step.3.2. Custom Instructionsの作成
+## Step.1.1. Custom Instructionsの作成
 
 GitHubのRepositoryに、GitHub Copilot Coding Agentがより正確にタスクを実行できるような`.github/copilot-instructions.md`ファイルを作成します。
 
@@ -272,7 +212,26 @@ Copilot を使用してタスクに取り組むためのベスト プラクテ�
 https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks#adding-custom-instructions-to-your-repository
 
 
-### Step.3.3. UI 作成
+
+## Step.2. 要求定義などビジネス面のドキュメントの整備
+
+こちらのドキュメントを参考にしてください。
+
+[要求定義の作成](Documentation.md)
+
+## Step.3. アプリケーション設計
+
+こちらのドキュメントを参考にしてください。
+
+[アプリケーション設計](ApplicationDesign-microservice-polyglotpersistence.md)
+
+## Step.4. アプリケーション実装用のPrompt
+
+-  作成結果のドキュメントの保存場所
+
+    ファイルはGitHubのRepositoryにUploadして、そのURLを参照させる形で、GitHub Copilot Coding Agentに作業をしてもらいます。
+
+### Step.4.1. UI 作成
 
 **サンプルデータ**と、**画面定義のドキュメント**をリポジトリーにUploadして、そのファイルのURLを参照させます。
 
@@ -337,7 +296,7 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 
 以下、複数のパターンの例を示します。全てを使う必要はありません。
 
-#### Step.3.3.1. (Option) 複数のWeb画面を一度に表示
+#### Step.4.1.1. (Option) 複数のWeb画面を一度に表示
 
 > [!NOTE]
 > あくまで画面作成の例です。スキップして構いません。
@@ -367,7 +326,7 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-#### Step.3.3.2. (Option) マルチエージェントのグループチャットのサンプル
+#### Step.4.1.2. (Option) マルチエージェントのグループチャットのサンプル
 
 > [!NOTE]
 > あくまで画面作成の例です。スキップして構いません。
@@ -402,9 +361,9 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
 ```
 
-## Step.4. データ
+## Step.5. データ
 
-### Step.4.1. データ保存先の選択
+### Step.5.1. データ保存先の選択
 
 それぞれのエンティティの適切なデータの保存を行います。Microsoft Azureの中で最適なサービスの候補を作成します。
 
@@ -499,7 +458,7 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
-### Step.4.2. Azure Data Services の作成
+### Step.5.2. Azure Data Services の作成
 
 作成したAzureのサービスを参考にして、Azureのサービスを作成していきます。
 `Microsoft Learn`の`MCP Server`を参照して、Azure CLIコマンドを作成します。
@@ -548,13 +507,13 @@ GitHub Copilot Coding AgentのIssueとして使います。Copilot君にIssueを
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
-## Step.5. API 作成
+## Step.6. API 作成
 
 REST APIのエンドポイントを作成します。
 
 作成したデータベースを参照して、REST APIのエンドポイントを作成します。Azure Functions上に作成します。Azure Functionsは、殆どのシナリオでのREST APIの実行環境に適しています。
 
-### Step.5.1. Azure Functions用のコードの作成
+### Step.6.1. Azure Functions用のコードの作成
 
 ```text
 # 目的
@@ -605,7 +564,7 @@ REST APIのエンドポイントを作成します。
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
-### Step.5.2. Azure Functions の作成
+### Step.6.2. Azure Functions の作成
 
 作成したコードをAzure Functionsにデプロイします。
 
@@ -650,7 +609,7 @@ REST APIのエンドポイントを作成します。
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
 
-## Step.6.画面とREST APIの連携
+## Step.7. 画面とREST APIの連携
 
 GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成してもらいます。
 
@@ -676,7 +635,7 @@ GitHub Copilot Coding Agentに、HTMLの画面とAPIの連携を作成しても�
 - 代替案や将来的な拡張案も併記し、意思決定がしやすい材料を提供する。
 - 品質・セキュリティ・コスト・スケジュールのバランスを常に意識する。
 ```
-## Step.6.1. Webアプリケーションのデプロイ
+## Step.7.1. Webアプリケーションのデプロイ
 
 作成したWebアプリケーションをAzure Static Web Appsにデプロイします。
 
@@ -727,7 +686,7 @@ Azure Static Web Appsの作成ができない場合があります。その場�
 > #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN_UC005
 > #### 4. Value: コピーしたトークン
 
-## Step.7. アーキテクチャレビュー
+## Step.8. アーキテクチャレビュー
 
 Microsoftの公式ドキュメントの情報を活用して、展開されたアーキテクチャのレビューを行います。
 
@@ -754,4 +713,46 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 
 ## レビュー結果の保存場所
 - docs/usecase/{ユースケースID}/ArchitectureReview-Azure-Report.md
+```
+
+# うまくいかなかった時の対応例
+
+以下は、作成する**量**や**タスクの複雑さ**に応じて。
+
+### タスクが途中で終了する
+
+> [!WARNING]
+> 指示したタスクがすべて完了していないのに、GitHub Copilotがタスクを終了することがあります。その場合は、コメントでCopilotに指示を出して、再度Copilotにコードを生成してもらってください。あるいは、自分で作業を継続してください。
+
+> 作業継続のPromptの例:
+
+```text
+@copilot
+以下の作業の進捗状況のドキュメントも参考にして、残作業を実行してください。
+- work/{ユースケースID}/api-azure-deploy-work-status.md
+```
+
+### 結果の妥当性チェック
+
+- また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
+
+```text
+@copilot
+妥当性チェックを行ってください。その際には、作成された全てを高精度に分析し、目的に整合しているかを検証してください。
+もし改善点がある場合は、どのように改善すれば正しい回答が得られるかを論理的かつプロフェッショナルとして考えてください。
+最初にこのタスクに取り組むべきポイントについて、3～7項目程度の簡潔なチェックリストを作成してください。このステップでは各項目は概念レベルでまとめ、実装詳細には踏み込みません。
+その後、作成したチェックリストを参考にして、正しい回答を得るためのに考えた内容をプロンプトに反映して再度実行してください。
+```
+
+### CI/CDのジョブがエラーになる
+
+- Azureと連携した後は、CopilotがPRを実行している際にGitHub Actionsでのジョブ実行を行います。その際に私たち人によるApprovalが必要です。ただ、そのGitHub Actionsのジョブがエラーになることがあります。
+
+![Job Errorの例](/Software%20Engineer/プロトタイプ-AIFirst//images/image.png)
+
+- その際には、PRのコメントに以下の様な指示をして、GitHub Copilotに修正をさせるのも手です。
+
+```text
+@copilot 
+reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
 ```
