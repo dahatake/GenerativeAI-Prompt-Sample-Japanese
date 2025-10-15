@@ -231,16 +231,18 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 こちらのドキュメントを参考にしてください。
 
-[アプリケーション設計](ApplicationDesign-microservice-polyglotpersistence.md)
+- microservicesアーキテクチャ と Polyglot Persistancyのアプリケーション設計
+
+  [microservies](ApplicationDesign-microservice-polyglotpersistence.md)
 
 
 ## Step.4. アプリケーションのコードの実装と、Azureへのデプロイ
 
 こちらのドキュメントを参考にしてください。
 
-- Webアプリケーションのコードの実装と、Azureへのデプロイ
+- Webアプリケーション
 
-  [Webアプリケーションのコードの実装と、Azureへのデプロイ](Implementation-WebAppOnAzure.md)
+  [Webアプリ](Implementation-WebAppOnAzure.md)
 
 
 # うまくいかなかった時の対応例
