@@ -15,7 +15,6 @@ https://docs.github.com/ja/enterprise-cloud@latest/copilot/using-github-copilot/
 
 As-IsとTo-Beを一度に作成します。
 
-
 ### ツール
 
 ツールは、最近のLLMであれば、どれでもそれなりにドキュメントを作成してくれます。

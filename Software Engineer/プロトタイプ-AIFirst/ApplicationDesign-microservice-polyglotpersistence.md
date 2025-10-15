@@ -51,6 +51,9 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 # 目的
 - {ユースケース}のドキュメントを深くかつ慎重に分析・解析をして、ビジネス機能のドメインモデリングをして、業務ドメインをリストアップしてください。
 
+## ユースケースID
+- UC-xxx
+
 ## ユースケース
   - docs/usecase/{ユースケースID}/usecase-description.md
 
@@ -181,12 +184,15 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 - 作業の進捗状況を、`work/{ユースケースID}/service-design-work-status.md`に日本語で追記してください。
 
+## ユースケースID
+- UC-xxx
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/domain-analytics.md
 
 ## 作成ファイル
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
 
 ## サービス候補一覧
 
@@ -285,10 +291,13 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-model-design-work-status.md`に日本語で追記してください。
 
+## ユースケースID
+- UC-xxx
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/domain-analytics.md
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
 
 ## 作成ファイル
   - docs/usecase/{ユースケースID}/data-model.md
@@ -319,13 +328,16 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-design-work-status.md`に日本語で追記してください。
 
+## ユースケースID
+- UC-xxx
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
 
 ## 作成ファイル
-  - docs/usecase/{ユースケースID}/screen-list.md
+  - docs/usecase/{ユースケースID}/screen/screen-list.md
 
 ## 出力形式
 
@@ -382,11 +394,14 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 - 画面とAPIの関係を俯瞰できるハイレベルマッピング表
 - 設計のベストプラクティスや注意点（冪等性、競合制御、バルク操作など）
 
+## ユースケースID
+- UC-xxx
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
-  - docs/usecase/{ユースケースID}/screen-list.md
+  - docs/usecase/{ユースケースID}/screen/screen-list.md
 
 ## 作成ファイル
   - docs/usecase/{ユースケースID}/service-mapping.md
@@ -425,17 +440,20 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-doc-implementation-work-status.md`に日本語で追記してください。
 
+## ユースケースID
+- UC-xxx
+
 ## 画面一覧
-  - docs/usecase/{ユースケースID}/screen-list.md
+  - docs/usecase/{ユースケースID}/screen/screen-list.md
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
   - docs/usecase/{ユースケースID}/service-mapping.md
 
 ## 作成ファイル
-  - docs/usecase/{ユースケースID}/{画面-ID}-{画面名}-description.md
+  - docs/usecase/{ユースケースID}/screen/{画面-ID}-{画面名}-description.md
     - {画面-ID}は、各画面のIDを設定する
     - {画面名}は、各画面の名称を設定する
 
@@ -555,16 +573,19 @@ Prompt:
 
 - 作業の進捗状況を、`work/{ユースケースID}/service-doc-implementation-work-status.md`に日本語で追記してください。
 
+## ユースケースID
+- UC-xxx
+
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
-  - docs/usecase/{ユースケースID}/service-list.md
+  - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
   - docs/usecase/{ユースケースID}/service-mapping.md
-  - data/{ユースケースID}-sample-data.json
+  - data/{ユースケースID}/sample-data.json
 
 
 ## 作成ファイル
-  - docs/usecase/{ユースケースID}/{サービスID}-{サービス名}-description.md
+  - docs/usecase/{ユースケースID}/services/{サービスID}-{サービス名}-description.md
     - {サービスID}は、各サービスのIDを設定する
     - {サービス名}は、各サービスの名称を設定する
 
@@ -733,5 +754,4 @@ Prompt:
 *   **AsyncAPI（スケルトン）**：チャンネル名・イベント名・キー属性のみ。
 *   **JSON Schema（概念版）**：`Template`, `FieldDefinition`, `AttachmentPolicy` の最低限属性。
 *   **用語集／語彙**：ラベル、状態、エラーコードの辞書。
-
 ```
