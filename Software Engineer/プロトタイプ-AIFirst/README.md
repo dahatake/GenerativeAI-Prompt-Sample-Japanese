@@ -225,7 +225,7 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 こちらのドキュメントを参考にしてください。
 
-[要求定義の作成](Documentation.md)
+[要求定義の作成](Business-Documentation.md)
 
 ## Step.3. アプリケーション設計
 

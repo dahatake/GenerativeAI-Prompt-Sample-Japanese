@@ -349,18 +349,13 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 - function_type: 主要機能（例：入力フォーム、承認画面、完了画面など）
 
 ### 2. 画面遷移図（Screen Transition Diagram）
-画面遷移図は、テキストベースで画面IDまたは画面名をノードとして表現し、矢印（->）で遷移関係を記述してください。
-#### 例：
-[申請入力画面] -> [確認画面] -> [完了画面]
-                       ↓
-                [差し戻し画面]
-または上記と同様のテキスト記述で明確にしてください。
+画面遷移図は、Mermaid記法で図式化してください。
 
 ### 3. エラーハンドリング
 画面の特定や遷移が曖昧または資料から判断できない場合は、その旨を備考または注意事項として明記してください。
 ```
 
-# Step.4. マッピング表の作成
+# Step.4. サービスカタログ表の作成
 
 このドキュメントを最終的に作りたかったのです!
 画面とサービスとデータ。それぞれに識別のためのIDを付与して、今後、個々に仕様書として作成するドキュメントを紐づけます。
@@ -375,7 +370,7 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 # 目的
 {参考ドキュメント}の全てのドキュメントの内容を高度に解析・分析して、このユースケースのマイクロサービスアーキテクチャで構築するアプリケーションの、
 画面 → **画面内機能 → 画面内処理 or API呼び出し → APIが管理するデータ
-のマッピングを、具体的かつ明瞭な表形式で作成してください。
+のカタログを、具体的かつ明瞭な表形式で作成してください。
 マイクロサービスアーキテクチャの原則を必ず守って設計を行ってください。
 
 ## 要件：
@@ -387,7 +382,7 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
   - その機能が「画面内処理」か「API呼び出し」かを明示
   - API呼び出しの場合は、API ID、API名、エンドポイント、HTTPメソッド、主要パラメータを記載
   - APIが管理するデータ（SoT）を明記
-- 最後に、APIサービスと管理データの責務マッピング表も追加してください
+- 最後に、APIサービスと管理データの責務も追加してください
 
 さらに、可能であれば以下も含めてください：
 
@@ -404,7 +399,7 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
   - docs/usecase/{ユースケースID}/screen/screen-list.md
 
 ## 作成ファイル
-  - docs/usecase/{ユースケースID}/service-mapping.md
+  - docs/usecase/{ユースケースID}/service-catalog.md
 ```
 
 
@@ -450,7 +445,7 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
-  - docs/usecase/{ユースケースID}/service-mapping.md
+  - docs/usecase/{ユースケースID}/service-catalog.md
 
 ## 作成ファイル
   - docs/usecase/{ユースケースID}/screen/{画面-ID}-{画面名}-description.md
@@ -580,7 +575,7 @@ Prompt:
   - docs/usecase/{ユースケースID}/usecase-description.md
   - docs/usecase/{ユースケースID}/services/service-list.md
   - docs/usecase/{ユースケースID}/data-model.md
-  - docs/usecase/{ユースケースID}/service-mapping.md
+  - docs/usecase/{ユースケースID}/service-catalog.md
   - data/{ユースケースID}/sample-data.json
 
 
