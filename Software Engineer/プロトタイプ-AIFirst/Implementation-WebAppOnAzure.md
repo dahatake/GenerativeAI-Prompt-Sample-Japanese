@@ -661,7 +661,7 @@ Azure Static Web Appsの作成ができない場合があります。その場�
 > ### ステップ3: GitHub Secretsに設定
 > #### 1. Settings > Secrets and variables > Actions
 > #### 2. New repository secret
-> #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN_UC005
+> #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN
 > #### 4. Value: コピーしたトークン
 
 ## Step.5. アーキテクチャレビュー
@@ -679,16 +679,19 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 - 最初に目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
 - 複数のレビュー案が考えられる場合は、それぞれのメリット・デメリットを比較して提示してください。
 
+## ユースケースID
+- UC-xxx
+
 ## レビューの対象のMicrosoft Azureのリソース
 - リソースグループ名: `dahatake{YYYYMMDD}`
 
 ## 参考ドキュメント
 - docs/usecase/{ユースケースID}/usecase-description.md
-- docs/usecase/{ユースケースID}/service-list.md
-- docs/usecase/{ユースケースID}/data-model.md
-- docs/usecase/{ユースケースID}/data-AzureServices.md
 - docs/usecase/{ユースケースID}/service-catalog.md
+- docs/usecase/{ユースケースID}/AzureServices-services.md
+- docs/usecase/{ユースケースID}/AzureServices-data.md
+- docs/usecase/{ユースケースID}/AzureServices-services-additional.md
 
 ## レビュー結果の保存場所
-- docs/usecase/{ユースケースID}/ArchitectureReview-Azure-Report.md
+- docs/usecase/{ユースケースID}/Azure-ArchitectureReview-Report.md
 ```
