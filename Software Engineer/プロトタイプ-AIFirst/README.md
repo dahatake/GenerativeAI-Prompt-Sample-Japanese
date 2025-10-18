@@ -264,7 +264,7 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 ### 結果の妥当性チェック
 
-- また、結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
+結果の精度が低い場合もあります。各Promptの実行後のPull Requestの中で、`@copilot`で指定して、別タスクとしてチェックを行ってもらうのがおススメです。
 
 ```text
 @copilot
