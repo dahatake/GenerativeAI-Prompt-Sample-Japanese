@@ -51,7 +51,6 @@ https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practi
 
 GitHubのRepositoryを作成します。GitHub Sparkや、GitHub Copilot Coding Agentが作業をするためのリポジトリーです。
 
-
 ## Step.1.1. Custom Instructionsの作成
 
 GitHubのRepositoryに、GitHub Copilot Coding Agentがより正確にタスクを実行できるような`.github/copilot-instructions.md`ファイルを作成します。
@@ -219,6 +218,43 @@ Copilot を使用してタスクに取り組むためのベスト プラクテ�
 
 https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks#adding-custom-instructions-to-your-repository
 
+## Step. 1.2 MCP Server 設定
+GitHubのRepositoryに、GitHub Copilot Coding AgentがMCP Serverを利用できるように設定します。
+
+以下の両方のBlog Postを参考にしてください。Microsoft Learnと、AzureのMCP Serverの両方を設定します。
+
+- GitHub Copilot Coding agent に Azure MCP Server の設定をする:
+
+  https://qiita.com/dahatake/items/3230a92532c35fec7599
+
+- GitHub Copilot Coding agent に Microsoft Learn Docs MCP Server の設定をする
+
+  https://qiita.com/dahatake/items/4f6f0deb53333c0200ef
+
+GitHub Copilot の Coding AgentのMCP Serverの設定文字列::
+
+```text
+{
+  "mcpServers": {
+    "Azure": {
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure/mcp@latest",
+        "server",
+        "start"
+      ],
+      "tools": ["*"]
+    },
+    "MicrosoftDocs": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp",
+      "tools": ["*"]
+    }
+  }
+}
+```
 
 
 ## Step.2. 要求定義などビジネス面のドキュメントの整備
