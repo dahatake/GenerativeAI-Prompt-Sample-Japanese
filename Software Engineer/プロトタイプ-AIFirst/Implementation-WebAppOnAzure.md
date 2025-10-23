@@ -498,7 +498,7 @@ REST APIのエンドポイントを作成します。
 - 最初に{マイクロサービス定義書}を高精度に分析し、目的に整合した、明確で実行可能な実行計画の手順を作成してください。構造的思考、ドメイン知識、ユーザー中心設計の原則を駆使し、アーキテクチャの網羅性、明確性、追跡可能性を確保します。その後、タスクを実行してください。
 - {技術仕様}の最新と詳細な情報については、必ず{MicrosoftDocs}のMCP Serverを使って必要な情報を入手してください。
 - {サービスカタログ}の情報を基にして、必ず全てのMicrosoft Azure サービスと接続してください。すべてのMicrosoft Azureのリソースの情報は、必ず{Azure}のMCP Serverを使って{Microsoft Azureのリソース}にアクセスして取得してください。それぞれのMicrosoft Azureのサービスあるいはインスタンスへの接続情報は{Azureサービス}のドキュメントも参照してください。
-- 単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面でAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
+- 単体テストのプログラムコードも必ず作成してください。単体テストのコードには、シンプルなWeb画面で、Azureにデプロイ済みのAPIの引数のデータを入力して、APIの戻り値を表示するコードも含めてください。単体テストのコードは、{単体テスト作成フォルダー}に保存してください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/api-implementation-work-status.md`に日本語で追記してください。
 
@@ -512,11 +512,11 @@ REST APIのエンドポイントを作成します。
 - UC-xxx
 
 # マイクロサービス定義書
-- docs/usecase/{ユースケースID}/{サービスID}-[サービス名]-description.md
+- docs/usecase/{ユースケースID}/services/{サービスID}-[サービス名]-description.md
 
 ## 参考ドキュメント
 - docs/usecase/{ユースケースID}/usecase-description.md
-- docs/usecase/{ユースケースID}/service-list.md
+- docs/usecase/{ユースケースID}/services/service-list.md
 - docs/usecase/{ユースケースID}/data-model.md
 
 ## サービスカタログ
@@ -525,6 +525,7 @@ REST APIのエンドポイントを作成します。
 ## Azureサービス
 - docs/usecase/{ユースケースID}/AzureServices-data.md
 - docs/usecase/{ユースケースID}/AzureServices-services-additional.md
+- docs/usecase/{ユースケースID}/AzureServices-services.md
 
 ## サービス作成フォルダー
 - api/{ユースケースID}/{サービスID}-{サービス名}/
@@ -554,7 +555,6 @@ REST APIのエンドポイントを作成します。
 ```
 
 ### Step.3.5. Azure Compute の作成
-
 
 作成した各サービスのコードを、それぞれのAzureのCompute Serviceを作成して、デプロイをします。
 
