@@ -94,30 +94,6 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 - `infra/`: インフラストラクチャのコードを格納します。
 - `work/`: 作業の進捗状況を記録します。
 
-## Coding Agentのタスクの実行エラーの対応策
-Coding AgentのGitHub Actionsでのタスクが失敗することがあります。
-{エラーメッセージ}が出力されている場合は、{解決策}を適用して修正してください。
-
-### エラーメッセージ
-$ undefined
-No command provided. Please supply a valid command to execute.
-
-### 解決策
-初回の失敗は、bash tool呼び出し時に必須のcommandパラメータを指定していなかったことが原因でした。
-
-##### ❌ 誤った呼び出し（commandパラメータなし）
-` ```text
-<invoke name="bash">
-</invoke>
-` ```
-
-##### ✅ 正しい呼び出し
-` ```text
-<invoke name="bash">
-<parameter name="command">python3 script.py</parameter>
-</invoke>
-` ```
-
 ## アーキテクチャとデザイン原則
 
 ### 認証とセキュリティ
@@ -345,4 +321,32 @@ GitHub Copilot の Coding AgentのMCP Serverの設定文字列::
 ```text
 @copilot 
 reviewのチェックで、github actionsのジョブがエラーになりました。原因をリストアップして、解決策を考えて、修正をしてください。
+```
+
+
+## Coding Agentのタスクの実行エラーの対応策
+
+> [!IMPORTANT]
+> この状況になったら、即座にジョブを停止させてください。GitHub Actionsの課金に影響が考えられます。
+
+Coding AgentのGitHub Actionsでのタスクが失敗することがあります。
+Pull Requestの`Session`の中で、`Run Back command`が繰り返されて、何も処理が行われていません。以下の様なPromptをPull Requestのコメントとして投入して、GitHub Copilot君に修正させてください。
+
+- エラーメッセージ
+
+```cmd
+  Run Bash command
+  $ undefined
+  No command provided. Please supply a valid command to execute.
+```
+
+Prompt:
+
+```promot
+@copilot ジョブの途中でコマンド文字列を生成できずに、{エラーメッセージ}が表示されています。原因を究明して、修正してください。
+
+### エラーメッセージ
+Run Bash command
+$ undefined
+No command provided. Please supply a valid command to execute.
 ```
