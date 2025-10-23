@@ -51,6 +51,8 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 # 目的
 - {ユースケース}のドキュメントを深くかつ慎重に分析・解析をして、ビジネス機能のドメインモデリングをして、業務ドメインをリストアップしてください。
 
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/architecture-domain-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
+
 ## ユースケースID
 - UC-xxx
 
@@ -184,6 +186,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 - 作業の進捗状況を、`work/{ユースケースID}/service-design-work-status.md`に日本語で追記してください。
 
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/architecture-microservice-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
+
 ## ユースケースID
 - UC-xxx
 
@@ -291,6 +295,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-model-design-work-status.md`に日本語で追記してください。
 
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/data-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
+
 ## ユースケースID
 - UC-xxx
 
@@ -328,6 +334,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 -画面に{ユースケースID}をそのまま表示することは絶対にしないでください。ユースケース名で表示をしてください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-design-work-status.md`に日本語で追記してください。
+
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/ui-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
 
 ## ユースケースID
 - UC-xxx
@@ -390,6 +398,8 @@ GitHub Copilot Agent Modeを使っている場合は、同じチャットに追�
 - 画面とAPIの関係を俯瞰できるハイレベルマッピング表
 - 設計のベストプラクティスや注意点（冪等性、競合制御、バルク操作など）
 
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/service-catalog-issue-prompt-<番号>.md`に日本語で追記してください。
+
 ## ユースケースID
 - UC-xxx
 
@@ -435,6 +445,8 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 - {サンプルデータファイル}の全てのデータを、データとして必ず追記してください。データが入っている事で、画面の作成後に、即座に利用することができるようにしてください。このデータは、後でAPI連携をした際に容易に削除できるようにしてください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-doc-implementation-work-status.md`に日本語で追記してください。
+
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/screen-detail-issue-prompt-<番号>.md`に日本語で追記してください。
 
 ## ユースケースID
 - UC-xxx
@@ -569,6 +581,8 @@ Prompt:
 
 - 作業の進捗状況を、`work/{ユースケースID}/service-doc-implementation-work-status.md`に日本語で追記してください。
 
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/microservice-detail-issue-prompt-<番号>.md`に日本語で追記してください。
+
 ## ユースケースID
 - UC-xxx
 
@@ -578,7 +592,6 @@ Prompt:
   - docs/usecase/{ユースケースID}/data-model.md
   - docs/usecase/{ユースケースID}/service-catalog.md
   - data/{ユースケースID}/sample-data.json
-
 
 ## 作成ファイル
   - docs/usecase/{ユースケースID}/services/{サービスID}-{サービス名}-description.md
