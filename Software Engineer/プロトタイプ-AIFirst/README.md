@@ -99,6 +99,7 @@ Coding AgentのGitHub Actionsでのタスクが失敗することがあります
 {エラーメッセージ}が出力されている場合は、{解決策}を適用して修正してください。
 
 ### エラーメッセージ
+$ undefined
 No command provided. Please supply a valid command to execute.
 
 ### 解決策
