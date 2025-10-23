@@ -94,6 +94,29 @@ Microsoft Azure、C#、F#、ASP.NET、Microsoft.Extensions、NuGet、など、Mi
 - `infra/`: インフラストラクチャのコードを格納します。
 - `work/`: 作業の進捗状況を記録します。
 
+## Coding Agentのタスクの実行エラーの対応策
+Coding AgentのGitHub Actionsでのタスクが失敗することがあります。
+{エラーメッセージ}が出力されている場合は、{解決策}を適用して修正してください。
+
+### エラーメッセージ
+No command provided. Please supply a valid command to execute.
+
+### 解決策
+初回の失敗は、bash tool呼び出し時に必須のcommandパラメータを指定していなかったことが原因でした。
+
+##### ❌ 誤った呼び出し（commandパラメータなし）
+` ```text
+<invoke name="bash">
+</invoke>
+` ```
+
+##### ✅ 正しい呼び出し
+` ```text
+<invoke name="bash">
+<parameter name="command">python3 script.py</parameter>
+</invoke>
+` ```
+
 ## アーキテクチャとデザイン原則
 
 ### 認証とセキュリティ
