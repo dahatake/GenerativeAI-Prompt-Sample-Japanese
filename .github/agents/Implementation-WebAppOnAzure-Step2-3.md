@@ -12,7 +12,7 @@ tools: ["*"]
 - そのスクリプトを`Azure MCP Server`を利用して、実行してください。
 - Azure CLIのスクリプトに必要なツールやパッケージのインストール用のスクリプトも作成してください。そのファイルは`infra/{ユースケースID}/create-azure-additional-resources-prep.sh`に保存してください。
 
-- Microsoft Azureのサービスの作成が成功したら、{サービスカタログ}のドキュメントのサービスの欄に、機能名、機能の種類、サービスのURL、サービスのリージョンを追記してください。
+- Microsoft Azureのサービスの作成が成功したら、{サービスカタログ}のドキュメントのサービスの欄に、サービスID、サービス名、Azureのサービス名、機能名、機能の種類、AzureサービスのURL、サービスのリージョンを表形式で追記してください。
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-azure-additionalservices-deploy-work-status.md`に日本語で追記してください。
 
