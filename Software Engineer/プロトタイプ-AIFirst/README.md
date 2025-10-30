@@ -314,9 +314,9 @@ cp -r GenerativeAI-Prompt-Sample-Japanese/.github/agents/* your-project/.github/
 your-project/
 ├── .github/
 │   ├── agents/
-│   │   ├── Architecture-Design-Step1-1.md
-│   │   ├── Architecture-Design-Step1-2.md
-│   │   ├── Architecture-Design-Step2.md
+│   │   ├── ArchitectureDesign-microservice-Step1-1.md
+│   │   ├── ArchitectureDesign-microservice-Step1-2.md
+│   │   ├── ArchitectureDesign-microservice-Step2.md
 │   │   ├── Business-Documentation-Step2-1.md
 │   │   ├── Business-Documentation-Step2-2.md
 │   │   ├── Implementation-WebAppOnAzure-Step1-1.md
@@ -331,7 +331,7 @@ your-project/
 
 各 Custom Agent ファイルは、プロジェクトの要件に応じてカスタマイズできます。
 
-例えば、`Architecture-Design-Step1-1.md` の中で、ユースケース ID やファイルパスを変更できます:
+例えば、`ArchitectureDesign-microservice-Step1-1.md` の中で、ユースケース ID やファイルパスを変更できます:
 
 ```markdown
 ## ユースケースID

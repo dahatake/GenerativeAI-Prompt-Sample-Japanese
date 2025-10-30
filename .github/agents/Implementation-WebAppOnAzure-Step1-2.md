@@ -18,14 +18,14 @@ tools: ["*"]
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-azure-deploy-work-status.md`に日本語で追記してください。
 
-- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/data-azuredeployment-issue-prompt-<番号>.md`に日本語で追記してください。
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/{ユースケースID}/data-azuredeployment-issue-prompt-<番号>.md`に日本語で追記してください。
 
 - ファイルを作成する際に、1つのファイルに大きな文字列を書き込む際に、書き込み処理が失敗する場合があります。ファイルは作成されているのに内容がEmptyになっています。その場合は、書き込む文字列を分割して、複数の回数に書き込み処理を分割して、1つのファイルに出力をしてください。
 
 - 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
 
 ## ユースケースID
-- UC-xxx
+- {ユースケースID}
 
 ## データストア
 - docs/usecase/{ユースケースID}/AzureServices-data.md
@@ -40,7 +40,7 @@ tools: ["*"]
 - docs/usecase/{ユースケースID}/service-catalog.md
 
 ## 技術仕様
-- リソースグループ名: `dahatake-{ユースケースID}`
+- リソースグループ名: `{ユースケースID}`
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - スケール設定は、必ず最小構成で作成してください。

@@ -1,5 +1,5 @@
 ---
-name: Architecture-Design-Step2-データモデル設計
+name: ArchitectureDesign-microservice-Step2-データモデル設計
 description: 全エンティティのデータモデルを設計し、Mermaid図で可視化、サンプルデータをJSON形式で作成します
 tools: ["*"]
 ---
@@ -23,12 +23,12 @@ tools: ["*"]
 
 - 作業の進捗状況を、`work/{ユースケースID}/data-model-design-work-status.md`に日本語で追記してください。
 
-- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/data-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/{ユースケースID}/data-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
 
 - ファイルを作成する際に、1つのファイルに大きな文字列を書き込む際に、書き込み処理が失敗する場合があります。ファイルは作成されているのに内容がEmptyになっています。その場合は、書き込む文字列を分割して、複数の回数に書き込み処理を分割して、1つのファイルに出力をしてください。
 
 ## ユースケースID
-- UC-xxx
+- {ユースケースID}
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md

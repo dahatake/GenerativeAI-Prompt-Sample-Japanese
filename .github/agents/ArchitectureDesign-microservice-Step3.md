@@ -1,5 +1,5 @@
 ---
-name: Architecture-Design-Step3-画面設計
+name: ArchitectureDesign-microservice-Step3-画面設計
 description: ユーザーが利用する画面一覧と画面遷移図をMermaid記法で作成し、ポータル画面からの遷移を設計します
 tools: ["*"]
 ---
@@ -22,12 +22,12 @@ tools: ["*"]
 
 - 作業の進捗状況を、`work/{ユースケースID}/screen-design-work-status.md`に日本語で追記してください。
 
-- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/ui-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/{ユースケースID}/ui-modeling-issue-prompt-<番号>.md`に日本語で追記してください。
 
 - ファイルを作成する際に、1つのファイルに大きな文字列を書き込む際に、書き込み処理が失敗する場合があります。ファイルは作成されているのに内容がEmptyになっています。その場合は、書き込む文字列を分割して、複数の回数に書き込み処理を分割して、1つのファイルに出力をしてください。
 
 ## ユースケースID
-- UC-xxx
+- {ユースケースID}
 
 ## 参考ドキュメント
   - docs/usecase/{ユースケースID}/usecase-description.md
