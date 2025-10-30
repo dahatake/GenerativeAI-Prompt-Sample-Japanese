@@ -363,7 +363,7 @@ your-project/
    - 例: 「Architecture-Design-Step1-1-ドメイン分析」を選択
 
 4. **タスクの詳細を Issue に記述**
-   - Custom Agent が適切に動作するために、タスクの詳細、要件、参照すべきファイルパスなどを明確に記述してください
+   - Custom Agent が適切に動作するために、タスクの詳細、要件、参照すべきファイルパス、ユースケースID、Azureのリソースグループ名などを明確に記述してください
    - 例:
      ```markdown
      ## タスク
@@ -387,13 +387,13 @@ your-project/
 - **Business-Documentation-Step2-2**: ユースケースの詳細定義書を作成
 
 #### アーキテクチャ設計関連
-- **Architecture-Design-Step1-1**: DDD の観点でドメインモデリング
-- **Architecture-Design-Step1-2**: マイクロサービス候補のリストアップ
-- **Architecture-Design-Step2**: データモデル設計と Mermaid 図作成
-- **Architecture-Design-Step3**: 画面一覧と画面遷移図の作成
-- **Architecture-Design-Step4**: 画面・機能・API・データのマッピング表作成
-- **Architecture-Design-Step5-1**: 全画面の詳細定義書作成
-- **Architecture-Design-Step5-2**: 各サービスの詳細仕様作成
+- **ArchitectureDesign-microservice-Step1-1**: DDD の観点でドメインモデリング
+- **ArchitectureDesign-microservice-Step1-2**: マイクロサービス候補のリストアップ
+- **ArchitectureDesign-microservice-Step2**: データモデル設計と Mermaid 図作成
+- **ArchitectureDesign-microservice-Step3**: 画面一覧と画面遷移図の作成
+- **ArchitectureDesign-microservice-Step4**: 画面・機能・API・データのマッピング表作成
+- **ArchitectureDesign-microservice-Step5-1**: 全画面の詳細定義書作成
+- **ArchitectureDesign-microservice-Step5-2**: 各サービスの詳細仕様作成
 
 #### 実装関連（Azure Web App）
 - **Implementation-WebAppOnAzure-Step1-1**: Azure データストアの選定
