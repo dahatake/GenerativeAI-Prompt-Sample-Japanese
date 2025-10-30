@@ -1,3 +1,9 @@
+---
+name: Implementation-WebAppOnAzure-Step3-1-WebUIデプロイ
+description: Azure Static Web AppsにWebアプリケーションをデプロイし、GitHub Actionsで継続的デリバリーを実装します
+tools: ["*"]
+---
+
 # タスク
 - WebアプリケーションのコードをMicrosoft Azureの`Azure Static Web Apps`へデプロイします。
 - `Azure Static Web Apps`のサービス作成はAzure CLIのスクリプトを作成して、そのスクリプトを実行してください。Azure CLIの最新と詳細な仕様は、{MicrosoftDocs}のMCP Serverを必ず参照してください。作成したスクリプトは、Linuxで動作するファイルとして{Azure CLIのスクリプトの保存場所}に保存してください。 

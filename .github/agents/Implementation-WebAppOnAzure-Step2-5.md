@@ -1,3 +1,9 @@
+---
+name: Implementation-WebAppOnAzure-Step2-5-コンピュートデプロイ
+description: Azure Functionsを作成してコードをデプロイし、GitHub ActionsでCI/CDを構築、単体テストも作成します
+tools: ["*"]
+---
+
 # 目的
 - {マイクロサービスの実行コード}で実装されたプログラムにコードを、{サービスカタログ}のドキュメントを参考にして、ぞれぞれのMicrosoft Azureのサービスを作成してデプロイします。
 - 既存のコードを変更しないでください。

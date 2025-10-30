@@ -1,3 +1,9 @@
+---
+name: Implementation-WebAppOnAzure-Step4-アーキテクチャレビュー
+description: デプロイされたAzureリソースを分析し、Microsoftベストプラクティスに基づいてアーキテクチャとセキュリティをレビューします
+tools: ["*"]
+---
+
 # 目的
 - {レビューの対象のMicrosoft Azureのリソース}の全ての構成要素を高度に解析をしてください。
 - どのサービスが、どのMicrosoft Azureのサービスにデプロイされているのかを高度に解析をして、Mermaid記法と詳細な文章で記述してください。{参考ドキュメント}も参考にしてください。
