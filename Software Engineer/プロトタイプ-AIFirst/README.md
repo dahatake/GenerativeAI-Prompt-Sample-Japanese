@@ -257,6 +257,162 @@ GitHub Copilot の Coding AgentのMCP Serverの設定文字列::
 ```
 
 
+## Step. 1.3 Custom Agent の設定と利用
+
+GitHub Copilot Coding Agent では、**Custom Agent** を利用することで、特定のタスクに特化した専門的なエージェントを使用できます。このリポジトリには、アプリケーション開発の各フェーズで利用できる Custom Agent が用意されています。
+
+### Custom Agent とは
+
+Custom Agent は、特定のドメインやタスクに特化した AI エージェントです。例えば、アーキテクチャ設計、ドメインモデリング、Azure リソースのデプロイなど、専門的な知識が必要なタスクを効率的に実行できます。
+
+公式ドキュメント:
+https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents
+
+### 準備手順
+
+#### 1. Custom Agent ファイルのダウンロード
+
+このリポジトリの `.github/agents/` フォルダーには、様々な Custom Agent ファイルが格納されています。
+
+Custom Agent ファイルの格納場所:
+https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese/tree/main/.github/agents
+
+以下のいずれかの方法で、Custom Agent ファイルを取得してください:
+
+**方法1: Git Clone でリポジトリ全体を取得**
+
+```bash
+git clone https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese.git
+```
+
+**方法2: 特定のフォルダーのみダウンロード（推奨）**
+
+GitHub の Web インターフェースから:
+1. 上記のリンクから `.github/agents/` フォルダーにアクセス
+2. 画面右上の「Download ZIP」または各ファイルを個別にダウンロード
+
+または、Git のスパースチェックアウトを使用:
+
+```bash
+git clone --depth 1 --filter=blob:none --sparse https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese.git
+cd GenerativeAI-Prompt-Sample-Japanese
+git sparse-checkout set .github/agents
+```
+
+#### 2. 自分のリポジトリへのコピー
+
+ダウンロードした Custom Agent ファイルを、あなたのプロジェクトのリポジトリの `.github/agents/` フォルダー以下に全てコピーします。
+
+```bash
+# 例: ローカルでコピーする場合
+cp -r GenerativeAI-Prompt-Sample-Japanese/.github/agents/* your-project/.github/agents/
+```
+
+フォルダー構造は以下のようになります:
+
+```
+your-project/
+├── .github/
+│   ├── agents/
+│   │   ├── Architecture-Design-Step1-1.md
+│   │   ├── Architecture-Design-Step1-2.md
+│   │   ├── Architecture-Design-Step2.md
+│   │   ├── Business-Documentation-Step2-1.md
+│   │   ├── Business-Documentation-Step2-2.md
+│   │   ├── Implementation-WebAppOnAzure-Step1-1.md
+│   │   ├── Implementation-WebAppOnAzure-Step2-1.md
+│   │   └── ... (その他の Custom Agent ファイル)
+│   └── copilot-instructions.md
+├── README.md
+└── ... (その他のプロジェクトファイル)
+```
+
+#### 3. Custom Agent ファイルの編集（オプション）
+
+各 Custom Agent ファイルは、プロジェクトの要件に応じてカスタマイズできます。
+
+例えば、`Architecture-Design-Step1-1.md` の中で、ユースケース ID やファイルパスを変更できます:
+
+```markdown
+## ユースケースID
+- UC-xxx  ← あなたのユースケース ID に変更
+
+## ユースケース
+  - docs/usecase/{ユースケースID}/usecase-description.md  ← パスを変更
+```
+
+**編集する際の注意点:**
+- ファイル先頭の YAML フロントマター（`---` で囲まれた部分）の `name` と `description` は Custom Agent の識別に使用されるため、わかりやすい名前に変更することをおすすめします
+- `tools: ["*"]` は全てのツールへのアクセスを許可する設定です。必要に応じて制限できます
+- プロンプトの内容は、プロジェクトの具体的な要件に合わせて調整してください
+
+### 利用手順
+
+#### Issue 作成時に Custom Agent を選択
+
+1. **GitHub リポジトリで Issue を作成**
+   - リポジトリの「Issues」タブから「New issue」をクリック
+
+2. **Copilot にアサイン**
+   - Issue の右側サイドバーで「Assignees」から `@copilot` を選択
+   - または、Issue のコメント欄で `@copilot` をメンションして作業を依頼
+
+3. **Custom Agent を選択（重要）**
+   - Issue 作成時または Copilot へのアサイン時に、右側サイドバーに「Copilot」セクションが表示されます
+   - 「Select agent」または「エージェントを選択」ドロップダウンから、使用したい Custom Agent を選択
+   - 例: 「Architecture-Design-Step1-1-ドメイン分析」を選択
+
+4. **タスクの詳細を Issue に記述**
+   - Custom Agent が適切に動作するために、タスクの詳細、要件、参照すべきファイルパスなどを明確に記述してください
+   - 例:
+     ```markdown
+     ## タスク
+     要求定義ドキュメント（docs/requirements.md）を基に、ドメインモデリングを実施してください。
+     
+     ## 参照ファイル
+     - docs/requirements.md
+     - docs/usecase/UC-001/usecase-description.md
+     ```
+
+5. **Copilot が作業を実行**
+   - 選択した Custom Agent が、専門知識を活用してタスクを実行します
+   - 進捗状況は Pull Request として確認できます
+
+### 利用可能な Custom Agent 一覧
+
+このリポジトリには以下のような Custom Agent が用意されています:
+
+#### ビジネスドキュメント関連
+- **Business-Documentation-Step2-1**: 要求定義からユースケースを抽出
+- **Business-Documentation-Step2-2**: ユースケースの詳細定義書を作成
+
+#### アーキテクチャ設計関連
+- **Architecture-Design-Step1-1**: DDD の観点でドメインモデリング
+- **Architecture-Design-Step1-2**: マイクロサービス候補のリストアップ
+- **Architecture-Design-Step2**: データモデル設計と Mermaid 図作成
+- **Architecture-Design-Step3**: 画面一覧と画面遷移図の作成
+- **Architecture-Design-Step4**: 画面・機能・API・データのマッピング表作成
+- **Architecture-Design-Step5-1**: 全画面の詳細定義書作成
+- **Architecture-Design-Step5-2**: 各サービスの詳細仕様作成
+
+#### 実装関連（Azure Web App）
+- **Implementation-WebAppOnAzure-Step1-1**: Azure データストアの選定
+- **Implementation-WebAppOnAzure-Step1-2**: データストア作成とサンプルデータ登録
+- **Implementation-WebAppOnAzure-Step2-1**: Azure ホスティング環境の選定
+- **Implementation-WebAppOnAzure-Step2-2**: 追加 Azure サービスの選定
+- **Implementation-WebAppOnAzure-Step2-3**: 追加サービスの作成
+- **Implementation-WebAppOnAzure-Step2-4**: C# Azure Functions の実装
+- **Implementation-WebAppOnAzure-Step2-5**: Azure Functions のデプロイと CI/CD 構築
+- **Implementation-WebAppOnAzure-Step3-1**: Azure Static Web Apps へのデプロイ
+- **Implementation-WebAppOnAzure-Step4**: アーキテクチャとセキュリティのレビュー
+
+### ヒント
+
+- **適切な Custom Agent を選択**: タスクの内容に応じて、最も適した Custom Agent を選択することで、より高品質な結果が得られます
+- **段階的に進める**: 大きなプロジェクトは、複数の Custom Agent を順番に使用して段階的に進めることをおすすめします
+- **カスタマイズ**: Custom Agent ファイルはテンプレートです。プロジェクトの要件に応じて自由に編集・追加してください
+- **フィードバック**: Custom Agent の実行結果を確認し、必要に応じて Issue のコメントで追加指示を出すことができます
+
 ## Step.2. 要求定義などビジネス面のドキュメントの整備
 
 こちらのドキュメントを参考にしてください。
