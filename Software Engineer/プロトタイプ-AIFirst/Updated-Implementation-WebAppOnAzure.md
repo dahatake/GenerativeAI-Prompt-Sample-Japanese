@@ -1345,3 +1345,759 @@ cd infra/{ユースケースID}
 - Step 3: UI作成（GitHub Sparkまたは静的Webアプリの作成）
 - Step 3.1: Webアプリケーションのデプロイ
 - Step 4: アーキテクチャレビュー
+
+## Step.3. UI 作成
+
+`GitHub Spark`を使う場合は、全てのサンプルデータとドキュメントを、そのままPromptの中に書き込みます。
+
+> [!IMPORTANT]
+> GitHub Sparkは**React**と**TypeScript**しか対応していません。
+
+GitHub Copilot Coding AgentのIssueとして使います。
+Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容を書いてください。
+
+> [!IMPORTANT]
+> ここでは、SPAあるいはStaticなHTMLの使用を前提にしています。
+
+```text
+# 役割
+あなたは、世界最高峰のソフトウェアエンジニアであり、同時に卓越したUX/UIデザイナーです。
+
+## あなたの専門領域
+- ユーザー中心設計（UCD）と最新のWeb技術（React, TypeScript, Tailwind CSS, Next.js等）に精通している
+- ビジネス価値とユーザー体験を両立させるWebアプリケーションを設計・実装できる
+- アクセシビリティ、レスポンシブデザイン、パフォーマンス最適化、美的感覚に優れたUIを追求する
+- コードは読みやすく、再利用性が高く、最新のベストプラクティスに準拠する
+- フィードバックを迅速に反映し、継続的に改善する
+
+# タスクの目的
+全ての{画面定義書}に基づいて、Webアプリケーションの画面を作成します。
+
+## 成果物
+- ユーザー中心設計に基づいた直感的なUI
+- デプロイ済みのAzure REST APIと統合されたフロントエンド
+- ペルソナ別の画面構成
+
+# 実施手順
+
+## ステップ1: 画面定義書の分析
+{画面定義書}と{画面遷移図}を確認し、以下を整理してください：
+
+### 分析観点
+1. **画面一覧と優先順位**
+   - 画面数とID
+   - 作成順序（依存関係を考慮）
+   - 並列実装可能な画面の特定
+
+2. **ペルソナの特定**
+   - エンドユーザー
+   - システム管理者
+   - その他のロール
+   - 各ペルソナ専用の画面
+
+3. **画面遷移の理解**
+   - 画面間の遷移ルート
+   - ナビゲーション構造
+   - 認証・認可の必要性
+
+4. **API連携の確認**
+   - {サービスカタログ}から利用するAPIエンドポイント
+   - 各画面で呼び出すAPI
+   - API呼び出しのタイミング（ページロード時/ボタンクリック時等）
+
+### 出力形式
+```markdown
+## 画面実装計画
+### 優先度1: ログイン画面
+- 画面ID: SCR-001
+- ペルソナ: 全ユーザー
+- 呼び出すAPI: なし（デモ用に何でもログイン可）
+- 依存: なし
+- 並列実装: 可能
+
+### 優先度2: ダッシュボード画面
+- 画面ID: SCR-002
+- ペルソナ: エンドユーザー
+- 呼び出すAPI: GET /api/dashboard/summary
+- 依存: ログイン画面完了後
+- 並列実装: 可能
+```
+
+## ステップ2: UI/UXデザインの検討
+各画面について、以下を考慮してください：
+
+### デザイン原則
+1. **アクセシビリティ（WCAG）**
+   - セマンティックHTML
+   - キーボードナビゲーション
+   - スクリーンリーダー対応
+   - 適切なコントラスト比
+
+2. **レスポンシブデザイン**
+   - モバイルファーストアプローチ
+   - ブレークポイント（768px, 1024px, 1280px）
+   - フレキシブルレイアウト
+
+3. **ユーザビリティ**
+   - 直感的なナビゲーション
+   - 明確なフィードバック（ローディング、エラー表示）
+   - 一貫したデザインパターン
+
+4. **パフォーマンス**
+   - 遅延ローディング
+   - 最小限のDOM操作
+   - 効率的なAPI呼び出し
+
+## ステップ3: コンポーネント設計
+画面を再利用可能なコンポーネントに分解してください：
+
+### コンポーネント種類
+1. **レイアウトコンポーネント**
+   - ヘッダー（ナビゲーションメニュー）
+   - サイドバー（折り畳み式メニュー）
+   - フッター
+   - メインコンテンツエリア
+
+2. **UIコンポーネント**
+   - ボタン
+   - フォーム入力
+   - テーブル
+   - カード
+   - モーダル
+
+3. **機能コンポーネント**
+   - API呼び出しラッパー
+   - 認証チェック
+   - エラーハンドリング
+
+### ディレクトリ構造
+```
+app/{ユースケースID}/
+├── index.html          # エントリーポイント
+├── css/
+│   └── styles.css      # スタイル
+├── js/
+│   ├── main.js         # メインロジック
+│   ├── api.js          # API呼び出し
+│   ├── auth.js         # 認証処理（デモ用）
+│   └── components/     # 再利用コンポーネント
+├── screens/
+│   ├── login.html
+│   ├── dashboard.html
+│   └── ...
+└── README.md
+```
+
+## ステップ4: 画面実装
+1画面ずつ、以下の順序で実装してください：
+
+### 実装順序
+1. **HTML構造作成**
+   - セマンティックなマークアップ
+   - アクセシビリティ属性（aria-*）
+   - メタデータ
+
+2. **スタイル適用**
+   - レスポンシブデザイン
+   - ペルソナ別のテーマ（該当する場合）
+
+3. **JavaScript実装**
+   - イベントハンドラー
+   - API呼び出し
+   - エラーハンドリング
+   - ローディング表示
+
+4. **API統合**
+   - {サービスカタログ}のエンドポイントに接続
+   - リクエスト/レスポンスの処理
+   - エラー時の再試行ロジック
+
+### API呼び出し例
+```javascript
+// api.js
+const API_BASE_URL = 'https://your-api.azurewebsites.net';
+
+async function callAPI(endpoint, method = 'GET', data = null) {
+    try {
+        const options = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
+        };
+        
+        if (data) {
+            options.body = JSON.stringify(data);
+        }
+        
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('API call failed:', error);
+        showErrorMessage('データの取得に失敗しました');
+        throw error;
+    }
+}
+```
+
+### 認証実装（デモ用）
+```javascript
+// auth.js - デモ用に何でもログイン可能
+function login(username, password) {
+    // デモ用: 何を入力してもログイン成功
+    localStorage.setItem('authToken', 'demo-token-' + Date.now());
+    localStorage.setItem('username', username);
+    return true;
+}
+
+function getAuthToken() {
+    return localStorage.getItem('authToken');
+}
+
+function isAuthenticated() {
+    return !!getAuthToken();
+}
+```
+
+## ステップ5: ナビゲーション実装
+画面遷移をスムーズにするため、以下を実装してください：
+
+### 必須機能
+1. **折り畳み式メニュー**
+   - カテゴリ別に整理
+   - 現在の画面をハイライト
+   - モバイル対応（ハンバーガーメニュー）
+
+2. **ペルソナ別メニュー**
+   - ログイン時にペルソナを判定
+   - ペルソナに応じたメニュー表示
+   - 権限のない画面は非表示
+
+3. **パンくずリスト**
+   - 現在位置の表示
+   - 上位階層への移動
+
+## ステップ6: 動作確認
+以下を確認してください：
+
+- [ ] 全ての画面が作成されている
+- [ ] 画面遷移が正常に動作する
+- [ ] 全てのAPIエンドポイントに接続できる
+- [ ] レスポンシブデザインが機能している
+- [ ] ペルソナ別の画面が正しく表示される
+- [ ] エラーハンドリングが適切である
+- [ ] ローディング表示が適切である
+- [ ] アクセシビリティが考慮されている
+
+# 参考ドキュメント
+## ユースケースID
+- UC-xxx
+
+## 画面一覧
+- docs/usecase/{ユースケースID}/screen/screen-list.md
+  - {画面遷移図}も記載されている
+
+## 画面定義書
+- docs/usecase/{ユースケースID}/screen/{画面ID}-description.md
+
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/data-model.md
+- docs/usecase/{ユースケースID}/services/service-catalog.md
+- data/{ユースケースID}/sample-data.json
+
+## サービスカタログ
+- docs/usecase/{ユースケースID}/service-catalog.md
+
+## 作成フォルダ
+- app/{ユースケースID}
+
+## 技術仕様
+- HTML5のみ使用
+- JavaScript
+
+# 作業管理
+- 作業の進捗状況を`work/{ユースケースID}/screen-implementation-work-status.md`に日本語で記録してください。
+
+- 作業時間が10分を超える場合は、作業を中断し、10分毎のタスクに分割して、Issueとして実行するためのPromptを`work/screen-implementation-issue-prompt-<番号>.md`に日本語で作成してください。
+
+- ファイル書き込み時に大きな文字列で失敗する場合は、文字列を分割して複数回に分けて書き込んでください。
+
+## 注意事項
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に記載する。
+```
+
+以下、複数のパターンの例を示します。全てを使う必要はありません。
+
+### (Option) Step.3.0.1. 複数のWeb画面を一度に表示
+
+> [!NOTE]
+> あくまで画面作成の例です。スキップして構いません。
+
+複数のWeb画面を一度に表示させる際には、以下の様なIssueを作成して、GitHub Copilot Coding Agentに作業をしてもらいます。
+
+```text
+以下のアプリケーションの画面を一度に見ることができる、[生産調整アプリケーション]を作成する
+
+# 作成フォルダ
+## 作成フォルダ
+- `{app/フォルダ名}`
+
+# 技術仕様
+- 参照されるアプリケーション
+  - [生産調整エージェント]
+    - フォルダー名: adjustment-agent
+  - [KPIモニタリングアプリケーション]
+    - フォルダー名: kpi-monitoring-app
+- HTML5のみで、それぞれの画面を参照する。独自の画面は作らない
+- 画面上部にアプリケーションの一覧名が表示されているタブを作成してください。タブを切り替えると画面の下に、そのアプリケーションが表示されるようにしてください。
+- 各アプリケーション参照のURLは、ルートからの絶対パスで指定をしてください。
+- Azure Static Web Appsにデプロイできるようにする
+- 現在あるすべてのGitHub Actionsは削除する
+
+## 注意事項
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
+```
+
+### (Option) Step.3.0.2. (Option) マルチエージェントのグループチャットのサンプル
+
+> [!NOTE]
+> あくまで画面作成の例です。スキップして構いません。
+
+マルチエージェントのグループチャットのサンプルです。
+
+```text
+[KPIモニタリングアプリケーション]と連携して、AIエージェントが生産の変更が可能かどうかを議論して、その議論の経過状況を確認できる画面を作成してください。
+
+# 作成フォルダー
+- app/adjustment-agent
+
+# 技術仕様
+- デモ用。サンプルデータを作成して、それを使う
+- HTML5のみ
+- 画面はチャットの形式
+- アクターとしてAIエージェントがグループチャットをする。JP工場エージェント、US工場エージェント、販売総合管理エージェント、販売ローカル管理エージェント、畠山さん(人)、榎並さん(人)
+  - 工場エージェントは、生産の調整が可能かどうかを現在の生産実績と、生産能力をもとにコメントする
+  - 販売総合管理エージェントは、在庫の状況をもとにコメントする
+  - 販売ローカル管理エージェントは、実際の販売状況をもとにコメントする
+  - 畠山さん、榎並さんは人間の担当者として実際に意思決定に関する最終判断をコメントする
+
+## 注意事項
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記する。
+```
+
+### Step.3.1. Azure Static Web Appsへのデプロイ
+
+> [!IMPORTANT]
+> ここでは、SPAあるいはStaticなHTMLの使用を前提にしています。Webサーバー側でHTML画面を生成する場合は、Azure Web Appsへのデプロイがお勧めです。
+
+```text
+# タスクの目的
+WebアプリケーションのコードをMicrosoft Azureの`Azure Static Web Apps`へデプロイします。
+
+# 実施手順
+
+## ステップ1: デプロイ準備
+以下を確認してください：
+
+### 確認事項
+1. **Webアプリケーションの完成**
+   - 全ての画面が実装されている
+   - API統合が完了している
+   - ローカルで正常に動作する
+
+2. **ビルド設定**
+   - 静的ファイル（HTML, CSS, JS）がapp/{ユースケースID}に配置されている
+   - 不要なファイルが含まれていない
+
+## ステップ2: Azure CLIスクリプトの作成
+MicrosoftDocsのMCP Serverを参照して、Azure CLIスクリプトを作成してください。
+
+### スクリプト要件
+1. **Azure Static Web Apps作成**
+2. **デプロイトークンの取得**
+3. **GitHub Secretsへの設定ガイド出力**
+
+### スクリプトテンプレート
+```bash
+#!/bin/bash
+set -e
+
+# 変数定義
+RESOURCE_GROUP="dahatake-${USECASE_ID}"
+LOCATION="eastasia"
+STATIC_WEB_APP_NAME="${USECASE_ID}-web"
+
+# Azure Static Web Apps作成
+echo "Creating Azure Static Web Apps..."
+az staticwebapp create \
+    --name $STATIC_WEB_APP_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --source https://github.com/your-org/your-repo \
+    --location $LOCATION \
+    --branch main \
+    --app-location "app/${USECASE_ID}" \
+    --api-location "" \
+    --output-location ""
+
+# デプロイトークン取得
+echo "Getting deployment token..."
+DEPLOY_TOKEN=$(az staticwebapp secrets list \
+    --name $STATIC_WEB_APP_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --query properties.apiKey -o tsv)
+
+echo "============================================"
+echo "Deployment token (save to GitHub Secrets):"
+echo $DEPLOY_TOKEN
+echo "============================================"
+echo ""
+echo "Next steps:"
+echo "1. Go to GitHub repository Settings > Secrets and variables > Actions"
+echo "2. Click 'New repository secret'"
+echo "3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN"
+echo "4. Value: (paste the token above)"
+```
+
+## ステップ3: ツール/パッケージインストールスクリプトの作成
+### ファイル保存先
+`infra/{ユースケースID}/create-azure-webui-resources-prep.sh`
+
+## ステップ4: GitHub Actionsワークフローの作成
+継続的デリバリー用のGitHub Actionsワークフローを作成してください。
+
+### ワークフローテンプレート
+```yaml
+name: Deploy to Azure Static Web Apps
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'app/{ユースケースID}/**'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build And Deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "app/{ユースケースID}"
+          api_location: ""
+          output_location: ""
+```
+
+## ステップ5: デプロイの実行
+以下の手順で実行してください：
+
+### 実行手順
+```bash
+# Step 1: Azureリソース作成
+cd infra/{ユースケースID}
+./create-azure-webui-resources-prep.sh
+./create-azure-webui-resources.sh
+
+# Step 2: デプロイトークンをコピー（スクリプト出力から）
+
+# Step 3: GitHub Secretsに設定
+# 1. Settings > Secrets and variables > Actions
+# 2. New repository secret
+# 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN
+# 4. Value: コピーしたトークン
+
+# Step 4: コードをpushしてデプロイ開始
+git add .
+git commit -m "Add web application"
+git push origin main
+```
+
+## ステップ6: サービスカタログの更新
+デプロイに成功したら、{サービスカタログ}に以下を追記してください：
+
+### 記載項目
+- WebアプリケーションのURL
+- デプロイ日
+- バージョン
+
+## ステップ7: 動作確認
+以下を確認してください：
+
+- [ ] Azure Static Web Appsが正常に作成されている
+- [ ] Webアプリケーションがデプロイされている
+- [ ] URLからアクセスできる
+- [ ] API呼び出しが正常に動作する
+- [ ] GitHub Actionsが正常に動作する
+- [ ] サービスカタログが更新されている
+- [ ] READMEに起動手順が記載されている
+
+## ユースケースID
+- UC-xxx
+
+## Azure CLIのスクリプトの保存場所
+- infra/{ユースケースID}/create-azure-webui-resources.sh
+
+## サービスカタログ
+- docs/usecase/{ユースケースID}/service-catalog.md
+
+## 技術仕様
+- リソースグループ名: `dahatake-{ユースケースID}`
+- リージョン: East Asia（利用できない場合: Japan West, East Asia, Southeast Asia）
+- スケール設定: 最小構成
+  - サーバーレス優先
+  - オートスケール優先
+
+# 作業管理
+- 作業の進捗状況を`work/{ユースケースID}/WebUI-azure-deploy-work-status.md`に日本語で記録してください。
+
+- 作業時間が10分を超える場合は、作業を中断し、10分毎のタスクに分割して、Issueとして実行するためのPromptを`work/azure-service-deploy-issue-prompt-<番号>.md`に日本語で作成してください。
+
+- ファイル書き込み時に大きな文字列で失敗する場合は、文字列を分割して複数回に分けて書き込んでください。
+
+- 機能の概要説明やアプリケーションの起動手順を日本語で`/README.md`に追記してください。
+```
+
+Azure Static Web Appsの作成ができない場合があります。その場合は、以下の手順を試してください。
+
+> ### ステップ1: Azureリソース作成
+> cd infra/{ユースケースID}
+> ./create-azure-webui-resources.sh
+> ### ステップ2: デプロイトークンをコピー（スクリプト出力から）
+> ### ステップ3: GitHub Secretsに設定
+> #### 1. Settings > Secrets and variables > Actions
+> #### 2. New repository secret
+> #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN
+> #### 4. Value: コピーしたトークン
+
+## Step.4. アーキテクチャレビュー
+
+Microsoftの公式ドキュメントの情報を活用して、展開されたアーキテクチャのレビューを行います。
+
+```text
+# タスクの目的
+{レビュー対象のMicrosoft Azureのリソース}の全ての構成要素を分析し、Microsoftのベストプラクティスに基づいてアーキテクチャとセキュリティのレビューを行います。
+
+# 実施手順
+
+## ステップ1: 現状アーキテクチャの把握
+{参考ドキュメント}とAzureポータルを確認し、以下を整理してください：
+
+### 確認事項
+1. **デプロイ済みリソース一覧**
+   - リソースグループ内の全リソース
+   - 各リソースのSKU/プラン
+   - リージョン
+   - コスト（概算）
+
+2. **リソース間の関係性**
+   - データフロー
+   - API呼び出し関係
+   - 認証・認可の流れ
+   - ネットワーク構成
+
+3. **現在のアーキテクチャパターン**
+   - Polyglot Persistence
+   - マイクロサービス
+   - サーバーレス
+   - 静的Webアプリ
+
+### 出力形式（Mermaid）
+```mermaid
+graph TB
+    Client[ブラウザ] --> SWA[Static Web Apps]
+    SWA --> APIM[API Management]
+    APIM --> Func1[Functions: 認証API]
+    APIM --> Func2[Functions: データAPI]
+    Func1 --> SQL[(SQL Database)]
+    Func2 --> Cosmos[(Cosmos DB)]
+    Func2 --> OpenAI[Azure OpenAI]
+```
+
+## ステップ2: Well-Architected Frameworkに基づくレビュー
+Microsoftの[Azure Well-Architected Framework](https://learn.microsoft.com/ja-jp/azure/well-architected/)の5つの柱に基づいてレビューしてください。
+
+### レビュー観点
+
+#### 1. コスト最適化（Cost Optimization）
+**チェック項目**:
+- [ ] 適切なSKU/プランが選択されているか
+- [ ] サーバーレス/オートスケール機能を活用しているか
+- [ ] 不要なリソースがないか
+- [ ] リザーブドインスタンスの活用余地はあるか
+
+**推奨事項の例**:
+```markdown
+- Azure Functions: Consumption Planの利用により、アイドル時のコスト削減
+- Cosmos DB: Request Unit（RU）の最適化により、月額コスト20%削減可能
+```
+
+#### 2. セキュリティ（Security）
+**チェック項目**:
+- [ ] Managed Identityを使用しているか
+- [ ] Key Vaultでシークレット管理されているか
+- [ ] ネットワークセキュリティグループ（NSG）が適切か
+- [ ] DDoS対策が有効か
+- [ ] データ暗号化（転送時・保管時）が有効か
+- [ ] Azure AD統合されているか
+
+**推奨事項の例**:
+```markdown
+- 重要: API Managementのサブスクリプションキー認証を追加
+- 推奨: Private Endpointの使用により、パブリックアクセスを制限
+```
+
+#### 3. 信頼性（Reliability）
+**チェック項目**:
+- [ ] 可用性SLAが要件を満たしているか
+- [ ] 複数リージョンへの展開が必要か
+- [ ] バックアップ戦略が定義されているか
+- [ ] ディザスタリカバリ計画があるか
+- [ ] Health CheckとAlertが設定されているか
+
+**推奨事項の例**:
+```markdown
+- 推奨: Azure SQL DatabaseのGeo-Replication設定
+- 推奨: Application Insightsの可用性テスト設定
+```
+
+#### 4. パフォーマンス効率（Performance Efficiency）
+**チェック項目**:
+- [ ] CDNを使用しているか
+- [ ] キャッシュ戦略が定義されているか
+- [ ] データベースインデックスが最適化されているか
+- [ ] APIレスポンス時間が許容範囲か
+- [ ] オートスケール設定が適切か
+
+**推奨事項の例**:
+```markdown
+- 推奨: Azure CDNの導入により、静的コンテンツの配信を高速化
+- 推奨: Redis Cacheの導入により、頻繁にアクセスされるデータをキャッシュ
+```
+
+#### 5. 運用の優秀性（Operational Excellence）
+**チェック項目**:
+- [ ] CI/CDパイプラインが設定されているか
+- [ ] ログ集約（Log Analytics）が有効か
+- [ ] 監視ダッシュボードがあるか
+- [ ] アラート設定が適切か
+- [ ] IaC（Infrastructure as Code）が使用されているか
+
+**推奨事項の例**:
+```markdown
+- 推奨: Azure MonitorのAlert Rulesを設定し、異常を即座に検知
+- 推奨: Azure DevOpsまたはGitHub Actionsによる完全な CI/CD 自動化
+```
+
+## ステップ3: セキュリティレビュー
+Microsoft Defender for Cloudの推奨事項とOWASP Top 10に基づいてレビューしてください。
+
+### セキュリティチェックリスト
+1. **認証・認可**
+   - [ ] Azure AD統合
+   - [ ] MFA有効化
+   - [ ] RBACの適切な設定
+
+2. **データ保護**
+   - [ ] TLS 1.2以上の使用
+   - [ ] データベース暗号化
+   - [ ] Key Vaultの使用
+
+3. **ネットワークセキュリティ**
+   - [ ] NSGの適切な設定
+   - [ ] Private Endpoint使用
+   - [ ] DDoS Protection
+
+4. **監視・監査**
+   - [ ] Azure Monitor設定
+   - [ ] ログ保持期間設定
+   - [ ] セキュリティアラート設定
+
+## ステップ4: 改善提案の作成
+レビュー結果に基づき、優先度別の改善提案を作成してください。
+
+### 改善提案フォーマット
+```markdown
+## 改善提案サマリー
+
+### 重要度: 高（即座に対応）
+1. **API Management認証の追加**
+   - 現状: APIエンドポイントが認証なしでアクセス可能
+   - リスク: 不正アクセス、DDoS攻撃
+   - 対策: Azure AD認証またはサブスクリプションキー認証を追加
+   - 工数: 2-3時間
+   - コスト影響: なし
+
+### 重要度: 中（1ヶ月以内に対応）
+2. **CDNの導入**
+   - 現状: 静的コンテンツが直接配信されている
+   - 効果: レスポンス時間50%改善、グローバルユーザーエクスペリエンス向上
+   - 対策: Azure CDNを導入
+   - 工数: 4-6時間
+   - コスト影響: 月額$10-30増
+
+### 重要度: 低（将来的に検討）
+3. **マルチリージョン展開**
+   - 現状: 単一リージョンのみ
+   - 効果: 災害対策、グローバルパフォーマンス向上
+   - 対策: Traffic Managerを使用したマルチリージョン構成
+   - 工数: 2-3日
+   - コスト影響: 約2倍
+```
+
+## ステップ5: アーキテクチャ図とドキュメントの作成
+レビュー結果を{レビュー結果の保存場所}に保存してください。
+
+### 含めるべき内容
+1. **現在のアーキテクチャ図**（Mermaid）
+2. **Well-Architected Frameworkレビュー結果**
+3. **セキュリティレビュー結果**
+4. **改善提案リスト**（優先度別）
+5. **コスト分析**
+6. **次のアクション**
+
+## ステップ6: 自己レビュー
+- [ ] 全てのAzureリソースがレビューされている
+- [ ] Well-Architected Framework 5つの柱全てがカバーされている
+- [ ] セキュリティリスクが特定されている
+- [ ] 改善提案が優先度付けされている
+- [ ] アーキテクチャ図が作成されている
+- [ ] 実行可能なアクションプランがある
+
+# 参考情報
+必ず`MicrosoftDocs`のMCP Serverから最新情報を参照してください。
+
+## ユースケースID
+- UC-xxx
+
+## レビュー対象のMicrosoft Azureのリソース
+- リソースグループ名: `dahatake-{ユースケースID}`
+
+## 参考ドキュメント
+- docs/usecase/{ユースケースID}/usecase-description.md
+- docs/usecase/{ユースケースID}/service-catalog.md
+- docs/usecase/{ユースケースID}/AzureServices-services.md
+- docs/usecase/{ユースケースID}/AzureServices-data.md
+- docs/usecase/{ユースケースID}/AzureServices-services-additional.md
+
+## レビュー結果の保存場所
+- docs/usecase/{ユースケースID}/Azure-ArchitectureReview-Report.md
+
+# 作業管理
+- 作業時間が10分を超える場合は、作業を中断し、10分毎のタスクに分割して、Issueとして実行するためのPromptを`work/azure-architecture-review-issue-prompt-<番号>.md`に日本語で作成してください。
+
+- ファイル書き込み時に大きな文字列で失敗する場合は、文字列を分割して複数回に分けて書き込んでください。
+```
