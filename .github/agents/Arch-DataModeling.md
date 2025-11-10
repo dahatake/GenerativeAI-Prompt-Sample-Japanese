@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step2-データモデル設計
+name: Arch-DataModeling (Step.3)
 description: 全エンティティのデータモデルを設計し、Mermaid図で可視化、サンプルデータをJSON形式で作成します
 tools: ["*"]
 ---

@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step1-2-データサービスデプロイ
+name: Impl-WebAzure-DataDeploy (Step.2)
 description: Azure CLIスクリプトでデータストアを作成し、サンプルデータをバルク登録します
 tools: ["*"]
 ---

@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step5-2-マイクロサービス定義書作成
+name: Arch-micro-ServiceDetail (Step.4)
 description: 各サービスの詳細仕様を作成し、API・イベント・データ所有・セキュリティ・運用を包括的に定義します
 tools: ["*"]
 ---

@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step2-4-サービスコード実装
+name: Impl-WebAzure-ServiceCoding (Step.6)
 description: マイクロサービス定義書からC# Azure Functionsのコードを実装し、Azureサービスと接続、単体テストも作成します
 tools: ["*"]
 ---

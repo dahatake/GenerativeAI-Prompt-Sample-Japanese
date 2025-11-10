@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step3-1-WebUIデプロイ
+name: Impl-WebAzure-UIDeploy (Step.8)
 description: Azure Static Web AppsにWebアプリケーションをデプロイし、GitHub Actionsで継続的デリバリーを実装します
 tools: ["*"]
 ---

@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step2-3-追加サービスデプロイ
+name: Impl-WebAzure-AddServiceDeploy.md (Step.5)
 description: Azure CLIスクリプトで追加サービス(Azure OpenAI等)を作成し、サービスカタログに登録します
 tools: ["*"]
 ---

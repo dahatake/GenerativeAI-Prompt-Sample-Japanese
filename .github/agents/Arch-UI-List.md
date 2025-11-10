@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step3-画面設計
+name: Arch-UI-List (Step.5)
 description: ユーザーが利用する画面一覧と画面遷移図をMermaid記法で作成し、ポータル画面からの遷移を設計します
 tools: ["*"]
 ---

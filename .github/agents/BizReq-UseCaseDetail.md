@@ -1,5 +1,5 @@
 ---
-name: Business-Documentation-Step2-2-ユースケース詳細作成
+name: BizReq-UseCaseDetail (Step2-2)
 description: ユースケース一覧から各ユースケースの詳細な定義書を作成し、アクター・フロー・ビジネスルール・非機能要件を明確化します
 tools: ["*"]
 ---

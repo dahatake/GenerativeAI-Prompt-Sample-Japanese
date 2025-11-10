@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step5-1-画面定義書作成
+name: Arch-UI-Detail (Step.6)
 description: 全画面の詳細な定義書を作成し、コア機能・UX要件・アクセシビリティ・セキュリティを包括的に定義します
 tools: ["*"]
 ---

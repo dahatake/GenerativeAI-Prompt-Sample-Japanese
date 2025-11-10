@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step2-5-コンピュートデプロイ
+name: Impl-WebAzure-ComputeDeploy.md (Step.7)
 description: Azure Functionsを作成してコードをデプロイし、GitHub ActionsでCI/CDを構築、単体テストも作成します
 tools: ["*"]
 ---

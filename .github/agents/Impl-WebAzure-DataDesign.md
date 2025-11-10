@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step1-1-データストア選定
+name: Impl-WebAppOnAzure-DataDesign (Step.1)
 description: Polyglot Persistenceアーキテクチャに基づき、各エンティティに最適なAzureデータストアを選定します
 tools: ["*"]
 ---

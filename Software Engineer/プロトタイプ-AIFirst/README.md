@@ -383,28 +383,30 @@ your-project/
 このリポジトリには以下のような Custom Agent が用意されています:
 
 #### ビジネスドキュメント関連
-- **Business-Documentation-Step2-1**: 要求定義からユースケースを抽出
-- **Business-Documentation-Step2-2**: ユースケースの詳細定義書を作成
+- **BizReq-UseCaseList**: 要求定義からユースケースを抽出してリスト化
+- **BizReq-UseCaseDetail**: ユースケースの詳細定義書を作成
 
 #### アーキテクチャ設計関連
-- **ArchitectureDesign-microservice-Step1-1**: DDD の観点でドメインモデリング
-- **ArchitectureDesign-microservice-Step1-2**: マイクロサービス候補のリストアップ
-- **ArchitectureDesign-microservice-Step2**: データモデル設計と Mermaid 図作成
-- **ArchitectureDesign-microservice-Step3**: 画面一覧と画面遷移図の作成
-- **ArchitectureDesign-microservice-Step4**: 画面・機能・API・データのマッピング表作成
-- **ArchitectureDesign-microservice-Step5-1**: 全画面の詳細定義書作成
-- **ArchitectureDesign-microservice-Step5-2**: 各サービスの詳細仕様作成
+- **Arch-micro-DomainAnalytics**: DDDの観点でドメインモデリングを実施
+- **Arch-micro-ServiceIdentify**: マイクロサービス候補をリストアップ
+- **Arch-DataModeling**: データモデル設計
+- **Arch-micro-ServiceDetail**: 各サービスの詳細仕様作成
+- **Arch-UI-List**: 画面一覧と画面遷移図の作成
+- **Arch-UI-Detail**: 全画面の詳細定義書作成
+- **Arch-micro-ServiceCatalog**: 画面・機能・API・データのマッピング表作成
 
 #### 実装関連（Azure Web App）
-- **Implementation-WebAppOnAzure-Step1-1**: Azure データストアの選定
-- **Implementation-WebAppOnAzure-Step1-2**: データストア作成とサンプルデータ登録
-- **Implementation-WebAppOnAzure-Step2-1**: Azure ホスティング環境の選定
-- **Implementation-WebAppOnAzure-Step2-2**: 追加 Azure サービスの選定
-- **Implementation-WebAppOnAzure-Step2-3**: 追加サービスの作成
-- **Implementation-WebAppOnAzure-Step2-4**: C# Azure Functions の実装
-- **Implementation-WebAppOnAzure-Step2-5**: Azure Functions のデプロイと CI/CD 構築
-- **Implementation-WebAppOnAzure-Step3-1**: Azure Static Web Apps へのデプロイ
-- **Implementation-WebAppOnAzure-Step4**: アーキテクチャとセキュリティのレビュー
+- **Impl-WebAzure-DataDesign**: Polyglot Persistenceアーキテクチャに基づくデータストア選定
+- **Impl-WebAzure-DataDeploy**: Azure CLIスクリプトでデータストア作成とサンプルデータ登録
+- **Impl-WebAzure-ComputeDesign**: 各マイクロサービスに最適なAzureホスティング環境の選定
+- **Impl-WebAzure-AddServiceDesign**: 追加で必要なAzureサービスの選定
+- **Impl-WebAzure-AddServiceDeploy**: Azure CLIスクリプトで追加サービスを作成
+- **Impl-WebAzure-ServiceCoding**: サービスのコード実装と単体テスト作成
+- **Impl-WebAzure-UICoding**: WebアプリケーションのUIコード実装
+
+#### レビュー
+- **QA-AzureDependencyReview**: Azureリソースの依存関係とコスト最適化のレビュー
+- **QA-AzureArchitectureReview**: アーキテクチャとセキュリティのレビュー
 
 ### ヒント
 

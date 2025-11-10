@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step4-サービスカタログ作成
+name: Arch-micro-ServiceCatalog (Step.7)
 description: 画面・機能・API・データのマッピング表を作成し、マイクロサービスアーキテクチャの全体像を明確化します
 tools: ["*"]
 ---

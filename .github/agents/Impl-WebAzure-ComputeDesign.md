@@ -1,5 +1,5 @@
 ---
-name: Implementation-WebAppOnAzure-Step2-1-コンピュートサービス選定
+name: Impl-WebAzure-ComputeDesign (Step.3)
 description: 各マイクロサービスに最適なAzureホスティング環境を選定し、技術的根拠を説明します
 tools: ["*"]
 ---

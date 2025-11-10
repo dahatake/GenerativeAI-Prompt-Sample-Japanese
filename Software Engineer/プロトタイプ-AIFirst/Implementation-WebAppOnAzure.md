@@ -533,8 +533,7 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 - app/{ユースケースID}
 
 ## 技術仕様
-- HTML5のみ使用
-- JavaScript
+- {UI実装技術。指定がなければ、HTML5とJavaScriptのみ}
 
 # 行動規範
 - 不確定な情報は推測せず、仮定と前提条件を明示する。

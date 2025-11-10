@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step1-1-ドメイン分析
+name: Arch-micro-DomainAnalytics (Step.1)
 description: ユースケースからDDDの観点でドメインモデリングを実施し、境界づけられたコンテキストとドメインイベントを特定します
 tools: ["*"]
 ---

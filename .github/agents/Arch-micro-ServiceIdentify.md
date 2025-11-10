@@ -1,5 +1,5 @@
 ---
-name: ArchitectureDesign-microservice-Step1-2-マイクロサービス抽出
+name: Arch-micro-ServiceIdentify (Step.2)
 description: ドメイン分析からマイクロサービス候補をリストアップし、責務・データ所有・非機能要件を定義してコンテキストマップを作成します
 tools: ["*"]
 ---
