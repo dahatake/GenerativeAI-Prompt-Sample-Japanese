@@ -22,9 +22,9 @@ tools: ["*"]
 - Microsoft Azureのサービスやアーキテクチャについては、以下の`MCP Server`から得られる情報を**必ず**参考にしてください。
   - MicrosoftDocs
 
-- 作業の進捗状況を、`work/{ユースケースID}/services-additional-azureservices-design-work-status.md`に日本語で追記してください。
+- 作業の進捗状況を、`work/{ユースケースID}/additional-azureservices-design-work-status.md`に日本語で追記してください。
 
-- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/{ユースケースID}/data-azure-additional-selection-issue-prompt-<番号>.md`に日本語で追記してください。
+- 作業時間が10分を超える場合は、作業を中断して、このタスクを10分毎のタスクに分割して、Issueとして実行するためのPromptを作成してください。それぞれのPromptを`work/{ユースケースID}/additional-azureservices-design-issue-prompt-<番号>.md`に日本語で追記してください。
 
 - ファイルを作成する際に、1つのファイルに大きな文字列を書き込む際に、書き込み処理が失敗する場合があります。ファイルは作成されているのに内容がEmptyになっています。その場合は、書き込む文字列を分割して、複数の回数に書き込み処理を分割して、1つのファイルに出力をしてください。
 

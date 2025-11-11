@@ -1,6 +1,14 @@
 # アプリケーションのプロトタイプ開発 (GitHub Copilot Coding Agent / GitHub Copilot for Azure)
 
-ここでは、ユーザーを早期に巻き込むフィードバックループを目的に以下の順番で進めていきます。
+
+# はじめに
+
+Copilot を使用してタスクに取り組むためのベスト プラクティス
+
+https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks
+
+
+- プロダクション環境での利用には十二分に注意をしてください。Pull Requestをマージするかどうかは、**人**の判断ですので!
 
 ## ツール
 
@@ -38,14 +46,12 @@
     https://learn.microsoft.com/ja-jp/azure/developer/github-copilot-azure/introduction
 
 
-# はじめに
+# Hands-on Lab
 
-Copilot を使用してタスクに取り組むためのベスト プラクティス
+**会員サービス**を題材にしたサンプルの要求定義や設計書などを参考にして1時間程度で完了するハンズオンラボです。
 
-https://docs.github.com/ja/copilot/using-github-copilot/coding-agent/best-practices-for-using-copilot-to-work-on-tasks
+[ハンズオンのテキスト](HOL.md)
 
-
-- プロダクション環境での利用には十二分に注意をしてください。Pull Requestをマージするかどうかは、**人**の判断ですので!
 
 # Step.1. GitHubのRepositoryの作成
 
