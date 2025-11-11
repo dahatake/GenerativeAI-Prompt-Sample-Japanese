@@ -1,5 +1,5 @@
 ---
-name: Impl-WebAzure-ComputeDeploy.md (Step.7)
+name: Impl-WebAzure-ComputeDeploy (Step.7)
 description: Azure Functionsを作成してコードをデプロイし、GitHub ActionsでCI/CDを構築、単体テストも作成します
 tools: ["*"]
 ---

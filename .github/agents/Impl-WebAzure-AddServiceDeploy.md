@@ -1,5 +1,5 @@
 ---
-name: Impl-WebAzure-AddServiceDeploy.md (Step.5)
+name: Impl-WebAzure-AddServiceDeploy (Step.5)
 description: Azure CLIスクリプトで追加サービス(Azure OpenAI等)を作成し、サービスカタログに登録します
 tools: ["*"]
 ---

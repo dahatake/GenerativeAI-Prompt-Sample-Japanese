@@ -1,5 +1,5 @@
 ---
-name: Impl-WebAzure-AddServiceDesign.md (Step.4)
+name: Impl-WebAzure-AddServiceDesign (Step.4)
 description: 各サービスの外部依存・統合要件から、追加で必要なAzureサービス(AI, 認証等)を選定します
 tools: ["*"]
 ---

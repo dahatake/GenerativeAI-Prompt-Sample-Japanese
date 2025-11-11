@@ -1,5 +1,5 @@
 ---
-name: QA-AzureDependencyReviewer
+name: QA-AzureDependencyReview
 description: デプロイされたAzureリソースを分析し、WebアプリケーションやAPIなどから適切に参照をされているのかをレビューします
 tools: ["*"]
 ---
