@@ -25,7 +25,7 @@ tools: ["*"]
 - api
 
 ## レビューの対象のMicrosoft Azureのリソース
-- リソースグループ名: `{ユースケースID}`
+- リソースグループ名: {リソースグループ名}
 
 ## サービスカタログのドキュメント
 - docs/usecase/{ユースケースID}/service-catalog.md

@@ -22,7 +22,7 @@ tools: ["*"]
 - UC-xxx
 
 ## レビューの対象のMicrosoft Azureのリソース
-- リソースグループ名: `dahatake{YYYYMMDD}`
+- リソースグループ名: {リソースグループ名}
 
 ## 参考ドキュメント
 - docs/usecase/{ユースケースID}/usecase-description.md

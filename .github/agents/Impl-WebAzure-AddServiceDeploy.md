@@ -35,7 +35,7 @@ tools: ["*"]
 - docs/usecase/{ユースケースID}/service-catalog.md
 
 ## 技術仕様
-- リソースグループ名: `{ユースケースID}`
+- リソースグループ名: {リソースグループ名}
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。そこでも利用できない場合は、どこでもよいです。
 - スケール設定は、必ず最小構成で作成してください。

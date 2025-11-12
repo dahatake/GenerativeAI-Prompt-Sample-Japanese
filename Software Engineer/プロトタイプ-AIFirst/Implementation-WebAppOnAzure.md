@@ -328,7 +328,7 @@ REST APIのエンドポイントを作成します。
 - docs/usecase/{ユースケースID}/service-catalog.md
 
 ## 技術仕様
-- リソースグループ名: `dahatake-{ユースケースID}`
+- リソースグループ名: {リソースグループ名}
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。そこでも利用できない場合は、どこでもよいです。
 - スケール設定は、必ず最小構成で作成してください。
@@ -456,7 +456,7 @@ REST APIのエンドポイントを作成します。
 - test/{ユースケースID}
 
 ## 技術仕様
-- リソースグループ名: `dahatake-{ユースケースID}`
+- リソースグループ名: {リソースグループ名}
 - リージョン: Japan East
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 
@@ -647,7 +647,7 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 - docs/usecase/{ユースケースID}/service-catalog.md
 
 ## 技術仕様
-- リソースグループ名: `dahatake{YYYYMMDD}`
+- リソースグループ名: {リソースグループ名}
 - リージョン: East Asia
   - もし利用できない場合は、Japan Westまたは、East Asia または South East Asia を選択してください。
 - スケール設定は、最小構成で作成してください。
@@ -696,7 +696,7 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 - UC-xxx
 
 ## レビューの対象のMicrosoft Azureのリソース
-- リソースグループ名: `dahatake{YYYYMMDD}`
+- リソースグループ名: {リソースグループ名}
 
 ## 参考ドキュメント
 - docs/usecase/{ユースケースID}/usecase-description.md
