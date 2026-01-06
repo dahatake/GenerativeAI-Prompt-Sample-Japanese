@@ -1,0 +1,39 @@
+<!-- フォルダー構造ナビゲーション -->
+<nav class="folder-structure">
+  <h3>📁 フォルダー構造</h3>
+  <ul class="folder-tree">
+    <li class="folder-item">
+      <a href="{{ '/' | relative_url }}">🏠 ホーム</a>
+    </li>
+    
+    <li class="folder-item">
+      <details open>
+        <summary>📂 日々のタスク</summary>
+        <ul>
+          <li><a href="{{ '/日々のタスク/' | relative_url }}">README</a></li>
+          <li><a href="{{ '/日々のタスク/タスクの振り返り.html' | relative_url }}">タスクの振り返り</a></li>
+          <li><a href="{{ '/日々のタスク/タスクの漏れチェック.html' | relative_url }}">タスクの漏れチェック</a></li>
+          <li><a href="{{ '/日々のタスク/プレゼンテーションのアジェンダ作成.html' | relative_url }}">プレゼンテーションのアジェンダ作成</a></li>
+          <li><a href="{{ '/日々のタスク/次にすべきタスクの洗い出し.html' | relative_url }}">次にすべきタスクの洗い出し</a></li>
+          <li><a href="{{ '/日々のタスク/自分の考えの深堀の相談.html' | relative_url }}">自分の考えの深堀の相談</a></li>
+          <li><a href="{{ '/日々のタスク/送信メールの分析.html' | relative_url }}">送信メールの分析</a></li>
+          <li><a href="{{ '/日々のタスク/顧客との会議あるいはプレゼンテーションの反省.html' | relative_url }}">顧客との会議あるいはプレゼンテーションの反省</a></li>
+        </ul>
+      </details>
+    </li>
+    
+    <li class="folder-item">
+      <details>
+        <summary>📂 投稿</summary>
+        <ul>
+          {% for post in site.posts %}
+          <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>

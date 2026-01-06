@@ -1,0 +1,28 @@
+<!-- 現在のページ情報 -->
+<div class="page-info">
+  <div class="page-path">
+    <strong>📍 現在のパス:</strong> 
+    <code>{{ page.path }}</code>
+  </div>
+  
+  <div class="page-url">
+    <strong>🔗 URL:</strong> 
+    <code>{{ page.url | absolute_url }}</code>
+  </div>
+  
+  {% if site.github.repository_url %}
+  <div class="github-link">
+    <strong>💾 GitHub:</strong> 
+    <a href="{{ site.github.repository_url }}/blob/{{ site.github.source.branch | default: 'main' }}/{{ page.path }}" target="_blank">
+      ソースを表示
+    </a>
+  </div>
+  {% endif %}
+  
+  {% if page.date %}
+  <div class="page-date">
+    <strong>📅 日付:</strong> 
+    {{ page.date | date: "%Y年%m月%d日" }}
+  </div>
+  {% endif %}
+</div>
