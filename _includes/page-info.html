@@ -26,3 +26,69 @@
   </div>
   {% endif %}
 </div>
+
+<style>
+.page-info {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.page-info > div {
+  margin-bottom: 8px;
+}
+
+.page-info > div:last-child {
+  margin-bottom: 0;
+}
+
+.page-info strong {
+  display: inline-block;
+  min-width: 70px;
+  font-size: 11px;
+  color: #495057;
+}
+
+.page-info code {
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  word-break: break-all;
+  color: #212529;
+}
+
+.page-info a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.page-info a:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .page-info {
+    background-color: #2d2d2d;
+    border-color: #444;
+  }
+
+  .page-info strong {
+    color: #adb5bd;
+  }
+
+  .page-info code {
+    background-color: #3a3a3a;
+    color: #e9ecef;
+  }
+
+  .page-info a {
+    color: #66b3ff;
+  }
+}
+</style>

@@ -7,6 +7,7 @@
 
 {% seo %}
     <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="{{ "/assets/css/custom.css" | relative_url }}">
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
@@ -38,16 +39,18 @@
           <li><a href="{{ site.github.repository_url }}">View On <strong>GitHub</strong></a></li>
         </ul>
         {% endif %}
-        
-        {% include folder-structure.html %}
       </header>
-      <section>
-
-      {% include page-info.html %}
+      <div class="main-content-wrapper">
+        <nav class="sidebar-nav">
+          {% include page-info.html %}
+          {% include folder-structure.html %}
+        </nav>
+        <section>
 
       {{ content }}
 
       </section>
+      </div>
       <footer>
         {% if site.github.is_project_page %}
         <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
