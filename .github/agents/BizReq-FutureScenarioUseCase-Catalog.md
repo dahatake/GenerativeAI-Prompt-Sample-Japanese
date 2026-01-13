@@ -72,7 +72,7 @@ flowchart LR
   FS01[FS01] --> UC01[UC01]
   FS01 --> UC03[UC03]
   FS02[FS02] --> UC02[UC02]
-````
+```
 
 # ファイル保存先
 
