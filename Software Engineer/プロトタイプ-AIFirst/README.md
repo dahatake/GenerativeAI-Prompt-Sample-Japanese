@@ -277,7 +277,10 @@ your-project/
 このリポジトリには以下のような Custom Agent が用意されています:
 
 #### ビジネスドキュメント関連
+- **BizReq-FutureScenarioList**: 要求定義からフューチャーシナリオを抽出してリスト化
+- **BizReq-FutureScenarioDetail**: フューチャーシナリオのリストから、フューチャーシナリオを作成
 - **BizReq-UseCaseList**: 要求定義からユースケースを抽出してリスト化
+- **BizReq-FutureSenarioUseCase-Catalog**: フューチャーシナリオとユースケースのマッピングカタログ作成
 - **BizReq-UseCaseDetail**: ユースケースの詳細定義書を作成
 
 #### アーキテクチャ設計関連
