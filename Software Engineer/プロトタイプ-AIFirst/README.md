@@ -364,7 +364,9 @@ your-project/
 
 - AI Agentのアプリケーション設計
 
-  [AI-Agent](./ApplicationDesign-AIAgent.md)
+  [AI-Agent version](./ApplicationDesign-AIAgent.md)
+
+  [AI-Agent-Simple version (まずはこちらをお勧め)](./ApplicationDesign-AIAgent-Simple.md)
 
 
 ## Step.4. アプリケーションのコードの実装と、Azureへのデプロイ

@@ -1,4 +1,3 @@
-````markdown
 # AI Agent 設計 - 汎用 Agent（LLM + Tool + RAG）向け
 
 AI Agentを設計・実装するための汎用設計ドキュメントです。  
