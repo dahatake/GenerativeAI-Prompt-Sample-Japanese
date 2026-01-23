@@ -2,9 +2,6 @@
 
 まだ初期バージョンに過ぎませんが、IT Service (IT Pro) の皆さんのための Prompt 集を作成しました。
 
-このフォルダー以外に、Software Engineer 向けのPromptからも役に立つ事が幾つかあります。特に業務をITに変換していく過程は共通のPromptが使えます。
-
-[Software Engineer向けPromptの一気通貫例](../../Software%20Enginner/Webアプリのプロトタイプ開発/README.md)
 
 分析もいくつも役に立ちます。
 
