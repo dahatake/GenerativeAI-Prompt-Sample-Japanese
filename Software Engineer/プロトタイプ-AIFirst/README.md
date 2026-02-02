@@ -286,9 +286,17 @@ your-project/
 
 こちらのドキュメントを参考にしてください。
 
-[要求定義の作成](./ProductManagement-Documentation.md.md)
+[要求定義の作成](./Business-Documentation.md)
 
-## Step.3. アプリケーション設計
+
+## Step.3. ユースケース作成
+
+こちらのドキュメントを参考にしてください。
+
+[ユースケース](./ProductManagement-Documentation.md)
+
+
+## Step.4. アプリケーション設計
 
 こちらのドキュメントを参考にしてください。
 
@@ -305,7 +313,7 @@ your-project/
   [AI-Agent-Simple version (まずはこちらをお勧め)](./ApplicationDesign-AIAgent-Simple.md)
 
 
-## Step.4. アプリケーションのコードの実装と、Azureへのデプロイ
+## Step.5. アプリケーションのコードの実装と、Azureへのデプロイ
 
 こちらのドキュメントを参考にしてください。
 
