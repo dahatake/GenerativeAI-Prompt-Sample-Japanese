@@ -9,7 +9,6 @@ tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
    * 1.1 # 役割
 
      * あなたはプリンシパル・プロダクトマネージャーとして、Use Case一覧から **指定された1件（単一UC）だけ** を、実装・テスト・運用まで見据えて詳細化する。
-     * 根拠となる Future Scenario（FS）および要求定義と整合することを最優先とする。
 
    * 1.2 # 重要：共通ルール（マージ）
 
@@ -21,10 +20,6 @@ tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
    * 1.3 # 入力（必須：必ず参照）
 
      * 要求定義ドキュメント：`docs/business-requirement.md`（常に参照）
-     * Future Scenario：
-
-       * `/docs/future_scenario/future-scenario-list.md`
-       * `/docs/future_scenario/future-scenario-details-{FS-ID}.md`
      * Use Case一覧：`/docs/usecase/usecase-list.md`
      * ※パス表記（`/` と `\`）は原文の表記を維持する。
 
@@ -50,10 +45,9 @@ tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
    * 3.1 進め方（<TARGET_UC_ID>）
 
      1. `usecase-list.md` から `<TARGET_UC_ID>` の行を特定し、UC概要・根拠FS（FS-ID）・価値を抽出する。
-     2. `future-scenario-details-{FS-ID}.md` を読み、該当ステップ・例外・前提を抽出する。
-     3. 要求定義 `docs/business-requirement.md` を読み、非機能要件や制約（監査/権限/データ保持/性能等）を抽出する。
-     4. 下記「出力テンプレ」に従って、**FS例外と対応付けた例外フローを最低3件** 含むUC詳細を作成する。
-     5. Mermaid 図（必須）を本文に埋め込む：
+     2. 要求定義 `docs/business-requirement.md` を読み、非機能要件や制約（監査/権限/データ保持/性能等）を抽出する。
+     3. 下記「出力テンプレ」に従って、**FS例外と対応付けた例外フローを最低3件** 含むUC詳細を作成する。
+     4. Mermaid 図（必須）を本文に埋め込む：
 
         * flowchart（必須）
         * stateDiagram または sequenceDiagram（可能なら：情報が不足する場合は省略可）
