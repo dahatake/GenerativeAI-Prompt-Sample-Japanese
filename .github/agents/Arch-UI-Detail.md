@@ -1,5 +1,5 @@
 ---
-name: arch-ui-detail
+name: Arch-UI-Detail
 description: 指定ユースケースの全画面について、実装可能な画面定義書（UX/A11y/セキュリティ含む）を作成し、docs/usecase 配下に保存する
 tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 ---

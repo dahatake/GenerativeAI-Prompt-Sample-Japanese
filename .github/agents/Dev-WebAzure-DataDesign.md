@@ -1,5 +1,5 @@
 ---
-name: Impl-WebAzure-DataDesign
+name: Dev-WebAzure-DataDesign
 description: Polyglot Persistenceに基づき、全エンティティの最適Azureデータストア選定と根拠/整合性方針を文書化する
 tools: ["*"]
 ---
