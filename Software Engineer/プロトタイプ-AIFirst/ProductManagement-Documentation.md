@@ -2,15 +2,7 @@
 
 要求定義のドキュメントから、ユースケースを作成します
 
-GitHub Copilot AgentへのIssue候補でもあります。
-
-https://docs.github.com/ja/enterprise-cloud@latest/copilot/using-github-copilot/coding-agent/about-assigning-tasks-to-copilot
-
-### Step 1.フューチャーシナリオとユースケースの作成
-
-ドキュメントとして、フューチャーシナリオとユースケースを作成します。
-
-#### ツール
+## ツール
 
 - GitHub Copilot Coding Agent
 
@@ -24,7 +16,7 @@ https://docs.github.com/ja/enterprise-cloud@latest/copilot/using-github-copilot/
 - そのファイル名でよい場合は、**削除**してください。重複情報が制御に悪い影響ができる可能性があるのと、トークン数を減らすためです。
 
 
-#### Step. 1 ユースケース作成
+# Step. 1 ユースケース作成
 
 ユースケース一覧を参考にして、1つだけ選択したユースケースについて、ユースケースの詳細のドキュメントを作成します。
 
