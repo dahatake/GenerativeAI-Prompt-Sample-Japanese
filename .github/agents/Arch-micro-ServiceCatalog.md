@@ -1,5 +1,5 @@
 ---
-name: Arch-micro-ServiceCatalog
+name: Arch-Micro-ServiceCatalog
 description: ユースケースの画面→機能→処理/API→SoTデータをマッピングしたサービスカタログを docs/usecase/<ユースケースID>/service-catalog.md に生成する
 tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 ---

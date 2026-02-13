@@ -1,5 +1,5 @@
 ---
-name: Arch-micro-DomainAnalytics
+name: Arch-Micro-DomainAnalytics
 description: ユースケースからDDD観点でドメインモデリングを行い、Bounded Contextとドメインイベントを特定して docs/usecase/{ユースケースID}/domain-analytics.md を作成する
 tools: ['execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 infer: false

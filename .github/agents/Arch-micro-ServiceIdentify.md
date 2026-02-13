@@ -1,5 +1,5 @@
 ---
-name: Arch-micro-ServiceIdentify
+name: Arch-Micro-ServiceIdentify
 description: ドメイン分析（docs/usecase/{ユースケースID}）からマイクロサービス候補を抽出し、service-list.md と Mermaid コンテキストマップを作成する
 target: github-copilot
 infer: false
