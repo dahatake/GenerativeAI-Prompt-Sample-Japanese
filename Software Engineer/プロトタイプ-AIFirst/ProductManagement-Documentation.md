@@ -24,7 +24,7 @@
   - PM-UseCaseDetail
 
 ```text
-Use Case一覧から指定UCを1件だけ詳細化し、FS/要求定義と整合したUC定義書（フロー・例外・ルール・NFR・受入・図）を /docs/usecase/ に生成する
+Use Case一覧から指定UCを1件だけ詳細化し、要求定義ドキュメントと整合したUC定義書（フロー・例外・ルール・NFR・受入・図）を /docs/usecase/ に生成する
 
 # 入力（必須：必ず参照）
 - 要求定義ドキュメント：`docs/business-requirement.md`（常に参照）
