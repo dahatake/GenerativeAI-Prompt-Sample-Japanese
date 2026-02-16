@@ -115,8 +115,9 @@ REST APIのエンドポイントを作成します。
 ユースケース内の全マイクロサービスについて、最適な Azure コンピュート（ホスティング）を選定し、根拠・代替案・前提を設計書に記録する
 
 # 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`
+- ユースケースID: `{ユースケースID}`
+- リソースグループ名: `{リソースグループ名}`
+- `docs/usecase/{ユースケースID}/usecase-detail.md`
 - `docs/usecase/{ユースケースID}/data-model.md`
 - `docs/usecase/{ユースケースID}/services/service-list.md`
 
@@ -137,7 +138,8 @@ REST APIのエンドポイントを作成します。
 サービス定義書の「外部依存・統合」から、追加で必要な Azure サービス（AI/認証/統合/運用等）を選定し、根拠（Microsoft Learn）付きで記録する
 
 # 入力
-- ユースケースID: {ユースケースID}
+- ユースケースID: `{ユースケースID}`
+- リソースグループ名: `{リソースグループ名}`
 - ユースケース: `docs/usecase/{ユースケースID}/usecase-description.md`
 - サービス一覧: `docs/usecase/{ユースケースID}/services/service-list.md`
 - 各サービス定義書: `docs/usecase/{ユースケースID}/services/{サービスID}-{サービス名}-description.md`
@@ -163,7 +165,8 @@ REST APIのエンドポイントを作成します。
 Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービスカタログ/README/進捗ログを更新する（Planner必須・10分分割・冪等）
 
 # 入力
-- ユースケースID: {ユースケースID}
+- ユースケースID: `{ユースケースID}`
+- リソースグループ名: `{リソースグループ名}`
 - `docs/usecase/{ユースケースID}/AzureServices-services-additional.md`
 
 # 出力（必須）
@@ -178,7 +181,7 @@ Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービ
 
 - 使用するカスタムエージェント
   - Dev-WebAzure-ServiceCoding-AzureFunctions
-  - Azure Functions用です。Containerなどの場合は、適時修正してください。
+    - Azure Functions用です。Containerなどの場合は、適時修正してください。
 
 ```text
 # タスク
@@ -186,6 +189,9 @@ Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービ
 
 # 入力
 - ユースケースID: {ユースケースID}
+- サービスID: {サービスID}
+- サービス名: {サービス名}
+
 - マイクロサービス定義書：
   - `docs/usecase/{ユースケースID}/services/{サービスID}-[サービス名]-description.md`
 - 参考：
@@ -217,18 +223,10 @@ Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービ
 Azure Functions 作成→デプロイ、GitHub Actions で CI/CD 構築、API スモークテスト（＋手動UI）を追加する
 
 # 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/service-catalog.md`
-- デプロイ対象のプログラムコード: api/{ユースケースID}/{サービスID}-{サービス名}/
-  - {サービスID}は、各サービスのIDを設定する
-  - {サービス名}は、各サービスの名称を設定する
-
-以下が未確定なら、Planner の Questions で確認する：
-- {ユースケースID}
-- {リソースグループ名}
-- 対象サービス一覧（サービスID/サービス名、必要な Azure サービス種別）
-- {MicrosoftDocs} MCP / {Azure MCP Server} の利用可否（認証方法）
-- デプロイ方式（OIDC 可否、publish profile 可否）
+- ユースケースID: `{ユースケースID}`
+- リソースグループ名: `{リソースグループ名}`
+- デプロイ対象コード: `api/{ユースケースID}/{サービスID}-{サービス名}/`
+- サービス情報: `docs/usecase/{ユースケースID}/service-catalog.md`
 
 # 出力（必須）- 章立ての数値はカスタムエージェントに準拠
 ## 2.1 Azure 作成スクリプト（Linux）
@@ -278,7 +276,7 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 
 - 使用するカスタムエージェント
   - Dev-WebAzure-UICoding
-  - HTML5のみです。SPAのフレームワークを使う場合は、適時修正してください。
+    - HTML5のみです。SPAのフレームワークを使う場合は、適時修正してください。
 
 ```text
 # タスク
@@ -287,12 +285,14 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 # UI実装技術: HTML5, JavaScript,のみ。フレームワーク不要
 
 # 入力
-- ユースケースID: {ユースケースID}
-- 画面一覧・画面遷移図: `docs/usecase/{ユースケースID}/screen/screen-list.md`
+- ユースケースID: `{ユースケースID}`
+- リソースグループ名: `{リソースグループ名}`
+- 画面一覧・遷移: `docs/usecase/{ユースケースID}/screen/screen-list.md`
 - 画面定義書: `docs/usecase/{ユースケースID}/screen/{画面ID}-description.md`
-- 参考: `docs/usecase/{ユースケースID}/usecase-description.md`, `data-model.md`
-- サービス: `docs/usecase/{ユースケースID}/services/service-catalog.md`（またはリポジトリに存在するサービスカタログ）
+- 参考: `docs/usecase/{ユースケースID}/usecase-detail.md`, `data-model.md`
+- サービス: `docs/usecase/{ユースケースID}/services/service-catalog.md`（または同等のサービスカタログ）
 - サンプル: `data/{ユースケースID}/sample-data.json`
+
 
 # 出力（必須）
 - `app/{ユースケースID}`
@@ -307,7 +307,7 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 
 - 使用するカスタムエージェント
   - Dev-WebAzure-UIDeploy-AzureStaticWebApps
-  - Azure Static Web Apps用です。
+    - Azure Static Web Apps用です。
 
 ```text
 # タスク
@@ -317,13 +317,6 @@ Azure Static Web Apps にWebをデプロイし、GitHub Actionsで継続的デ�
 - ユースケースID: {ユースケースID}
 - リソースグループ名: {リソースグループ名}
 - リージョン優先順: East Asia -> Japan West -> Southeast Asia
-- サービスカタログ: docs/usecase/{ユースケースID}/service-catalog.md
-
-
-# 出力（必須）
-- Azure CLIスクリプト保存先:
-  - infra/{ユースケースID}/create-azure-webui-resources.sh
-  - infra/{ユースケースID}/create-azure-webui-resources-prep.sh
 ```
 
 Azure Static Web Appsの作成ができない場合があります。その場合は、以下の手順を試してください。
@@ -353,7 +346,7 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 
 # 入力
 - ユースケースID: {ユースケースID}
-- レビュー対象: リソースグループ名 = {リソースグループ名}
+- レビュー対象: リソースグループ名: {リソースグループ名}
 - 参考ドキュメント:
   - `docs/usecase/{ユースケースID}/usecase-description.md`
   - `docs/usecase/{ユースケースID}/service-catalog.md`
