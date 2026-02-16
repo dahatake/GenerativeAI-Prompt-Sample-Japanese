@@ -281,7 +281,7 @@ your-project/
 
 こちらのドキュメントを参考にしてください。
 
-Step 2.1. のユースケースの一覧までを行います。
+**Step 2.1. のユースケースの一覧まで**を行います。
 
 なおMicrosoft 365 Copilotのリサーチツールの出力結果を、そのままMarkdownとして使用すると、根拠となった情報ソースへのURLや、サマリーのインフォグラフィックスのHTML文字列などが含まれています。
 そのため、以下の様なPromptを使って、精緻なMarkdownのドキュメントを作成してください。その成型後の文字列をコピーしてMarkdownファイルとして保存します。
@@ -325,7 +325,7 @@ Step 2.1. のユースケースの一覧までを行います。
 
 - Webアプリケーション
 
-  [Webアプリ](Implementation-WebAppOnAzure.md)
+  [Webアプリ](./Development-WebAppOnAzure.md)
 
 - AI Agent
 
