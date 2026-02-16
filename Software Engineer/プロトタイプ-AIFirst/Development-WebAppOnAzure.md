@@ -59,6 +59,7 @@ Azure CLIでデータ系サービスを最小構成で作成し、サンプル�
 - データストア定義: `docs/usecase/{ユースケースID}/AzureServices-data.md`
 - サービスカタログ: `docs/usecase/{ユースケースID}/service-catalog.md`
 - 既存サンプルデータ: `data/{ユースケースID}/sample-data.json`
+- Azure Resource Group Name: {ユースケースID}
 
 # 出力（必須）
 ## 1) 事前準備スクリプト（Linux）
