@@ -44,7 +44,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 # 入力
 - ユースケースID: {ユースケースID}
-- 主文書: docs/usecase/{ユースケースID}/usecase-description.md
+- 主文書: docs/usecase/{ユースケースID}/usecase-detail.md.md
 
 # 出力（必須）
 - docs/usecase/{ユースケースID}/domain-analytics.md
@@ -61,7 +61,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 # 入力
 - ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`
+- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
 - `docs/usecase/{ユースケースID}/domain-analytics.md`
 
 # 出力（必須）
@@ -80,7 +80,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 # 入力
 - ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`
+- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
 - `docs/usecase/{ユースケースID}/domain-analytics.md`
 - `docs/usecase/{ユースケースID}/services/service-list.md`
 
@@ -105,7 +105,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 # 入力
 - ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`（最優先）
+- `docs/usecase/{ユースケースID}/usecase-detail.md.md`（最優先）
 - `docs/usecase/{ユースケースID}/services/service-list.md`（機能/責務の補助）
 - `docs/usecase/{ユースケースID}/data-model.md`（表示/入力項目の補助）
 
@@ -130,7 +130,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 # 入力
 - ユースケースID: {ユースケースID}
 - 参照ドキュメント（存在しない場合は search で同等ファイルを特定し、差分を前提に明記）
-  - `docs/usecase/{ユースケースID}/usecase-description.md`
+  - `docs/usecase/{ユースケースID}/usecase-detail.md.md`
   - `docs/usecase/{ユースケースID}/services/service-list.md`
   - `docs/usecase/{ユースケースID}/data-model.md`
   - `docs/usecase/{ユースケースID}/screen/screen-list.md`
@@ -159,7 +159,7 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 
 # 入力（必読）
 - ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`（最優先）
+- `docs/usecase/{ユースケースID}/usecase-detail.md.md`（最優先）
 - `docs/usecase/{ユースケースID}/services/service-list.md`（機能/責務の補助）
 - `docs/usecase/{ユースケースID}/data-model.md`（表示/入力項目の補助）
 
@@ -183,7 +183,7 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 - {ユースケースID}
 
 ## 参考ドキュメント（必ず最初に読む）
-- `docs/usecase/{ユースケースID}/usecase-description.md`
+- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
 - `docs/usecase/{ユースケースID}/services/service-list.md`
 - `docs/usecase/{ユースケースID}/service-catalog.md`
 - `docs/usecase/{ユースケースID}/data-model.md`

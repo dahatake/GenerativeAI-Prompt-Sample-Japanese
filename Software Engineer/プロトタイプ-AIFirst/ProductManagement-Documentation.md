@@ -32,5 +32,5 @@ Use Case一覧から指定UCを1件だけ詳細化し、要求定義ドキュメ
 - ユースケースID: <TARGET_UC_ID>
 
 # 出力先（Markdown）— テンプレ固定
-- `/docs/usecase/usecase-<TARGET_UC_ID>.md`
+- `docs/usecase/<TARGET_UC_ID>/usecase-detail.md`
 ```
