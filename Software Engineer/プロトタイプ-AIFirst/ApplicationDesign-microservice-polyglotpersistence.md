@@ -159,13 +159,20 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 docs/screen-list.md の全画面について、実装に使える画面定義書（UX/A11y/セキュリティ含む）を docs/usecase/<ユースケースID>/screen/ に生成・更新する。
 
 # 入力（必読）
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-detail.md.md`（最優先）
-- `docs/usecase/{ユースケースID}/services/service-list.md`（機能/責務の補助）
-- `docs/usecase/{ユースケースID}/data-model.md`（表示/入力項目の補助）
+必須:
+- `docs/screen-list.md`
+
+推奨（存在すれば読む）:
+- `docs/service-list.md`
+- `docs/data-model.md`
+- `docs/service-catalog.md`
+- ユースケースID: `<ユースケースID>`
+- `docs/usecase/<ユースケースID>/usecase-detail.md`
+- `data/sample-data.json`（存在しなければ付録は作らず Questions へ））
+
 
 # 出力（必須）
-- `docs/usecase/{ユースケースID}/screen/screen-list.md`
+- `docs/screen/<画面-ID>-<画面名>-description.md`
 ```
 
 ## Step. 5.2. マイクロサービス定義書の作成
@@ -180,19 +187,19 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
 ユースケース配下の全サービスについて、マイクロサービス詳細仕様（API/イベント/データ所有/セキュリティ/運用）をテンプレに沿って作成する
 
 # 入力（必読）
-## ユースケースID
-- {ユースケースID}
-
-## 参考ドキュメント（必ず最初に読む）
-- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
-- `docs/usecase/{ユースケースID}/services/service-list.md`
-- `docs/usecase/{ユースケースID}/service-catalog.md`
-- `docs/usecase/{ユースケースID}/data-model.md`
-- `data/{ユースケースID}/sample-data.json`（※値の転記は禁止。要約のみ）
+1. 仕様テンプレ（本文構造の正）：`docs/templates/microservice-definition.md`
+2. サービス定義（必ず最初に読む）:
+   - `docs/service-list.md`
+   - `docs/service-catalog.md`
+   - `docs/data-model.md`
+   - `docs/usecase/*/usecase-detail.md`
+3. サンプルデータ（値の転記は禁止。要約のみ）:
+   - `data/sample-data.json`
 
 # 成果物
-## サービス詳細仕様（サービスごと。必ず作成する）
-- `docs/usecase/{ユースケースID}/services/{サービスID}-{サービス名slug}-description.md`
-  - slug規約：小文字、空白は `-`、英数と `-` のみ（不明なら `{サービスID}-description.md` でも可）
-  - 本文：docs/templates/microservice-definition.md をコピーし、サービス情報で埋める（推測禁止、TBD＋根拠）
+## サービス詳細仕様（サービスごと）
+- `docs/services/{serviceId}-{serviceNameSlug}-description.md`
+  - `serviceNameSlug` 規約: 小文字 / 空白は `-` / 英数と `-` のみ
+  - slugが不明なら: `{serviceId}-description.md` で可
+  - 本文はテンプレをコピーして埋める。推測はしない（不明は `TBD` + 根拠/理由）。
 ```
