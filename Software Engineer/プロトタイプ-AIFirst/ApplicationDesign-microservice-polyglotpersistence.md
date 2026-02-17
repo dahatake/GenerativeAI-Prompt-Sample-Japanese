@@ -88,7 +88,7 @@ docs/ のドメイン分析からマイクロサービス候補を抽出し、se
 - `docs/data-model.md`
 
 ### B) サンプルデータ
-- 原則：`data/<USECASE_ID>/sample-data.json`
+- 原則：`data/sample-data.json`
 ```
 
 # Step. 3. 画面一覧と遷移図の作成
