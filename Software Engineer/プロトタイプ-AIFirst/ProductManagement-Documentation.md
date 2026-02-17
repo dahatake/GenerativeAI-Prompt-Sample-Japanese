@@ -28,7 +28,7 @@ Use Case一覧から指定UCを1件だけ詳細化し、要求定義ドキュメ
 
 # 入力（必須：必ず参照）
 - 要求定義ドキュメント：`docs/business-requirement.md`（常に参照）
-- Use Case一覧：`/docs/usecase/usecase-list.md`
+- Use Case一覧：`/docs/usecase-list.md`
 - ユースケースID: <TARGET_UC_ID>
 
 # 出力先（Markdown）— テンプレ固定

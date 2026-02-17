@@ -40,33 +40,34 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 ```text
 # タスク
-ユースケースからDDD観点でドメインモデリングを行い、Bounded Contextとドメインイベントを特定して docs/usecase/{ユースケースID}/domain-analytics.md を作成する
+ユースケース文書を根拠に、DDD観点でドメイン分析（Bounded Context / ユビキタス言語 / 集約 / ドメインイベント / コンテキストマップ等）を整理し、docs/domain-analytics.md を作成する。
 
 # 入力
-- ユースケースID: {ユースケースID}
-- 主文書: docs/usecase/{ユースケースID}/usecase-detail.md.md
+- ユースケース文書: `docs/usecase-list.md`
 
-# 出力（必須）
-- docs/usecase/{ユースケースID}/domain-analytics.md
+### 2.3 出力（必須）
+- `docs/domain-analytics.md`
 ```
 
 ## Step. 1.2. マイクロサービスの一覧の抽出
 
 - 使用するカスタムエージェント
-  - Arch-micro-ServiceIdentify
+  - Arch-Micro-ServiceIdentify
 
 ```text
 # タスク
-ドメイン分析（docs/usecase/{ユースケースID}）からマイクロサービス候補を抽出し、service-list.md と Mermaid コンテキストマップを作成する
+docs/ のドメイン分析からマイクロサービス候補を抽出し、service-list.md（サマリ表＋候補詳細＋Mermaidコンテキストマップ）を作成/更新する。
 
 # 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
-- `docs/usecase/{ユースケースID}/domain-analytics.md`
+- `docs/usecase-list.md`
+- `docs/domain-analytics.md`
 
 # 出力（必須）
-- `docs/usecase/{ユースケースID}/services/service-list.md`
-   - 形式：このファイル内に **(A)サマリ表 → (B)サービス候補詳細 → (C)Mermaidコンテキストマップ** の順で記載する。
+- `docs/service-list.md`
+  - 構成は必ず以下の順：
+    - **A. サマリ（表）**
+    - **B. サービス候補詳細（候補ごと）**
+    - **C. Mermaid コンテキストマップ（末尾）**
 ```
 
 # Step. 2. データモデル作成
@@ -79,17 +80,15 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 ユースケース文書から全エンティティを抽出し、サービス境界と所有権を明確にしたデータモデル（Mermaid）と、日本語のサンプルデータ(JSON)を生成します
 
 # 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-detail.md.md`
-- `docs/usecase/{ユースケースID}/domain-analytics.md`
-- `docs/usecase/{ユースケースID}/services/service-list.md`
+- `docs/domain-analytics.md`
+- `docs/service-list.md`
 
 # 出力（必須）
 ## A) モデリングドキュメント
--  `docs/usecase/{ユースケースID}/data-model.md`
+- `docs/data-model.md`
 
-## B) サンプルデータ
-- `data/{ユースケースID}/sample-data.json`
+### B) サンプルデータ
+- 原則：`data/<USECASE_ID>/sample-data.json`
 ```
 
 # Step. 3. 画面一覧と遷移図の作成
@@ -101,16 +100,20 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 ```text
 # タスク
-ユースケースの画面一覧（表）と画面遷移図（Mermaid flowchart）を作成し、ポータル（タブ）から各画面へ遷移できる構造を設計する
+docs/ の資料から、ユースケースと画面の関係性のベストプラクティスを示したうえで、画面一覧（表）と画面遷移図（Mermaid）を設計し、screen-list.md と進捗ログを作成・更新する。
+
 
 # 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-detail.md.md`（最優先）
-- `docs/usecase/{ユースケースID}/services/service-list.md`（機能/責務の補助）
-- `docs/usecase/{ユースケースID}/data-model.md`（表示/入力項目の補助）
+- 最優先：
+  - `docs/service-list.md`（機能/責務の補助）
+  - `docs/data-model.md`（表示/入力項目の補助）
+
+- 補助（指定があるときだけ）：
+  - ユースケースID: {ユースケースID}
+  - `docs/usecase/{ユースケースID}/usecase-detail.md`
 
 # 出力（必須）
-- `docs/usecase/{ユースケースID}/screen/screen-list.md`
+- 主要成果物：`docs/screen-list.md`
 ```
 
 # Step.4. サービスカタログ表の作成
@@ -125,18 +128,17 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 ```text
 # タスク
-ユースケースの画面→機能→処理/API→SoTデータをマッピングしたサービスカタログを docs/usecase/<ユースケースID>/service-catalog.md に生成する
+既存ドキュメントを根拠に、画面→機能→処理/API→SoTデータをマッピングしたサービスカタログを docs/service-catalog.md に生成/更新する（推測禁止、出典必須）。
 
-# 入力
-- ユースケースID: {ユースケースID}
-- 参照ドキュメント（存在しない場合は search で同等ファイルを特定し、差分を前提に明記）
-  - `docs/usecase/{ユースケースID}/usecase-detail.md.md`
-  - `docs/usecase/{ユースケースID}/services/service-list.md`
-  - `docs/usecase/{ユースケースID}/data-model.md`
-  - `docs/usecase/{ユースケースID}/screen/screen-list.md`
+# 入力（優先順位順）
+原則として次の4ファイルを読む。無い場合は `search` で同等の資料を特定し、差分（不足・代替）を明記する。
+- `docs/service-list.md`
+- `docs/data-model.md`
+- `docs/screen-list.md`
+- `docs/usecase/{ユースケースID}/usecase-detail.md`
 
 # 出力（必須）
-- `docs/usecase/{ユースケースID}/service-catalog.md`
+- `docs/service-catalog.md`
 ```
 
 # Step.5. 生成AIに最適化した各コンポーネントプロンプトの作成
@@ -155,7 +157,7 @@ Step 3. で作成したユースケースの情報をもとに、生成AIに最�
 
 ```text
 # タスク
-ユースケースの画面一覧（表）と画面遷移図（Mermaid flowchart）を作成し、ポータル（タブ）から各画面へ遷移できる構造を設計する
+docs/screen-list.md の全画面について、実装に使える画面定義書（UX/A11y/セキュリティ含む）を docs/usecase/<ユースケースID>/screen/ に生成・更新する。
 
 # 入力（必読）
 - ユースケースID: {ユースケースID}
