@@ -104,6 +104,7 @@ docs/ の資料から、ユースケースと画面の関係性のベストプ�
 
 # 入力
 - 最優先：
+  - `docs/domain-analytics.md`
   - `docs/service-list.md`（機能/責務の補助）
   - `docs/data-model.md`（表示/入力項目の補助）
 
@@ -130,6 +131,7 @@ docs/ の資料から、ユースケースと画面の関係性のベストプ�
 - `docs/service-list.md`
 - `docs/data-model.md`
 - `docs/screen-list.md`
+- `docs/domain-analytics.md`
 
 # 出力（必須）
 - `docs/service-catalog.md`
@@ -158,6 +160,7 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
 - `docs/screen-list.md`
 
 推奨（存在すれば読む）:
+- `docs/domain-analytics.md`
 - `docs/service-list.md`
 - `docs/data-model.md`
 - `docs/service-catalog.md`
@@ -181,6 +184,7 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
 # 入力（必読）
 1. 仕様テンプレ（本文構造の正）：`docs/templates/microservice-definition.md`
 2. サービス定義（必ず最初に読む）:
+   - `docs/domain-analytics.md`
    - `docs/service-list.md`
    - `docs/service-catalog.md`
    - `docs/data-model.md`
