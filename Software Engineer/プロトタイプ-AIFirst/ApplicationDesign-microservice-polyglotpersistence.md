@@ -33,7 +33,7 @@ Coding Agentの場合はDeep Reserch系の動作をすることもあって、�
 
 ## Step. 1.1. ドメイン分析の実施
 
-ここでは作成されたユースケースから、**1つだけ選択**して、業務上のドメイン分析を行います。
+ここでは作成されたユースケースから、業務上のドメイン分析を行います。
 
 - 使用するカスタムエージェント
   - Arch-Micro-DomainAnalytics
@@ -107,10 +107,6 @@ docs/ の資料から、ユースケースと画面の関係性のベストプ�
   - `docs/service-list.md`（機能/責務の補助）
   - `docs/data-model.md`（表示/入力項目の補助）
 
-- 補助（指定があるときだけ）：
-  - ユースケースID: {ユースケースID}
-  - `docs/usecase/{ユースケースID}/usecase-detail.md`
-
 # 出力（必須）
 - 主要成果物：`docs/screen-list.md`
 ```
@@ -123,7 +119,7 @@ docs/ の資料から、ユースケースと画面の関係性のベストプ�
 作業手順の中で**機能やAPI**の概要を作成している点をお忘れなく。
 
 - カスタムエージェント
-  - Arch-micro-ServiceCatalog
+  - Arch-Micro-ServiceCatalog
 
 ```text
 # タスク
@@ -134,7 +130,6 @@ docs/ の資料から、ユースケースと画面の関係性のベストプ�
 - `docs/service-list.md`
 - `docs/data-model.md`
 - `docs/screen-list.md`
-- `docs/usecase/{ユースケースID}/usecase-detail.md`
 
 # 出力（必須）
 - `docs/service-catalog.md`
@@ -166,10 +161,7 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
 - `docs/service-list.md`
 - `docs/data-model.md`
 - `docs/service-catalog.md`
-- ユースケースID: `<ユースケースID>`
-- `docs/usecase/<ユースケースID>/usecase-detail.md`
 - `data/sample-data.json`（存在しなければ付録は作らず Questions へ））
-
 
 # 出力（必須）
 - `docs/screen/<画面-ID>-<画面名>-description.md`
@@ -180,7 +172,7 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
 サービスの候補から、1つを選んで、マイクロサービス定義書に準拠したドキュメントを作成します。
 
 - カスタムエージェント
-  - Arch_Micro_Service_Detail
+  - Arch-Micro-Service-Detail
 
 ```text
 # タスク
@@ -192,7 +184,6 @@ docs/screen-list.md の全画面について、実装に使える画面定義書
    - `docs/service-list.md`
    - `docs/service-catalog.md`
    - `docs/data-model.md`
-   - `docs/usecase/*/usecase-detail.md`
 3. サンプルデータ（値の転記は禁止。要約のみ）:
    - `data/sample-data.json`
 
