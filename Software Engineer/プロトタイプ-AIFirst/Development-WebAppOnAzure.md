@@ -258,6 +258,19 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 > [!IMPORTANT]
 > ここでは、SPAあるいはStaticなHTMLの使用を前提にしています。Webサーバー側でHTML画面を生成する場合は、Azure Web Appsへのデプロイがお勧めです。
 
+
+### Azure Static Web Appsを使う場合の、デプロイトークン設定
+
+GitHubからのCI/CDで、GitHub側から設定をする際には、Azure Static Web AppsのデプロイトークンをGitHubのシークレットに設定する必要があります。
+これはAzure Static Web Appsの作成後に**手動でしか設定が出来ません**ので、注意をしてください。
+
+Azure 静的 Web アプリへのデプロイ:
+
+https://docs.github.com/ja/enterprise-cloud@latest/actions/how-tos/deploy/deploy-to-third-party-platforms/azure-static-web-app
+
+  - 「前提条件」のみを行ってください。
+
+
 - 使用するカスタムエージェント
   - Dev-WebAzure-UIDeploy-AzureStaticWebApps
     - Azure Static Web Apps用です。
@@ -289,18 +302,6 @@ Azure Static Web Apps へのWebデプロイと、GitHub Actionsによる継続�
 4. `docs/service-catalog.md`
    - 作成したWebアプリURLを追記（取得できない場合は取得手順を追記）。
 ```
-
-Azure Static Web Appsの作成ができない場合があります。その場合は、以下の手順を試してください。
-
-> ### ステップ1: Azureリソース作成
-> cd infra/azure
-> ./create-azure-webui-resources.sh
-> ### ステップ2: デプロイトークンをコピー（スクリプト出力から）
-> ### ステップ3: GitHub Secretsに設定
-> #### 1. Settings > Secrets and variables > Actions
-> #### 2. New repository secret
-> #### 3. Name: AZURE_STATIC_WEB_APPS_API_TOKEN
-> #### 4. Value: コピーしたトークン
 
 ## Step.4. アーキテクチャレビュー
 
