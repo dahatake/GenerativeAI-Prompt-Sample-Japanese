@@ -214,9 +214,19 @@ your-project/
 
 PAT（Personal Access Token）をシークレットに設定し使用します。
 
+1. **Personal Access Token (PAT) を作成**
+
  - GitHub Settings → Developer settings → Personal access tokens (fine-grained)
  - 権限: `metadata: read`, `actions: read/write`, `contents: read/write`, `issues: read/write`, `pull_requests: read/write`
  - シークレット名: `COPILOT_PAT`
+ 
+ **トークン文字列**が作成されるので、保存をする。
+
+
+2. **リポジトリのシークレットに登録**
+   - **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `COPILOT_PAT`
+   - Value: 作成した PAT を貼り付け
 
 ### 利用手順  
 
