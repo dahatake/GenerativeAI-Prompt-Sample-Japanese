@@ -209,7 +209,16 @@ your-project/
 - `tools: ["*"]` は全てのツールへのアクセスを許可する設定です。必要に応じて制限できます
 - プロンプトの内容は、プロジェクトの具体的な要件に合わせて調整してください
 
-### 利用手順
+
+#### 4. GitHub CopilotにIssueを自動的にアサインする認証設定
+
+PAT（Personal Access Token）をシークレットに設定し使用します。
+
+ - GitHub Settings → Developer settings → Personal access tokens (fine-grained)
+ - 権限: `metadata: read`, `actions: read/write`, `contents: read/write`, `issues: read/write`, `pull_requests: read/write`
+ - シークレット名: `COPILOT_PAT`
+
+### 利用手順  
 
 #### Issue 作成時に Custom Agent を選択
 

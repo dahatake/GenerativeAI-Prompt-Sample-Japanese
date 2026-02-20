@@ -31,15 +31,17 @@ MCP Server経由で、ベストプラクティスや仕様の確認をしたり�
 # タスク
 Polyglot Persistenceに基づき、全エンティティの最適Azureデータストア選定と根拠/整合性方針を文書化する
 
-# 入力
-- ユースケースID: {ユースケースID}
-- `docs/usecase/{ユースケースID}/usecase-description.md`
-- `docs/usecase/{ユースケースID}/data-model.md`
-- `docs/usecase/{ユースケースID}/services/service-list.md`
+## 入力（必読）
+- 必読ファイル
+  - `docs/data-model.md`
+  - `docs/service-list.md`
+  - `docs/domain-analytics.md`
+- 任意（存在すれば参照）
+  - `docs/templates/agent-playbook.md`（社内テンプレ/語彙/表現ルールがある場合のみ）
 
-# 出力（必須）
-1) 設計ドキュメント
-- `docs/usecase/{ユースケースID}/AzureServices-data.md`
+## 成果物（必須）
+- 設計ドキュメント（作成/更新）
+  - `docs/Azure/AzureServices-data.md`
 ```
 
 ### Step.1.2. データサービスのAzure へのデプロイと、サンプルデータの登録
@@ -55,46 +57,17 @@ Polyglot Persistenceに基づき、全エンティティの最適Azureデータ�
 Azure CLIでデータ系サービスを最小構成で作成し、サンプルデータを変換・一括登録する（冪等・検証付き）
 
 # 入力
-- ユースケースID: {ユースケースID}
-- データストア定義: `docs/usecase/{ユースケースID}/AzureServices-data.md`
-- サービスカタログ: `docs/usecase/{ユースケースID}/service-catalog.md`
-- 既存サンプルデータ: `data/{ユースケースID}/sample-data.json`
-- Azure Resource Group Name: {ユースケースID}
+## 2. 入力（必読）
+- リソースグループ名: `{リソースグループ名}`
+- データストア定義: `docs/azure/AzureServices-data.md`
+- サービスカタログ: `docs/service-catalog.md`
+- サンプルデータ: `data/sample-data.json`
 
 # 出力（必須）
-## 1) 事前準備スクリプト（Linux）
-- `infra/{ユースケースID}/create-azure-data-resources-prep.sh`
-  - 目的: 必要ツール/拡張のインストール、az拡張、前提チェック（ログイン、サブスクリプション、権限）
-  - 要件: `set -euo pipefail`、実行ログ、失敗時の分かりやすいメッセージ
-
-## 2) リソース作成スクリプト（Linux）
-- `infra/{ユースケースID}/create-azure-data-resources.sh`
-  - 目的: データストアのAzureサービスを最小構成で作成
-  - 要件:
-    - 冪等（存在チェック→作成/更新）。再実行で落ちない
-    - リージョン: 原則 Japan East。利用不可時は Japan West → East Asia → Southeast Asia の順で自動フォールバック
-    - 可能ならサーバーレス/最小SKU/オートスケール最小
-    - リソース名: `{サービス名}` をベースにし、衝突回避トークンを付与（必要な場合）
-    - タグ付け（usecase, env, owner 等。具体は repo-wide 指示に従う）
-    - 作成後に `az ... show/list` 等で存在/設定を検証し、重要値（URL/ID/リージョン）を出力
-
-## 3) データ登録スクリプト（Linux）
-- `data/{ユースケースID}/data-registration-script.sh`
-  - 目的: サンプルデータを変換し、各サービスへ一括登録
-  - 要件:
-    - 入力データの場所/形式を明示（不明なら Questions）
-    - 変換（必要な場合）と登録を分離し、ログに件数/結果を出す
-    - 登録後に最小の検証（件数取得/サンプル取得/クエリ）を実施
-
-## 4) ドキュメント更新
-- サービスカタログ追記: `docs/usecase/{ユースケースID}/service-catalog.md`
-  - 追記する表の列（重複禁止）:
-    - ServiceID（独自ID。無いなら null または “TBD”）
-    - マイクロサービス名
-    - サービス種別（例: Cosmos DB / Blob Storage 等）
-    - サービスURL（接続先のURI等。無ければ null）
-    - Azure Resource ID（/subscriptions/... のresourceId）
-    - リージョン
+- 事前準備スクリプト（必須）: `infra/azure/create-azure-data-resources-prep.sh`
+- リソース作成スクリプト（必須）: `infra/azure/create-azure-data-resources.sh`
+- データ登録スクリプト（必須）: `data/azure/data-registration-script.sh`
+- ドキュメント更新（必須）: `docs/azure/service-catalog.md`：重複行を作らず追記
 ```
 
 ## Step.2. マイクロサービス 作成
@@ -112,18 +85,17 @@ REST APIのエンドポイントを作成します。
 
 ```text
 # タスク
-ユースケース内の全マイクロサービスについて、最適な Azure コンピュート（ホスティング）を選定し、根拠・代替案・前提を設計書に記録する
+ユースケース内の全マイクロサービスについて、最適な Azure コンピュート（ホスティング）を選定し、根拠・代替案・前提・未決事項を設計書に記録する（ドキュメント作成特化）
 
-# 入力
-- ユースケースID: `{ユースケースID}`
+### 入力（必読）
 - リソースグループ名: `{リソースグループ名}`
-- `docs/usecase/{ユースケースID}/usecase-detail.md`
-- `docs/usecase/{ユースケースID}/data-model.md`
-- `docs/usecase/{ユースケースID}/services/service-list.md`
+- `docs/service-list.md`
+- `docs/usecase-list.md`
+- `docs/data-model.md`
+- `docs/service-catalog.md`
 
-# 出力（必須）
-1) 設計書（Markdown）
-- `docs/usecase/{ユースケースID}/AzureServices-services.md`
+### 成果物（必須）
+- 設計書（Markdown）: `docs/azure/AzureServices-services.md`
 ```
 
 ### Step.2.2. 各サービスが利用する追加のAzureのサービスの選定
@@ -137,19 +109,18 @@ REST APIのエンドポイントを作成します。
 # タスク
 サービス定義書の「外部依存・統合」から、追加で必要な Azure サービス（AI/認証/統合/運用等）を選定し、根拠（Microsoft Learn）付きで記録する
 
-# 入力
-- ユースケースID: `{ユースケースID}`
+# Inputs（必読）
 - リソースグループ名: `{リソースグループ名}`
-- ユースケース: `docs/usecase/{ユースケースID}/usecase-description.md`
-- サービス一覧: `docs/usecase/{ユースケースID}/services/service-list.md`
-- 各サービス定義書: `docs/usecase/{ユースケースID}/services/{サービスID}-{サービス名}-description.md`
-- 既存採用済み（除外用）:
-  - `docs/usecase/{ユースケースID}/AzureServices-services.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-data.md`
+- ユースケース: `docs//usecase-list.md`
+- サービス一覧: `docs/service-list.md`
+- 各サービス定義書: `docs/services/{サービスID}-{サービス名}-description.md`
+- 既存採用済み（追加提案から除外）:
+  - `docs/azure/AzureServices-services.md`
+  - `docs/azure/AzureServices-data.md`
 
-# 出力（必須）
-1) 追加サービス設計（本成果物）
-- `docs/usecase/{ユースケースID}/AzureServices-services-additional.md`
+# Outputs（必須）
+- 追加サービス設計（本成果物）:
+  - `docs/azure/AzureServices-services-additional.md`
 ```
 
 ### Step.2.3. Azureの追加機能の作成
@@ -162,17 +133,18 @@ REST APIのエンドポイントを作成します。
 
 ```text
 # タスク
-Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービスカタログ/README/進捗ログを更新する（Planner必須・10分分割・冪等）
+ `docs/azure/AzureServices-services-additional.md` を根拠に、追加Azureサービスを **Azure CLI で冪等に作成**する。
 
 # 入力
-- ユースケースID: `{ユースケースID}`
 - リソースグループ名: `{リソースグループ名}`
-- `docs/usecase/{ユースケースID}/AzureServices-services-additional.md`
+- （任意だが推奨）`subscription` / `tenant` / 優先リージョン / 命名規則
+根拠ファイル（必読）: `docs/azure/AzureServices-services-additional.md`
 
 # 出力（必須）
-- Azure CLIスクリプト: `infra/{ユースケースID}/create-azure-additional-resources/`
-- 依存ツール準備スクリプト: `infra/{ユースケースID}/create-azure-additional-resources-prep.sh`
-- サービスカタログ: `docs/usecase/{ユースケースID}/service-catalog.md`
+- `infra/azure/create-azure-additional-resources-prep.sh`
+- `infra/azure/create-azure-additional-resources/create.sh`
+- （複数サービスの場合）`infra/azure/create-azure-additional-resources/services/<service>.sh`
+- サービスカタログ: `docs/service-catalog.md` の表を更新する（重複行は作らない）。
 ```
 
 ### Step.2.4. 各サービスのコードの作成
@@ -185,29 +157,26 @@ Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービ
 
 ```text
 # タスク
-マイクロサービス定義書から {サービスID} の C# Azure Functions を実装し、必要な Azure 依存に接続し、テストとドキュメントを作成する
+マイクロサービス定義書から全てのサービスの Azure Functions を実装し、テスト/最小ドキュメント/設定雛形まで揃える
 
 # 入力
-- ユースケースID: {ユースケースID}
-- サービスID: {サービスID}
-- サービス名: {サービス名}
+最低限ほしい情報：
+- マイクロサービス定義書（例）：
+  - `docs/services/{serviceId}-{serviceNameSlug}-description.md`
+  - Azure Functionsのプログラミング言語: `C#（最新版のAzure Functionsでサポートされているもの）`
+- 参照候補（存在すれば読む）：
+  - `docs/service-list.md`
+  - `docs/data-model.md`
+  - `docs/service-catalog.md`
+  - `docs/azure/AzureServices-*.md`
 
-- マイクロサービス定義書：
-  - `docs/usecase/{ユースケースID}/services/{サービスID}-[サービス名]-description.md`
-- 参考：
-  - `docs/usecase/{ユースケースID}/usecase-description.md`
-  - `docs/usecase/{ユースケースID}/services/service-list.md`
-  - `docs/usecase/{ユースケースID}/data-model.md`
-  - `docs/usecase/{ユースケースID}/service-catalog.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-*.md`
-
-# 出力（必須）
+# 成果物（必須）
 - 実装：
-  - `api/{ユースケースID}/{サービスID}-{サービス名}/` 配下に Azure Functions (C#) を作成
+  - `api/{サービスID}-{サービス名}/` 配下に Azure Functionsを作成/更新
 - テスト：
-  - 単体テスト（xUnit, 決定的・外部依存はモック）：`test/{ユースケースID}/api/`
-  - 手動スモーク UI（デプロイ済み API を叩く簡易 HTML/JS。自動 unit test に混ぜない）：
-    - `test/{ユースケースID}/api/smoke-ui/index.html`
+  - `test/api/` に単体テスト（外部I/Oはモック。CIで決定的に）
+- 手動スモーク（任意だが推奨。自動テストに混ぜない）：
+  - `test/api/smoke-ui/index.html`
 ```
 
 ### Step.2.5. Azure Compute の作成
@@ -220,45 +189,32 @@ Azure CLIで追加サービス（例: Azure OpenAI等）を作成し、サービ
 
 ```text
 # タスク
-Azure Functions 作成→デプロイ、GitHub Actions で CI/CD 構築、API スモークテスト（＋手動UI）を追加する
+サービスリストの全てのサービスを、Azure Functions用に作成/更新→デプロイ、GitHub Actions で CI/CD 構築、API スモークテスト（+手動UI）追加まで行う。AGENTS.mdのルールを守り、推測せず、根拠はリポジトリ内資料またはCLIヘルプ/実行結果で残す。
 
-# 入力
-- ユースケースID: `{ユースケースID}`
+# Inputs（既定の参照場所）
+- サービスリスト: `docs/service-list.md`
+- サービスカタログ: `docs/service-catalog.md`
 - リソースグループ名: `{リソースグループ名}`
-- デプロイ対象コード: `api/{ユースケースID}/{サービスID}-{サービス名}/`
-- サービス情報: `docs/usecase/{ユースケースID}/service-catalog.md`
+- デプロイ対象コード: `api/{サービスID}-{サービス名}/`
+- リージョン: `Japan East`（優先。利用不可なら `Japan West`、それも不可なら `Southeast Asia`）
 
-# 出力（必須）- 章立ての数値はカスタムエージェントに準拠
-## 2.1 Azure 作成スクリプト（Linux）
-- 準備スクリプト：`infra/{ユースケースID}/create-azure-api-resources-prep.sh`
-  - Azure CLI 前提のチェック/導入（必要なら）
-- リソース作成スクリプト：`infra/{ユースケースID}/create-azure-api-resources.sh`
-  - **べき等**：各リソースは `show/exists` で存在確認→無ければ作成→あれば skip
-  - 作成後、必要な値（URL/Resource ID/リージョン等）を取得できるようにする
-- 実行：Azure CLI スクリプトは **Azure MCP Server で認証後に実行**。CLI仕様は MicrosoftDocs MCP を参照。
+# 出力（必須）
+- Azure 作成スクリプト（Linux）: `infra/azure/create-azure-api-resources-prep.sh`
+- GitHub Actions（CI/CD）
+  - 配置: `/.github/workflows/`
+  - 原則: OIDC + `azure/login`（可能なら secret-less を優先）
+  - Functions デプロイ: Azure Functions 用公式 Action を利用（既存 Function App へデプロイ）
+  - 例外: OIDC 不可の場合のみ publish profile 等を採用し、採用理由と設定手順を README に残す
+  - 注意: Copilot が push しても workflow は自動実行されないことがあるため、PR 側でユーザーが実行承認できるよう説明を残す。
 
-## 2.2 GitHub Actions（CI/CD）
-- ワークフローは `/.github/workflows/` に配置する。
-- 原則：OIDC + `azure/login` を用いた認証（可能なら secret-less を優先）。
-- Azure Functions へのデプロイは `Azure/functions-action` を使用（既存 Function App へデプロイ）。
-- 例外：OIDC が不可能な場合のみ、publish profile 等の代替を採用（採用理由と手順を README に記載）。
+- サービスカタログ(更新): `docs/service-catalog.md` の表に追記/更新
 
-## 2.4 テスト（自動 + 手動UI）
-- 保存先：`test/{ユースケースID}/`
-- 必須：
-  1) 自動スモークテスト（HTTP で Functions の API を呼び出し、主要レスポンスを検証）
-  2) 手動用のシンプル Web 画面（引数入力→API呼び出し→戻り値表示）
-- 「単体テスト」と記載があるが、性質上は **API スモーク/統合寄り**である旨を README に明記（テスト名は “smoke” 等にする）。
-
-## 2.5 進捗ログ
-- `work/{ユースケースID}/api-azure-deploy-work-status.md` に日本語で追記。
-- 推奨セクション：
-  - 実施内容 / 作成・更新ファイル一覧 / 実行結果（成功/失敗・エラー要約）/ 次アクション
-
-# 3. リージョン選択
-- 既定：Japan East
-- 利用不可/非対応の場合：Japan West → East Asia → Southeast Asia の順でフォールバック。
-- 変更した場合は理由（例：機能非対応/クォータ）を work-status に記録。
+- テスト（自動 + 手動UI）
+  - 保存先: `test/{サービスID}-{サービス名}/`
+  - 必須:
+    1. 自動スモークテスト（HTTPでFunctions API呼び出し、主要レスポンス検証）
+    2. 手動UI（最小の Web 画面：入力 → API呼び出し → 結果表示）
+  - リポジトリ既存のテスト方式があればそれに従う。無ければ「依存追加なし」で動く最小構成を選ぶ。
 ```
 
 ## Step.3. UI 作成
@@ -280,22 +236,19 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 
 ```text
 # タスク
-画面定義書に基づき、1画面ずつUIを実装し、APIクライアント層でサービス接続を整備する（進捗記録・10分超は分割）
+画面定義書に基づき、全ての画面のUIを実装し、サービスカタログに基づくAPIクライアント層を整備する。
 
-# UI実装技術: HTML5, JavaScript,のみ。フレームワーク不要
+# 入力（参照順）
 
-# 入力
-- ユースケースID: `{ユースケースID}`
-- リソースグループ名: `{リソースグループ名}`
-- 画面一覧・遷移: `docs/usecase/{ユースケースID}/screen/screen-list.md`
-- 画面定義書: `docs/usecase/{ユースケースID}/screen/{画面ID}-description.md`
-- 参考: `docs/usecase/{ユースケースID}/usecase-detail.md`, `data-model.md`
-- サービス: `docs/usecase/{ユースケースID}/services/service-catalog.md`（または同等のサービスカタログ）
-- サンプル: `data/{ユースケースID}/sample-data.json`
+1. 画面定義書: `docs/screen/{画面ID}-description.md`
+2. 画面一覧・遷移: `docs/screen-list.md`
+3. サービスカタログ: `docs/service-catalog.md`
+4. UI実装技術: `HTML5/CSS/JavaScript（リポジトリ既存規約に合わせる）`
+5. 参考: `docs/usecase-list.md`
+6. サンプルデータ: `data/sample-data.json`
 
-
-# 出力（必須）
-- `app/{ユースケースID}`
+# 出力（作る場所）
+- 実装: `app/` 配下（既存構造がある場合はそれに合わせる）
 ```
 
 ## Step.3.1. Webアプリケーションのデプロイ
@@ -311,18 +264,36 @@ Copilot君にIssueをAssignして、Issueのコメントに以下の様な内容
 
 ```text
 # タスク
-Azure Static Web Apps にWebをデプロイし、GitHub Actionsで継続的デリバリーを構築する
+Azure Static Web Apps へのWebデプロイと、GitHub Actionsによる継続的デリバリー（CD）構築を、リポジトリ標準（AGENTS.md / skills）に従って実施する。
 
-# 入力
-- ユースケースID: {ユースケースID}
-- リソースグループ名: {リソースグループ名}
-- リージョン優先順: East Asia -> Japan West -> Southeast Asia
+# Inputs（変数）
+- リソースグループ名: `{リソースグループ名}`
+- デプロイブランチ: `main` と PRプレビュー要否
+- アプリの `app_location` / `api_location` / `output_location`（静的サイト/フレームワーク構成に依存）。以下がデフォルト
+   - 実装: `app/`
+   - APIクライアント層: `app/lib/api/`
+
+既定（明示してよい仮定）
+- リージョン優先: East Asia -> Japan West -> Southeast Asia
+
+### 成果物（このジョブの対象）
+1. `infra/azure/create-azure-webui-resources-prep.sh`
+   - Linux bash。必要最小限の事前確認（az/login/拡張など）。冪等。
+2. `infra/azure/create-azure-webui-resources.sh`
+   - Azure Static Web Apps の作成/更新（az CLI）。冪等（既存時は安全に更新/終了）。
+   - 実行可能性を重視し、CLIの妥当性は **実際に `az ... --help` / dry-run相当 / show** 等で確認する。
+3. `.github/workflows/<deploy-workflow>.yml`（新規 or 更新）
+   - GitHub Actions で SWA へデプロイ。
+   - Secret `AZURE_STATIC_WEB_APPS_API_TOKEN` を参照（値は一切書かない）。
+   - `app_location/api_location/output_location` は実ディレクトリ構造に合わせる。
+4. `docs/service-catalog.md`
+   - 作成したWebアプリURLを追記（取得できない場合は取得手順を追記）。
 ```
 
 Azure Static Web Appsの作成ができない場合があります。その場合は、以下の手順を試してください。
 
 > ### ステップ1: Azureリソース作成
-> cd infra/{ユースケースID}
+> cd infra/azure
 > ./create-azure-webui-resources.sh
 > ### ステップ2: デプロイトークンをコピー（スクリプト出力から）
 > ### ステップ3: GitHub Secretsに設定
@@ -342,20 +313,20 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 
 ```text
 # タスク
-デプロイ済みAzureリソースを棚卸しし、Azure Well-Architected Framework（5本柱）と Azure Security Benchmark v3 を根拠にアーキテクチャ/セキュリティをレビューし、Mermaid図付きレポートを生成する
+デプロイ済みAzureリソースを棚卸しし、Azure Well-Architected Framework（5本柱）と Azure Security Benchmark v3 を根拠にアーキテクチャ/セキュリティをレビューして、日本語のMermaid図付きレポートを生成する
 
-# 入力
-- ユースケースID: {ユースケースID}
-- レビュー対象: リソースグループ名: {リソースグループ名}
-- 参考ドキュメント:
-  - `docs/usecase/{ユースケースID}/usecase-description.md`
-  - `docs/usecase/{ユースケースID}/service-catalog.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-services.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-data.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-services-additional.md`
+- レビュー対象（いずれか）:
+  - リソースグループ名: `{resourceGroupName}`
+  - または サブスクリプション/範囲: `{subscriptionOrScope}`（RGが複数の場合）
+- 参考ドキュメント（存在する範囲で）:
+  - `docs/usecase-detail.md`
+  - `docs/service-catalog.md`
+  - `docs/azure/AzureServices-services.md`
+  - `docs/azure/AzureServices-data.md`
+  - `docs/azure/AzureServices-services-additional.md`
 
-# 出力（必須）
-  - `docs/usecase/{ユースケースID}/Azure-ArchitectureReview-Report.md`
+- 出力先（固定）:
+  - `docs/azure/Azure-ArchitectureReview-Report.md`
 ```
 
 ### Step.4.2. 整合性チェック
@@ -366,19 +337,18 @@ Microsoftの公式ドキュメントの情報を活用して、展開された�
 
 ```text
 # タスク
-デプロイ済みAzureリソース（サービスカタログ記載）と、app/api/infra/config等の参照・設定整合を点検し、証跡付きでレビューし、必要なら最小差分で修正する
+サービスカタログ準拠で Azure 依存（参照・設定・IaC）を証跡付きで点検し、必要なら最小差分で修正する
 
-# 入力
-- ユースケースID: {ユースケースID}
-- リソースグループ名: {リソースグループ名}
-- Webソース: `app/`
-- APIソース: `api/`
-- 必読: `docs/usecase/{ユースケースID}/service-catalog.md`
-- 参考:
-  - `docs/usecase/{ユースケースID}/AzureServices-services.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-data.md`
-  - `docs/usecase/{ユースケースID}/AzureServices-services-additional.md`
+## 入力（未確定なら質問）
+必須：
+- リソースグループ名：`<resource-group>`（実環境照会を行う場合のみ必須）
+- 必読：`docs/service-catalog.md`
 
-# 出力（必須）
-- `docs/usecase/{ユースケースID}/All-DependencyReview-Report.md`
+推奨（存在するなら参照）：
+- `docs/azure/AzureServices-services*.md`
+- `docs/azure/AzureServices-data*.md`
+- 参照先コード：`app/`, `api/`, `infra/`, `config/`, `.github/workflows/`
+
+## 出力（固定）
+- 最終成果物：`docs/azure/DependencyReview-Report.md`
 ```
