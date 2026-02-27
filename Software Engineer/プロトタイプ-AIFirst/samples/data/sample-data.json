@@ -1,0 +1,2338 @@
+{
+  "description": "UC-006: 生成AI搭載カスタマーサポートチャットボット - サンプルデータ",
+  "version": "1.0",
+  "generatedAt": "2025-10-22T07:10:00Z",
+  "entities": {
+    "ConversationSession": [
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440001",
+        "customerId": "CUST-2024-001234",
+        "channel": "Web",
+        "status": "Resolved",
+        "startedAt": "2025-10-15T10:30:00Z",
+        "endedAt": "2025-10-15T10:45:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": "ポイント残高の確認方法について説明し、お客様のポイント残高を確認しました。",
+        "satisfactionRating": 5,
+        "metadata": {
+          "customerType": "Gold",
+          "deviceType": "Desktop",
+          "browser": "Chrome"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440002",
+        "customerId": "CUST-2024-005678",
+        "channel": "MobileApp",
+        "status": "Escalated",
+        "startedAt": "2025-10-15T14:20:00Z",
+        "endedAt": "2025-10-15T14:50:00Z",
+        "assignedAgentId": "660e8400-e29b-41d4-a716-446655440101",
+        "escalationReason": "複雑な請求エラーの問題。人間のエージェントによる調査が必要。",
+        "resolutionSummary": "請求エラーを確認し、システム側の不具合を修正しました。",
+        "satisfactionRating": 4,
+        "metadata": {
+          "customerType": "Platinum",
+          "deviceType": "iOS",
+          "appVersion": "2.5.0"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440003",
+        "customerId": "CUST-2024-009012",
+        "channel": "LINE",
+        "status": "Active",
+        "startedAt": "2025-10-15T16:00:00Z",
+        "endedAt": null,
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": null,
+        "satisfactionRating": null,
+        "metadata": {
+          "customerType": "Silver",
+          "lineUserId": "U1234567890abcdef"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440004",
+        "customerId": "CUST-2024-003456",
+        "channel": "Web",
+        "status": "Resolved",
+        "startedAt": "2025-10-14T09:15:00Z",
+        "endedAt": "2025-10-14T09:25:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": "キャンペーン情報を提供し、参加方法を説明しました。",
+        "satisfactionRating": 5,
+        "metadata": {
+          "customerType": "Bronze",
+          "deviceType": "Mobile",
+          "browser": "Safari"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440005",
+        "customerId": "CUST-2024-007890",
+        "channel": "MobileApp",
+        "status": "Abandoned",
+        "startedAt": "2025-10-14T11:30:00Z",
+        "endedAt": "2025-10-14T11:35:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": null,
+        "satisfactionRating": null,
+        "metadata": {
+          "customerType": "Silver",
+          "deviceType": "Android",
+          "appVersion": "2.4.8"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440006",
+        "customerId": "CUST-2024-001111",
+        "channel": "FacebookMessenger",
+        "status": "Resolved",
+        "startedAt": "2025-10-13T13:45:00Z",
+        "endedAt": "2025-10-13T14:00:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": "特典交換手順を案内し、交換を完了しました。",
+        "satisfactionRating": 4,
+        "metadata": {
+          "customerType": "Gold",
+          "facebookId": "1234567890"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440007",
+        "customerId": "CUST-2024-002222",
+        "channel": "Web",
+        "status": "Escalated",
+        "startedAt": "2025-10-13T15:20:00Z",
+        "endedAt": "2025-10-13T16:10:00Z",
+        "assignedAgentId": "660e8400-e29b-41d4-a716-446655440102",
+        "escalationReason": "顧客が不満を表明し、人間のエージェントとの対話を要求。",
+        "resolutionSummary": "顧客の懸念事項を丁寧にヒアリングし、特別対応を実施しました。",
+        "satisfactionRating": 3,
+        "metadata": {
+          "customerType": "Platinum",
+          "deviceType": "Desktop",
+          "browser": "Firefox"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440008",
+        "customerId": "CUST-2024-003333",
+        "channel": "LINE",
+        "status": "Resolved",
+        "startedAt": "2025-10-12T10:00:00Z",
+        "endedAt": "2025-10-12T10:12:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": "ポイント有効期限について説明し、延長方法を案内しました。",
+        "satisfactionRating": 5,
+        "metadata": {
+          "customerType": "Silver",
+          "lineUserId": "U9876543210fedcba"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440009",
+        "customerId": "CUST-2024-004444",
+        "channel": "MobileApp",
+        "status": "Resolved",
+        "startedAt": "2025-10-12T14:30:00Z",
+        "endedAt": "2025-10-12T14:40:00Z",
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": "アプリのログイン問題をトラブルシューティングし、解決しました。",
+        "satisfactionRating": 4,
+        "metadata": {
+          "customerType": "Bronze",
+          "deviceType": "Android",
+          "appVersion": "2.5.0"
+        }
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440010",
+        "customerId": "CUST-2024-005555",
+        "channel": "Web",
+        "status": "Active",
+        "startedAt": "2025-10-15T17:00:00Z",
+        "endedAt": null,
+        "assignedAgentId": null,
+        "escalationReason": null,
+        "resolutionSummary": null,
+        "satisfactionRating": null,
+        "metadata": {
+          "customerType": "Gold",
+          "deviceType": "Desktop",
+          "browser": "Edge"
+        }
+      }
+    ],
+    "Message": [
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440001",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "sender": "Customer",
+        "content": "こんにちは、ポイント残高を確認したいのですが。",
+        "timestamp": "2025-10-15T10:30:15Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440002",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "sender": "Bot",
+        "content": "こんにちは!ポイント残高の確認ですね。お客様の現在のポイント残高は、12,350ポイントです。",
+        "timestamp": "2025-10-15T10:30:18Z",
+        "confidenceScore": 0.95,
+        "processingTime": 2800,
+        "metadata": {
+          "modelName": "gpt-4",
+          "tokenUsage": {
+            "input": 45,
+            "output": 32
+          }
+        }
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440003",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "sender": "Customer",
+        "content": "先月の請求が間違っているようです。ポイントが正しく付与されていません。",
+        "timestamp": "2025-10-15T14:20:30Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440004",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "sender": "Bot",
+        "content": "申し訳ございません。請求に関するお問い合わせは、専門のスタッフが対応させていただきます。少々お待ちください。",
+        "timestamp": "2025-10-15T14:20:35Z",
+        "confidenceScore": 0.58,
+        "processingTime": 3200,
+        "metadata": {
+          "modelName": "gpt-4",
+          "tokenUsage": {
+            "input": 52,
+            "output": 28
+          }
+        }
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440005",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "sender": "Agent",
+        "content": "お待たせいたしました。担当の佐藤と申します。請求内容を確認させていただきます。",
+        "timestamp": "2025-10-15T14:25:00Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {
+          "agentId": "660e8400-e29b-41d4-a716-446655440101"
+        }
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440006",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440003",
+        "sender": "Customer",
+        "content": "現在開催中のキャンペーンについて教えてください。",
+        "timestamp": "2025-10-15T16:00:10Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440007",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "sender": "Customer",
+        "content": "秋のポイント2倍キャンペーンに参加したいです。",
+        "timestamp": "2025-10-14T09:15:20Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440008",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "sender": "Bot",
+        "content": "秋のポイント2倍キャンペーンへのご参加ありがとうございます!期間中のお買い物で、通常の2倍のポイントが貯まります。参加登録は不要で、自動的に適用されます。",
+        "timestamp": "2025-10-14T09:15:24Z",
+        "confidenceScore": 0.92,
+        "processingTime": 3500,
+        "metadata": {
+          "modelName": "gpt-4",
+          "tokenUsage": {
+            "input": 48,
+            "output": 55
+          }
+        }
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440009",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440006",
+        "sender": "Customer",
+        "content": "ポイントを商品券に交換したいのですが、手順を教えてください。",
+        "timestamp": "2025-10-13T13:45:15Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440010",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440007",
+        "sender": "Customer",
+        "content": "何度も同じことを聞かれてうんざりです。人と話したいです。",
+        "timestamp": "2025-10-13T15:20:25Z",
+        "confidenceScore": null,
+        "processingTime": null,
+        "metadata": {}
+      }
+    ],
+    "ConversationContext": [
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440001",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "customerId": "CUST-2024-001234",
+        "customerTier": "Gold",
+        "currentPointBalance": 12350,
+        "recentTransactions": [
+          {
+            "date": "2025-10-10",
+            "type": "purchase",
+            "points": 500,
+            "description": "オンラインショップ購入"
+          },
+          {
+            "date": "2025-10-05",
+            "type": "bonus",
+            "points": 1000,
+            "description": "月間ボーナス"
+          }
+        ],
+        "previousSessionsSummary": "過去2回の問い合わせでキャンペーン情報を確認。満足度は高い。",
+        "languagePreference": "ja",
+        "location": "東京都",
+        "lastUpdatedAt": "2025-10-15T10:30:15Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440002",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "customerId": "CUST-2024-005678",
+        "customerTier": "Platinum",
+        "currentPointBalance": 45800,
+        "recentTransactions": [
+          {
+            "date": "2025-10-12",
+            "type": "purchase",
+            "points": 2500,
+            "description": "店舗購入"
+          },
+          {
+            "date": "2025-10-08",
+            "type": "redeem",
+            "points": -10000,
+            "description": "商品券交換"
+          }
+        ],
+        "previousSessionsSummary": "過去に請求関連の問い合わせが1回あり、迅速に解決された。",
+        "languagePreference": "ja",
+        "location": "大阪府",
+        "lastUpdatedAt": "2025-10-15T14:20:30Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440003",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440003",
+        "customerId": "CUST-2024-009012",
+        "customerTier": "Silver",
+        "currentPointBalance": 5600,
+        "recentTransactions": [
+          {
+            "date": "2025-10-14",
+            "type": "purchase",
+            "points": 300,
+            "description": "オンラインショップ購入"
+          }
+        ],
+        "previousSessionsSummary": "初めての問い合わせ。",
+        "languagePreference": "ja",
+        "location": "福岡県",
+        "lastUpdatedAt": "2025-10-15T16:00:10Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440004",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "customerId": "CUST-2024-003456",
+        "customerTier": "Bronze",
+        "currentPointBalance": 1200,
+        "recentTransactions": [
+          {
+            "date": "2025-10-08",
+            "type": "purchase",
+            "points": 150,
+            "description": "店舗購入"
+          }
+        ],
+        "previousSessionsSummary": "過去1回、ポイント確認の問い合わせあり。",
+        "languagePreference": "ja",
+        "location": "愛知県",
+        "lastUpdatedAt": "2025-10-14T09:15:20Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440005",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440005",
+        "customerId": "CUST-2024-007890",
+        "customerTier": "Silver",
+        "currentPointBalance": 8900,
+        "recentTransactions": [
+          {
+            "date": "2025-10-11",
+            "type": "purchase",
+            "points": 800,
+            "description": "オンラインショップ購入"
+          }
+        ],
+        "previousSessionsSummary": "過去に問い合わせなし。",
+        "languagePreference": "ja",
+        "location": "神奈川県",
+        "lastUpdatedAt": "2025-10-14T11:30:00Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440006",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440006",
+        "customerId": "CUST-2024-001111",
+        "customerTier": "Gold",
+        "currentPointBalance": 18500,
+        "recentTransactions": [
+          {
+            "date": "2025-10-10",
+            "type": "purchase",
+            "points": 1200,
+            "description": "店舗購入"
+          },
+          {
+            "date": "2025-10-06",
+            "type": "bonus",
+            "points": 2000,
+            "description": "誕生日ボーナス"
+          }
+        ],
+        "previousSessionsSummary": "過去3回の問い合わせ、全て満足に解決。",
+        "languagePreference": "ja",
+        "location": "北海道",
+        "lastUpdatedAt": "2025-10-13T13:45:15Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440007",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440007",
+        "customerId": "CUST-2024-002222",
+        "customerTier": "Platinum",
+        "currentPointBalance": 62300,
+        "recentTransactions": [
+          {
+            "date": "2025-10-13",
+            "type": "purchase",
+            "points": 5000,
+            "description": "高額商品購入"
+          }
+        ],
+        "previousSessionsSummary": "過去に不満を表明したことがある。VIP対応が必要。",
+        "languagePreference": "ja",
+        "location": "東京都",
+        "lastUpdatedAt": "2025-10-13T15:20:25Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440008",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440008",
+        "customerId": "CUST-2024-003333",
+        "customerTier": "Silver",
+        "currentPointBalance": 7200,
+        "recentTransactions": [
+          {
+            "date": "2025-10-09",
+            "type": "purchase",
+            "points": 400,
+            "description": "オンラインショップ購入"
+          }
+        ],
+        "previousSessionsSummary": "過去1回、ポイント有効期限の確認あり。",
+        "languagePreference": "ja",
+        "location": "宮城県",
+        "lastUpdatedAt": "2025-10-12T10:00:10Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440009",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440009",
+        "customerId": "CUST-2024-004444",
+        "customerTier": "Bronze",
+        "currentPointBalance": 950,
+        "recentTransactions": [
+          {
+            "date": "2025-10-07",
+            "type": "purchase",
+            "points": 100,
+            "description": "店舗購入"
+          }
+        ],
+        "previousSessionsSummary": "初めての問い合わせ。",
+        "languagePreference": "ja",
+        "location": "広島県",
+        "lastUpdatedAt": "2025-10-12T14:30:10Z"
+      },
+      {
+        "id": "880e8400-e29b-41d4-a716-446655440010",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440010",
+        "customerId": "CUST-2024-005555",
+        "customerTier": "Gold",
+        "currentPointBalance": 22100,
+        "recentTransactions": [
+          {
+            "date": "2025-10-15",
+            "type": "purchase",
+            "points": 1500,
+            "description": "オンラインショップ購入"
+          }
+        ],
+        "previousSessionsSummary": "過去2回の問い合わせで商品交換について確認。",
+        "languagePreference": "ja",
+        "location": "京都府",
+        "lastUpdatedAt": "2025-10-15T17:00:10Z"
+      }
+    ],
+    "Intent": [
+      {
+        "id": "0a091d32-fd99-4307-81c0-34a34d789f19",
+        "messageId": "770e8400-e29b-41d4-a716-446655440001",
+        "name": "CheckPointBalance",
+        "confidenceScore": 0.95,
+        "parameters": {
+          "balanceType": "current"
+        },
+        "recognizedAt": "2025-10-15T10:30:17Z"
+      },
+      {
+        "id": "1070d295-0028-42dc-81a5-5b5611d91f32",
+        "messageId": "770e8400-e29b-41d4-a716-446655440003",
+        "name": "InquireBilling",
+        "confidenceScore": 0.88,
+        "parameters": {
+          "period": "last_month",
+          "issue": "missing_points"
+        },
+        "recognizedAt": "2025-10-15T14:20:33Z"
+      },
+      {
+        "id": "1bf35f63-9d2c-45ff-aad2-565e04fc0e57",
+        "messageId": "770e8400-e29b-41d4-a716-446655440006",
+        "name": "InquireCampaign",
+        "confidenceScore": 0.92,
+        "parameters": {
+          "campaignType": "current"
+        },
+        "recognizedAt": "2025-10-15T16:00:12Z"
+      },
+      {
+        "id": "369e7761-6ad6-4e1f-a26f-8a383768c33e",
+        "messageId": "770e8400-e29b-41d4-a716-446655440007",
+        "name": "JoinCampaign",
+        "confidenceScore": 0.89,
+        "parameters": {
+          "campaignName": "秋のポイント2倍"
+        },
+        "recognizedAt": "2025-10-14T09:15:22Z"
+      },
+      {
+        "id": "6308b981-7d9c-47c8-a979-a8ff51205269",
+        "messageId": "770e8400-e29b-41d4-a716-446655440009",
+        "name": "RedeemReward",
+        "confidenceScore": 0.94,
+        "parameters": {
+          "rewardType": "gift_card"
+        },
+        "recognizedAt": "2025-10-13T13:45:17Z"
+      },
+      {
+        "id": "1824ea4f-2214-41db-b1c9-068d530847df",
+        "messageId": "770e8400-e29b-41d4-a716-446655440010",
+        "name": "RequestHumanAgent",
+        "confidenceScore": 0.97,
+        "parameters": {
+          "reason": "dissatisfaction"
+        },
+        "recognizedAt": "2025-10-13T15:20:27Z"
+      },
+      {
+        "id": "f7dbc30a-b500-445a-8ace-cf4e9e3c46cd",
+        "messageId": "4b21aaa5-3e05-4b7c-850e-6bf599258a11",
+        "name": "TechnicalSupport",
+        "confidenceScore": 0.86,
+        "parameters": {
+          "issueType": "login_problem"
+        },
+        "recognizedAt": "2025-10-12T14:30:12Z"
+      },
+      {
+        "id": "5a7b293f-f7a0-4d38-99a0-d8e6a5f58019",
+        "messageId": "f88a2d16-0496-4ad1-bdda-4b4d68cea0d3",
+        "name": "InquirePointExpiry",
+        "confidenceScore": 0.91,
+        "parameters": {
+          "concernType": "expiration_date"
+        },
+        "recognizedAt": "2025-10-12T10:00:12Z"
+      },
+      {
+        "id": "f4e5d98c-3c59-4c0a-b4fe-710ae258635d",
+        "messageId": "6c87637b-1f2d-4cfb-afb5-0d28ebf2af81",
+        "name": "CheckTransactionHistory",
+        "confidenceScore": 0.87,
+        "parameters": {
+          "period": "last_3_months"
+        },
+        "recognizedAt": "2025-10-11T11:15:20Z"
+      },
+      {
+        "id": "5d93da71-f73c-456c-9371-71aa35897f7c",
+        "messageId": "77a0fe10-2db6-4fda-8a8b-31aa76a6cee2",
+        "name": "UpdateProfile",
+        "confidenceScore": 0.83,
+        "parameters": {
+          "updateType": "email"
+        },
+        "recognizedAt": "2025-10-11T15:30:25Z"
+      }
+    ],
+    "ExtractedEntity": [
+      {
+        "id": "da425823-c614-4c8f-8eb8-9a4de49008c8",
+        "messageId": "770e8400-e29b-41d4-a716-446655440003",
+        "entityType": "Date",
+        "value": "先月",
+        "normalizedValue": "2025-09",
+        "confidenceScore": 0.92,
+        "extractedAt": "2025-10-15T14:20:33Z"
+      },
+      {
+        "id": "0ebe222c-0043-4097-8606-d4ac1092965a",
+        "messageId": "770e8400-e29b-41d4-a716-446655440003",
+        "entityType": "PointValue",
+        "value": "ポイント",
+        "normalizedValue": "points",
+        "confidenceScore": 0.89,
+        "extractedAt": "2025-10-15T14:20:33Z"
+      },
+      {
+        "id": "f4696943-d73c-4760-9b05-d2013ab199ad",
+        "messageId": "770e8400-e29b-41d4-a716-446655440007",
+        "entityType": "ProductName",
+        "value": "秋のポイント2倍キャンペーン",
+        "normalizedValue": "autumn_double_points_campaign",
+        "confidenceScore": 0.95,
+        "extractedAt": "2025-10-14T09:15:22Z"
+      },
+      {
+        "id": "64f0eb4f-8241-4d94-b9b3-b67573447154",
+        "messageId": "770e8400-e29b-41d4-a716-446655440009",
+        "entityType": "Amount",
+        "value": "商品券",
+        "normalizedValue": "gift_card",
+        "confidenceScore": 0.91,
+        "extractedAt": "2025-10-13T13:45:17Z"
+      },
+      {
+        "id": "05c703bf-1e17-42d1-a00e-d1fce46b867f",
+        "messageId": "3ec50f2b-3cd7-4c44-9636-e6f3aed49d35",
+        "entityType": "Amount",
+        "value": "5000ポイント",
+        "normalizedValue": "5000",
+        "confidenceScore": 0.94,
+        "extractedAt": "2025-10-13T10:20:15Z"
+      },
+      {
+        "id": "9cde4a81-1217-40bc-8996-35c52ae3a246",
+        "messageId": "c64fbc92-b8d4-4671-86f5-6f2fd6e1cfe4",
+        "entityType": "Date",
+        "value": "来月",
+        "normalizedValue": "2025-11",
+        "confidenceScore": 0.88,
+        "extractedAt": "2025-10-12T16:30:22Z"
+      },
+      {
+        "id": "639e8752-5f0d-4fc9-a7d9-17ff3f997464",
+        "messageId": "788f28d7-c8a8-4e3b-8a70-a323de6517d4",
+        "entityType": "Location",
+        "value": "東京店",
+        "normalizedValue": "tokyo_store",
+        "confidenceScore": 0.9,
+        "extractedAt": "2025-10-12T11:15:30Z"
+      },
+      {
+        "id": "a97e8aca-a2f1-44f8-88e9-66d849a9015e",
+        "messageId": "5673664f-aa7c-4af7-a264-8111458b0174",
+        "entityType": "ProductName",
+        "value": "プレミアム商品",
+        "normalizedValue": "premium_item",
+        "confidenceScore": 0.86,
+        "extractedAt": "2025-10-11T14:25:18Z"
+      },
+      {
+        "id": "2a47131c-1f56-4d2b-86a4-21c8b76b5b0f",
+        "messageId": "7b43151a-9d3f-4d3c-8d99-3ee59c428f91",
+        "entityType": "Date",
+        "value": "今週末",
+        "normalizedValue": "2025-10-19/2025-10-20",
+        "confidenceScore": 0.93,
+        "extractedAt": "2025-10-11T10:45:12Z"
+      },
+      {
+        "id": "beb23d17-84c9-4f9f-9008-242bc4b642a3",
+        "messageId": "17ae4157-2907-4112-a216-4b7c70159949",
+        "entityType": "Amount",
+        "value": "10000円分",
+        "normalizedValue": "10000",
+        "confidenceScore": 0.92,
+        "extractedAt": "2025-10-10T13:20:25Z"
+      }
+    ],
+    "PromptTemplate": [
+      {
+        "id": "790ba23a-b0b1-452b-9532-143ea71ec3cc",
+        "templateId": "support-general-v1",
+        "template": "あなたはロイヤルティプログラムのカスタマーサポート担当AIです。{customer_name}様からの以下の質問に、丁寧かつ正確に回答してください。",
+        "variables": [
+          "customer_name",
+          "customer_question",
+          "context"
+        ],
+        "systemInstructions": "常に敬語を使用し、顧客に対して親切で丁寧な対応を心がけてください。",
+        "exampleConversations": [
+          {
+            "question": "ポイント残高を教えてください",
+            "answer": "お客様の現在のポイント残高は{balance}ポイントです。"
+          }
+        ],
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "11b7d0d3-61a4-4486-8649-2bd20385e3ad",
+        "templateId": "support-technical-v1",
+        "template": "あなたはロイヤルティプログラムの技術サポート担当AIです。",
+        "variables": [
+          "customer_name",
+          "technical_issue",
+          "device_info"
+        ],
+        "systemInstructions": "技術的な問題は明確で具体的な手順を提供してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "6cd0baf7-2533-416c-a57b-fcdc50904657",
+        "templateId": "support-billing-v1",
+        "template": "あなたはロイヤルティプログラムの請求担当AIです。",
+        "variables": [
+          "customer_name",
+          "billing_inquiry",
+          "transaction_history"
+        ],
+        "systemInstructions": "請求に関する問題は慎重に扱い、具体的な金額やポイント数を確認してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "26af1b81-551b-4f0c-b4a1-cf767b6e1e67",
+        "templateId": "support-campaign-v1",
+        "template": "あなたはロイヤルティプログラムのキャンペーン情報担当AIです。",
+        "variables": [
+          "customer_name",
+          "campaign_info",
+          "customer_tier"
+        ],
+        "systemInstructions": "キャンペーン情報は最新のものを提供し、参加条件や期限を明確に伝えてください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "0242e4fe-4a61-4a56-85cf-607e6babfe39",
+        "templateId": "support-redemption-v1",
+        "template": "あなたはロイヤルティプログラムの特典交換担当AIです。",
+        "variables": [
+          "customer_name",
+          "redemption_request",
+          "current_points"
+        ],
+        "systemInstructions": "ポイント交換の手順を分かりやすく説明してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "6170a216-4426-4e89-aa73-a9b09397a68c",
+        "templateId": "support-general-v2",
+        "template": "あなたはロイヤルティプログラムのカスタマーサポート担当AIです。",
+        "variables": [
+          "customer_name",
+          "customer_tier",
+          "customer_question",
+          "context"
+        ],
+        "systemInstructions": "常に敬語を使用し、顧客ティアに応じた対応を心がけてください。",
+        "exampleConversations": null,
+        "version": 2,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-01T00:00:00Z"
+      },
+      {
+        "id": "25a52fba-18b7-4674-8a87-fc77150cdbcb",
+        "templateId": "support-vip-v1",
+        "template": "あなたはロイヤルティプログラムのVIPサポート担当AIです。",
+        "variables": [
+          "customer_name",
+          "inquiry",
+          "vip_benefits"
+        ],
+        "systemInstructions": "Platinum会員には最高レベルのサービスを提供してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "ab8918b2-828c-4a04-a81e-f213e5fb6da6",
+        "templateId": "support-complaint-v1",
+        "template": "あなたはロイヤルティプログラムの苦情対応担当AIです。",
+        "variables": [
+          "customer_name",
+          "complaint",
+          "sentiment_score"
+        ],
+        "systemInstructions": "顧客の不満には共感を示し、迅速な解決を目指してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "a318e8b4-3870-41a3-866f-60ec3ea39393",
+        "templateId": "support-feedback-v1",
+        "template": "あなたはロイヤルティプログラムのフィードバック収集担当AIです。",
+        "variables": [
+          "customer_name",
+          "feedback"
+        ],
+        "systemInstructions": "フィードバックに対して感謝を伝え、改善に活かすことを約束してください。",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      },
+      {
+        "id": "636b2354-58ca-45a7-a647-f1f5cb60463f",
+        "templateId": "support-multilingual-v1",
+        "template": "You are a customer support AI for the loyalty program.",
+        "variables": [
+          "customer_name",
+          "customer_question",
+          "language_preference"
+        ],
+        "systemInstructions": "Respond in the customer's preferred language.",
+        "exampleConversations": null,
+        "version": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-09-01T00:00:00Z"
+      }
+    ],
+    "InferenceLog": [
+      {
+        "id": "7e65ec48-7357-4e71-a4ce-4f3a8ee66adf",
+        "messageId": "770e8400-e29b-41d4-a716-446655440001",
+        "promptTemplateId": "edad2c4a-bc98-4cf4-a939-9ade961a1102",
+        "prompt": "プロンプト1のサンプルテキスト...",
+        "response": "応答1のサンプルテキスト...",
+        "inputTokens": 50,
+        "outputTokens": 30,
+        "latency": 2500,
+        "modelName": "gpt-4",
+        "inferredAt": "2025-10-15T10:30:00Z"
+      },
+      {
+        "id": "ccd3209f-b3bd-481a-a95f-6c64fbfe04fe",
+        "messageId": "770e8400-e29b-41d4-a716-446655440002",
+        "promptTemplateId": "62b7921b-f0d0-4035-a39e-8074f4646e76",
+        "prompt": "プロンプト2のサンプルテキスト...",
+        "response": "応答2のサンプルテキスト...",
+        "inputTokens": 60,
+        "outputTokens": 35,
+        "latency": 2700,
+        "modelName": "gpt-3.5-turbo",
+        "inferredAt": "2025-10-15T11:30:00Z"
+      },
+      {
+        "id": "29d69f3f-84dc-4e66-ad74-390147b2d136",
+        "messageId": "770e8400-e29b-41d4-a716-446655440003",
+        "promptTemplateId": "4f10268b-ff1b-414e-bcbe-e73e5e03cf7a",
+        "prompt": "プロンプト3のサンプルテキスト...",
+        "response": "応答3のサンプルテキスト...",
+        "inputTokens": 70,
+        "outputTokens": 40,
+        "latency": 2900,
+        "modelName": "gpt-4",
+        "inferredAt": "2025-10-14T12:30:00Z"
+      },
+      {
+        "id": "df19f312-c1dc-459d-8274-41828273553e",
+        "messageId": "770e8400-e29b-41d4-a716-446655440004",
+        "promptTemplateId": "c62fe2ac-d634-4555-ae1c-b753855b9b09",
+        "prompt": "プロンプト4のサンプルテキスト...",
+        "response": "応答4のサンプルテキスト...",
+        "inputTokens": 80,
+        "outputTokens": 45,
+        "latency": 3100,
+        "modelName": "gpt-3.5-turbo",
+        "inferredAt": "2025-10-14T13:30:00Z"
+      },
+      {
+        "id": "200ed243-1088-4153-a254-ac44df58ca3b",
+        "messageId": "770e8400-e29b-41d4-a716-446655440005",
+        "promptTemplateId": "2f6b7b6d-9778-4996-bd58-d82ca2e01bac",
+        "prompt": "プロンプト5のサンプルテキスト...",
+        "response": "応答5のサンプルテキスト...",
+        "inputTokens": 90,
+        "outputTokens": 50,
+        "latency": 3300,
+        "modelName": "gpt-4",
+        "inferredAt": "2025-10-13T14:30:00Z"
+      },
+      {
+        "id": "0990bb4b-b6a7-43a3-9f14-0a6451a30662",
+        "messageId": "770e8400-e29b-41d4-a716-446655440006",
+        "promptTemplateId": "994f3dd5-227e-449a-96be-059242b0ad2b",
+        "prompt": "プロンプト6のサンプルテキスト...",
+        "response": "応答6のサンプルテキスト...",
+        "inputTokens": 100,
+        "outputTokens": 55,
+        "latency": 3500,
+        "modelName": "gpt-3.5-turbo",
+        "inferredAt": "2025-10-13T15:30:00Z"
+      },
+      {
+        "id": "fc667ae7-a045-4499-a603-2fc1faa7d07d",
+        "messageId": "770e8400-e29b-41d4-a716-446655440007",
+        "promptTemplateId": "8d248953-ef5e-4841-9041-8403b86590cf",
+        "prompt": "プロンプト7のサンプルテキスト...",
+        "response": "応答7のサンプルテキスト...",
+        "inputTokens": 110,
+        "outputTokens": 60,
+        "latency": 3700,
+        "modelName": "gpt-4",
+        "inferredAt": "2025-10-12T16:30:00Z"
+      },
+      {
+        "id": "a21ab25a-48f5-4115-b7fc-57b0606f697c",
+        "messageId": "770e8400-e29b-41d4-a716-446655440008",
+        "promptTemplateId": "fcc7c79b-65ed-4361-aded-467a2ec46985",
+        "prompt": "プロンプト8のサンプルテキスト...",
+        "response": "応答8のサンプルテキスト...",
+        "inputTokens": 120,
+        "outputTokens": 65,
+        "latency": 3900,
+        "modelName": "gpt-3.5-turbo",
+        "inferredAt": "2025-10-12T17:30:00Z"
+      },
+      {
+        "id": "9ce11743-110c-4891-b3fb-d6c42ebf3f63",
+        "messageId": "770e8400-e29b-41d4-a716-446655440009",
+        "promptTemplateId": "11de18d9-2c46-4dc9-9d4a-8b7328eb4df3",
+        "prompt": "プロンプト9のサンプルテキスト...",
+        "response": "応答9のサンプルテキスト...",
+        "inputTokens": 130,
+        "outputTokens": 70,
+        "latency": 4100,
+        "modelName": "gpt-4",
+        "inferredAt": "2025-10-11T18:30:00Z"
+      },
+      {
+        "id": "34a147f0-8945-4493-b127-3777f101406d",
+        "messageId": "770e8400-e29b-41d4-a716-4466554400010",
+        "promptTemplateId": "842f5703-f12d-4866-8f88-89704ca79e6f",
+        "prompt": "プロンプト10のサンプルテキスト...",
+        "response": "応答10のサンプルテキスト...",
+        "inputTokens": 140,
+        "outputTokens": 75,
+        "latency": 4300,
+        "modelName": "gpt-3.5-turbo",
+        "inferredAt": "2025-10-11T19:30:00Z"
+      }
+    ],
+    "KnowledgeBaseArticle": [
+      {
+        "id": "b4fe5544-e103-4097-91d5-e3710cfc0f14",
+        "title": "ナレッジベース記事 1: ポイント残高の確認方法",
+        "content": "これは記事1の本文です。詳細な説明がここに記載されます...",
+        "category": "FAQ",
+        "tags": [
+          "tag1",
+          "category1"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-01T10:00:00Z",
+        "lastUpdatedAt": "2025-10-01T15:00:00Z",
+        "viewCount": 100,
+        "usefulnessScore": 3.5,
+        "embedding": "[0.000, 0.001, ...]"
+      },
+      {
+        "id": "1bfa51c2-5a26-40fe-a7b7-59b74bd6d840",
+        "title": "ナレッジベース記事 2: 特典交換手順",
+        "content": "これは記事2の本文です。詳細な説明がここに記載されます...",
+        "category": "TroubleShooting",
+        "tags": [
+          "tag2",
+          "category2"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-02T10:00:00Z",
+        "lastUpdatedAt": "2025-10-02T15:00:00Z",
+        "viewCount": 150,
+        "usefulnessScore": 4.0,
+        "embedding": "[0.001, 0.002, ...]"
+      },
+      {
+        "id": "48f0df6b-8d62-492f-be32-fc182149b01e",
+        "title": "ナレッジベース記事 3: キャンペーン参加方法",
+        "content": "これは記事3の本文です。詳細な説明がここに記載されます...",
+        "category": "Policy",
+        "tags": [
+          "tag3",
+          "category3"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-03T10:00:00Z",
+        "lastUpdatedAt": "2025-10-03T15:00:00Z",
+        "viewCount": 200,
+        "usefulnessScore": 4.5,
+        "embedding": "[0.002, 0.003, ...]"
+      },
+      {
+        "id": "30ab6abc-1e8f-4727-8320-0d885e7edb94",
+        "title": "ナレッジベース記事 4: アカウント設定変更",
+        "content": "これは記事4の本文です。詳細な説明がここに記載されます...",
+        "category": "ProductInfo",
+        "tags": [
+          "tag4",
+          "category1"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-04T10:00:00Z",
+        "lastUpdatedAt": "2025-10-04T15:00:00Z",
+        "viewCount": 250,
+        "usefulnessScore": 3.5,
+        "embedding": "[0.003, 0.004, ...]"
+      },
+      {
+        "id": "a96fee8c-f581-4fa7-beee-76e14e2eecb3",
+        "title": "ナレッジベース記事 5: ポイント有効期限について",
+        "content": "これは記事5の本文です。詳細な説明がここに記載されます...",
+        "category": "CampaignInfo",
+        "tags": [
+          "tag5",
+          "category2"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-05T10:00:00Z",
+        "lastUpdatedAt": "2025-10-05T15:00:00Z",
+        "viewCount": 300,
+        "usefulnessScore": 4.0,
+        "embedding": "[0.004, 0.005, ...]"
+      },
+      {
+        "id": "b4a95ed4-f810-49e6-a93a-709c6b0d819c",
+        "title": "ナレッジベース記事 6: ログイン問題のトラブルシューティング",
+        "content": "これは記事6の本文です。詳細な説明がここに記載されます...",
+        "category": "FAQ",
+        "tags": [
+          "tag6",
+          "category3"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-06T10:00:00Z",
+        "lastUpdatedAt": "2025-10-06T15:00:00Z",
+        "viewCount": 350,
+        "usefulnessScore": 4.5,
+        "embedding": "[0.005, 0.006, ...]"
+      },
+      {
+        "id": "ba54462f-6cb0-4750-840c-b62337894007",
+        "title": "ナレッジベース記事 7: 請求に関するFAQ",
+        "content": "これは記事7の本文です。詳細な説明がここに記載されます...",
+        "category": "TroubleShooting",
+        "tags": [
+          "tag7",
+          "category1"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-07T10:00:00Z",
+        "lastUpdatedAt": "2025-10-07T15:00:00Z",
+        "viewCount": 400,
+        "usefulnessScore": 3.5,
+        "embedding": "[0.006, 0.007, ...]"
+      },
+      {
+        "id": "91aec91a-dd11-4508-bdb5-dfc02b80a23a",
+        "title": "ナレッジベース記事 8: プライバシーポリシー",
+        "content": "これは記事8の本文です。詳細な説明がここに記載されます...",
+        "category": "Policy",
+        "tags": [
+          "tag8",
+          "category2"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-08T10:00:00Z",
+        "lastUpdatedAt": "2025-10-08T15:00:00Z",
+        "viewCount": 450,
+        "usefulnessScore": 4.0,
+        "embedding": "[0.007, 0.008, ...]"
+      },
+      {
+        "id": "fc12900e-eaea-49f2-b986-70b3aaae00a5",
+        "title": "ナレッジベース記事 9: 新商品情報",
+        "content": "これは記事9の本文です。詳細な説明がここに記載されます...",
+        "category": "ProductInfo",
+        "tags": [
+          "tag9",
+          "category3"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-09T10:00:00Z",
+        "lastUpdatedAt": "2025-10-09T15:00:00Z",
+        "viewCount": 500,
+        "usefulnessScore": 4.5,
+        "embedding": "[0.008, 0.009, ...]"
+      },
+      {
+        "id": "c4410fe6-48bb-4953-8147-709e09d260be",
+        "title": "ナレッジベース記事 10: 秋のキャンペーン詳細",
+        "content": "これは記事10の本文です。詳細な説明がここに記載されます...",
+        "category": "CampaignInfo",
+        "tags": [
+          "tag10",
+          "category1"
+        ],
+        "version": 1,
+        "publishedAt": "2025-09-10T10:00:00Z",
+        "lastUpdatedAt": "2025-10-10T15:00:00Z",
+        "viewCount": 550,
+        "usefulnessScore": 3.5,
+        "embedding": "[0.009, 0.010, ...]"
+      }
+    ],
+    "ArticleVersion": [
+      {
+        "id": "27c13f60-3847-41a6-b1b0-8e188cc5f3b3",
+        "articleId": "dadec884-1622-4ef5-a966-15a554d6dfab",
+        "versionNumber": 1,
+        "content": "バージョン1の記事内容...",
+        "updatedBy": "editor1@example.com",
+        "changeDescription": "変更内容1: 情報の更新と追記",
+        "createdAt": "2025-09-01T12:00:00Z"
+      },
+      {
+        "id": "b0168b46-068d-4799-805a-26413912f454",
+        "articleId": "ae31a59b-584c-4eb6-938f-8b1493d5fc6d",
+        "versionNumber": 2,
+        "content": "バージョン2の記事内容...",
+        "updatedBy": "editor2@example.com",
+        "changeDescription": "変更内容2: 情報の更新と追記",
+        "createdAt": "2025-09-02T12:00:00Z"
+      },
+      {
+        "id": "63d33434-3ab5-4acd-a52c-ecc3bd36c7ab",
+        "articleId": "d691902c-e24d-46ae-aeea-04e4c44082cc",
+        "versionNumber": 3,
+        "content": "バージョン3の記事内容...",
+        "updatedBy": "admin@example.com",
+        "changeDescription": "変更内容3: 情報の更新と追記",
+        "createdAt": "2025-09-03T12:00:00Z"
+      },
+      {
+        "id": "8055f37f-5306-4c18-a40d-3d95661b0009",
+        "articleId": "7f7914a8-32fe-4fb3-9d91-49806e550fa5",
+        "versionNumber": 1,
+        "content": "バージョン1の記事内容...",
+        "updatedBy": "editor1@example.com",
+        "changeDescription": "変更内容4: 情報の更新と追記",
+        "createdAt": "2025-09-04T12:00:00Z"
+      },
+      {
+        "id": "e8523845-7b12-442b-b533-632e18a826f6",
+        "articleId": "0adbea1f-4594-48b4-9ca4-2d33dc5f8d4d",
+        "versionNumber": 2,
+        "content": "バージョン2の記事内容...",
+        "updatedBy": "editor2@example.com",
+        "changeDescription": "変更内容5: 情報の更新と追記",
+        "createdAt": "2025-09-05T12:00:00Z"
+      },
+      {
+        "id": "393ceeb7-5bee-4cf2-a29b-6e98f405c2cc",
+        "articleId": "1b1c9324-3a30-426e-a27a-f80f0958a69e",
+        "versionNumber": 3,
+        "content": "バージョン3の記事内容...",
+        "updatedBy": "admin@example.com",
+        "changeDescription": "変更内容6: 情報の更新と追記",
+        "createdAt": "2025-10-06T12:00:00Z"
+      },
+      {
+        "id": "f9c30d3c-5282-4313-962f-d03c79501064",
+        "articleId": "a7cff012-4d32-4a44-bf1e-feda2262f035",
+        "versionNumber": 1,
+        "content": "バージョン1の記事内容...",
+        "updatedBy": "editor1@example.com",
+        "changeDescription": "変更内容7: 情報の更新と追記",
+        "createdAt": "2025-10-07T12:00:00Z"
+      },
+      {
+        "id": "4c40f710-afe1-47e3-bd2a-da196a9ab291",
+        "articleId": "69c3bd7a-2435-4d69-b690-4fc83e88c47d",
+        "versionNumber": 2,
+        "content": "バージョン2の記事内容...",
+        "updatedBy": "editor2@example.com",
+        "changeDescription": "変更内容8: 情報の更新と追記",
+        "createdAt": "2025-10-08T12:00:00Z"
+      },
+      {
+        "id": "cb3cd197-09b1-4067-94b3-1b2f7da71b19",
+        "articleId": "68325b5c-7749-40b3-aad7-e8b8a804b7fb",
+        "versionNumber": 3,
+        "content": "バージョン3の記事内容...",
+        "updatedBy": "admin@example.com",
+        "changeDescription": "変更内容9: 情報の更新と追記",
+        "createdAt": "2025-10-09T12:00:00Z"
+      },
+      {
+        "id": "49e9a863-748d-49ec-b4c7-da3663b908ca",
+        "articleId": "6e3cb119-954b-4943-9de8-eed6fe1e2500",
+        "versionNumber": 1,
+        "content": "バージョン1の記事内容...",
+        "updatedBy": "editor1@example.com",
+        "changeDescription": "変更内容10: 情報の更新と追記",
+        "createdAt": "2025-10-10T12:00:00Z"
+      }
+    ],
+    "Agent": [
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440100",
+        "name": "佐藤 太郎",
+        "email": "agent1@example.com",
+        "specialties": [
+          "General"
+        ],
+        "status": "Available",
+        "maxConcurrentSessions": 5,
+        "activeSessions": [
+          "451faf29-7bee-4299-b3a4-120ac1453434"
+        ],
+        "createdAt": "2025-01-15T09:00:00Z",
+        "lastActiveAt": "2025-10-15T14:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440101",
+        "name": "鈴木 花子",
+        "email": "agent2@example.com",
+        "specialties": [
+          "Billing",
+          "General"
+        ],
+        "status": "Busy",
+        "maxConcurrentSessions": 5,
+        "activeSessions": [
+          "d580244f-7cfd-4504-95e5-e94c2f78ff59",
+          "a4466911-d205-4b4c-ac69-2bdfe2a3b795"
+        ],
+        "createdAt": "2025-01-15T09:00:00Z",
+        "lastActiveAt": "2025-10-15T15:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440102",
+        "name": "高橋 健",
+        "email": "agent3@example.com",
+        "specialties": [
+          "Technical"
+        ],
+        "status": "Offline",
+        "maxConcurrentSessions": 5,
+        "activeSessions": [],
+        "createdAt": "2025-01-15T09:00:00Z",
+        "lastActiveAt": null
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440103",
+        "name": "田中 美咲",
+        "email": "agent4@example.com",
+        "specialties": [
+          "VIP",
+          "General"
+        ],
+        "status": "Available",
+        "maxConcurrentSessions": 5,
+        "activeSessions": [
+          "1fe4c07c-d1ae-445f-8149-58501ba010b7"
+        ],
+        "createdAt": "2025-01-15T09:00:00Z",
+        "lastActiveAt": "2025-10-14T17:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440104",
+        "name": "渡辺 誠",
+        "email": "agent5@example.com",
+        "specialties": [
+          "Billing"
+        ],
+        "status": "Busy",
+        "maxConcurrentSessions": 5,
+        "activeSessions": [
+          "a409eb16-80a8-463d-a650-f92b62d1b1f7",
+          "e7e42ada-ac46-43c7-82b2-05fceb5d7043"
+        ],
+        "createdAt": "2025-01-15T09:00:00Z",
+        "lastActiveAt": "2025-10-13T18:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440105",
+        "name": "伊藤 あゆみ",
+        "email": "agent6@example.com",
+        "specialties": [
+          "Technical",
+          "General"
+        ],
+        "status": "Offline",
+        "maxConcurrentSessions": 3,
+        "activeSessions": [],
+        "createdAt": "2025-02-15T09:00:00Z",
+        "lastActiveAt": null
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440106",
+        "name": "山本 大輔",
+        "email": "agent7@example.com",
+        "specialties": [
+          "VIP"
+        ],
+        "status": "Available",
+        "maxConcurrentSessions": 3,
+        "activeSessions": [
+          "47aa02d5-dea5-4208-a185-e690504e5e04"
+        ],
+        "createdAt": "2025-02-15T09:00:00Z",
+        "lastActiveAt": "2025-10-12T20:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440107",
+        "name": "中村 真理",
+        "email": "agent8@example.com",
+        "specialties": [
+          "General",
+          "Technical"
+        ],
+        "status": "Busy",
+        "maxConcurrentSessions": 3,
+        "activeSessions": [
+          "ce550639-951e-44b8-b532-d5da8449cdec",
+          "72f43d85-62b4-454b-9fd8-62ecc3fb5261"
+        ],
+        "createdAt": "2025-02-15T09:00:00Z",
+        "lastActiveAt": "2025-10-12T21:30:00Z"
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440108",
+        "name": "小林 勇",
+        "email": "agent9@example.com",
+        "specialties": [
+          "Billing",
+          "VIP"
+        ],
+        "status": "Offline",
+        "maxConcurrentSessions": 3,
+        "activeSessions": [],
+        "createdAt": "2025-02-15T09:00:00Z",
+        "lastActiveAt": null
+      },
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440109",
+        "name": "加藤 由美",
+        "email": "agent10@example.com",
+        "specialties": [
+          "General"
+        ],
+        "status": "Available",
+        "maxConcurrentSessions": 3,
+        "activeSessions": [
+          "feb0e433-b2a2-4f2c-ae59-b002433a1f0c"
+        ],
+        "createdAt": "2025-02-15T09:00:00Z",
+        "lastActiveAt": "2025-10-11T23:30:00Z"
+      }
+    ],
+    "AgentMetrics": [
+      {
+        "id": "9dd51693-cf5b-4930-80aa-e0cd1895f7d0",
+        "agentId": "660e8400-e29b-41d4-a716-446655440100",
+        "totalSessions": 50,
+        "averageHandlingTime": 300,
+        "customerSatisfactionScore": 4.0,
+        "resolutionRate": 75.0,
+        "escalationsReceived": 10,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "7eced4fe-40e7-405d-9402-5970fae145a4",
+        "agentId": "660e8400-e29b-41d4-a716-446655440101",
+        "totalSessions": 60,
+        "averageHandlingTime": 320,
+        "customerSatisfactionScore": 4.2,
+        "resolutionRate": 77.0,
+        "escalationsReceived": 12,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "d927983e-ab22-4201-a2b0-56131676c06d",
+        "agentId": "660e8400-e29b-41d4-a716-446655440102",
+        "totalSessions": 70,
+        "averageHandlingTime": 340,
+        "customerSatisfactionScore": 4.4,
+        "resolutionRate": 79.0,
+        "escalationsReceived": 14,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "1eae74ca-9c83-46b4-87e6-e6b618ab44de",
+        "agentId": "660e8400-e29b-41d4-a716-446655440103",
+        "totalSessions": 80,
+        "averageHandlingTime": 360,
+        "customerSatisfactionScore": 4.6,
+        "resolutionRate": 81.0,
+        "escalationsReceived": 16,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "ce56a464-b9b6-4a24-8b7e-1a40d3467b01",
+        "agentId": "660e8400-e29b-41d4-a716-446655440104",
+        "totalSessions": 90,
+        "averageHandlingTime": 380,
+        "customerSatisfactionScore": 4.8,
+        "resolutionRate": 83.0,
+        "escalationsReceived": 18,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "73a476ce-77d6-444c-9cc6-761f3b804c87",
+        "agentId": "660e8400-e29b-41d4-a716-446655440105",
+        "totalSessions": 100,
+        "averageHandlingTime": 400,
+        "customerSatisfactionScore": 4.0,
+        "resolutionRate": 85.0,
+        "escalationsReceived": 20,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "02bfb09d-a390-447d-82a8-f92bde7b6449",
+        "agentId": "660e8400-e29b-41d4-a716-446655440106",
+        "totalSessions": 110,
+        "averageHandlingTime": 420,
+        "customerSatisfactionScore": 4.2,
+        "resolutionRate": 87.0,
+        "escalationsReceived": 22,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "6861990d-8524-4533-8bff-c6eab58668f9",
+        "agentId": "660e8400-e29b-41d4-a716-446655440107",
+        "totalSessions": 120,
+        "averageHandlingTime": 440,
+        "customerSatisfactionScore": 4.4,
+        "resolutionRate": 89.0,
+        "escalationsReceived": 24,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "91d8548d-6832-49e2-ba24-d98a3a04d6fb",
+        "agentId": "660e8400-e29b-41d4-a716-446655440108",
+        "totalSessions": 130,
+        "averageHandlingTime": 460,
+        "customerSatisfactionScore": 4.6,
+        "resolutionRate": 91.0,
+        "escalationsReceived": 26,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "c887773b-f296-4363-b427-266dd8aacb79",
+        "agentId": "660e8400-e29b-41d4-a716-446655440109",
+        "totalSessions": 140,
+        "averageHandlingTime": 480,
+        "customerSatisfactionScore": 4.8,
+        "resolutionRate": 93.0,
+        "escalationsReceived": 28,
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      }
+    ],
+    "EscalationCriteria": [
+      {
+        "id": "19dc9bc7-0bd3-4a04-b2ac-8a2dca8075d5",
+        "name": "低信頼度エスカレーション",
+        "lowConfidenceThreshold": 0.5,
+        "negativeSentimentThreshold": -0.8,
+        "maxFailedAttempts": 2,
+        "complexityScoreThreshold": 0.7,
+        "requiresHumanReview": true,
+        "priority": 1,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-01T12:00:00Z"
+      },
+      {
+        "id": "63660b67-8df8-403c-9997-dde03a91108c",
+        "name": "ネガティブセンチメントエスカレーション",
+        "lowConfidenceThreshold": 0.6,
+        "negativeSentimentThreshold": -0.7000000000000001,
+        "maxFailedAttempts": 3,
+        "complexityScoreThreshold": 0.75,
+        "requiresHumanReview": false,
+        "priority": 2,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-02T12:00:00Z"
+      },
+      {
+        "id": "4e133ba5-8264-480a-a16d-58af08207473",
+        "name": "複数回失敗エスカレーション",
+        "lowConfidenceThreshold": 0.7,
+        "negativeSentimentThreshold": -0.6000000000000001,
+        "maxFailedAttempts": 4,
+        "complexityScoreThreshold": 0.7999999999999999,
+        "requiresHumanReview": false,
+        "priority": 3,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-03T12:00:00Z"
+      },
+      {
+        "id": "a3066a98-084f-4958-bb45-55d1f06420d0",
+        "name": "高複雑度エスカレーション",
+        "lowConfidenceThreshold": 0.8,
+        "negativeSentimentThreshold": -0.8,
+        "maxFailedAttempts": 2,
+        "complexityScoreThreshold": 0.85,
+        "requiresHumanReview": true,
+        "priority": 4,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-04T12:00:00Z"
+      },
+      {
+        "id": "3a3acf47-b776-4f8f-a552-a3e57540a647",
+        "name": "VIP顧客優先対応",
+        "lowConfidenceThreshold": 0.5,
+        "negativeSentimentThreshold": -0.7000000000000001,
+        "maxFailedAttempts": 3,
+        "complexityScoreThreshold": 0.7,
+        "requiresHumanReview": false,
+        "priority": 5,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-05T12:00:00Z"
+      },
+      {
+        "id": "77a04cf8-e692-43f9-a52f-4eb34fd9626b",
+        "name": "請求問題エスカレーション",
+        "lowConfidenceThreshold": 0.6,
+        "negativeSentimentThreshold": -0.6000000000000001,
+        "maxFailedAttempts": 4,
+        "complexityScoreThreshold": 0.75,
+        "requiresHumanReview": false,
+        "priority": 6,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-06T12:00:00Z"
+      },
+      {
+        "id": "39e2fe03-64f2-4a4d-80cf-56f0a79c6b34",
+        "name": "技術問題エスカレーション",
+        "lowConfidenceThreshold": 0.7,
+        "negativeSentimentThreshold": -0.8,
+        "maxFailedAttempts": 2,
+        "complexityScoreThreshold": 0.7999999999999999,
+        "requiresHumanReview": true,
+        "priority": 7,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-07T12:00:00Z"
+      },
+      {
+        "id": "00e0e877-2be2-4d7d-8ddf-4fd73676247b",
+        "name": "明示的エージェント要求",
+        "lowConfidenceThreshold": 0.8,
+        "negativeSentimentThreshold": -0.7000000000000001,
+        "maxFailedAttempts": 3,
+        "complexityScoreThreshold": 0.85,
+        "requiresHumanReview": false,
+        "priority": 8,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-08T12:00:00Z"
+      },
+      {
+        "id": "a5df425c-6990-4b27-ba66-7b530d426fe9",
+        "name": "緊急対応必要",
+        "lowConfidenceThreshold": 0.5,
+        "negativeSentimentThreshold": -0.6000000000000001,
+        "maxFailedAttempts": 4,
+        "complexityScoreThreshold": 0.7,
+        "requiresHumanReview": false,
+        "priority": 9,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-09T12:00:00Z"
+      },
+      {
+        "id": "ca3af63b-a103-4515-989b-ba9cb326484e",
+        "name": "デフォルト基準",
+        "lowConfidenceThreshold": 0.6,
+        "negativeSentimentThreshold": -0.8,
+        "maxFailedAttempts": 2,
+        "complexityScoreThreshold": 0.75,
+        "requiresHumanReview": true,
+        "priority": 10,
+        "createdAt": "2025-09-01T00:00:00Z",
+        "lastUpdatedAt": "2025-10-10T12:00:00Z"
+      }
+    ],
+    "EscalationDecision": [
+      {
+        "id": "992d8c45-7ee4-4967-8b48-0e1fe29f56f7",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "criteriaId": "91f41b0f-c973-4960-b07e-131a145b3afe",
+        "shouldEscalate": true,
+        "reasons": [
+          {
+            "reason": "信頼度が閾値を下回った",
+            "score": 0.55
+          },
+          {
+            "reason": "複数回の失敗が検出された",
+            "score": 0.7
+          }
+        ],
+        "overallScore": 0.6,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-15T10:35:00Z"
+      },
+      {
+        "id": "c351680c-0939-40f9-9aca-eb4baca55aaf",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "criteriaId": "b9ebb190-8460-4db1-957a-cfbd6df8a2e2",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.65,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-15T11:35:00Z"
+      },
+      {
+        "id": "1c73bc83-8ba8-43fa-9ddf-bcd6bbd1aa1a",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440003",
+        "criteriaId": "25194189-2c9b-4fc0-9cdb-81c3504aa17d",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.7,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-14T12:35:00Z"
+      },
+      {
+        "id": "2b9b7b09-14f2-43b9-aabe-86f64206bab1",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "criteriaId": "0ad39f4c-c90e-455b-aa9f-5509bc21432c",
+        "shouldEscalate": true,
+        "reasons": [
+          {
+            "reason": "信頼度が閾値を下回った",
+            "score": 0.55
+          },
+          {
+            "reason": "複数回の失敗が検出された",
+            "score": 0.7
+          }
+        ],
+        "overallScore": 0.75,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-14T13:35:00Z"
+      },
+      {
+        "id": "88500479-5cdc-4015-a592-8cb2e6ab7eab",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440005",
+        "criteriaId": "f21a5923-0dce-4a75-9694-d943d4ee8070",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.8,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-13T14:35:00Z"
+      },
+      {
+        "id": "5b698202-3d51-4834-b5cd-d8f2c4a82d81",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440006",
+        "criteriaId": "e1e20c97-a8ed-47c6-b741-35f16a185345",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.6,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-13T15:35:00Z"
+      },
+      {
+        "id": "a1d5f446-0d34-4816-a7a7-458d1b222b2d",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440007",
+        "criteriaId": "5b8b1f38-68b8-46e3-9040-b1ccd44b548a",
+        "shouldEscalate": true,
+        "reasons": [
+          {
+            "reason": "信頼度が閾値を下回った",
+            "score": 0.55
+          },
+          {
+            "reason": "複数回の失敗が検出された",
+            "score": 0.7
+          }
+        ],
+        "overallScore": 0.65,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-12T16:35:00Z"
+      },
+      {
+        "id": "6ad3f9e1-ecfb-421a-8aab-52d0064b0d40",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440008",
+        "criteriaId": "edd4902a-f64d-4530-b57f-f29e14625a50",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.7,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-12T17:35:00Z"
+      },
+      {
+        "id": "6d1574c3-d30e-4f68-aa40-1bd8e80d14d4",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440009",
+        "criteriaId": "86e57558-ae7b-42f1-ab9a-6c3a8310d6cb",
+        "shouldEscalate": false,
+        "reasons": [
+          {
+            "reason": "基準を満たしている",
+            "score": 0.9
+          }
+        ],
+        "overallScore": 0.75,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-11T18:35:00Z"
+      },
+      {
+        "id": "c397df9e-2b85-4bb5-8dc0-e06590468dbf",
+        "sessionId": "550e8400-e29b-41d4-a716-4466554400010",
+        "criteriaId": "c22290f8-5dda-4a3d-9b01-5fe20767eeb2",
+        "shouldEscalate": true,
+        "reasons": [
+          {
+            "reason": "信頼度が閾値を下回った",
+            "score": 0.55
+          },
+          {
+            "reason": "複数回の失敗が検出された",
+            "score": 0.7
+          }
+        ],
+        "overallScore": 0.8,
+        "decidedBy": "System",
+        "decidedAt": "2025-10-11T19:35:00Z"
+      }
+    ],
+    "ConversationAnalytics": [
+      {
+        "id": "e61474ca-9cf1-4bb1-8000-1943d9373ce7",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "messageCount": 3,
+        "averageResponseTime": 3,
+        "sentimentScore": -0.5,
+        "intentDistribution": {
+          "CheckPointBalance": 0.4,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": true,
+        "wasEscalated": false,
+        "sessionDuration": 600,
+        "analyticsDate": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:00:00Z"
+      },
+      {
+        "id": "3ac140b5-72cf-4e55-8857-6935f40e42cf",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "messageCount": 4,
+        "averageResponseTime": 4,
+        "sentimentScore": -0.35,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.3,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": true,
+        "wasEscalated": true,
+        "sessionDuration": 660,
+        "analyticsDate": "2025-10-15",
+        "calculatedAt": "2025-10-15T23:00:00Z"
+      },
+      {
+        "id": "3efc3f96-69c1-41da-8a30-5bb32691547b",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440003",
+        "messageCount": 5,
+        "averageResponseTime": 5,
+        "sentimentScore": -0.2,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.3
+        },
+        "wasResolved": true,
+        "wasEscalated": false,
+        "sessionDuration": 720,
+        "analyticsDate": "2025-10-14",
+        "calculatedAt": "2025-10-14T23:00:00Z"
+      },
+      {
+        "id": "09548682-2302-4686-8627-909c80e12823",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "messageCount": 6,
+        "averageResponseTime": 6,
+        "sentimentScore": -0.050000000000000044,
+        "intentDistribution": {
+          "CheckPointBalance": 0.4,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": false,
+        "wasEscalated": false,
+        "sessionDuration": 780,
+        "analyticsDate": "2025-10-14",
+        "calculatedAt": "2025-10-14T23:00:00Z"
+      },
+      {
+        "id": "e021c41e-96e7-4673-b085-9eaa3346fd9d",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440005",
+        "messageCount": 7,
+        "averageResponseTime": 7,
+        "sentimentScore": 0.09999999999999998,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.3,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": true,
+        "wasEscalated": false,
+        "sessionDuration": 840,
+        "analyticsDate": "2025-10-13",
+        "calculatedAt": "2025-10-13T23:00:00Z"
+      },
+      {
+        "id": "eb8bf9ce-eede-4ed4-b83c-f22b12e08139",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440006",
+        "messageCount": 8,
+        "averageResponseTime": 8,
+        "sentimentScore": 0.25,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.3
+        },
+        "wasResolved": true,
+        "wasEscalated": true,
+        "sessionDuration": 900,
+        "analyticsDate": "2025-10-13",
+        "calculatedAt": "2025-10-13T23:00:00Z"
+      },
+      {
+        "id": "1c67b734-781d-47f9-bdde-02cf3ea94e34",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440007",
+        "messageCount": 9,
+        "averageResponseTime": 9,
+        "sentimentScore": 0.3999999999999999,
+        "intentDistribution": {
+          "CheckPointBalance": 0.4,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": true,
+        "wasEscalated": false,
+        "sessionDuration": 960,
+        "analyticsDate": "2025-10-12",
+        "calculatedAt": "2025-10-12T23:00:00Z"
+      },
+      {
+        "id": "b8b2d7dc-e540-4860-819d-2086676df7e0",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440008",
+        "messageCount": 10,
+        "averageResponseTime": 10,
+        "sentimentScore": 0.55,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.3,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": false,
+        "wasEscalated": false,
+        "sessionDuration": 1020,
+        "analyticsDate": "2025-10-12",
+        "calculatedAt": "2025-10-12T23:00:00Z"
+      },
+      {
+        "id": "093d4766-cf59-4086-bd4d-1c1fbdf8655b",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440009",
+        "messageCount": 11,
+        "averageResponseTime": 11,
+        "sentimentScore": 0.7,
+        "intentDistribution": {
+          "CheckPointBalance": 0.0,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.3
+        },
+        "wasResolved": true,
+        "wasEscalated": false,
+        "sessionDuration": 1080,
+        "analyticsDate": "2025-10-11",
+        "calculatedAt": "2025-10-11T23:00:00Z"
+      },
+      {
+        "id": "92131c12-849a-4d74-ba96-5f914344cf1e",
+        "sessionId": "550e8400-e29b-41d4-a716-4466554400010",
+        "messageCount": 12,
+        "averageResponseTime": 12,
+        "sentimentScore": 0.8499999999999999,
+        "intentDistribution": {
+          "CheckPointBalance": 0.4,
+          "InquireCampaign": 0.0,
+          "RedeemReward": 0.0
+        },
+        "wasResolved": true,
+        "wasEscalated": true,
+        "sessionDuration": 1140,
+        "analyticsDate": "2025-10-11",
+        "calculatedAt": "2025-10-11T23:00:00Z"
+      }
+    ],
+    "KPIMetrics": [
+      {
+        "id": "46da8487-1949-487c-996c-773b4fe0966c",
+        "metricName": "自動解決率",
+        "value": 60.0,
+        "unit": "percentage",
+        "category": "Efficiency",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "5b2ddcca-f3d9-40bd-83c0-cd02e7d9b956",
+        "metricName": "平均応答時間",
+        "value": 3.3,
+        "unit": "seconds",
+        "category": "Performance",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "63722012-f094-4ecb-9d71-25c4533ad494",
+        "metricName": "顧客満足度",
+        "value": 4.2,
+        "unit": "score",
+        "category": "Satisfaction",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "f465e4b9-2419-491b-a8e9-659253e28e4c",
+        "metricName": "NPS",
+        "value": 4.3,
+        "unit": "score",
+        "category": "Satisfaction",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "8c3553de-4d03-45aa-b5b5-83aeb3e6fa5d",
+        "metricName": "エスカレーション率",
+        "value": 72.0,
+        "unit": "percentage",
+        "category": "Quality",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "8198363f-7ea5-4c61-80ea-14b8319f370f",
+        "metricName": "初回解決率",
+        "value": 75.0,
+        "unit": "percentage",
+        "category": "Quality",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "1d006b5e-8ba3-446a-b8e8-71c33880c8d9",
+        "metricName": "セッション完了率",
+        "value": 78.0,
+        "unit": "percentage",
+        "category": "Efficiency",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "5c731806-c87c-455b-bafc-1ec9beba2b5f",
+        "metricName": "平均セッション時間",
+        "value": 5.1,
+        "unit": "seconds",
+        "category": "Performance",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "5596b736-3ee4-4f96-a670-6b88f9981d4d",
+        "metricName": "ポイント問い合わせ率",
+        "value": 84.0,
+        "unit": "percentage",
+        "category": "Trend",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      },
+      {
+        "id": "6e227fa6-9853-481c-8620-73f72d8c2fa1",
+        "metricName": "技術問題発生率",
+        "value": 87.0,
+        "unit": "percentage",
+        "category": "Trend",
+        "periodStart": "2025-10-01",
+        "periodEnd": "2025-10-15",
+        "breakdown": {
+          "by_channel": {
+            "Web": 0.4,
+            "MobileApp": 0.35,
+            "LINE": 0.25
+          },
+          "by_tier": {
+            "Bronze": 0.2,
+            "Silver": 0.3,
+            "Gold": 0.3,
+            "Platinum": 0.2
+          }
+        },
+        "calculatedAt": "2025-10-15T23:59:59Z"
+      }
+    ],
+    "FeedbackRecord": [
+      {
+        "id": "886ba43a-7182-4a10-a7d0-fa17767cab99",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440001",
+        "messageId": "770e8400-e29b-41d4-a716-446655440001",
+        "rating": 1,
+        "comment": "とても分かりやすい説明でした。",
+        "feedbackType": "Helpful",
+        "metadata": {
+          "source": "post_conversation_survey",
+          "responseTime": "2秒"
+        },
+        "submittedAt": "2025-10-15T11:00:00Z"
+      },
+      {
+        "id": "0013e1cd-afd0-42e9-8b67-7f36df50a963",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440002",
+        "messageId": null,
+        "rating": 2,
+        "comment": "もう少し詳しい情報が欲しかったです。",
+        "feedbackType": "NotHelpful",
+        "metadata": {
+          "source": "in_conversation_feedback",
+          "responseTime": "3秒"
+        },
+        "submittedAt": "2025-10-15T12:00:00Z"
+      },
+      {
+        "id": "d5ae965c-dc39-47b0-87e3-a3accd2ca8cd",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440003",
+        "messageId": null,
+        "rating": 3,
+        "comment": "問題が解決して助かりました。",
+        "feedbackType": "Resolved",
+        "metadata": {
+          "source": "post_conversation_survey",
+          "responseTime": "4秒"
+        },
+        "submittedAt": "2025-10-14T13:00:00Z"
+      },
+      {
+        "id": "30608e3c-cffc-42b0-b7be-b263565aa45b",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440004",
+        "messageId": "770e8400-e29b-41d4-a716-446655440004",
+        "rating": 4,
+        "comment": "まだ問題が残っています。",
+        "feedbackType": "NotResolved",
+        "metadata": {
+          "source": "in_conversation_feedback",
+          "responseTime": "5秒"
+        },
+        "submittedAt": "2025-10-14T14:00:00Z"
+      },
+      {
+        "id": "78c509a7-2b6d-46bb-84f7-44dc079e84a6",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440005",
+        "messageId": null,
+        "rating": 5,
+        "comment": "人間のサポートが必要でした。",
+        "feedbackType": "Escalation",
+        "metadata": {
+          "source": "post_conversation_survey",
+          "responseTime": "6秒"
+        },
+        "submittedAt": "2025-10-13T15:00:00Z"
+      },
+      {
+        "id": "e28414af-08e2-4777-8e5c-5d9ae1887072",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440006",
+        "messageId": null,
+        "rating": 1,
+        "comment": "迅速な対応ありがとうございました。",
+        "feedbackType": "Helpful",
+        "metadata": {
+          "source": "in_conversation_feedback",
+          "responseTime": "7秒"
+        },
+        "submittedAt": "2025-10-13T16:00:00Z"
+      },
+      {
+        "id": "f86d7bba-cd95-4d03-ba9f-f3eedf766c59",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440007",
+        "messageId": "770e8400-e29b-41d4-a716-446655440007",
+        "rating": 2,
+        "comment": "回答が的外れでした。",
+        "feedbackType": "NotHelpful",
+        "metadata": {
+          "source": "post_conversation_survey",
+          "responseTime": "8秒"
+        },
+        "submittedAt": "2025-10-12T17:00:00Z"
+      },
+      {
+        "id": "c6ea7160-341c-4726-bb25-cd3f6560439f",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440008",
+        "messageId": null,
+        "rating": 3,
+        "comment": "期待通りの対応でした。",
+        "feedbackType": "Resolved",
+        "metadata": {
+          "source": "in_conversation_feedback",
+          "responseTime": "9秒"
+        },
+        "submittedAt": "2025-10-12T18:00:00Z"
+      },
+      {
+        "id": "7d60ad58-7a70-4427-831e-6b353c5a94f2",
+        "sessionId": "550e8400-e29b-41d4-a716-446655440009",
+        "messageId": null,
+        "rating": 4,
+        "comment": "もっと早く対応してほしかった。",
+        "feedbackType": "NotResolved",
+        "metadata": {
+          "source": "post_conversation_survey",
+          "responseTime": "10秒"
+        },
+        "submittedAt": "2025-10-11T19:00:00Z"
+      },
+      {
+        "id": "b8c023e7-520b-4866-b37b-f822bd52888f",
+        "sessionId": "550e8400-e29b-41d4-a716-4466554400010",
+        "messageId": "770e8400-e29b-41d4-a716-4466554400010",
+        "rating": 5,
+        "comment": "素晴らしいサービスです。",
+        "feedbackType": "Escalation",
+        "metadata": {
+          "source": "in_conversation_feedback",
+          "responseTime": "11秒"
+        },
+        "submittedAt": "2025-10-11T20:00:00Z"
+      }
+    ]
+  }
+}
