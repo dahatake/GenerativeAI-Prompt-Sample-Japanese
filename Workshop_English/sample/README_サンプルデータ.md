@@ -23,7 +23,7 @@ Rough draft to fix:
 Dear Eleanor,
 I am sorry I was late today. The train stopped because of weather and I got there late. I will be careful next time. Thank you for waiting and I hope the demo was okay.
 
-What must stay true:
+Facts to preserve:
 - The weather issue is factual.
 - You are not asking for forgiveness directly.
 - The follow-up meeting time is not confirmed yet.
@@ -117,7 +117,7 @@ Desired JSON fields:
 - Confidence
 
 Rules:
-- Emotion must be Positive / Neutral / Negative / Mixed
+- Emotion values: Positive / Neutral / Negative / Mixed
 - Score range: 0-100
 - Confidence range: 0.00-1.00
 ```
@@ -147,7 +147,7 @@ Learners:
 - 12 business users with no coding background
 - 90 minutes per session, 4 weeks
 
-Must include:
+Include:
 - Summaries
 - Role prompting
 - Few-shot examples

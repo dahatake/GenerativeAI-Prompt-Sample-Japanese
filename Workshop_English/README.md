@@ -76,7 +76,7 @@ Please follow this "Creation of Japanese sentences at the next level".
 
 ```prompt
 ### Instructions
-Please do not change the message of the following scenario and correct it to the N1 level of the JLPT.
+Keep the message of the following scenario unchanged and correct it to the N1 level of the JLPT.
 Please write the corrected text in Japanese. Please write the reason why you made the improvement in English.
 
 ### Scenario
@@ -186,7 +186,7 @@ In this example, "wow" is the word or sentence you want to Thailand that you act
 
 Prompt:
 ```text
-Do not print explanatory text.
+Return only the sentiment label and score in the format `Emotion, score point`.
 
 It's awesome, isn't it? Mr./Ms. Hatakeyama's coolness. : Positive, 100 point
 Mr./Ms. Hatakeyama, it's no good. I'm late: Negative, 5 point
@@ -299,7 +299,7 @@ If you have multiple years of data for one data, display the data in a tabular f
 If possible, create a graph for each of them.
 ```
 
-The output may not be finished at once. In that case, please prompt "Please continue working".
+If you need a continuation, include the last visible heading or line and list the remaining sections you want.
 
 If you can use **Microsoft Edge** in your web browser  , please continue with: 
 
@@ -407,6 +407,5 @@ Here, I'll ask ChatGPT itself to review the prompt I wrote.
 Prompt:
 ```text
 What prompt should I have entered at the very beginning to resolve this issue efficiently? Create a prompt for it and a description of the improvement.
-Take a deep breath and take it one step at a time.
+The revised prompt should clearly state the goal, context, constraints, and expected output format.
 ```
-

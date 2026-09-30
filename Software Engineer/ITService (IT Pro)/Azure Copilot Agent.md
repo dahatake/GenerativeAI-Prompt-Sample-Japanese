@@ -9,7 +9,7 @@ https://learn.microsoft.com/ja-jp/azure/copilot/agents-preview
 
 ### Prompt: セキュアな分析基盤を構築
 ```text
-本番運用に耐えるセキュアな分析環境を構築してください。大量データの収集・ETL・可視化まで行える構成を Azure 上に自動設計し、必要なリソース（Storage、Event Hub、Data Explorer、Network、監査設定）をすべて含む完全な IaC（Bicep）を生成してください。
+本番運用を想定したセキュアな分析環境を設計してください。大量データの収集・ETL・可視化まで行える構成を Azure 上に設計し、必要なリソース（Storage、Event Hub、Data Explorer、Network、監査設定）を含む IaC（Bicep）を生成してください。前提が不足している場合は、推測で補わず確認事項として示してください。
 ```
 
 ### Prompt: Azure OpenAI を IaC でデプロイ
@@ -79,7 +79,7 @@ https://learn.microsoft.com/ja-jp/azure/copilot/agents-preview
 
 ### Prompt: VM 接続不可のトラブルシュート（Ignite デモ日本語版）
 ```text
-`<vmName>` に接続できません。ネットワーク、NSG、ルート、DNS、Identity の観点で段階的に切り分けてください。解決できない場合はサポートチケットを作成してください。
+`<vmName>` に接続できません。ネットワーク、NSG、ルート、DNS、Identity の観点で切り分けてください。解決できない場合は、サポートチケットに記載する情報と本文案を提示してください。チケット作成が必要な場合は、作成前にユーザー確認を求めてください。
 ```
 
 ### Prompt: 500/503 エラーの原因分析
