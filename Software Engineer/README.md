@@ -2,13 +2,92 @@
 
 ソフトウェアエンジニアリング向けのPromptです。
 
+## このフォルダーの内容
+
+用途から Prompt、サンプルデータ、教材を探せます。各リンクから説明やファイルを開いてください。
+
+### フォルダー
+
+| フォルダー | 概要 |
+| --- | --- |
+| [ITService (IT Pro)](./ITService%20%28IT%20Pro%29/) | ITサービスやITプロフェッショナル向けのPromptと、そのサンプルデータをまとめています。 |
+| [sample](./sample/) | この階層にある各Promptを試すためのサンプルデータです。 |
+| [プロトタイプ](./プロトタイプ/) | Webアプリのプロトタイプ開発に関するPromptや画面・データの資料です。 |
+| [VibeCoding](./VibeCoding/) | アプリを段階的に開発しながら学ぶ、Vibe Codingのハンズオン教材です。 |
+| [プロトタイプ/sample](./プロトタイプ/sample/) | プロトタイプ開発に関するサンプルデータです。 |
+| [プロトタイプ/Data](./プロトタイプ/Data/) | プロトタイプで利用するSQLデータベースの定義です。 |
+| [プロトタイプ/diagram](./プロトタイプ/diagram/) | アプリケーションの画面遷移や構成を確認する図です。 |
+| [プロトタイプ/images](./プロトタイプ/images/) | プロトタイプ開発で作成した図の画像です。 |
+| [ITService (IT Pro)/sample](./ITService%20%28IT%20Pro%29/sample/) | ITプロフェッショナル向けPromptの入力例・サンプルデータです。 |
+
+### この階層のPrompt・教材
+
+| ファイル | 概要 |
+| --- | --- |
+| [Linux として動作.md](./Linux%20として動作.md) | Linuxターミナルの入出力を模擬するPromptです。 |
+| [SQL文作成.md](./SQL文作成.md) | 質問内容に応じたSQL Server向けSQL文を作成するPromptです。 |
+| [アーキテクチャレビュー.md](./アーキテクチャレビュー.md) | Microsoft Learn Docsを参照しながらアプリケーション構成をレビューするPromptです。 |
+| [ソフトウェアの保守.md](./ソフトウェアの保守.md) | Vibe Codingを活用したソフトウェア保守の内製化ユースケースを設計するPromptです。 |
+| [ハンズオンテキストの作成.md](./ハンズオンテキストの作成.md) | 技術や製品を初心者向けに学ぶハンズオン教材を作成するPromptです。 |
+| [技術調査.md](./技術調査.md) | 技術的な問題の初期調査に向けて、Web上の情報をもとに調査ステップを作成するPromptです。 |
+
+### sample — サンプルデータ
+
+| ファイル | 概要 |
+| --- | --- |
+| [README_サンプルデータ.md](./sample/README_サンプルデータ.md) | サンプルデータの概要と使い方を案内します。 |
+| [Linux として動作_サンプルデータ.md](./sample/Linux%20として動作_サンプルデータ.md) | Linuxターミナル模擬Prompt用の入力例です。 |
+| [SQL文作成_サンプルデータ.md](./sample/SQL文作成_サンプルデータ.md) | SQL文作成Prompt用のデータ例です。 |
+| [アーキテクチャレビュー_サンプルデータ.md](./sample/アーキテクチャレビュー_サンプルデータ.md) | アーキテクチャレビューPrompt用の入力例です。 |
+| [ソフトウェアの保守_サンプルデータ.md](./sample/ソフトウェアの保守_サンプルデータ.md) | ソフトウェア保守Prompt用の入力例です。 |
+| [ハンズオンテキストの作成_サンプルデータ.md](./sample/ハンズオンテキストの作成_サンプルデータ.md) | ハンズオン教材作成Prompt用の入力例です。 |
+| [技術調査_サンプルデータ.md](./sample/技術調査_サンプルデータ.md) | 技術調査Prompt用の入力例です。 |
+
+### ITService (IT Pro)
+
+| ファイル | 概要 |
+| --- | --- |
+| [README.md](./ITService%20%28IT%20Pro%29/README.md) | ITプロフェッショナル向けPrompt集の案内です。 |
+| [Azure Copilot Agent.md](./ITService%20%28IT%20Pro%29/Azure%20Copilot%20Agent.md) | Azure Copilot Agentを活用するためのPrompt集です。 |
+| [RFI撲滅委員会.md](./ITService%20%28IT%20Pro%29/RFI撲滅委員会.md) | ビジネス要求に合う製品・サービス・技術の調査と選定を支援するPromptです。 |
+| [アプリケーションの操作マニュアル作成.md](./ITService%20%28IT%20Pro%29/アプリケーションの操作マニュアル作成.md) | アプリケーション画面の情報から操作マニュアルを作成するPromptです。 |
+| [プログラムコードの説明.md](./ITService%20%28IT%20Pro%29/プログラムコードの説明.md) | プログラムコードの処理内容を文章で説明するPromptです。 |
+| [Azure Copilot Agent_サンプルデータ.md](./ITService%20%28IT%20Pro%29/sample/Azure%20Copilot%20Agent_サンプルデータ.md) | Azure Copilot Agent Prompt用のシナリオ・入力例です。 |
+| [RFI撲滅委員会_サンプルデータ.md](./ITService%20%28IT%20Pro%29/sample/RFI撲滅委員会_サンプルデータ.md) | RFI作成・製品選定Prompt用のシナリオ例です。 |
+| [アプリケーションの操作マニュアル作成_サンプルデータ.md](./ITService%20%28IT%20Pro%29/sample/アプリケーションの操作マニュアル作成_サンプルデータ.md) | 操作マニュアル作成Prompt用の画面仕様例です。 |
+| [プログラムコードの説明_サンプルデータ.md](./ITService%20%28IT%20Pro%29/sample/プログラムコードの説明_サンプルデータ.md) | コード説明Promptに渡すプログラム例です。 |
+
+### プロトタイプ
+
+| ファイル | 概要 |
+| --- | --- |
+| [README.md](./プロトタイプ/README.md) | Webアプリのプロトタイプ開発の進め方と参考資料です。 |
+| [SQLDatabase.sql](./プロトタイプ/Data/SQLDatabase.sql) | プロトタイプで使用するユーザー、観光スポットなどのテーブル定義です。 |
+| [画面遷移図.md](./プロトタイプ/diagram/画面遷移図.md) | Webアプリの画面と画面遷移を示す図です。 |
+| [アプリケーション・アーキテクチャ.png](./プロトタイプ/diagram/アプリケーション・アーキテクチャ.png) | アプリケーション構成を示す図です。 |
+| [mermaid-diagram-2024-02-07-160326.png](./プロトタイプ/images/mermaid-diagram-2024-02-07-160326.png) | プロトタイプ開発で作成したMermaid図の画像です。 |
+| [README_サンプルデータ.md](./プロトタイプ/sample/README_サンプルデータ.md) | ITプロトタイプ開発用サンプルデータとシナリオを案内します。 |
+
+### VibeCoding — ハンズオン教材
+
+| ファイル | 概要 |
+| --- | --- |
+| [README.md](./VibeCoding/README.md) | 教材の対象、カリキュラム、技術構成、進め方をまとめた全体案内です。 |
+| [00-foundations.md](./VibeCoding/00-foundations.md) | Vibe Codingの原則、環境、Agentへの指示設計を学びます。 |
+| [01-local-api.md](./VibeCoding/01-local-api.md) | メモリ保存のローカルAPIを作成します。 |
+| [02-ui.md](./VibeCoding/02-ui.md) | UIを追加してAPIと連携させます。 |
+| [03-database.md](./VibeCoding/03-database.md) | データベースを導入し、データを永続化します。 |
+| [04-quality-ci.md](./VibeCoding/04-quality-ci.md) | テスト、CI、セキュリティを含む品質ゲートを整えます。 |
+| [05-cloud.md](./VibeCoding/05-cloud.md) | アプリケーションをクラウドへ展開します。 |
+| [06-feature-addition.md](./VibeCoding/06-feature-addition.md) | 仕様に沿った機能追加と回帰防止を学びます。 |
+| [07-multi-agent.md](./VibeCoding/07-multi-agent.md) | 複数のCoding Agentによる並列開発と統合を学びます。 |
+| [08-governance-appendix.md](./VibeCoding/08-governance-appendix.md) | 企業利用のガバナンス、チェックリスト、付録を確認します。 |
+
+### 関連リポジトリ
+
 | 項目 | 説明 |
 | --- | --- |
-| [IT Service, IT Pro](/Software%20Engineer/ITService%20(IT%20Pro)/) | ITサービスやITプロフェッショナル向けのPromptです。 |
-| [Agentic Software Engineering - Hypervelocity Engineering](https://github.com/dahatake/HypervelocityEngineering) | プロトタイプ開発向けのPromptです。Microsoft 365 Copilot ResearcherやGitHub CopilotのAgentなどDeep Researcher系のエージェント型アプリケーションを活用したものになります。 |
-| [Software Engineer - Standard](/Software%20Engineer/プロトタイプ/) | プロトタイプ開発向けのPromptです。 |
-| [ソフトウェアの保守](/Software%20Engineer/ソフトウェアの保守.md) | 外部委託している保守作業をVibe Codingで段階的に内製化するユースケースを作成するPromptです。 |
-
+| [Agentic Software Engineering - Hypervelocity Engineering](https://github.com/dahatake/HypervelocityEngineering) | Microsoft 365 Copilot ResearcherやGitHub Copilot Agentなどを活用するエージェント型アプリケーション向けのPromptです。 |
 
 # 私がよく使っているもの
 
@@ -150,5 +229,4 @@ git push はしないでください。ローカルでの commit はしてかま
 </communication>
 
 ```
-
 
