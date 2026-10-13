@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt Art Sample - Builder</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 1rem auto; padding: 0 1rem; }
+    label { display: block; margin-top: .75rem; font-weight: bold; }
+    textarea, select { width: 100%; }
+    canvas { border: 1px solid #888; width: 100%; max-width: 480px; }
+    #builderMessage { color: #060; margin-top: .5rem; }
+  </style>
+</head>
+<body>
+  <nav><a href="builder.html" aria-current="page">Builder</a> | <a href="analyzer.html">Analyzer</a></nav>
+  <h1>展示会ブース案内文 Builder</h1>
+
+  <label for="promptText">入力テキスト</label>
+  <textarea id="promptText" rows="4" placeholder="例: 新製品の省エネ空調を紹介するブースです"></textarea>
+
+  <label for="purpose">用途</label>
+  <select id="purpose">
+    <option value="invite">来場誘導</option>
+    <option value="explain">製品説明</option>
+    <option value="survey">アンケート依頼</option>
+  </select>
+
+  <label for="tone">トーン</label>
+  <select id="tone">
+    <option value="friendly">親しみやすい</option>
+    <option value="formal">フォーマル</option>
+    <option value="energetic">元気</option>
+  </select>
+
+  <p><button id="previewBtn" type="button">プレビュー</button> <button id="saveBtn" type="button">保存</button></p>
+  <canvas id="previewCanvas" width="480" height="160" aria-label="案内文のプレビュー"></canvas>
+  <p id="builderMessage" role="status" aria-live="polite"></p>
+
+  <script src="app.js"></script>
+</body>
+</html>

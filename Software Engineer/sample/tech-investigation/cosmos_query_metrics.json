@@ -1,0 +1,19 @@
+{
+  "_note": "研修用の架空データ。技術調査_サンプルデータ.md の x-ms-documentdb-query-metrics 抜粋を、コンテナー設定とあわせて整理したもの。改善後の値は未測定のため含めない。",
+  "query": "SELECT TOP 50 c.userId, c.sku, c.occurredAt FROM c WHERE c.category = \"camera\" AND c.occurredAt >= \"2026-08-01T00:00:00Z\" ORDER BY c.occurredAt DESC",
+  "before": {
+    "partitionKeyFilter": "none (cross-partition)",
+    "requestChargeRU": { "min": 210, "max": 480 },
+    "retrievedDocumentCount": 102344,
+    "outputDocumentCount": 50,
+    "indexUtilizationPercent": 12.4,
+    "totalQueryExecutionTimeMs": 1620,
+    "appLatencyMs": { "avg": 1800, "p95": 4700 }
+  },
+  "containerSettings": {
+    "partitionKey": "/tenantId",
+    "provisionedThroughputRU": 20000,
+    "ttlSeconds": 15552000,
+    "documentCountApprox": 120000000
+  }
+}

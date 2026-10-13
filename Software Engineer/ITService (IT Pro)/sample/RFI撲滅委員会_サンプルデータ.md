@@ -72,6 +72,10 @@
 - SWOT に加えて主要リスク5件を明記してほしい
 ```
 
+実ファイル(添付の代わりに使える架空の本文。docx/pdf/png の代替としてテキストで用意): [requirements_v0_9.md](./mallconcierge-attachments/requirements_v0_9.md)、[security_policy_excerpt.md](./mallconcierge-attachments/security_policy_excerpt.md)、[current_architecture.txt](./mallconcierge-attachments/current_architecture.txt)、[ops_notes.txt](./mallconcierge-attachments/ops_notes.txt)
+
+意図的な矛盾: 要求の「在庫は10分以内の遅延」に対し、現行の在庫反映は15分間隔バッチです。RFIの評価で、このギャップが「要確認」として拾われるかを確認できます。
+
 ## 3. ChatGPT での初回分析向け入力
 ```text
 # ビジネス上の実現したい事

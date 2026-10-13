@@ -1,0 +1,11 @@
+Worker,Mon,Tue,Wed,Thu,Fri,Sat,Sun,TotalShifts,WeekendShifts,PreferredMatched
+A,O,M,M,O,O,O,M,3,1,3
+B,O,D,O,D,D,O,O,3,0,3
+C,N,O,O,N,O,N,O,3,1,3
+D,M,M,M,O,M,M,O,5,1,5
+E,D,O,D,D,O,D,O,4,1,4
+F,O,O,N,O,N,O,N,3,1,3
+G,M,O,O,M,O,M,O,3,1,3
+H,O,O,O,M,M,O,M,3,1,3
+I,D,D,D,O,D,O,D,5,1,5
+J,O,N,O,O,O,O,O,1,0,1

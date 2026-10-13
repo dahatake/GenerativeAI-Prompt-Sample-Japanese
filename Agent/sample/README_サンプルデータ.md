@@ -1,4 +1,4 @@
-> 対応Prompt: ../README.md
+> 対応Prompt: [..\README.md](..\README.md)
 
 # README — サンプルデータ
 

@@ -1,0 +1,21 @@
+Comment,ExpectedEmotion,ExpectedScore,ExpectedConfidence
+The demo was clear and practical. I want my team to try it next week.,Positive,90,0.95
+"Helpful session, but I still do not see how this fits our approval workflow.",Mixed,48,0.8
+Another tool? This sounds like extra overhead for the plant managers.,Negative,20,0.85
+"The FAQ summary feature looks promising, especially for weekly escalations.",Positive,82,0.9
+"Good pace, but the slides were hard to read from the back of the room.",Mixed,55,0.75
+I liked the security overview. It answered most of our questions.,Positive,86,0.9
+No strong opinion yet.,Neutral,50,0.9
+"The pricing was not discussed, so I cannot take this to my manager.",Negative,35,0.7
+Could we get more time for Q&A next time?,Neutral,45,0.6
+The weekly report draft saved us at least an hour in the trial.,Positive,88,0.9
+I am worried the summaries might miss important details.,Negative,35,0.75
+Great examples from similar manufacturers. Very relevant.,Positive,85,0.9
+Setup looks complicated. How many days of training would we need?,Negative,32,0.7
+"The remote session was smooth, though the audio dropped twice.",Mixed,58,0.75
+It would be useful if the tool could work with our existing ticket system.,Neutral,55,0.65
+"Impressive demo, but I need to see it work with our own data.",Mixed,60,0.8
+Handout was concise and easy to follow.,Positive,78,0.85
+"Honestly, I expected more automation than what was shown.",Negative,38,0.7
+The roadmap slide gave me confidence about future features.,Positive,80,0.8
+Not sure yet. I will discuss it with my team.,Neutral,50,0.8

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt Art Sample - Analyzer</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 1rem auto; padding: 0 1rem; }
+    .cards { display: flex; gap: 1rem; margin: 1rem 0; }
+    .card { border: 1px solid #888; padding: .5rem 1rem; }
+    #analyzerError { color: #b00; }
+    li { margin: .25rem 0; }
+  </style>
+</head>
+<body>
+  <nav><a href="builder.html">Builder</a> | <a href="analyzer.html" aria-current="page">Analyzer</a></nav>
+  <h1>保存済みデータ Analyzer</h1>
+
+  <div class="cards">
+    <div class="card">件数: <strong id="statCount">-</strong></div>
+    <div class="card">平均文字数: <strong id="statAvgLength">-</strong></div>
+    <div class="card">最新: <strong id="statLatest">-</strong></div>
+  </div>
+
+  <p><button id="analyzeBtn" type="button">再分析</button></p>
+  <p id="analyzerError" role="alert" aria-live="assertive"></p>
+  <ul id="promptList"></ul>
+
+  <script src="app.js"></script>
+</body>
+</html>

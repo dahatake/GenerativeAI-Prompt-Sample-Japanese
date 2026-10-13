@@ -1,0 +1,11 @@
+employee,night_ok,leader_ok,preferred_shift,days_off_request
+A,0,1,M,木
+B,0,0,D,
+C,1,0,N,日
+D,0,1,M,
+E,1,1,D,火
+F,1,0,N,
+G,0,0,M,金
+H,0,1,M,
+I,1,0,D,
+J,1,0,N,月

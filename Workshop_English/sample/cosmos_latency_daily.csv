@@ -1,0 +1,15 @@
+date,day_type,dashboard_p95_ms_0830_1100_jst,throttled_requests_429,consumed_ru_per_sec_avg,note
+2026-08-17,weekday,178,1,3340,baseline
+2026-08-18,weekday,193,2,3457,baseline
+2026-08-19,weekday,195,2,3460,baseline
+2026-08-20,weekday,198,1,3445,composite index deployed 08-20
+2026-08-21,weekday,219,1,3400,
+2026-08-22,weekend,99,0,3441,
+2026-08-23,weekend,88,0,3444,
+2026-08-24,weekday,906,18,3458,import job added 08-24
+2026-08-25,weekday,907,19,3341,
+2026-08-26,weekday,857,40,3428,
+2026-08-27,weekday,818,33,3370,
+2026-08-28,weekday,863,24,3398,
+2026-08-29,weekend,348,0,3440,
+2026-08-30,weekend,372,0,3405,

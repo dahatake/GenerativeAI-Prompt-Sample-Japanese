@@ -1,0 +1,522 @@
+[
+  {
+    "id": "RST-001",
+    "contentType": "restaurant",
+    "name": "ミルクボックスカフェ郡山駅前",
+    "area": "駅前",
+    "areaCode": "EKI",
+    "category": "カフェ",
+    "supportsCashless": true,
+    "openFrom": "08:00",
+    "openTo": "20:00",
+    "avgPriceYen": 1200,
+    "favoriteCount": 412,
+    "reviewScore": 4.3,
+    "paymentMethodIds": [
+      "PAY-02",
+      "PAY-03"
+    ],
+    "location": {
+      "lat": 37.3982,
+      "lon": 140.388
+    },
+    "imageUrl": "https://example.invalid/images/rst-001.jpg"
+  },
+  {
+    "id": "RST-002",
+    "contentType": "restaurant",
+    "name": "磐梯山味噌ラーメン 麓",
+    "area": "湖南",
+    "areaCode": "KONAN",
+    "category": "ラーメン",
+    "supportsCashless": true,
+    "openFrom": "11:00",
+    "openTo": "21:00",
+    "avgPriceYen": 980,
+    "favoriteCount": 655,
+    "reviewScore": 4.5,
+    "paymentMethodIds": [
+      "PAY-01",
+      "PAY-04"
+    ],
+    "location": {
+      "lat": 37.432,
+      "lon": 140.217
+    },
+    "imageUrl": "https://example.invalid/images/rst-002.jpg"
+  },
+  {
+    "id": "RST-003",
+    "contentType": "restaurant",
+    "name": "駅前酒場 あさか屋",
+    "area": "駅前",
+    "areaCode": "EKI",
+    "category": "居酒屋",
+    "supportsCashless": true,
+    "openFrom": "17:00",
+    "openTo": "23:30",
+    "avgPriceYen": 3800,
+    "favoriteCount": 288,
+    "reviewScore": 4.1,
+    "paymentMethodIds": [
+      "PAY-01",
+      "PAY-02",
+      "PAY-04"
+    ],
+    "location": {
+      "lat": 37.3991,
+      "lon": 140.3871
+    },
+    "imageUrl": "https://example.invalid/images/rst-003.jpg"
+  },
+  {
+    "id": "RST-004",
+    "contentType": "restaurant",
+    "name": "麓山そば処 山並",
+    "area": "開成山",
+    "areaCode": "KAISEI",
+    "category": "そば",
+    "supportsCashless": false,
+    "openFrom": "11:00",
+    "openTo": "15:00",
+    "avgPriceYen": 1100,
+    "favoriteCount": 201,
+    "reviewScore": 4.4,
+    "paymentMethodIds": [
+      "PAY-01"
+    ],
+    "location": {
+      "lat": 37.4028,
+      "lon": 140.3665
+    },
+    "imageUrl": "https://example.invalid/images/rst-004.jpg"
+  },
+  {
+    "id": "RST-005",
+    "contentType": "restaurant",
+    "name": "こおりやま鯉ごはん 水辺",
+    "area": "安積",
+    "areaCode": "ASAKA",
+    "category": "和食",
+    "supportsCashless": true,
+    "openFrom": "11:30",
+    "openTo": "21:00",
+    "avgPriceYen": 2400,
+    "favoriteCount": 340,
+    "reviewScore": 4.0,
+    "paymentMethodIds": [
+      "PAY-02",
+      "PAY-03",
+      "PAY-05"
+    ],
+    "location": {
+      "lat": 37.3735,
+      "lon": 140.349
+    },
+    "imageUrl": "https://example.invalid/images/rst-005.jpg"
+  },
+  {
+    "id": "RST-006",
+    "contentType": "restaurant",
+    "name": "カフェ・ド・ふくしま 朝市",
+    "area": "駅前",
+    "areaCode": "EKI",
+    "category": "カフェ",
+    "supportsCashless": true,
+    "openFrom": "07:00",
+    "openTo": "17:00",
+    "avgPriceYen": 900,
+    "favoriteCount": 175,
+    "reviewScore": 3.9,
+    "paymentMethodIds": [
+      "PAY-02",
+      "PAY-03",
+      "PAY-04"
+    ],
+    "location": {
+      "lat": 37.3975,
+      "lon": 140.3895
+    },
+    "imageUrl": "https://example.invalid/images/rst-006.jpg"
+  },
+  {
+    "id": "RST-007",
+    "contentType": "restaurant",
+    "name": "ぶどうの丘ベーカリー",
+    "area": "湖南",
+    "areaCode": "KONAN",
+    "category": "パン",
+    "supportsCashless": false,
+    "openFrom": "09:00",
+    "openTo": "17:30",
+    "avgPriceYen": 650,
+    "favoriteCount": 120,
+    "reviewScore": 4.2,
+    "paymentMethodIds": [
+      "PAY-01",
+      "PAY-05"
+    ],
+    "location": {
+      "lat": 37.441,
+      "lon": 140.2255
+    },
+    "imageUrl": "https://example.invalid/images/rst-007.jpg"
+  },
+  {
+    "id": "RST-008",
+    "contentType": "restaurant",
+    "name": "うまか鶏 駅前本店",
+    "area": "駅前",
+    "areaCode": "EKI",
+    "category": "焼き鳥",
+    "supportsCashless": true,
+    "openFrom": "16:30",
+    "openTo": "23:00",
+    "avgPriceYen": 3200,
+    "favoriteCount": 530,
+    "reviewScore": 4.2,
+    "paymentMethodIds": [
+      "PAY-01",
+      "PAY-02",
+      "PAY-04"
+    ],
+    "location": {
+      "lat": 37.3988,
+      "lon": 140.386
+    },
+    "imageUrl": "https://example.invalid/images/rst-008.jpg"
+  },
+  {
+    "id": "RST-009",
+    "contentType": "restaurant",
+    "name": "ふるさと郷土料理 いなほ庵",
+    "area": "安積",
+    "areaCode": "ASAKA",
+    "category": "郷土料理",
+    "supportsCashless": true,
+    "openFrom": "11:00",
+    "openTo": "20:30",
+    "avgPriceYen": 2800,
+    "favoriteCount": 410,
+    "reviewScore": 4.6,
+    "paymentMethodIds": [
+      "PAY-02",
+      "PAY-03"
+    ],
+    "location": {
+      "lat": 37.371,
+      "lon": 140.3522
+    },
+    "imageUrl": "https://example.invalid/images/rst-009.jpg"
+  },
+  {
+    "id": "RST-010",
+    "contentType": "restaurant",
+    "name": "夜景テラス 逢瀬ビュー",
+    "area": "逢瀬",
+    "areaCode": "OUSE",
+    "category": "ダイニング",
+    "supportsCashless": true,
+    "openFrom": "17:00",
+    "openTo": "22:00",
+    "avgPriceYen": 4500,
+    "favoriteCount": 96,
+    "reviewScore": 3.8,
+    "paymentMethodIds": [
+      "PAY-02",
+      "PAY-04"
+    ],
+    "location": {
+      "lat": 37.356,
+      "lon": 140.401
+    },
+    "imageUrl": "https://example.invalid/images/rst-010.jpg"
+  },
+  {
+    "id": "SPT-001",
+    "contentType": "spot",
+    "name": "開成山公園",
+    "areaCode": "KAISEI",
+    "tags": [
+      "自然",
+      "散策",
+      "家族向け"
+    ],
+    "rainNote": "雨天不可",
+    "admissionYen": 0,
+    "location": {
+      "lat": 37.4012,
+      "lon": 140.3641
+    },
+    "imageUrl": "https://example.invalid/images/spt-001.jpg"
+  },
+  {
+    "id": "SPT-002",
+    "contentType": "spot",
+    "name": "安積歴史博物館",
+    "areaCode": "ASAKA",
+    "tags": [
+      "歴史",
+      "雨天可"
+    ],
+    "rainNote": "雨天可",
+    "admissionYen": 600,
+    "location": {
+      "lat": 37.3705,
+      "lon": 140.3501
+    },
+    "imageUrl": "https://example.invalid/images/spt-002.jpg"
+  },
+  {
+    "id": "SPT-003",
+    "contentType": "spot",
+    "name": "麓山展望台",
+    "areaCode": "KAISEI",
+    "tags": [
+      "夜景",
+      "自然"
+    ],
+    "rainNote": "雨天不可",
+    "admissionYen": 0,
+    "location": {
+      "lat": 37.4105,
+      "lon": 140.359
+    },
+    "imageUrl": "https://example.invalid/images/spt-003.jpg"
+  },
+  {
+    "id": "SPT-004",
+    "contentType": "spot",
+    "name": "湖南みどり体験農園",
+    "areaCode": "KONAN",
+    "tags": [
+      "体験",
+      "自然",
+      "家族向け"
+    ],
+    "rainNote": "雨天可(一部)",
+    "admissionYen": 1500,
+    "location": {
+      "lat": 37.445,
+      "lon": 140.23
+    },
+    "imageUrl": "https://example.invalid/images/spt-004.jpg"
+  },
+  {
+    "id": "SPT-005",
+    "contentType": "spot",
+    "name": "水路めぐり遊歩道",
+    "areaCode": "ASAKA",
+    "tags": [
+      "散策",
+      "歴史"
+    ],
+    "rainNote": "雨天不可",
+    "admissionYen": 0,
+    "location": {
+      "lat": 37.369,
+      "lon": 140.347
+    },
+    "imageUrl": "https://example.invalid/images/spt-005.jpg"
+  },
+  {
+    "id": "SPT-006",
+    "contentType": "spot",
+    "name": "旧酒蔵ギャラリー",
+    "areaCode": "ASAKA",
+    "tags": [
+      "歴史",
+      "雨天可",
+      "体験"
+    ],
+    "rainNote": "雨天可",
+    "admissionYen": 800,
+    "location": {
+      "lat": 37.372,
+      "lon": 140.351
+    },
+    "imageUrl": "https://example.invalid/images/spt-006.jpg"
+  },
+  {
+    "id": "SPT-007",
+    "contentType": "spot",
+    "name": "逢瀬の丘 夜景スポット",
+    "areaCode": "OUSE",
+    "tags": [
+      "夜景",
+      "自然"
+    ],
+    "rainNote": "雨天不可",
+    "admissionYen": 0,
+    "location": {
+      "lat": 37.355,
+      "lon": 140.402
+    },
+    "imageUrl": "https://example.invalid/images/spt-007.jpg"
+  },
+  {
+    "id": "SPT-008",
+    "contentType": "spot",
+    "name": "こおりやま陶芸工房",
+    "areaCode": "EKI",
+    "tags": [
+      "体験",
+      "雨天可"
+    ],
+    "rainNote": "雨天可",
+    "admissionYen": 2800,
+    "location": {
+      "lat": 37.396,
+      "lon": 140.392
+    },
+    "imageUrl": "https://example.invalid/images/spt-008.jpg"
+  },
+  {
+    "id": "RTE-001",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "開成山公園",
+    "mode": "バス",
+    "minutes": 15,
+    "fareYen": 240
+  },
+  {
+    "id": "RTE-002",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "開成山公園",
+    "mode": "徒歩",
+    "minutes": 35,
+    "fareYen": 0
+  },
+  {
+    "id": "RTE-003",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "開成山公園",
+    "mode": "タクシー",
+    "minutes": 12,
+    "fareYen": 1800
+  },
+  {
+    "id": "RTE-004",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "安積歴史博物館",
+    "mode": "バス",
+    "minutes": 22,
+    "fareYen": 240
+  },
+  {
+    "id": "RTE-005",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "麓山展望台",
+    "mode": "バス",
+    "minutes": 20,
+    "fareYen": 240
+  },
+  {
+    "id": "RTE-006",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "麓山展望台",
+    "mode": "タクシー",
+    "minutes": 14,
+    "fareYen": 2000
+  },
+  {
+    "id": "RTE-007",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "湖南みどり体験農園",
+    "mode": "バス",
+    "minutes": 48,
+    "fareYen": 520
+  },
+  {
+    "id": "RTE-008",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "逢瀬の丘 夜景スポット",
+    "mode": "タクシー",
+    "minutes": 25,
+    "fareYen": 3600
+  },
+  {
+    "id": "RTE-009",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "こおりやま陶芸工房",
+    "mode": "徒歩",
+    "minutes": 12,
+    "fareYen": 0
+  },
+  {
+    "id": "RTE-010",
+    "contentType": "route",
+    "origin": "開成山公園",
+    "destination": "麓山展望台",
+    "mode": "徒歩",
+    "minutes": 18,
+    "fareYen": 0
+  },
+  {
+    "id": "RTE-011",
+    "contentType": "route",
+    "origin": "安積歴史博物館",
+    "destination": "水路めぐり遊歩道",
+    "mode": "徒歩",
+    "minutes": 8,
+    "fareYen": 0
+  },
+  {
+    "id": "RTE-012",
+    "contentType": "route",
+    "origin": "郡山駅",
+    "destination": "旧酒蔵ギャラリー",
+    "mode": "バス",
+    "minutes": 24,
+    "fareYen": 240
+  },
+  {
+    "id": "CPN-001",
+    "contentType": "coupon",
+    "title": "駅前カフェ ドリンク50円引き",
+    "targetId": "RST-001",
+    "discountYen": 50,
+    "validTo": "2026-12-31"
+  },
+  {
+    "id": "CPN-002",
+    "contentType": "coupon",
+    "title": "味噌ラーメン 味玉サービス",
+    "targetId": "RST-002",
+    "discountYen": 120,
+    "validTo": "2026-12-31"
+  },
+  {
+    "id": "CPN-003",
+    "contentType": "coupon",
+    "title": "陶芸体験 500円引き",
+    "targetId": "SPT-008",
+    "discountYen": 500,
+    "validTo": "2026-12-31"
+  },
+  {
+    "id": "CPN-004",
+    "contentType": "coupon",
+    "title": "歴史博物館 団体割引(2名以上)",
+    "targetId": "SPT-002",
+    "discountYen": 200,
+    "validTo": "2026-12-31"
+  },
+  {
+    "id": "CPN-005",
+    "contentType": "coupon",
+    "title": "鶏皮せんべい1袋プレゼント",
+    "targetId": "RST-008",
+    "discountYen": 300,
+    "validTo": "2026-12-31"
+  }
+]

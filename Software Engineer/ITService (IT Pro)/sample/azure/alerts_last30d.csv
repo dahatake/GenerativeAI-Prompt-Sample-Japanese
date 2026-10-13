@@ -1,0 +1,30 @@
+fired_at,alert_rule,service,severity,duration_min,suspected_cause
+2026-08-03T01:21:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,11,リビジョンの CPU 過小設定
+2026-08-03T03:26:00+09:00,adx-hot-cache-pressure,Data Explorer,Sev2,55,月末分析ジョブ集中
+2026-08-03T14:20:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,22,リビジョンの CPU 過小設定
+2026-08-06T02:05:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,21,リビジョンの CPU 過小設定
+2026-08-07T13:22:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,57,リビジョンの CPU 過小設定
+2026-08-07T17:35:00+09:00,sql-deadlock-burst,Azure SQL,Sev1,94,在庫更新バッチ競合
+2026-08-08T05:52:00+09:00,adx-hot-cache-pressure,Data Explorer,Sev2,90,月末分析ジョブ集中
+2026-08-08T14:35:00+09:00,sql-deadlock-burst,Azure SQL,Sev1,63,在庫更新バッチ競合
+2026-08-11T03:24:00+09:00,prod-app-5xx-spike,App Service,Sev2,47,デプロイ直後の接続タイムアウト
+2026-08-11T06:43:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,55,リビジョンの CPU 過小設定
+2026-08-12T06:43:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,8,リビジョンの CPU 過小設定
+2026-08-12T21:43:00+09:00,adx-hot-cache-pressure,Data Explorer,Sev2,26,月末分析ジョブ集中
+2026-08-12T22:13:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,31,リビジョンの CPU 過小設定
+2026-08-13T23:20:00+09:00,prod-app-5xx-spike,App Service,Sev2,66,デプロイ直後の接続タイムアウト
+2026-08-15T06:45:00+09:00,prod-app-5xx-spike,App Service,Sev2,80,デプロイ直後の接続タイムアウト
+2026-08-15T19:58:00+09:00,storage-private-endpoint-dns-fail,Storage,Sev1,22,DNS zone link 漏れ
+2026-08-16T21:05:00+09:00,adx-hot-cache-pressure,Data Explorer,Sev2,74,月末分析ジョブ集中
+2026-08-17T19:47:00+09:00,prod-app-5xx-spike,App Service,Sev2,60,デプロイ直後の接続タイムアウト
+2026-08-18T04:07:00+09:00,prod-app-5xx-spike,App Service,Sev2,81,デプロイ直後の接続タイムアウト
+2026-08-18T07:14:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,24,リビジョンの CPU 過小設定
+2026-08-20T12:32:00+09:00,adx-hot-cache-pressure,Data Explorer,Sev2,70,月末分析ジョブ集中
+2026-08-21T00:38:00+09:00,prod-app-5xx-spike,App Service,Sev2,67,デプロイ直後の接続タイムアウト
+2026-08-21T18:50:00+09:00,storage-private-endpoint-dns-fail,Storage,Sev1,74,DNS zone link 漏れ
+2026-08-22T21:59:00+09:00,prod-app-5xx-spike,App Service,Sev2,43,デプロイ直後の接続タイムアウト
+2026-08-25T04:45:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,32,リビジョンの CPU 過小設定
+2026-08-26T10:27:00+09:00,sql-deadlock-burst,Azure SQL,Sev1,67,在庫更新バッチ競合
+2026-08-28T09:45:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,11,リビジョンの CPU 過小設定
+2026-08-28T10:15:00+09:00,containerapps-cpu-throttle,Container Apps,Sev2,80,リビジョンの CPU 過小設定
+2026-08-31T06:01:00+09:00,prod-app-5xx-spike,App Service,Sev2,42,デプロイ直後の接続タイムアウト

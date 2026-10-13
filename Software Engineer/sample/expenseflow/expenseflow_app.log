@@ -1,0 +1,16 @@
+2026-08-21T21:58:12+09:00 INFO expenseId=EX-8810 calculated=1025 expected=1025 route=night-bus
+2026-08-21T22:03:41+09:00 INFO expenseId=EX-8815 calculated=513 expected=513 route=taxi
+2026-08-21T22:41:09+09:00 INFO expenseId=EX-8820 calculated=2183 expected=2183 route=night-train
+2026-08-21T22:58:04+09:00 WARN expenseId=EX-8821 calculated=1381 expected=1380 route=night-bus
+2026-08-21T23:30:50+09:00 INFO expenseId=EX-8826 calculated=743 expected=743 route=bus
+2026-08-22T00:12:33+09:00 INFO expenseId=EX-8831 calculated=433 expected=433 route=taxi
+2026-08-22T01:20:47+09:00 INFO expenseId=EX-8836 calculated=2183 expected=2183 route=taxi
+2026-08-22T03:05:19+09:00 WARN expenseId=EX-8840 calculated=1066 expected=1065 route=taxi
+2026-08-22T04:59:30+09:00 INFO expenseId=EX-8843 calculated=633 expected=633 route=taxi
+2026-08-22T05:00:01+09:00 INFO expenseId=EX-8844 midnightFlag=true
+2026-08-22T05:00:02+09:00 WARN expenseId=EX-8844 calculated=600 expected=480 route=taxi
+2026-08-22T05:01:15+09:00 INFO expenseId=EX-8845 calculated=480 expected=480 route=taxi
+2026-08-22T08:00:10+09:00 INFO expenseId=EX-8850 calculated=520 expected=520 route=bus
+2026-08-22T09:15:44+09:00 INFO expenseId=EX-8855 calculated=580 expected=580 route=train
+2026-08-22T09:47:02+09:00 WARN expenseId=EX-8858 calculated=1146 expected=1043 route=night-bus
+2026-08-22T10:30:21+09:00 INFO expenseId=EX-8861 calculated=923 expected=923 route=train

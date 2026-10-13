@@ -1,4 +1,4 @@
-対応Prompt: [..\README.md](..\README.md)
+対応Prompt: [../README.md](../README.md)
 
 > このファイルの内容はすべて研修用の架空データです。説明は日本語ですが、貼り付け用の source data は英語中心で作成しています。
 
@@ -13,7 +13,7 @@
 
 ```text
 Customer:
-- Ms. Eleanor Price, Operations Director, Northwind Components
+- Ms. Eleanor Price, Operations Director, Northgate Components
 
 What happened:
 - You arrived 17 minutes late to a paid on-site workshop because your connecting train was suspended by severe weather.
@@ -121,6 +121,8 @@ Rules:
 - Score range: 0-100
 - Confidence range: 0.00-1.00
 ```
+
+Full-volume file: [feedback_comments_en.csv](./feedback_comments_en.csv) has 20 comments (including the four above) with expected labels for checking the output. Do not paste the expected labels into the prompt.
 
 ## 6. Creating a table from a sentence
 
@@ -243,6 +245,8 @@ What is still unknown:
 - Whether cross-partition fan-out has increased
 ```
 
+Supporting data: [cosmos_latency_daily.csv](./cosmos_latency_daily.csv) lists 14 days (2026-08-17 to 08-30) of dashboard p95 latency for the 08:30-11:00 JST window, throttled requests, and average RU/s. RU/s stays flat (about 3,400) while p95 rises from about 180 ms to over 800 ms after 08-24 and 429 throttling spikes appear. Weekend values are lower because the dashboard is used less.
+
 ## 11. Prompt review
 
 ```text
@@ -253,4 +257,43 @@ Observed issues:
 - The output format changes every time
 - Customer-facing language and internal notes get mixed together
 - Unconfirmed facts are sometimes written as decisions
+```
+
+## 12. Simulating a meeting (section 2.3)
+
+```text
+Meeting topic:
+- Should we introduce ChatGPT or Microsoft 365 Copilot company-wide this fiscal year?
+
+Reference information to gather first (for the <参考情報> tag):
+- Benefits for companies
+- Drawbacks
+- Departments that can try it quickly
+- Concerns about data leakage, wrong answers, and governance
+
+Meeting conditions:
+- Participants: two executives, one sales representative, one IT representative, one customer success representative
+- Candidate conclusions: "Adopt this year", "Limited pilot", "Do not adopt"
+
+Direction of thought (use something other than lateral thinking):
+- Strategic thinking
+- Systems thinking
+- Critical thinking
+```
+
+## 13. Application prototyping (section 2.4)
+
+```text
+Customer profile:
+- Business transformation lead at a manufacturer, not familiar with IT
+- Cannot see the return on investment of a new application and cannot put requirements into words yet
+
+What the prototype should show:
+- Inquiry summaries
+- Weekly report drafts
+- FAQ update candidates
+
+Constraints:
+- A first draft within three days
+- Use dummy data only; no confidential data
 ```

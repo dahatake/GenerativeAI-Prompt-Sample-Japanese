@@ -159,7 +159,7 @@
 ```text
 # サンプル店舗・スポット
 1. Restaurant
-   - `RST-001` クリームボックスカフェ郡山駅前 / エリア: 駅前 / 支払い: 交通系IC, クレカ
+   - `RST-001` ミルクボックスカフェ郡山駅前 / エリア: 駅前 / 支払い: 交通系IC, クレカ
    - `RST-002` 磐梯山味噌ラーメン 麓 / エリア: 湖南 / 支払い: 現金, QR
 2. TouristSpot
    - `SPT-001` 開成山公園 / タグ: 自然, 散策, 家族向け
@@ -205,6 +205,11 @@
 - 画像URLはダミー
 - 本番で使わず開発検証専用
 ```
+
+### 実ファイル（12・14・15・21・22 共通のデータセット）
+店舗名・施設名は架空です(地名・公園などの一般的な場所名のみ実在)。上の本文の RST-001/002、SPT-001/002、郡山駅→開成山公園のルートを含みます。
+- [seed_azure_sql.sql](./data/seed_azure_sql.sql): Azure SQL 用。`restaurants` 10件、`tourist_spots` 8件、`route_options` 12件、`payment_methods` 5件のテーブル作成と登録(監査列 `created_at`/`updated_at` 付き)と、「一番人気」のクエリ(`RST-002 磐梯山味噌ラーメン 麓` が該当)
+- [travel_content.json](./data/travel_content.json): Cosmos DB `travel_content`(パーティションキー `/contentType`)用の35件(restaurant 10 / spot 8 / route 12 / coupon 5)。画像URLは `example.invalid` のダミー
 
 ## 16. 画面作成向け入力
 ```text

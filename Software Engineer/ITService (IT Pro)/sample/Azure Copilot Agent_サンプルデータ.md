@@ -1,4 +1,4 @@
-対応Prompt: [../Azure Copilot Agent.md](../Azure Copilot Agent.md)
+対応Prompt: [../Azure Copilot Agent.md](../Azure%20Copilot%20Agent.md)
 
 ※以下はすべて架空のサンプルデータです。実在の企業・個人・環境・識別子とは無関係です。以下のサブスクリプション名・ID・リソース名は学習用です。生成されるコマンドや IaC は本番環境へ実行しないでください。
 
@@ -9,6 +9,10 @@
 - DR リージョン: Japan West
 - 監査要件: J-SOX 相当、監査ログ1年保持
 - セキュリティ: PII と取引先契約情報を扱うため Private Link / Key Vault / Managed Identity 優先
+
+## 実ファイル（`azure/`）
+- [alerts_last30d.csv](./azure/alerts_last30d.csv): 「4. アラートのキャッチアップ」の29件(5ルール: 8/5/2/11/3回)の発生日時・継続時間・原因候補
+- [cost_daily_2026-08.csv](./azure/cost_daily_2026-08.csv): 「7. コスト要約と予測」の8月分の日次コスト(prod 合計 ¥4,820,000、dev 合計 ¥1,360,000。サービス別内訳も本文と一致)
 
 ## 1. セキュアな分析基盤を構築
 ```text

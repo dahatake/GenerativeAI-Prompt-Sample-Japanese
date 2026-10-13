@@ -1,0 +1,311 @@
+date,subscription,service,cost_jpy
+2026-08-01,sub-dev-hoshizora-sim,AKS,14600
+2026-08-01,sub-dev-hoshizora-sim,Azure SQL,5300
+2026-08-01,sub-dev-hoshizora-sim,Container Apps,6800
+2026-08-01,sub-dev-hoshizora-sim,OpenAI,6400
+2026-08-01,sub-dev-hoshizora-sim,その他,12700
+2026-08-01,sub-prod-hoshizora-sim,AKS,46700
+2026-08-01,sub-prod-hoshizora-sim,App Service,23100
+2026-08-01,sub-prod-hoshizora-sim,Azure SQL,18300
+2026-08-01,sub-prod-hoshizora-sim,Data Explorer,30600
+2026-08-01,sub-prod-hoshizora-sim,Network/その他,33000
+2026-08-02,sub-dev-hoshizora-sim,AKS,15000
+2026-08-02,sub-dev-hoshizora-sim,Azure SQL,6000
+2026-08-02,sub-dev-hoshizora-sim,Container Apps,5900
+2026-08-02,sub-dev-hoshizora-sim,OpenAI,5800
+2026-08-02,sub-dev-hoshizora-sim,その他,10400
+2026-08-02,sub-prod-hoshizora-sim,AKS,43900
+2026-08-02,sub-prod-hoshizora-sim,App Service,21400
+2026-08-02,sub-prod-hoshizora-sim,Azure SQL,18400
+2026-08-02,sub-prod-hoshizora-sim,Data Explorer,29600
+2026-08-02,sub-prod-hoshizora-sim,Network/その他,34400
+2026-08-03,sub-dev-hoshizora-sim,AKS,14500
+2026-08-03,sub-dev-hoshizora-sim,Azure SQL,5800
+2026-08-03,sub-dev-hoshizora-sim,Container Apps,7400
+2026-08-03,sub-dev-hoshizora-sim,OpenAI,5500
+2026-08-03,sub-dev-hoshizora-sim,その他,13300
+2026-08-03,sub-prod-hoshizora-sim,AKS,42800
+2026-08-03,sub-prod-hoshizora-sim,App Service,24300
+2026-08-03,sub-prod-hoshizora-sim,Azure SQL,22200
+2026-08-03,sub-prod-hoshizora-sim,Data Explorer,31100
+2026-08-03,sub-prod-hoshizora-sim,Network/その他,34300
+2026-08-04,sub-dev-hoshizora-sim,AKS,14100
+2026-08-04,sub-dev-hoshizora-sim,Azure SQL,6900
+2026-08-04,sub-dev-hoshizora-sim,Container Apps,5800
+2026-08-04,sub-dev-hoshizora-sim,OpenAI,5300
+2026-08-04,sub-dev-hoshizora-sim,その他,11700
+2026-08-04,sub-prod-hoshizora-sim,AKS,50000
+2026-08-04,sub-prod-hoshizora-sim,App Service,23200
+2026-08-04,sub-prod-hoshizora-sim,Azure SQL,23900
+2026-08-04,sub-prod-hoshizora-sim,Data Explorer,28300
+2026-08-04,sub-prod-hoshizora-sim,Network/その他,30200
+2026-08-05,sub-dev-hoshizora-sim,AKS,12300
+2026-08-05,sub-dev-hoshizora-sim,Azure SQL,5300
+2026-08-05,sub-dev-hoshizora-sim,Container Apps,6800
+2026-08-05,sub-dev-hoshizora-sim,OpenAI,6000
+2026-08-05,sub-dev-hoshizora-sim,その他,12400
+2026-08-05,sub-prod-hoshizora-sim,AKS,51100
+2026-08-05,sub-prod-hoshizora-sim,App Service,21400
+2026-08-05,sub-prod-hoshizora-sim,Azure SQL,20200
+2026-08-05,sub-prod-hoshizora-sim,Data Explorer,32800
+2026-08-05,sub-prod-hoshizora-sim,Network/その他,36800
+2026-08-06,sub-dev-hoshizora-sim,AKS,13100
+2026-08-06,sub-dev-hoshizora-sim,Azure SQL,6800
+2026-08-06,sub-dev-hoshizora-sim,Container Apps,7700
+2026-08-06,sub-dev-hoshizora-sim,OpenAI,5100
+2026-08-06,sub-dev-hoshizora-sim,その他,13100
+2026-08-06,sub-prod-hoshizora-sim,AKS,42000
+2026-08-06,sub-prod-hoshizora-sim,App Service,26100
+2026-08-06,sub-prod-hoshizora-sim,Azure SQL,23300
+2026-08-06,sub-prod-hoshizora-sim,Data Explorer,29700
+2026-08-06,sub-prod-hoshizora-sim,Network/その他,36400
+2026-08-07,sub-dev-hoshizora-sim,AKS,12500
+2026-08-07,sub-dev-hoshizora-sim,Azure SQL,5900
+2026-08-07,sub-dev-hoshizora-sim,Container Apps,7200
+2026-08-07,sub-dev-hoshizora-sim,OpenAI,5800
+2026-08-07,sub-dev-hoshizora-sim,その他,10100
+2026-08-07,sub-prod-hoshizora-sim,AKS,51800
+2026-08-07,sub-prod-hoshizora-sim,App Service,24200
+2026-08-07,sub-prod-hoshizora-sim,Azure SQL,18700
+2026-08-07,sub-prod-hoshizora-sim,Data Explorer,36400
+2026-08-07,sub-prod-hoshizora-sim,Network/その他,35900
+2026-08-08,sub-dev-hoshizora-sim,AKS,15900
+2026-08-08,sub-dev-hoshizora-sim,Azure SQL,5400
+2026-08-08,sub-dev-hoshizora-sim,Container Apps,7600
+2026-08-08,sub-dev-hoshizora-sim,OpenAI,6100
+2026-08-08,sub-dev-hoshizora-sim,その他,10700
+2026-08-08,sub-prod-hoshizora-sim,AKS,40700
+2026-08-08,sub-prod-hoshizora-sim,App Service,24000
+2026-08-08,sub-prod-hoshizora-sim,Azure SQL,18400
+2026-08-08,sub-prod-hoshizora-sim,Data Explorer,31700
+2026-08-08,sub-prod-hoshizora-sim,Network/その他,33900
+2026-08-09,sub-dev-hoshizora-sim,AKS,14500
+2026-08-09,sub-dev-hoshizora-sim,Azure SQL,6900
+2026-08-09,sub-dev-hoshizora-sim,Container Apps,7600
+2026-08-09,sub-dev-hoshizora-sim,OpenAI,5100
+2026-08-09,sub-dev-hoshizora-sim,その他,12000
+2026-08-09,sub-prod-hoshizora-sim,AKS,44300
+2026-08-09,sub-prod-hoshizora-sim,App Service,23900
+2026-08-09,sub-prod-hoshizora-sim,Azure SQL,24000
+2026-08-09,sub-prod-hoshizora-sim,Data Explorer,36900
+2026-08-09,sub-prod-hoshizora-sim,Network/その他,27900
+2026-08-10,sub-dev-hoshizora-sim,AKS,12100
+2026-08-10,sub-dev-hoshizora-sim,Azure SQL,5900
+2026-08-10,sub-dev-hoshizora-sim,Container Apps,5900
+2026-08-10,sub-dev-hoshizora-sim,OpenAI,5300
+2026-08-10,sub-dev-hoshizora-sim,その他,12100
+2026-08-10,sub-prod-hoshizora-sim,AKS,53100
+2026-08-10,sub-prod-hoshizora-sim,App Service,26600
+2026-08-10,sub-prod-hoshizora-sim,Azure SQL,18100
+2026-08-10,sub-prod-hoshizora-sim,Data Explorer,34200
+2026-08-10,sub-prod-hoshizora-sim,Network/その他,35300
+2026-08-11,sub-dev-hoshizora-sim,AKS,13000
+2026-08-11,sub-dev-hoshizora-sim,Azure SQL,5300
+2026-08-11,sub-dev-hoshizora-sim,Container Apps,6000
+2026-08-11,sub-dev-hoshizora-sim,OpenAI,5400
+2026-08-11,sub-dev-hoshizora-sim,その他,11300
+2026-08-11,sub-prod-hoshizora-sim,AKS,48600
+2026-08-11,sub-prod-hoshizora-sim,App Service,21700
+2026-08-11,sub-prod-hoshizora-sim,Azure SQL,18400
+2026-08-11,sub-prod-hoshizora-sim,Data Explorer,29200
+2026-08-11,sub-prod-hoshizora-sim,Network/その他,33400
+2026-08-12,sub-dev-hoshizora-sim,AKS,13100
+2026-08-12,sub-dev-hoshizora-sim,Azure SQL,6100
+2026-08-12,sub-dev-hoshizora-sim,Container Apps,6500
+2026-08-12,sub-dev-hoshizora-sim,OpenAI,6300
+2026-08-12,sub-dev-hoshizora-sim,その他,10200
+2026-08-12,sub-prod-hoshizora-sim,AKS,42300
+2026-08-12,sub-prod-hoshizora-sim,App Service,21600
+2026-08-12,sub-prod-hoshizora-sim,Azure SQL,21300
+2026-08-12,sub-prod-hoshizora-sim,Data Explorer,34800
+2026-08-12,sub-prod-hoshizora-sim,Network/その他,36700
+2026-08-13,sub-dev-hoshizora-sim,AKS,13100
+2026-08-13,sub-dev-hoshizora-sim,Azure SQL,6900
+2026-08-13,sub-dev-hoshizora-sim,Container Apps,6900
+2026-08-13,sub-dev-hoshizora-sim,OpenAI,6700
+2026-08-13,sub-dev-hoshizora-sim,その他,11400
+2026-08-13,sub-prod-hoshizora-sim,AKS,41500
+2026-08-13,sub-prod-hoshizora-sim,App Service,21900
+2026-08-13,sub-prod-hoshizora-sim,Azure SQL,22700
+2026-08-13,sub-prod-hoshizora-sim,Data Explorer,37000
+2026-08-13,sub-prod-hoshizora-sim,Network/その他,29000
+2026-08-14,sub-dev-hoshizora-sim,AKS,15700
+2026-08-14,sub-dev-hoshizora-sim,Azure SQL,7100
+2026-08-14,sub-dev-hoshizora-sim,Container Apps,6700
+2026-08-14,sub-dev-hoshizora-sim,OpenAI,5600
+2026-08-14,sub-dev-hoshizora-sim,その他,12100
+2026-08-14,sub-prod-hoshizora-sim,AKS,52100
+2026-08-14,sub-prod-hoshizora-sim,App Service,23500
+2026-08-14,sub-prod-hoshizora-sim,Azure SQL,20300
+2026-08-14,sub-prod-hoshizora-sim,Data Explorer,27900
+2026-08-14,sub-prod-hoshizora-sim,Network/その他,33200
+2026-08-15,sub-dev-hoshizora-sim,AKS,13700
+2026-08-15,sub-dev-hoshizora-sim,Azure SQL,6100
+2026-08-15,sub-dev-hoshizora-sim,Container Apps,6500
+2026-08-15,sub-dev-hoshizora-sim,OpenAI,6500
+2026-08-15,sub-dev-hoshizora-sim,その他,12400
+2026-08-15,sub-prod-hoshizora-sim,AKS,45800
+2026-08-15,sub-prod-hoshizora-sim,App Service,24500
+2026-08-15,sub-prod-hoshizora-sim,Azure SQL,19200
+2026-08-15,sub-prod-hoshizora-sim,Data Explorer,28600
+2026-08-15,sub-prod-hoshizora-sim,Network/その他,35800
+2026-08-16,sub-dev-hoshizora-sim,AKS,14900
+2026-08-16,sub-dev-hoshizora-sim,Azure SQL,6600
+2026-08-16,sub-dev-hoshizora-sim,Container Apps,6700
+2026-08-16,sub-dev-hoshizora-sim,OpenAI,5900
+2026-08-16,sub-dev-hoshizora-sim,その他,10600
+2026-08-16,sub-prod-hoshizora-sim,AKS,48500
+2026-08-16,sub-prod-hoshizora-sim,App Service,26100
+2026-08-16,sub-prod-hoshizora-sim,Azure SQL,19700
+2026-08-16,sub-prod-hoshizora-sim,Data Explorer,35700
+2026-08-16,sub-prod-hoshizora-sim,Network/その他,35900
+2026-08-17,sub-dev-hoshizora-sim,AKS,14000
+2026-08-17,sub-dev-hoshizora-sim,Azure SQL,6800
+2026-08-17,sub-dev-hoshizora-sim,Container Apps,6100
+2026-08-17,sub-dev-hoshizora-sim,OpenAI,5000
+2026-08-17,sub-dev-hoshizora-sim,その他,10500
+2026-08-17,sub-prod-hoshizora-sim,AKS,41600
+2026-08-17,sub-prod-hoshizora-sim,App Service,22300
+2026-08-17,sub-prod-hoshizora-sim,Azure SQL,18700
+2026-08-17,sub-prod-hoshizora-sim,Data Explorer,30400
+2026-08-17,sub-prod-hoshizora-sim,Network/その他,36600
+2026-08-18,sub-dev-hoshizora-sim,AKS,12100
+2026-08-18,sub-dev-hoshizora-sim,Azure SQL,5700
+2026-08-18,sub-dev-hoshizora-sim,Container Apps,7300
+2026-08-18,sub-dev-hoshizora-sim,OpenAI,6400
+2026-08-18,sub-dev-hoshizora-sim,その他,10600
+2026-08-18,sub-prod-hoshizora-sim,AKS,48300
+2026-08-18,sub-prod-hoshizora-sim,App Service,21800
+2026-08-18,sub-prod-hoshizora-sim,Azure SQL,19200
+2026-08-18,sub-prod-hoshizora-sim,Data Explorer,30900
+2026-08-18,sub-prod-hoshizora-sim,Network/その他,33300
+2026-08-19,sub-dev-hoshizora-sim,AKS,13600
+2026-08-19,sub-dev-hoshizora-sim,Azure SQL,6100
+2026-08-19,sub-dev-hoshizora-sim,Container Apps,7300
+2026-08-19,sub-dev-hoshizora-sim,OpenAI,5600
+2026-08-19,sub-dev-hoshizora-sim,その他,13200
+2026-08-19,sub-prod-hoshizora-sim,AKS,44200
+2026-08-19,sub-prod-hoshizora-sim,App Service,27900
+2026-08-19,sub-prod-hoshizora-sim,Azure SQL,23600
+2026-08-19,sub-prod-hoshizora-sim,Data Explorer,31300
+2026-08-19,sub-prod-hoshizora-sim,Network/その他,28300
+2026-08-20,sub-dev-hoshizora-sim,AKS,14700
+2026-08-20,sub-dev-hoshizora-sim,Azure SQL,5900
+2026-08-20,sub-dev-hoshizora-sim,Container Apps,6800
+2026-08-20,sub-dev-hoshizora-sim,OpenAI,5300
+2026-08-20,sub-dev-hoshizora-sim,その他,11400
+2026-08-20,sub-prod-hoshizora-sim,AKS,42600
+2026-08-20,sub-prod-hoshizora-sim,App Service,25900
+2026-08-20,sub-prod-hoshizora-sim,Azure SQL,19500
+2026-08-20,sub-prod-hoshizora-sim,Data Explorer,36000
+2026-08-20,sub-prod-hoshizora-sim,Network/その他,30500
+2026-08-21,sub-dev-hoshizora-sim,AKS,14100
+2026-08-21,sub-dev-hoshizora-sim,Azure SQL,6300
+2026-08-21,sub-dev-hoshizora-sim,Container Apps,7000
+2026-08-21,sub-dev-hoshizora-sim,OpenAI,6600
+2026-08-21,sub-dev-hoshizora-sim,その他,11400
+2026-08-21,sub-prod-hoshizora-sim,AKS,43600
+2026-08-21,sub-prod-hoshizora-sim,App Service,25800
+2026-08-21,sub-prod-hoshizora-sim,Azure SQL,20600
+2026-08-21,sub-prod-hoshizora-sim,Data Explorer,35300
+2026-08-21,sub-prod-hoshizora-sim,Network/その他,31900
+2026-08-22,sub-dev-hoshizora-sim,AKS,12300
+2026-08-22,sub-dev-hoshizora-sim,Azure SQL,6400
+2026-08-22,sub-dev-hoshizora-sim,Container Apps,6800
+2026-08-22,sub-dev-hoshizora-sim,OpenAI,6000
+2026-08-22,sub-dev-hoshizora-sim,その他,12000
+2026-08-22,sub-prod-hoshizora-sim,AKS,40500
+2026-08-22,sub-prod-hoshizora-sim,App Service,21400
+2026-08-22,sub-prod-hoshizora-sim,Azure SQL,22400
+2026-08-22,sub-prod-hoshizora-sim,Data Explorer,29600
+2026-08-22,sub-prod-hoshizora-sim,Network/その他,29500
+2026-08-23,sub-dev-hoshizora-sim,AKS,13200
+2026-08-23,sub-dev-hoshizora-sim,Azure SQL,6200
+2026-08-23,sub-dev-hoshizora-sim,Container Apps,6800
+2026-08-23,sub-dev-hoshizora-sim,OpenAI,5300
+2026-08-23,sub-dev-hoshizora-sim,その他,11200
+2026-08-23,sub-prod-hoshizora-sim,AKS,41700
+2026-08-23,sub-prod-hoshizora-sim,App Service,26800
+2026-08-23,sub-prod-hoshizora-sim,Azure SQL,21600
+2026-08-23,sub-prod-hoshizora-sim,Data Explorer,27900
+2026-08-23,sub-prod-hoshizora-sim,Network/その他,30100
+2026-08-24,sub-dev-hoshizora-sim,AKS,12100
+2026-08-24,sub-dev-hoshizora-sim,Azure SQL,5300
+2026-08-24,sub-dev-hoshizora-sim,Container Apps,6000
+2026-08-24,sub-dev-hoshizora-sim,OpenAI,5400
+2026-08-24,sub-dev-hoshizora-sim,その他,12100
+2026-08-24,sub-prod-hoshizora-sim,AKS,40100
+2026-08-24,sub-prod-hoshizora-sim,App Service,26100
+2026-08-24,sub-prod-hoshizora-sim,Azure SQL,21300
+2026-08-24,sub-prod-hoshizora-sim,Data Explorer,34300
+2026-08-24,sub-prod-hoshizora-sim,Network/その他,30100
+2026-08-25,sub-dev-hoshizora-sim,AKS,12700
+2026-08-25,sub-dev-hoshizora-sim,Azure SQL,5600
+2026-08-25,sub-dev-hoshizora-sim,Container Apps,7400
+2026-08-25,sub-dev-hoshizora-sim,OpenAI,5100
+2026-08-25,sub-dev-hoshizora-sim,その他,11600
+2026-08-25,sub-prod-hoshizora-sim,AKS,45900
+2026-08-25,sub-prod-hoshizora-sim,App Service,26700
+2026-08-25,sub-prod-hoshizora-sim,Azure SQL,23000
+2026-08-25,sub-prod-hoshizora-sim,Data Explorer,29300
+2026-08-25,sub-prod-hoshizora-sim,Network/その他,34700
+2026-08-26,sub-dev-hoshizora-sim,AKS,12700
+2026-08-26,sub-dev-hoshizora-sim,Azure SQL,6500
+2026-08-26,sub-dev-hoshizora-sim,Container Apps,7600
+2026-08-26,sub-dev-hoshizora-sim,OpenAI,5700
+2026-08-26,sub-dev-hoshizora-sim,その他,11500
+2026-08-26,sub-prod-hoshizora-sim,AKS,46200
+2026-08-26,sub-prod-hoshizora-sim,App Service,25100
+2026-08-26,sub-prod-hoshizora-sim,Azure SQL,20400
+2026-08-26,sub-prod-hoshizora-sim,Data Explorer,29500
+2026-08-26,sub-prod-hoshizora-sim,Network/その他,31700
+2026-08-27,sub-dev-hoshizora-sim,AKS,13800
+2026-08-27,sub-dev-hoshizora-sim,Azure SQL,6900
+2026-08-27,sub-dev-hoshizora-sim,Container Apps,5900
+2026-08-27,sub-dev-hoshizora-sim,OpenAI,6400
+2026-08-27,sub-dev-hoshizora-sim,その他,10500
+2026-08-27,sub-prod-hoshizora-sim,AKS,48900
+2026-08-27,sub-prod-hoshizora-sim,App Service,28300
+2026-08-27,sub-prod-hoshizora-sim,Azure SQL,24100
+2026-08-27,sub-prod-hoshizora-sim,Data Explorer,28100
+2026-08-27,sub-prod-hoshizora-sim,Network/その他,28300
+2026-08-28,sub-dev-hoshizora-sim,AKS,12200
+2026-08-28,sub-dev-hoshizora-sim,Azure SQL,6500
+2026-08-28,sub-dev-hoshizora-sim,Container Apps,7700
+2026-08-28,sub-dev-hoshizora-sim,OpenAI,6300
+2026-08-28,sub-dev-hoshizora-sim,その他,11000
+2026-08-28,sub-prod-hoshizora-sim,AKS,43700
+2026-08-28,sub-prod-hoshizora-sim,App Service,22300
+2026-08-28,sub-prod-hoshizora-sim,Azure SQL,18300
+2026-08-28,sub-prod-hoshizora-sim,Data Explorer,30300
+2026-08-28,sub-prod-hoshizora-sim,Network/その他,34400
+2026-08-29,sub-dev-hoshizora-sim,AKS,13100
+2026-08-29,sub-dev-hoshizora-sim,Azure SQL,5300
+2026-08-29,sub-dev-hoshizora-sim,Container Apps,6900
+2026-08-29,sub-dev-hoshizora-sim,OpenAI,5600
+2026-08-29,sub-dev-hoshizora-sim,その他,12200
+2026-08-29,sub-prod-hoshizora-sim,AKS,47000
+2026-08-29,sub-prod-hoshizora-sim,App Service,28500
+2026-08-29,sub-prod-hoshizora-sim,Azure SQL,22600
+2026-08-29,sub-prod-hoshizora-sim,Data Explorer,31000
+2026-08-29,sub-prod-hoshizora-sim,Network/その他,35100
+2026-08-30,sub-dev-hoshizora-sim,AKS,12100
+2026-08-30,sub-dev-hoshizora-sim,Azure SQL,5800
+2026-08-30,sub-dev-hoshizora-sim,Container Apps,5700
+2026-08-30,sub-dev-hoshizora-sim,OpenAI,6100
+2026-08-30,sub-dev-hoshizora-sim,その他,11200
+2026-08-30,sub-prod-hoshizora-sim,AKS,50800
+2026-08-30,sub-prod-hoshizora-sim,App Service,28500
+2026-08-30,sub-prod-hoshizora-sim,Azure SQL,18400
+2026-08-30,sub-prod-hoshizora-sim,Data Explorer,32600
+2026-08-30,sub-prod-hoshizora-sim,Network/その他,28100
+2026-08-31,sub-dev-hoshizora-sim,AKS,15200
+2026-08-31,sub-dev-hoshizora-sim,Azure SQL,6400
+2026-08-31,sub-dev-hoshizora-sim,Container Apps,6700
+2026-08-31,sub-dev-hoshizora-sim,OpenAI,6400
+2026-08-31,sub-dev-hoshizora-sim,その他,13100
+2026-08-31,sub-prod-hoshizora-sim,AKS,49700
+2026-08-31,sub-prod-hoshizora-sim,App Service,25100
+2026-08-31,sub-prod-hoshizora-sim,Azure SQL,19200
+2026-08-31,sub-prod-hoshizora-sim,Data Explorer,29000
+2026-08-31,sub-prod-hoshizora-sim,Network/その他,35300

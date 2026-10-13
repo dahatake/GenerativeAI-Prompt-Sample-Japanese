@@ -1,0 +1,8 @@
+current_architecture(文章版。元は current_architecture.png 想定・架空)
+
+- ECサイト: Java / Spring Boot。商品検索は Elasticsearch(商品マスタ約85万件)
+- 在庫情報: 基幹システムから 15 分間隔のバッチで EC に反映
+- LINE: 未導入(公式アカウントは未開設)
+- ナレッジ: FAQ 約 1,200 件(Wiki)、レビュー約 31 万件(EC DB)
+- 認証: EC 会員 ID。LINE 連携時は別途アカウント連携が必要
+- 監視: 既存EC側のみ。チャット機能用の監視は未整備
