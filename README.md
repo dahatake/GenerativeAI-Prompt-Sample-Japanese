@@ -1,6 +1,8 @@
 # GenerativeAI-Prompt-Sample-Japanese
 GenerativeAI の Prompt のサンプルです。
 
+🌐 **インタラクティブ学習サイト（GitHub Pages）**: `docs/` 配下に 2D/3D で Copilot を遊んで学べるサイトがあります。Settings → Pages → Source を **GitHub Actions** にすると公開されます。
+
 # 注意点
 全ては自己責任です。ご利用は十二分に注意をしてください。以下は ChatGPT に限らず情報管理の一般論とも言えますが。
 

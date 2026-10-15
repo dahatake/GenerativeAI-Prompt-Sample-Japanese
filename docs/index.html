@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copilot Playground｜生成AIプロンプトを遊んで学ぶ</title>
+<meta name="description" content="Microsoft 365 Copilot / GitHub Copilot / Copilot Studio などを、アニメーション・クイズ・3Dカメラワークで楽しく学べるインタラクティブサイト。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<a class="skip" href="#cards">メインコンテンツへ</a>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<header class="nav acrylic">
+  <a class="brand" href="#top"><span class="logo">✦</span><span>Copilot Playground</span></a>
+  <div class="nav-right">
+    <div class="xp" title="経験値">
+      <span class="lv" id="lv">Lv.1</span>
+      <span class="xpbar"><i id="xpfill"></i></span>
+      <span id="xptxt">0 XP</span>
+    </div>
+    <div class="seg" role="tablist" aria-label="表示モード">
+      <button role="tab" id="m2d" aria-selected="true">2D</button>
+      <button role="tab" id="m3d" aria-selected="false">3D</button>
+    </div>
+    <button class="icon-btn" id="theme" aria-label="テーマ切替" title="テーマ切替">🌓</button>
+  </div>
+</header>
+
+<main id="view2d">
+  <section class="hero" id="top">
+    <p class="eyebrow reveal">GenerativeAI Prompt Sample Japanese</p>
+    <h1 class="reveal" id="heroTitle">Copilotを、<br><span class="grad">遊んで</span>マスターしよう。</h1>
+    <p class="lead reveal">プロンプトを組み立て、クイズに挑み、3Dの世界をカメラで駆け巡る。<br>6つの Copilot を学んで、レベルとバッジを集めましょう。</p>
+    <div class="cta reveal">
+      <a class="btn primary" href="#cards">学習をはじめる</a>
+      <button class="btn" id="to3d">🪐 3Dモードへ</button>
+      <button class="btn ghost" id="roulette">🎲 ランダムお題</button>
+    </div>
+    <div class="stats reveal">
+      <div><b data-count="6">0</b><span>Copilot</span></div>
+      <div><b data-count="9">0</b><span>演出スタイル</span></div>
+      <div><b data-count="12">0</b><span>ミッション</span></div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">scroll ↓</div>
+  </section>
+
+  <section class="section" id="cards">
+    <h2 class="reveal">学ぶ Copilot を選ぶ</h2>
+    <p class="sub reveal">カードをクリックすると、<b>Learn</b>・<b>Prompt Lab</b>・<b>Quiz</b> のミッションが始まります。</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="section" id="promptlab-intro">
+    <div class="split">
+      <div class="reveal">
+        <h2>良いプロンプトの5要素</h2>
+        <p class="sub">役割・目的・文脈・出力形式・制約。足すほど、答えが磨かれます。各ミッションの Prompt Lab で体感しましょう。</p>
+        <ul class="five" id="five"></ul>
+      </div>
+      <div class="reveal demo acrylic" id="demo" aria-live="polite">
+        <div class="demo-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span>Before → After</span></div>
+        <div class="bubble bad"><small>😵 Before</small><p id="demoBad"></p></div>
+        <div class="bubble good"><small>✨ After</small><p id="demoGood"></p></div>
+        <button class="btn small" id="demoNext">次の例 ↻</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="badges">
+    <h2 class="reveal">バッジコレクション</h2>
+    <div class="badges" id="badgeList"></div>
+    <p class="hint">ヒント：キーボードで ↑↑↓↓←→←→BA を試してみてください 🌈</p>
+  </section>
+
+  <section class="section" id="sources">
+    <h2 class="reveal">もっと深く学ぶ</h2>
+    <p class="sub reveal">このサイトのプロンプト例は <a href="https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese" target="_blank" rel="noopener">GitHub リポジトリ</a>のサンプルをもとにしています。</p>
+    <p class="note">⚠️ 機微な情報・機密情報は入力しない／出力結果を鵜呑みにしない／知財・法務は専門家に確認する。</p>
+  </section>
+  <footer>© dahatake ・ Made with ❤ for learners</footer>
+</main>
+
+<section id="view3d" hidden>
+  <div id="stage"></div>
+  <div class="hud top">
+    <button class="btn small acrylic" id="back2d">← 2Dへ戻る</button>
+    <div class="hud-title acrylic" id="hudTitle">クリックして Copilot を選択</div>
+    <button class="btn small acrylic" id="openLesson">📖 学ぶ</button>
+  </div>
+
+  <aside class="panel acrylic" id="camPanel">
+    <button class="panel-toggle" id="camToggle" aria-expanded="true">🎥 カメラワーク</button>
+    <div class="panel-body">
+      <label class="lbl">演出スタイル</label>
+      <div class="chips" id="styleChips"></div>
+      <div class="formula" id="formula" aria-live="polite"></div>
+      <details open>
+        <summary>4要素をカスタム</summary>
+        <label>Shot Size<select id="selSize"></select></label>
+        <label>Camera Angle<select id="selAngle"></select></label>
+        <label>Camera Movement<select id="selMove"></select></label>
+        <label>Motion Character<select id="selChar"></select></label>
+      </details>
+      <div class="row">
+        <button class="btn small" id="dice">🎲 ランダム監督</button>
+        <button class="btn small" id="autoTour">🎬 オートツアー</button>
+      </div>
+      <p class="mini" id="goal"></p>
+    </div>
+  </aside>
+
+  <div class="dock acrylic" id="dock"></div>
+  <div class="orbhud acrylic" id="orbhud">🔮 <b id="orbCount">0</b> 集めた</div>
+  <div class="fps" id="fps3d"></div>
+</section>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet acrylic">
+    <button class="close icon-btn" id="mClose" aria-label="閉じる">✕</button>
+    <div class="m-head">
+      <span class="m-emoji" id="mEmoji"></span>
+      <div><h3 id="mTitle"></h3><p id="mTag"></p></div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="learn" aria-selected="true">📘 Learn</button>
+      <button role="tab" data-tab="lab" aria-selected="false">🧪 Prompt Lab</button>
+      <button role="tab" data-tab="quiz" aria-selected="false">🎯 Quiz</button>
+    </div>
+    <div class="tabpane" id="paneLearn"></div>
+    <div class="tabpane" id="paneLab" hidden></div>
+    <div class="tabpane" id="paneQuiz" hidden></div>
+  </div>
+</div>
+
+<div id="toasts" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
