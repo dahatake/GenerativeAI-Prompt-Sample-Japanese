@@ -4,6 +4,9 @@ import { openNote, initSearch } from "./notes.js";
 import { setCtx, urlFor } from "./ghlink.js";
 import { initWizard } from "./wizard.js";
 import { initAudio, sfx, setMood } from "./audio.js";
+import { initTips } from "./tips.js";
+
+initTips();
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
