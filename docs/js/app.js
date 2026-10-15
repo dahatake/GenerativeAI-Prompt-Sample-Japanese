@@ -1,4 +1,5 @@
 import { COPILOTS, PART_LABELS, BADGES } from "./data.js";
+import { CATALOG } from "./catalog.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -351,5 +352,55 @@ $("#m3d").onclick = () => setMode("3d");
 $("#to3d").onclick = () => setMode("3d");
 $("#back2d").onclick = () => setMode("2d");
 
-renderXP(); renderCards(); renderBadges();
+/* ---------- Sample prompt catalog ---------- */
+function fileList(c) {
+  const groups = {};
+  c.files.forEach(f => (groups[f.group] ||= []).push(f));
+  return Object.entries(groups).map(([g, fs]) => `${g ? `<div class="grp">📁 ${esc(g)}</div>` : ""}<ul>${fs.map(f => `<li><a href="${f.url}" target="_blank" rel="noopener">${f.path === "README.md" ? "📖 " : "📝 "}${esc(f.title)}</a></li>`).join("")}</ul>`).join("");
+}
+function catCard(c) {
+  const big = c.kind === "persona";
+  return `<article class="cat ${big ? "big" : ""} reveal" style="--c1:${c.color}" data-dir="${esc(c.dir)}">
+    <div class="cat-top"><span class="cat-ic">${c.icon}</span><div>
+      ${big ? `<span class="role">職種：${esc(c.role)}</span>` : ""}
+      <h4>${esc(c.dir)}</h4></div><span class="count">${c.count}件</span></div>
+    <p>${esc(c.desc)}</p>
+    <div class="cat-actions">
+      <a class="btn small primary" href="${c.startUrl}" target="_blank" rel="noopener">まず読む ↗</a>
+      <button class="btn small toggle" aria-expanded="false">Promptを見る ▾</button>
+      <a class="chip" href="${c.url}" target="_blank" rel="noopener">📂 フォルダ</a>
+    </div>
+    <div class="cat-files" hidden>${fileList(c)}</div>
+  </article>`;
+}
+function renderCatalog() {
+  $("#personaGrid").innerHTML = CATALOG.filter(c => c.kind === "persona").map(catCard).join("");
+  $("#topicGrid").innerHTML = CATALOG.filter(c => c.kind === "topic").map(catCard).join("");
+  $$(".cat").forEach(el => io.observe(el));
+  $("#catalogRoot").onclick = e => {
+    const b = e.target.closest(".toggle");
+    if (!b) return;
+    const box = b.closest(".cat").querySelector(".cat-files");
+    const open = box.hidden;
+    box.hidden = !open;
+    b.setAttribute("aria-expanded", open);
+    b.textContent = open ? "閉じる ▴" : "Promptを見る ▾";
+  };
+}
+$("#finder").oninput = e => {
+  const q = e.target.value.trim().toLowerCase();
+  const res = $("#finderResults");
+  $("#catalogRoot").hidden = !!q;
+  res.hidden = !q;
+  if (!q) { $("#finderCount").textContent = ""; return; }
+  const hits = [];
+  CATALOG.forEach(c => {
+    const metaHit = (c.dir + c.desc + (c.role || "")).toLowerCase().includes(q);
+    c.files.forEach(f => { if (metaHit || f.title.toLowerCase().includes(q) || f.path.toLowerCase().includes(q)) hits.push({ c, f }); });
+  });
+  $("#finderCount").textContent = `${hits.length}件`;
+  res.innerHTML = hits.length ? hits.slice(0, 80).map(({ c, f }) => `<a class="hit" style="--c1:${c.color}" href="${f.url}" target="_blank" rel="noopener"><span>${c.icon}</span><b>${esc(f.title)}</b><small>${esc(c.dir)}${f.group ? " / " + esc(f.group) : ""}</small></a>`).join("") : '<p class="hint">見つかりませんでした。別のキーワードをお試しください。</p>';
+};
+
+renderXP(); renderCards(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");

@@ -18,6 +18,7 @@
 
 <header class="nav acrylic">
   <a class="brand" href="#top"><span class="logo">✦</span><span>Copilot Playground</span></a>
+  <nav class="links-nav" aria-label="ページ内リンク"><a href="#samples">サンプルPrompt</a><a href="#cards">Copilotで学ぶ</a></nav>
   <div class="nav-right">
     <div class="xp" title="経験値">
       <span class="lv" id="lv">Lv.1</span>
@@ -38,7 +39,8 @@
     <h1 class="reveal" id="heroTitle">Copilotを、<br><span class="grad">遊んで</span>マスターしよう。</h1>
     <p class="lead reveal">プロンプトを組み立て、クイズに挑み、3Dの世界をカメラで駆け巡る。<br>6つの Copilot を学んで、レベルとバッジを集めましょう。</p>
     <div class="cta reveal">
-      <a class="btn primary" href="#cards">学習をはじめる</a>
+      <a class="btn primary" href="#samples">📚 サンプルPromptを探す</a>
+      <a class="btn" href="#cards">学習をはじめる</a>
       <button class="btn" id="to3d">🪐 3Dモードへ</button>
       <button class="btn ghost" id="roulette">🎲 ランダムお題</button>
     </div>
@@ -48,6 +50,23 @@
       <div><b data-count="12">0</b><span>ミッション</span></div>
     </div>
     <div class="scroll-hint" aria-hidden="true">scroll ↓</div>
+  </section>
+
+  <section class="section" id="samples">
+    <p class="eyebrow reveal">Sample Prompts</p>
+    <h2 class="reveal">サンプルPrompt：どこに何がある？</h2>
+    <p class="sub reveal">はじめての方は <b>①自分の職種</b> を選び、見つからなければ <b>②やりたいこと（テーマ）</b> から探しましょう。カードを開くと中のPromptが並び、クリックすると GitHub で全文を読めます。</p>
+    <div class="finder reveal">
+      <input type="search" id="finder" placeholder="🔎 キーワードで探す（例：議事録、SQL、統計、画像）" aria-label="サンプルPromptを検索">
+      <span id="finderCount" class="hint"></span>
+    </div>
+    <div id="finderResults" class="results" hidden></div>
+    <div id="catalogRoot">
+      <h3 class="cat-h reveal">👤 職種（ペルソナ）から探す</h3>
+      <div class="persona-grid" id="personaGrid"></div>
+      <h3 class="cat-h reveal">🧩 テーマ・シナリオから探す</h3>
+      <div class="topic-grid" id="topicGrid"></div>
+    </div>
   </section>
 
   <section class="section" id="cards">
