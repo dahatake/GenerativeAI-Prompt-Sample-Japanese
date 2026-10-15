@@ -164,29 +164,6 @@ addEventListener("pointermove", e => {
   if (t) t.style.transform = `translate(${(e.clientX / innerWidth - .5) * -14}px,${(e.clientY / innerHeight - .5) * -10}px)`;
 });
 
-/* ---------- Cards ---------- */
-function renderCards() {
-  $("#grid").innerHTML = COPILOTS.map(c => `
-    <button class="card reveal" data-id="${c.id}" style="--c1:${c.color};--c2:${c.color2}">
-      ${state.done.includes(c.id) ? '<span class="done" title="クリア">✅</span>' : ""}
-      <span class="em">${c.emoji}</span>
-      <h3>${c.name}</h3>
-      <p>${c.tagline}</p>
-      <div class="go"><span>ミッション開始</span><span>→</span></div>
-    </button>`).join("");
-  $$(".card").forEach((el, i) => {
-    el.style.transitionDelay = i * 70 + "ms";
-    requestAnimationFrame(() => io.observe(el));
-    el.onclick = () => openLesson(el.dataset.id);
-    el.onpointermove = e => {
-      const r = el.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      el.style.setProperty("--mx", px * 100 + "%"); el.style.setProperty("--my", py * 100 + "%");
-      if (!reduce) el.style.transform = `rotateY(${(px - .5) * 14}deg) rotateX(${(.5 - py) * 14}deg) translateY(-4px)`;
-    };
-    el.onpointerleave = () => { el.style.transform = ""; };
-  });
-}
-
 function renderBadges() {
   $("#badgeList").innerHTML = BADGES.map(b => `<div class="badge ${state.badges.includes(b.id) ? "on" : ""}"><span class="b">${b.icon}</span><small>${b.name}</small></div>`).join("");
 }
@@ -228,7 +205,7 @@ export function openLesson(id, tab = "learn") {
   $("#mClose").focus();
   addXP(2);
 }
-function closeModal() { $("#modal").hidden = true; setCtx("lesson", null); lastFocus && lastFocus.focus && lastFocus.focus(); renderCards(); }
+function closeModal() { $("#modal").hidden = true; setCtx("lesson", null); lastFocus && lastFocus.focus && lastFocus.focus(); }
 $("#mClose").onclick = closeModal;
 $("#paneLearn").addEventListener("click", e => {
   const b = e.target.closest("[data-cat]");
@@ -468,6 +445,6 @@ window.addEventListener("note-copied", e => {
 initSearch();
 initAudio();
 initWizard({ state, save, addXP, toast, burst, checkBadges, setMode, focusCat });
-renderXP(); renderCards(); renderBadges(); renderCatalog();
+renderXP(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
 if (location.hash === "#galaxy") setMode("3d", { galaxy: true });

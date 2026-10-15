@@ -4,7 +4,7 @@ import { getPrompts, copyText, openNote } from "./notes.js";
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const PERSONAS = CATALOG.filter(c => c.kind === "persona");
-const TITLES = ["ようこそ", "あなたは？", "コピーしてみよう", "貼り付けて使おう", "探し方3つ", "3Dで遊ぼう", "完成！"];
+const TITLES = ["コピーしてみよう", "貼り付けて使おう", "探し方3つ", "3Dで遊ぼう"];
 
 export function initWizard(api) {
   const { state, save, addXP, toast, burst, checkBadges, setMode, focusCat } = api;
@@ -23,19 +23,6 @@ export function initWizard(api) {
   }
 
   const screens = [
-    () => `<div class="w-hero">🧭</div>
-      <h2 id="wizTitle">はじめまして！ 3分でわかる使い方ガイド</h2>
-      <p>ここは、<b>CopilotやChatGPTにそのまま貼り付けて使える「Promptのサンプル集」</b>です。むずかしい知識はいりません。</p>
-      <ul class="w-points">
-        <li><b>📝 ノート</b><span>Promptが付箋になっていて、ボタン1つでコピーできます</span></li>
-        <li><b>🔎 検索・一覧</b><span>職種やテーマから、やりたいことに合うPromptが見つかります</span></li>
-        <li><b>🪐 3D</b><span>宇宙のようなマップで、遊びながらPromptを探せます（お好みで）</span></li>
-      </ul>
-      <p class="w-note">所要時間は約3分。途中でやめても、いつでもヘッダーの「🧭 使い方ガイド」から再開できます。</p>`,
-    () => `<h2 id="wizTitle">あなたに近いのはどれ？</h2>
-      <p>選ぶとその職種向けのPromptをご案内します。<small>（あとから変更できます）</small></p>
-      <div class="w-grid">${PERSONAS.map(p => `<button class="w-card ${pick === p.dir ? "on" : ""}" data-pick="${esc(p.dir)}" style="--c1:${p.color}"><span>${p.icon}</span><b>${esc(p.role)}</b><small>${esc(p.dir)}・${p.count}件</small></button>`).join("")}
-        <button class="w-card ${pick === "" ? "on" : ""}" data-pick="" style="--c1:#a4a8bd"><span>🤔</span><b>まだ決まっていない</b><small>会議の例で体験します</small></button></div>`,
     () => {
       const c = demo ? demo.c : null;
       return `<h2 id="wizTitle">まず、Promptをコピーしてみよう</h2>
@@ -72,16 +59,8 @@ export function initWizard(api) {
         <li><b>⎋ Esc</b><span>ズームアウト</span></li>
         <li><b>🎥 カメラ設定</b><span>「かんたん」タブで好きな雰囲気を選ぶだけ。酔いやすい方は「落ち着いた発表」がおすすめ</span></li>
       </ul>
-      <div class="w-links"><button class="btn small primary" id="w3d">🪐 いま3Dを体験する</button></div>`,
-    () => `<div class="w-hero done">🎉</div>
-      <h2 id="wizTitle">ガイド完了！ あとは使うだけ</h2>
-      <p>${cat() ? `${cat().icon} <b>${esc(cat().role)}</b>向けのPromptから始めるのがおすすめです。` : "気になるPromptを探してみましょう。"}</p>
-      <div class="w-links">
-        ${cat() ? `<button class="btn primary" data-end="cat">${cat().icon} ${esc(cat().dir)} のPromptを見る</button>` : ""}
-        <button class="btn" data-end="search">🔎 検索してみる</button>
-        <button class="btn" data-end="close">▶ 自分で探す</button>
-      </div>
-      <p class="w-note">🏅 バッジ「ガイド修了」を獲得しました！</p>`
+      <div class="w-links"><button class="btn small primary" id="w3d">🪐 いま3Dを体験する</button></div>
+      <p class="w-note">🏅 このガイドを最後まで見ると、バッジ「ガイド修了」を獲得できます。</p>`
   ];
 
   function render() {
@@ -97,7 +76,7 @@ export function initWizard(api) {
         <span class="w-count">${step + 1} / ${screens.length}</span>
         <span>
           <button class="btn small" id="wBack" ${step === 0 ? "disabled" : ""}>‹ 戻る</button>
-          ${last ? '<button class="btn small primary" id="wDone">閉じる</button>' : `<button class="btn small primary" id="wNext" ${step === 1 && pick === null ? "disabled" : ""}>次へ ›</button>`}
+          ${last ? '<button class="btn small primary" id="wDone">閉じる</button>' : `<button class="btn small primary" id="wNext" >次へ ›</button>`}
         </span>
       </footer>`;
     const nx = $("#wNext") || $("#wDone");
@@ -107,7 +86,7 @@ export function initWizard(api) {
   async function go(n) {
     if (n < 0 || n >= screens.length) return;
     dir = n > step ? 1 : -1;
-    if (n === 2 && !demo) { step = n; render(); await loadDemo(); copied = false; }
+    if (n === 0 && !demo) { step = n; render(); await loadDemo(); copied = false; }
     step = n;
     render();
     if (n === screens.length - 1 && !state.guideDone) {
@@ -144,14 +123,6 @@ export function initWizard(api) {
     if (t.closest("#wBack")) return go(step - 1);
     const dot = t.closest("[data-go]");
     if (dot && !dot.disabled) return go(+dot.dataset.go);
-    const pk = t.closest("[data-pick]");
-    if (pk) {
-      pick = pk.dataset.pick; demo = null; copied = false;
-      box.querySelectorAll(".w-card").forEach(c => c.classList.toggle("on", c === pk));
-      $("#wNext").disabled = false;
-      burst(pk.getBoundingClientRect().left + 40, pk.getBoundingClientRect().top + 20, 24);
-      return;
-    }
     if (t.closest("#wCopy")) {
       const ok = await copyText(demo.text);
       copied = ok;
