@@ -1,5 +1,26 @@
 import * as THREE from "three";
 import { COPILOTS, SHOTS, ANGLES, MOVES, CHARS, STYLES } from "./data.js";
+import { CATALOG } from "./catalog.js";
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function tagSprite(icon, text, color, w = 5, sub = "", depthTest = false) {
+  const H = sub ? 160 : 128, c = document.createElement("canvas");
+  c.width = 512; c.height = H;
+  const g = c.getContext("2d");
+  g.fillStyle = "rgba(10,12,24,.76)";
+  g.beginPath(); g.roundRect(4, 8, 504, H - 16, 40); g.fill();
+  g.strokeStyle = color; g.lineWidth = 3; g.stroke();
+  g.fillStyle = "#fff"; g.textBaseline = "middle";
+  g.font = "600 40px 'Segoe UI','Yu Gothic UI',sans-serif";
+  g.fillText(icon, 26, sub ? 56 : H / 2);
+  g.fillText(text, 86, sub ? 56 : H / 2, 400);
+  if (sub) { g.fillStyle = color; g.font = "600 26px 'Segoe UI','Yu Gothic UI',sans-serif"; g.fillText(sub, 86, 112, 400); }
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false, depthTest }));
+  sp.scale.set(w, w * H / 512, 1);
+  sp.renderOrder = 10;
+  return sp;
+}
 
 const $ = (s, r = document) => r.querySelector(s);
 const rad = d => d * Math.PI / 180;
@@ -129,6 +150,83 @@ export async function initScene(api) {
   const selRing = new THREE.Mesh(new THREE.TorusGeometry(2.7, .05, 8, 80), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
   scene.add(selRing);
 
+  /* ---------- Prompt Galaxy (sample prompt catalog) ---------- */
+  const gal = new THREE.Group();
+  gal.visible = false;
+  scene.add(gal);
+  const galCore = new THREE.Mesh(new THREE.IcosahedronGeometry(1.8, 2), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffd24a, emissiveIntensity: 1.2, roughness: .3 }));
+  gal.add(galCore);
+  const galHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0xffd24a, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  galHalo.scale.setScalar(14); gal.add(galHalo);
+  const galTitle = tagSprite("📚", "サンプルPrompt", "#ffd24a", 7);
+  galTitle.position.y = 3.8; gal.add(galTitle);
+  [13, 28].forEach(r => {
+    const ring = new THREE.Mesh(new THREE.RingGeometry(r - .06, r + .06, 160), new THREE.MeshBasicMaterial({ color: 0x5a64ff, transparent: true, opacity: .3, side: THREE.DoubleSide }));
+    ring.rotation.x = Math.PI / 2; gal.add(ring);
+  });
+  const shapes = [s => new THREE.IcosahedronGeometry(s), s => new THREE.OctahedronGeometry(s * 1.1), s => new THREE.DodecahedronGeometry(s), s => new THREE.SphereGeometry(s, 32, 24), s => new THREE.TorusKnotGeometry(s * .7, s * .25, 80, 12)];
+  const nPersona = CATALOG.filter(c => c.kind === "persona").length, nTopic = CATALOG.length - nPersona;
+  let pi = 0, ti = 0;
+  const cats = CATALOG.map((meta, i) => {
+    const big = meta.kind === "persona";
+    let a, r, y;
+    if (big) { a = pi / nPersona * Math.PI * 2; r = 13; y = Math.sin(pi * 1.7) * 1.6; pi++; }
+    else { a = (ti + .5) / nTopic * Math.PI * 2; r = 28; y = Math.sin(ti * 1.3) * 4; ti++; }
+    const grp = new THREE.Group();
+    grp.position.set(Math.sin(a) * r, y, Math.cos(a) * r);
+    const col = new THREE.Color(meta.color), size = big ? 2.1 : 1.3;
+    const mat = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: .5, metalness: .5, roughness: .3, flatShading: true });
+    const mesh = new THREE.Mesh(shapes[i % shapes.length](size), mat);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: col, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: .8 }));
+    halo.scale.setScalar(big ? 9 : 6);
+    const label = tagSprite(meta.icon, meta.dir, meta.color, big ? 7 : 5.4, big ? "職種：" + meta.role : "");
+    label.position.y = size + (big ? 2.2 : 1.7);
+    const hit = new THREE.Mesh(new THREE.SphereGeometry(size * 1.5, 8, 8), new THREE.MeshBasicMaterial({ visible: false }));
+    hit.userData.gcat = i;
+    grp.add(mesh, halo, label, hit);
+    gal.add(grp);
+    return { meta, i, grp, mesh, mat, halo, label, hit, base: grp.position.clone(), ph: i * .9, k: 0, scale: 1, built: false, fileGrp: null, files: [], big };
+  });
+  {
+    const sp = [];
+    cats.forEach(c => sp.push(0, 0, 0, c.base.x, c.base.y, c.base.z));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(sp), 3));
+    gal.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x6670ff, transparent: true, opacity: .16 })));
+  }
+  function buildFiles(c) {
+    c.built = true;
+    c.fileGrp = new THREE.Group();
+    c.fileGrp.visible = false; c.fileGrp.scale.setScalar(.001);
+    c.grp.add(c.fileGrp);
+    const files = c.meta.files, n = files.length, R = 4.5 + Math.sqrt(n) * .55;
+    const groups = [...new Set(files.map(f => f.group))];
+    const lines = [];
+    files.forEach((f, j) => {
+      const y = n === 1 ? 0 : 1 - (j / (n - 1)) * 2, rr = Math.sqrt(1 - y * y), th = j * 2.399963;
+      const pos = new THREE.Vector3(Math.cos(th) * rr, y, Math.sin(th) * rr).multiplyScalar(R);
+      const readme = f.path === "README.md";
+      const col = new THREE.Color(c.meta.color).offsetHSL(groups.indexOf(f.group) * .08, 0, readme ? .18 : 0);
+      const grp = new THREE.Group();
+      grp.position.copy(pos);
+      const mat = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: .7, metalness: .4, roughness: .3, flatShading: true });
+      const mesh = new THREE.Mesh(readme ? new THREE.DodecahedronGeometry(.5) : new THREE.OctahedronGeometry(.45), mat);
+      const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: col, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: .7 }));
+      halo.scale.setScalar(2.8);
+      const label = tagSprite(readme ? "📖" : "📝", f.title, "#" + col.getHexString(), 4.4, "", true);
+      label.position.y = 1;
+      const hit = new THREE.Mesh(new THREE.SphereGeometry(.85, 8, 8), new THREE.MeshBasicMaterial({ visible: false }));
+      hit.userData.gfile = { c: c.i, f: j };
+      grp.add(mesh, halo, label, hit);
+      c.fileGrp.add(grp);
+      c.files.push({ f, grp, mesh, mat, label, hit, sc: 1 });
+      lines.push(0, 0, 0, pos.x, pos.y, pos.z);
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(lines), 3));
+    c.fileGrp.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: new THREE.Color(c.meta.color), transparent: true, opacity: .25 })));
+  }
+
   /* Collectible orbs */
   const orbs = [];
   const orbGeo = new THREE.SphereGeometry(.32, 16, 16);
@@ -219,7 +317,7 @@ export async function initScene(api) {
       return;
     }
     if (shot.angle === "pov") {
-      if (hubTarget) out.pos.copy(dir).multiplyScalar(14).addScaledVector(up, .8);
+      if (hubTarget || world === "galaxy") out.pos.copy(tg).addScaledVector(dir, 14).addScaledVector(up, .8);
       else out.pos.copy(tg).multiplyScalar(.2).addScaledVector(up, .6);
       out.pos.addScaledVector(right, m.lat);
       out.look.copy(tg).addScaledVector(right, m.lookR).addScaledVector(up, m.lookU);
@@ -287,9 +385,121 @@ export async function initScene(api) {
     }
     document.querySelectorAll("#dock button").forEach(b => b.classList.toggle("on", +b.dataset.i === i));
   }
-  $("#dock").innerHTML = `<button data-i="-1" class="on" style="--c:#fff">🌌 Hub</button>` + COPILOTS.map((c, i) => `<button data-i="${i}" style="--c:${c.color}">${c.emoji} ${c.name.replace("Microsoft 365 ", "M365 ")}</button>`).join("");
-  $("#dock").onclick = e => { const b = e.target.closest("button"); if (b) select(+b.dataset.i); };
+  function buildDock() {
+    $("#dock").innerHTML = world === "galaxy"
+      ? `<button data-g="-1" class="on" style="--c:#fff">🌌 全体</button>` + cats.map((c, i) => `<button data-g="${i}" style="--c:${c.meta.color}">${c.meta.icon} ${esc(c.meta.dir)}</button>`).join("")
+      : `<button data-i="-1" class="on" style="--c:#fff">🌌 Hub</button>` + COPILOTS.map((c, i) => `<button data-i="${i}" style="--c:${c.color}">${c.emoji} ${c.name.replace("Microsoft 365 ", "M365 ")}</button>`).join("");
+  }
+  $("#dock").onclick = e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.g !== undefined) gGo(+b.dataset.g); else select(+b.dataset.i);
+  };
   $("#openLesson").onclick = () => sel.i < 0 ? toast("先に Copilot を選択してください（ドックかオブジェクトをクリック）") : openLesson(nodes[sel.i].cp.id);
+
+  /* ---------------- Galaxy logic: 全体 → カテゴリ → 個別Prompt のズーム ---------------- */
+  let world = "copilot";
+  const gSel = { c: -1, f: -1 };
+  const openUrl = u => window.open(u, "_blank", "noopener");
+  const curFile = () => (gSel.c >= 0 && gSel.f >= 0 ? cats[gSel.c].meta.files[gSel.f] : null);
+
+  function galPreset() {
+    let size = "EWS", angle = "high";
+    if (gSel.f >= 0) { size = "MCU"; angle = "eye"; }
+    else if (gSel.c >= 0) { const n = cats[gSel.c].meta.count; size = n >= 15 ? "WS" : n >= 3 ? "FS" : "MS"; angle = "eye"; }
+    const s = shots[shotIdx];
+    user.zoom = 1;
+    setCustom({ size, angle, move: s.move, char: s.char });
+  }
+  function gGo(c, f = -1) {
+    const prev = gSel.c;
+    gSel.c = c; gSel.f = f;
+    if (c >= 0 && !cats[c].built) buildFiles(cats[c]);
+    galPreset();
+    const file = curFile(), meta = c >= 0 ? cats[c].meta : null;
+    $("#hudTitle").textContent = file ? `📝 ${file.title}` : meta ? `${meta.icon} ${meta.dir}` : "📚 サンプルPrompt銀河";
+    document.querySelectorAll("#dock button").forEach(b => b.classList.toggle("on", b.dataset.g !== undefined && +b.dataset.g === c));
+    renderCard();
+    galTitle.visible = c < 0;
+    cats.forEach(k => { k.label.visible = c < 0 || (k.i === c && f < 0); });
+    if (c >= 0) cats[c].files.forEach((n, j) => { n.label.visible = f < 0 || j === f; });
+    if (c >= 0 && c !== prev) {
+      burst3(cats[c].grp.position, new THREE.Color(meta.color), 80);
+      addXP(1);
+      state.gcats = state.gcats || [];
+      if (!state.gcats.includes(meta.dir)) { state.gcats.push(meta.dir); save(); checkBadges(); }
+    }
+  }
+  function galUp() {
+    if (gSel.f >= 0) gGo(gSel.c, -1);
+    else if (gSel.c >= 0) gGo(-1);
+  }
+  const card = $("#galCard");
+  function renderCard() {
+    const f = curFile(), c = gSel.c >= 0 ? cats[gSel.c].meta : null;
+    let h = `<nav class="crumbs"><button data-a="all">🌌 全体</button>`;
+    if (c) h += ` › <button data-a="cat">${c.icon} ${esc(c.dir)}</button>`;
+    if (f) h += ` › <span>${esc(f.title)}</span>`;
+    h += "</nav>";
+    if (f) {
+      h += `<h4>${esc(f.title)}</h4><p class="mini">📁 ${esc(c.dir + (f.group ? " / " + f.group : ""))}</p><p class="mini">もう一度クリック（または Enter）で GitHub の全文を開きます。</p>
+        <div class="row"><a class="btn small primary" target="_blank" rel="noopener" href="${f.url}">全文を読む ↗</a><button class="btn small" data-a="next">次のPrompt ›</button></div>`;
+    } else if (c) {
+      h += `${c.kind === "persona" ? `<span class="role">職種：${esc(c.role)}</span>` : ""}<h4>${c.icon} ${esc(c.dir)}</h4><p class="mini">${esc(c.desc)}</p>
+        <p class="mini">✨ ${c.count}件のPrompt。周りの星をクリックでさらにズームイン。</p>
+        <div class="row"><a class="btn small primary" target="_blank" rel="noopener" href="${c.startUrl}">まず読む ↗</a></div>`;
+    } else {
+      h += `<h4>📚 サンプルPrompt銀河</h4><p class="mini">内側の大きな星＝<b>職種（ペルソナ）</b>、外側の小さな星＝<b>テーマ</b>。星をクリックするとズームインして、中のPromptが現れます。</p>
+        <p class="mini">ドラッグ=視点 ／ ホイール=ズーム ／ ←→=移動 ／ Esc=ズームアウト</p>`;
+    }
+    h += `<div class="row">${c ? '<button class="btn small" data-a="up">⤴ ズームアウト</button>' : ""}<button class="btn small" data-a="2d">🖥 2Dで見る</button></div>`;
+    card.innerHTML = h;
+  }
+  card.onclick = e => {
+    const b = e.target.closest("[data-a]");
+    if (!b) return;
+    const a = b.dataset.a;
+    if (a === "all") gGo(-1);
+    else if (a === "cat") gGo(gSel.c);
+    else if (a === "up") galUp();
+    else if (a === "next") gGo(gSel.c, (gSel.f + 1) % cats[gSel.c].meta.files.length);
+    else if (a === "2d") api.goTo2D(gSel.c >= 0 ? cats[gSel.c].meta.dir : null);
+  };
+
+  function flyIn() {
+    cur.pos.add(cur.pos.clone().sub(cur.look).multiplyScalar(1.1));
+    cur.fov += 18;
+  }
+  function setWorld(w) {
+    if (w === world) return;
+    world = w;
+    const g = w === "galaxy";
+    nodes.forEach(n => { n.grp.visible = !g; });
+    hub.visible = !g; track.visible = !g; selRing.visible = !g; gal.visible = g;
+    scene.fog.density = g ? .0055 : .0105;
+    $("#wCop").setAttribute("aria-selected", !g);
+    $("#wGal").setAttribute("aria-selected", g);
+    card.hidden = !g;
+    $("#openLesson").style.display = g ? "none" : "";
+    buildDock();
+    sel.i = -1; selRing.material.opacity = 0;
+    if (g) {
+      gSel.c = -1; gSel.f = -1;
+      setCustom({ size: "EWS", angle: "high", move: "orbit", char: "gentle" });
+      gGo(-1);
+    } else {
+      setStyle("product");
+      select(-1);
+    }
+    flyIn();
+  }
+  function showGalaxy(dir) {
+    setWorld("galaxy");
+    gGo(dir ? cats.findIndex(c => c.meta.dir === dir) : -1);
+  }
+  $("#wCop").onclick = () => setWorld("copilot");
+  $("#wGal").onclick = () => setWorld("galaxy");
+  buildDock();
 
   /* ---------------- Interaction ---------------- */
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
@@ -298,7 +508,12 @@ export async function initScene(api) {
   const setPtr = e => { const r = el.getBoundingClientRect(); ptr.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); };
   function hitTest(e) {
     setPtr(e); ray.setFromCamera(ptr, camera);
-    const hits = ray.intersectObjects([...nodes.map(n => n.hit), ...orbs.filter(o => o.alive).map(o => o.mesh)], false);
+    let list;
+    if (world === "galaxy") {
+      list = cats.map(c => c.hit);
+      if (gSel.c >= 0) cats[gSel.c].files.forEach(n => list.push(n.hit));
+    } else list = nodes.map(n => n.hit);
+    const hits = ray.intersectObjects([...list, ...orbs.filter(o => o.alive).map(o => o.mesh)], false);
     return hits[0] ? hits[0].object : null;
   }
   el.addEventListener("pointerdown", e => { down = { x: e.clientX, y: e.clientY, ax: user.az, ay: user.el, moved: false }; el.setPointerCapture(e.pointerId); });
@@ -315,12 +530,28 @@ export async function initScene(api) {
     const o = hitTest(e);
     if (!o) return;
     if (o.userData.orb) collect(o.userData.orb, e);
+    else if (world === "galaxy") {
+      const gf = o.userData.gfile;
+      if (gf) {
+        if (gSel.c === gf.c && gSel.f === gf.f) openUrl(cats[gf.c].meta.files[gf.f].url); else gGo(gf.c, gf.f);
+      } else if (o.userData.gcat !== undefined && !(gSel.c === o.userData.gcat && gSel.f < 0)) gGo(o.userData.gcat);
+    }
     else if (o.userData.node === sel.i) openLesson(nodes[sel.i].cp.id);
     else select(o.userData.node);
   });
   el.addEventListener("wheel", e => { e.preventDefault(); user.zoom = clamp(user.zoom * (1 + Math.sign(e.deltaY) * .08), .35, 2.6); }, { passive: false });
   addEventListener("keydown", e => {
     if ($("#view3d").hidden || !$("#modal").hidden || /SELECT|INPUT/.test(document.activeElement.tagName)) return;
+    if (world === "galaxy") {
+      const dir = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (dir) {
+        if (gSel.f >= 0) { const n = cats[gSel.c].meta.files.length; gGo(gSel.c, (gSel.f + dir + n) % n); }
+        else gGo((gSel.c + dir + cats.length) % cats.length);
+      }
+      if (e.key === "Enter") { const f = curFile(); if (f) openUrl(f.url); else if (gSel.c >= 0) openUrl(cats[gSel.c].meta.startUrl); }
+      if (e.key === "Escape" || e.key === "Backspace") galUp();
+      return;
+    }
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") select((sel.i + (e.key === "ArrowRight" ? 1 : -1) + COPILOTS.length + 1 - 0) % (COPILOTS.length) );
     if (e.key === "Enter" && sel.i >= 0) openLesson(nodes[sel.i].cp.id);
     if (e.key === "Escape") select(-1);
@@ -367,6 +598,11 @@ export async function initScene(api) {
       if (shots[shotIdx].cut) cur.snap = true;
     }
     const shot = shots[shotIdx];
+    if (world === "galaxy") {
+      if (gSel.f >= 0 && cats[gSel.c].files[gSel.f]) cats[gSel.c].files[gSel.f].mesh.getWorldPosition(target);
+      else if (gSel.c >= 0) cats[gSel.c].grp.getWorldPosition(target);
+      else target.set(0, 0, 0);
+    }
     pose(shot, custom ? clock : clock, want);
     const C = CHAR[shot.char];
 
@@ -415,6 +651,32 @@ export async function initScene(api) {
       o.mesh.position.set(o.base.x + Math.sin(t * .7 + o.ph) * 1.2, o.base.y + Math.sin(t * 1.3 + o.ph) * .8, o.base.z + Math.cos(t * .6 + o.ph) * 1.2);
       o.mesh.scale.setScalar(o.pop * (hover === o.mesh ? 1.6 : 1) * (1 + Math.sin(t * 4 + o.ph) * .15));
     });
+    if (world === "galaxy") {
+      galCore.rotation.y += dt * .6;
+      galHalo.scale.setScalar(14 + Math.sin(t * 2) * .8);
+      cats.forEach(c => {
+        const selC = c.i === gSel.c, hov = hover && hover.userData.gcat === c.i;
+        c.grp.position.y = c.base.y + Math.sin(t * .8 + c.ph) * .4;
+        c.mesh.rotation.y += dt * (selC ? 1.2 : .4); c.mesh.rotation.x += dt * .2;
+        c.scale = lerp(c.scale, selC ? .8 : hov ? 1.25 : 1, 1 - Math.exp(-8 * dt));
+        c.mesh.scale.setScalar(c.scale);
+        c.mat.emissiveIntensity = lerp(c.mat.emissiveIntensity, selC ? 1.2 : hov ? .9 : .5, .1);
+        c.halo.scale.setScalar((c.big ? 9 : 6) + (selC ? 2 + Math.sin(t * 4) * .5 : 0));
+        if (!c.built) return;
+        c.k = lerp(c.k, selC ? 1 : 0, 1 - Math.exp(-5 * dt));
+        c.fileGrp.visible = c.k > .01;
+        c.fileGrp.scale.setScalar(Math.max(.001, c.k));
+        if (!c.fileGrp.visible) return;
+        if (gSel.f < 0) c.fileGrp.rotation.y += dt * .08;
+        c.files.forEach((n, j) => {
+          const gf = hover && hover.userData.gfile;
+          const goal = selC && gSel.f === j ? 1.9 : gf && gf.c === c.i && gf.f === j ? 1.4 : 1;
+          n.sc = lerp(n.sc, goal, .15);
+          n.mesh.scale.setScalar(n.sc);
+          n.mesh.rotation.y += dt * 1.2;
+        });
+      });
+    }
     bursts = bursts.filter(b => {
       b.life -= dt;
       const p = b.pts.geometry.attributes.position;
@@ -432,8 +694,15 @@ export async function initScene(api) {
   cur.pos.set(0, 8, 70); cur.look.set(0, 0, 0);
 
   return {
-    start() { if (running) return; running = true; last = performance.now(); resize(); raf = requestAnimationFrame(frame); setTimeout(() => toast("🖱️ ドラッグで視点、ホイールでズーム、🔮をクリックでXP"), 800); },
+    start(opts = {}) {
+      if (running) { if (opts.galaxy) showGalaxy(opts.dir || null); return; }
+      running = true; last = performance.now(); resize();
+      if (opts.galaxy) showGalaxy(opts.dir || null);
+      flyIn();
+      raf = requestAnimationFrame(frame);
+      setTimeout(() => toast(world === "galaxy" ? "🖱️ 星をクリックでズームイン、Esc でズームアウト" : "🖱️ ドラッグで視点、ホイールでズーム、🔮をクリックでXP"), 900);
+    },
     stop() { running = false; cancelAnimationFrame(raf); },
-    _debug: { select, setStyle, setCustom, camera }
+    _debug: { select, setStyle, setCustom, camera, gGo, setWorld }
   };
 }

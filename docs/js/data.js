@@ -210,6 +210,7 @@ export const BADGES = [
   { id: "quiz3", icon: "🧠", name: "3連続正解", cond: s => s.bestCombo >= 3 },
   { id: "all", icon: "🏆", name: "全Copilot制覇", cond: s => s.done.length >= COPILOTS.length },
   { id: "orb", icon: "🔮", name: "オーブコレクター", cond: s => s.orbs >= 5 },
+  { id: "lib", icon: "📚", name: "Prompt探検家", cond: s => (s.gcats || []).length >= 5 },
   { id: "dir", icon: "🎬", name: "カメラ監督", cond: s => s.cams.length >= 5 },
   { id: "konami", icon: "🌈", name: "秘密のコマンド", cond: s => s.konami }
 ];

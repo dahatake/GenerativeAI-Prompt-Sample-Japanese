@@ -57,6 +57,7 @@
     <h2 class="reveal">サンプルPrompt：どこに何がある？</h2>
     <p class="sub reveal">はじめての方は <b>①自分の職種</b> を選び、見つからなければ <b>②やりたいこと（テーマ）</b> から探しましょう。カードを開くと中のPromptが並び、クリックすると GitHub で全文を読めます。</p>
     <div class="finder reveal">
+      <button class="btn primary" id="galaxyBtn">🪐 3D「Prompt銀河」で探索する</button>
       <input type="search" id="finder" placeholder="🔎 キーワードで探す（例：議事録、SQL、統計、画像）" aria-label="サンプルPromptを検索">
       <span id="finderCount" class="hint"></span>
     </div>
@@ -136,6 +137,11 @@
 
   <div class="dock acrylic" id="dock"></div>
   <div class="orbhud acrylic" id="orbhud">🔮 <b id="orbCount">0</b> 集めた</div>
+  <div class="seg world acrylic" id="worldSeg" role="tablist" aria-label="3Dワールド">
+    <button id="wCop" role="tab" aria-selected="true">✨ Copilot世界</button>
+    <button id="wGal" role="tab" aria-selected="false">📚 Prompt銀河</button>
+  </div>
+  <aside class="galcard acrylic" id="galCard" hidden aria-live="polite"></aside>
   <div class="fps" id="fps3d"></div>
 </section>
 

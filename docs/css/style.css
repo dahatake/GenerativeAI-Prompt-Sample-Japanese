@@ -217,3 +217,27 @@ footer{padding:40px;text-align:center;color:var(--mute);font-size:.85rem}
 .hit span{grid-row:span 2;font-size:1.4rem}.hit small{color:var(--mute)}
 
 
+
+/* 2D <-> 3D transition */
+#view2d{transition:opacity .75s var(--ease),transform .9s var(--ease),filter .75s var(--ease);transform-origin:50% 40%}
+#view2d.leaving{opacity:0;transform:scale(1.18);filter:blur(10px);pointer-events:none}
+#view2d.entering{opacity:0;transform:scale(.92)}
+#view3d{transition:opacity .75s var(--ease),transform .9s var(--ease)}
+#view3d.enter{opacity:0;transform:scale(.88)}
+#view3d.leaving{opacity:0;transform:scale(1.12);pointer-events:none}
+.cat.pulse{animation:catpulse 1.1s ease-in-out 2}
+@keyframes catpulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--c1) 55%,transparent),0 0 50px var(--c1)}}
+
+/* Prompt Galaxy HUD */
+.seg.world{position:absolute;left:50%;top:112px;transform:translateX(-50%)}
+.seg.world button{white-space:nowrap}
+.galcard{position:absolute;right:14px;top:158px;width:min(320px,calc(100% - 28px));max-height:calc(100% - 270px);overflow:auto;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);animation:rise .5s var(--ease)}
+.galcard[hidden]{display:none}
+.galcard h4{margin:8px 0 4px;font-size:1.05rem}
+.galcard .mini{margin:4px 0}
+.galcard .role{margin-top:4px}
+.crumbs{font-size:.78rem;color:var(--mute);display:flex;flex-wrap:wrap;gap:2px;align-items:center}
+.crumbs button{font:inherit;background:none;border:0;color:var(--accent2);cursor:pointer;padding:0 2px;text-decoration:underline}
+.crumbs span{color:var(--fg)}
+@media(max-width:700px){.seg.world{top:104px}.galcard{top:auto;bottom:70px;right:14px;max-height:34%}}
+.galcard{--c1:#7f85f5}

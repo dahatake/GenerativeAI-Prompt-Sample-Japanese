@@ -322,36 +322,76 @@ addEventListener("keydown", e => {
 });
 
 /* ---------- Mode switch (2D / 3D) ---------- */
-let scene = null;
-async function setMode(m) {
+let scene = null, mode = "2d", savedY = 0, switching = false;
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+function focusCat(dir) {
+  const el = dir && $(`.cat[data-dir="${CSS.escape(dir)}"]`);
+  if (!el) return false;
+  el.classList.add("in", "pulse");
+  const box = el.querySelector(".cat-files");
+  if (box.hidden) el.querySelector(".toggle").click();
+  const top = el.getBoundingClientRect().top + scrollY - innerHeight / 4;
+  scrollTo({ top, behavior: "instant" });
+  setTimeout(() => el.classList.remove("pulse"), 2600);
+  return true;
+}
+
+async function setMode(m, opts = {}) {
+  if (switching) return;
   const is3d = m === "3d";
-  $("#m2d").setAttribute("aria-selected", !is3d);
-  $("#m3d").setAttribute("aria-selected", is3d);
-  $("#view3d").hidden = !is3d;
-  $("#view2d").hidden = is3d;
-  $("#bg").style.display = is3d ? "none" : "";
-  if (is3d) {
-    if (!scene) {
-      toast("🪐 3Dワールドを読み込み中…");
-      try {
-        const mod = await import("./scene3d.js");
-        scene = await mod.initScene({ state, save, addXP, toast, burst, openLesson, checkBadges });
-      } catch (err) {
-        console.error(err);
-        toast("⚠️ 3Dを開始できませんでした（WebGL未対応またはCDN接続不可）");
-        setMode("2d");
-        return;
+  const v2 = $("#view2d"), v3 = $("#view3d");
+  if (is3d && mode === "3d") { scene && scene.start(opts); return; }
+  if (!is3d && mode === "2d") return;
+  switching = true;
+  try {
+    if (is3d) {
+      if (!scene) {
+        toast("🪐 3Dワールドを読み込み中…");
+        try {
+          const mod = await import("./scene3d.js");
+          scene = await mod.initScene({ state, save, addXP, toast, burst, openLesson, checkBadges, goTo2D: dir => setMode("2d", { dir }) });
+        } catch (err) {
+          console.error(err);
+          toast("⚠️ 3Dを開始できませんでした（WebGL未対応またはCDN接続不可）");
+          return;
+        }
       }
+      mode = "3d";
+      $("#m2d").setAttribute("aria-selected", false); $("#m3d").setAttribute("aria-selected", true);
+      savedY = scrollY;
+      v3.classList.add("enter");
+      v3.hidden = false;
+      scene.start(opts);
+      void v3.offsetWidth;
+      v3.classList.remove("enter");
+      v2.classList.add("leaving");
+      await wait(750);
+      v2.hidden = true; v2.classList.remove("leaving");
+      $("#bg").style.display = "none";
+    } else {
+      mode = "2d";
+      $("#m2d").setAttribute("aria-selected", true); $("#m3d").setAttribute("aria-selected", false);
+      v2.classList.add("entering");
+      v2.hidden = false;
+      $("#bg").style.display = "";
+      if (!focusCat(opts.dir)) scrollTo({ top: savedY, behavior: "instant" });
+      void v2.offsetWidth;
+      v2.classList.remove("entering");
+      v3.classList.add("leaving");
+      await wait(750);
+      v3.hidden = true; v3.classList.remove("leaving");
+      scene && scene.stop();
     }
-    scene.start();
-  } else if (scene) scene.stop();
-  scrollTo(0, 0);
+  } finally {
+    switching = false;
+  }
 }
 $("#m2d").onclick = () => setMode("2d");
 $("#m3d").onclick = () => setMode("3d");
 $("#to3d").onclick = () => setMode("3d");
 $("#back2d").onclick = () => setMode("2d");
-
+$("#galaxyBtn").onclick = () => setMode("3d", { galaxy: true });
 /* ---------- Sample prompt catalog ---------- */
 function fileList(c) {
   const groups = {};
@@ -368,6 +408,7 @@ function catCard(c) {
     <div class="cat-actions">
       <a class="btn small primary" href="${c.startUrl}" target="_blank" rel="noopener">まず読む ↗</a>
       <button class="btn small toggle" aria-expanded="false">Promptを見る ▾</button>
+      <button class="btn small to3d" title="3Dでこの星にズームイン">🪐 3Dで見る</button>
       <a class="chip" href="${c.url}" target="_blank" rel="noopener">📂 フォルダ</a>
     </div>
     <div class="cat-files" hidden>${fileList(c)}</div>
@@ -378,6 +419,8 @@ function renderCatalog() {
   $("#topicGrid").innerHTML = CATALOG.filter(c => c.kind === "topic").map(catCard).join("");
   $$(".cat").forEach(el => io.observe(el));
   $("#catalogRoot").onclick = e => {
+    const t3 = e.target.closest(".to3d");
+    if (t3) { setMode("3d", { galaxy: true, dir: t3.closest(".cat").dataset.dir }); return; }
     const b = e.target.closest(".toggle");
     if (!b) return;
     const box = b.closest(".cat").querySelector(".cat-files");
@@ -404,3 +447,4 @@ $("#finder").oninput = e => {
 
 renderXP(); renderCards(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
+if (location.hash === "#galaxy") setMode("3d", { galaxy: true });
