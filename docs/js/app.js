@@ -1,5 +1,7 @@
 import { COPILOTS, PART_LABELS, BADGES } from "./data.js";
 import { CATALOG } from "./catalog.js";
+import { openNote, initSearch } from "./notes.js";
+import { setCtx, urlFor } from "./ghlink.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -216,13 +218,21 @@ export function openLesson(id, tab = "learn") {
   $("#mTitle").textContent = cur.name;
   $("#mTag").textContent = cur.tagline;
   buildLearn(); buildLab(); buildQuiz();
+  setCtx("lesson", cur.cats[0] ? { url: urlFor(cur.cats[0]), label: `${cur.name}（${cur.cats[0]}）` } : null);
   $("#modal").hidden = false;
   setTab(tab);
   $("#mClose").focus();
   addXP(2);
 }
-function closeModal() { $("#modal").hidden = true; lastFocus && lastFocus.focus && lastFocus.focus(); renderCards(); }
+function closeModal() { $("#modal").hidden = true; setCtx("lesson", null); lastFocus && lastFocus.focus && lastFocus.focus(); renderCards(); }
 $("#mClose").onclick = closeModal;
+$("#paneLearn").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]");
+  if (!b) return;
+  const dir = b.dataset.cat;
+  closeModal();
+  if (mode === "3d") scene.start({ galaxy: true, dir }); else setTimeout(() => focusCat(dir), 50);
+});
 $("#modal").addEventListener("pointerdown", e => { if (e.target.id === "modal") closeModal(); });
 addEventListener("keydown", e => { if (e.key === "Escape" && !$("#modal").hidden) closeModal(); });
 function setTab(t) {
@@ -236,7 +246,7 @@ function buildLearn() {
     ${cur.tips.map((t, i) => `<div class="tip"><b>TIP ${i + 1}</b><span>${t}</span></div>`).join("")}
     <div class="bubble bad"><small>😵 Before</small><p>${esc(cur.bad)}</p></div>
     <div class="bubble good"><small>✨ After</small><p>${esc(cur.good)}</p></div>
-    <div class="links">${cur.links.map(l => `<a class="chip" target="_blank" rel="noopener" href="${l.url}">📂 ${l.label}</a>`).join("")}</div>`;
+    <div class="links"><span class="mini">📚 関連するサンプルPrompt：</span>${cur.cats.map(d => `<button class="chip" data-cat="${esc(d)}">${(CATALOG.find(c => c.dir === d) || {}).icon || "📁"} ${esc(d)}</button>`).join("")}</div>`;
 }
 
 function buildLab() {
@@ -360,6 +370,7 @@ async function setMode(m, opts = {}) {
       mode = "3d";
       $("#m2d").setAttribute("aria-selected", false); $("#m3d").setAttribute("aria-selected", true);
       savedY = scrollY;
+      setCtx("cat", null);
       v3.classList.add("enter");
       v3.hidden = false;
       scene.start(opts);
@@ -375,6 +386,7 @@ async function setMode(m, opts = {}) {
       v2.classList.add("entering");
       v2.hidden = false;
       $("#bg").style.display = "";
+      setCatCtx(opts.dir || null);
       if (!focusCat(opts.dir)) scrollTo({ top: savedY, behavior: "instant" });
       void v2.offsetWidth;
       v2.classList.remove("entering");
@@ -396,7 +408,7 @@ $("#galaxyBtn").onclick = () => setMode("3d", { galaxy: true });
 function fileList(c) {
   const groups = {};
   c.files.forEach(f => (groups[f.group] ||= []).push(f));
-  return Object.entries(groups).map(([g, fs]) => `${g ? `<div class="grp">📁 ${esc(g)}</div>` : ""}<ul>${fs.map(f => `<li><a href="${f.url}" target="_blank" rel="noopener">${f.path === "README.md" ? "📖 " : "📝 "}${esc(f.title)}</a></li>`).join("")}</ul>`).join("");
+  return Object.entries(groups).map(([g, fs]) => `${g ? `<div class="grp">📁 ${esc(g)}</div>` : ""}<ul>${fs.map(f => `<li><button class="notelink" data-path="${esc(f.path)}">${f.path === "README.md" ? "📖 " : "📝 "}${esc(f.title)}</button></li>`).join("")}</ul>`).join("");
 }
 function catCard(c) {
   const big = c.kind === "persona";
@@ -406,45 +418,44 @@ function catCard(c) {
       <h4>${esc(c.dir)}</h4></div><span class="count">${c.count}件</span></div>
     <p>${esc(c.desc)}</p>
     <div class="cat-actions">
-      <a class="btn small primary" href="${c.startUrl}" target="_blank" rel="noopener">まず読む ↗</a>
+      ${c.startPath ? '<button class="btn small primary start">📖 まず読む</button>' : ""}
       <button class="btn small toggle" aria-expanded="false">Promptを見る ▾</button>
       <button class="btn small to3d" title="3Dでこの星にズームイン">🪐 3Dで見る</button>
-      <a class="chip" href="${c.url}" target="_blank" rel="noopener">📂 フォルダ</a>
     </div>
     <div class="cat-files" hidden>${fileList(c)}</div>
   </article>`;
 }
+function setCatCtx(dir) { setCtx("cat", dir ? { url: urlFor(dir), label: dir } : null); }
 function renderCatalog() {
   $("#personaGrid").innerHTML = CATALOG.filter(c => c.kind === "persona").map(catCard).join("");
   $("#topicGrid").innerHTML = CATALOG.filter(c => c.kind === "topic").map(catCard).join("");
   $$(".cat").forEach(el => io.observe(el));
   $("#catalogRoot").onclick = e => {
-    const t3 = e.target.closest(".to3d");
-    if (t3) { setMode("3d", { galaxy: true, dir: t3.closest(".cat").dataset.dir }); return; }
+    const card = e.target.closest(".cat");
+    if (!card) return;
+    const dir = card.dataset.dir, c = CATALOG.find(x => x.dir === dir);
+    if (e.target.closest(".to3d")) { setMode("3d", { galaxy: true, dir }); return; }
+    const nl = e.target.closest(".notelink");
+    if (nl) { setCatCtx(dir); openNote(dir, nl.dataset.path); return; }
+    if (e.target.closest(".start")) { setCatCtx(dir); openNote(dir, c.startPath); return; }
     const b = e.target.closest(".toggle");
     if (!b) return;
-    const box = b.closest(".cat").querySelector(".cat-files");
+    const box = card.querySelector(".cat-files");
     const open = box.hidden;
     box.hidden = !open;
     b.setAttribute("aria-expanded", open);
     b.textContent = open ? "閉じる ▴" : "Promptを見る ▾";
+    setCatCtx(open ? dir : null);
   };
 }
-$("#finder").oninput = e => {
-  const q = e.target.value.trim().toLowerCase();
-  const res = $("#finderResults");
-  $("#catalogRoot").hidden = !!q;
-  res.hidden = !q;
-  if (!q) { $("#finderCount").textContent = ""; return; }
-  const hits = [];
-  CATALOG.forEach(c => {
-    const metaHit = (c.dir + c.desc + (c.role || "")).toLowerCase().includes(q);
-    c.files.forEach(f => { if (metaHit || f.title.toLowerCase().includes(q) || f.path.toLowerCase().includes(q)) hits.push({ c, f }); });
-  });
-  $("#finderCount").textContent = `${hits.length}件`;
-  res.innerHTML = hits.length ? hits.slice(0, 80).map(({ c, f }) => `<a class="hit" style="--c1:${c.color}" href="${f.url}" target="_blank" rel="noopener"><span>${c.icon}</span><b>${esc(f.title)}</b><small>${esc(c.dir)}${f.group ? " / " + esc(f.group) : ""}</small></a>`).join("") : '<p class="hint">見つかりませんでした。別のキーワードをお試しください。</p>';
-};
-
+window.addEventListener("note-copied", e => {
+  const { x, y, key } = e.detail;
+  burst(x, y, 45);
+  state.copies = state.copies || [];
+  if (!state.copies.includes(key)) { state.copies.push(key); addXP(3, x, y); } else floatText("📋", x, y);
+  checkBadges();
+});
+initSearch();
 renderXP(); renderCards(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
 if (location.hash === "#galaxy") setMode("3d", { galaxy: true });

@@ -1,9 +1,7 @@
-const REPO = "https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese/tree/main/";
-const link = (folder, label) => ({ label, url: REPO + encodeURI(folder) });
 
 export const COPILOTS = [
   {
-    id: "m365",
+    id: "m365", vx: "📧",
     name: "Microsoft 365 Copilot",
     emoji: "🧑‍💼",
     color: "#7f85f5",
@@ -32,10 +30,10 @@ export const COPILOTS = [
       { q: "Copilot に良い回答を引き出す最初の一歩は？", a: ["とにかく短く依頼する", "役割・目的・文脈を伝える", "何度も同じ依頼を繰り返す", "英語でだけ依頼する"], correct: 1, why: "役割・目的・文脈が揃うほど、意図に沿った出力になります。" },
       { q: "出力が惜しい時、次にやると効果的なのは？", a: ["最初からやり直す", "諦める", "追加の指示で具体的に修正を依頼する", "画面を再読み込みする"], correct: 2, why: "対話で育てるのが Copilot の基本スタイルです。" }
     ],
-    links: [link("会議", "会議のサンプル"), link("日々のタスク", "日々のタスク"), link("営業", "営業"), link("管理職", "管理職")]
+    cats: ["会議", "日々のタスク", "営業", "管理職"]
   },
   {
-    id: "github",
+    id: "github", vx: "🐙",
     name: "GitHub Copilot",
     emoji: "👩‍💻",
     color: "#3fb950",
@@ -64,10 +62,10 @@ export const COPILOTS = [
       { q: "補完の精度を上げるコツは？", a: ["ファイルを空にする", "意図が伝わるコメントや関数名を先に書く", "変数名を a, b, c にする", "常にTabキーを連打する"], correct: 1, why: "文脈（コメント・命名・周辺コード）が補完の手がかりになります。" },
       { q: "生成されたコードの扱いとして正しいのは？", a: ["そのままデプロイ", "テストとレビューで検証する", "コメントを消すだけ", "動いたら何も見ない"], correct: 1, why: "品質とセキュリティの責任は開発者にあります。" }
     ],
-    links: [link("Software Engineer", "Software Engineer"), link("Code Interpreter", "Code Interpreter")]
+    cats: ["Software Engineer", "Code Interpreter"]
   },
   {
-    id: "studio",
+    id: "studio", vx: "🤖",
     name: "Copilot Studio",
     emoji: "🤖",
     color: "#ff8c00",
@@ -96,10 +94,10 @@ export const COPILOTS = [
       { q: "エージェント作成で最初に決めるべきことは？", a: ["アイコンの色", "誰の何の業務をどこまで任せるか", "名前の絵文字", "公開日"], correct: 1, why: "目的と範囲が明確だと、指示文もテストも設計しやすくなります。" },
       { q: "重要な操作（支払い・削除など）はどうする？", a: ["全自動にする", "人の承認を挟む", "ログを無効化する", "全員に権限を渡す"], correct: 1, why: "Human-in-the-loop で安全に自動化します。" }
     ],
-    links: [link("Agent", "Agent サンプル")]
+    cats: ["Agent"]
   },
   {
-    id: "security",
+    id: "security", vx: "🛡️",
     name: "Security Copilot",
     emoji: "🛡️",
     color: "#e5484d",
@@ -128,10 +126,10 @@ export const COPILOTS = [
       { q: "Prompt Injection とは？", a: ["プロンプトの圧縮技術", "入力で AI に意図しない指示を実行させる攻撃", "高速化の手法", "画像生成の設定"], correct: 1, why: "外部入力に紛れた命令でAIの挙動が乗っ取られるリスクです。" },
       { q: "AI の調査結果はどう扱う？", a: ["そのまま信じる", "ログなど一次情報で裏取りする", "無視する", "公開する"], correct: 1, why: "出力を鵜呑みにしないことが原則です。" }
     ],
-    links: [link("Security", "Security サンプル")]
+    cats: ["Security"]
   },
   {
-    id: "analyst",
+    id: "analyst", vx: "📊",
     name: "Researcher & Analyst",
     emoji: "📊",
     color: "#00b7c3",
@@ -160,10 +158,10 @@ export const COPILOTS = [
       { q: "分析依頼で最初に伝えると良いことは？", a: ["好きな色", "何を決めたいか（意思決定の目的）", "ファイルサイズ", "作成者名"], correct: 1, why: "目的が分析の切り口を決めます。" },
       { q: "数字を含む回答の扱いは？", a: ["全て正しい", "元データで検証する", "丸めて報告", "削除する"], correct: 1, why: "計算ミスや誤読の可能性があるため検証が必要です。" }
     ],
-    links: [link("データ分析", "データ分析"), link("ビジネス戦略や分析", "ビジネス戦略や分析"), link("数理最適化問題", "数理最適化問題")]
+    cats: ["データ分析", "ビジネス戦略や分析", "数理最適化問題"]
   },
   {
-    id: "creative",
+    id: "creative", vx: "🎨",
     name: "Designer & Creative",
     emoji: "🎨",
     color: "#ff4fa3",
@@ -192,7 +190,7 @@ export const COPILOTS = [
       { q: "画像の指示で効果的なのは？", a: ["単語1つだけ", "被写体・スタイル・構図・光を具体的に書く", "長い物語だけ", "記号だけ"], correct: 1, why: "具体的な視覚要素が仕上がりを決めます。" },
       { q: "ローアングルが与える印象は？", a: ["客観性", "力強さ・ヒーロー感", "不安定さ", "俯瞰"], correct: 1, why: "下から見上げると威厳や力強さが出ます。" }
     ],
-    links: [link("文書・画像作成", "文書・画像作成"), link("DALL-E", "DALL-E")]
+    cats: ["文書・画像作成", "DALL-E"]
   }
 ];
 

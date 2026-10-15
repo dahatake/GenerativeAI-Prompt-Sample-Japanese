@@ -1,9 +1,4 @@
 import { FILES } from "./files.js";
-
-const BLOB = "https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese/blob/main/";
-const TREE = "https://github.com/dahatake/GenerativeAI-Prompt-Sample-Japanese/tree/main/";
-const enc = p => p.split("/").map(encodeURIComponent).join("/");
-
 // kind: persona = フォルダー名が職種・役割 / topic = テーマ・シナリオ
 const META = [
   { dir: "Software Engineer", kind: "persona", role: "ソフトウェアエンジニア / IT担当者", icon: "👩‍💻", color: "#3fb950", desc: "要件定義・設計レビュー・技術調査・Vibe Coding・保守・IT Pro向けまで、開発ライフサイクル全体のPrompt。", start: "README.md" },
@@ -31,13 +26,16 @@ const META = [
 
 const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\]\s*/, m => m.trim() + " ");
 
+
+// 3D ピクセル・ジオラマに使う「テーマを象徴する」アイコン（未指定は icon を使用）
+const VX = { "Software Engineer": "💻", "人事": "👥", "教育": "🎓", "会議": "🎤", "Agent": "🤖", "数理最適化問題": "🧮" };
+
 export const CATALOG = META.map(m => {
   const files = (FILES[m.dir] || []).map(p => ({
     path: p,
     title: p === "README.md" ? "はじめに（README）" : titleOf(p),
-    group: p.includes("/") ? p.split("/").slice(0, -1).join("/") : "",
-    url: BLOB + enc(m.dir + "/" + p)
+    group: p.includes("/") ? p.split("/").slice(0, -1).join("/") : ""
   }));
-  const readme = files.find(f => f.path === "README.md");
-  return { ...m, files, count: files.length, url: TREE + enc(m.dir), startUrl: readme ? readme.url : (files[0] ? files[0].url : TREE + enc(m.dir)) };
+  const start = files.find(f => f.path === "README.md") || files[0];
+  return { ...m, vx: VX[m.dir] || m.icon, files, count: files.length, startPath: start ? start.path : null };
 });
