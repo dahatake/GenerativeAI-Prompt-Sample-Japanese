@@ -1,6 +1,7 @@
 import { CATALOG } from "./catalog.js";
 import { FILES } from "./files.js";
 import { setCtx, urlFor } from "./ghlink.js";
+import { sfx } from "./audio.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -111,6 +112,7 @@ let cur = null;
 export async function openNote(dir, path) {
   const m = meta(dir);
   const root = $("#noteModal");
+  if (root.hidden) sfx("open");
   root.hidden = false;
   document.body.classList.add("noting");
   const sheet = $("#noteSheet");
@@ -172,7 +174,7 @@ export async function openNote(dir, path) {
     const ok = await copyText(s);
     const r = b.getBoundingClientRect();
     const card = b.closest(".sticky");
-    if (card) { card.classList.remove("done"); void card.offsetWidth; card.classList.add("done"); }
+    if (card) { sfx("stamp"); card.classList.remove("done"); void card.offsetWidth; card.classList.add("done"); }
     b.classList.add("ok");
     const old = b.textContent;
     b.textContent = ok ? "✅ コピーしました！" : "⚠️ 選択してコピーしてください";

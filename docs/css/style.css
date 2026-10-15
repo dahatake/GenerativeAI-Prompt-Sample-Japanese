@@ -403,3 +403,12 @@ kbd{background:var(--card-h);border:1px solid var(--line);border-bottom-width:3p
 .w-foot span:last-child{display:flex;gap:8px}
 .w-count{color:var(--mute);font-size:.8rem}
 .btn:disabled{opacity:.45;pointer-events:none}
+
+/* ===== サウンド ===== */
+.soundwrap{position:relative}
+.soundpop{position:absolute;right:0;top:calc(100% + 10px);width:230px;padding:14px;border-radius:14px;display:grid;gap:8px;box-shadow:var(--shadow);z-index:75;animation:rise .3s var(--ease)}
+.soundpop[hidden]{display:none}
+.soundpop label{display:flex;align-items:center;gap:8px;font-size:.9rem}
+.soundpop .vol{justify-content:space-between}.soundpop .vol input{flex:1;accent-color:var(--accent2)}
+.soundpop input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent2)}
+.soundpop small{color:var(--mute);font-size:.72rem;line-height:1.5}

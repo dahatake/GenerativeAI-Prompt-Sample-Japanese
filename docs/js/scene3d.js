@@ -5,6 +5,7 @@ import { makeVoxelIcon } from "./voxel.js";
 import { SIZE_JA, ANGLE_JA, MOVE_JA, CHAR_JA, STYLE_JA, SLIDERS } from "./camja.js";
 import { openNote } from "./notes.js";
 import { setCtx, urlFor } from "./ghlink.js";
+import { sfx, setMood } from "./audio.js";
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -426,6 +427,7 @@ export async function initScene(api) {
       $("#hudTitle").textContent = `${nodes[i].cp.emoji} ${nodes[i].cp.name}`;
       selRing.material.color.set(nodes[i].cp.color);
       burst3(nodes[i].base, new THREE.Color(nodes[i].cp.color), 90);
+      sfx("star");
       addXP(1);
     }
     document.querySelectorAll("#dock button").forEach(b => b.classList.toggle("on", +b.dataset.i === i));
@@ -461,6 +463,7 @@ export async function initScene(api) {
     const prev = gSel.c;
     gSel.c = c; gSel.f = f;
     if (c >= 0 && !cats[c].built) buildFiles(cats[c]);
+    sfx(c < 0 ? "whooshBack" : f >= 0 ? "star" : "zoom");
     galPreset();
     const file = curFile(), meta = c >= 0 ? cats[c].meta : null;
     $("#hudTitle").textContent = file ? `📝 ${file.title}` : meta ? `${meta.icon} ${meta.dir}` : "📚 サンプルPrompt銀河";
@@ -523,6 +526,8 @@ export async function initScene(api) {
     if (w === world) return;
     world = w;
     const g = w === "galaxy";
+    setMood(g ? "galaxy" : "space");
+    sfx("whoosh");
     if (!g) setCtx("cat", null);
     nodes.forEach(n => { n.grp.visible = !g; });
     hub.visible = !g; track.visible = !g; selRing.visible = !g; gal.visible = g;
@@ -545,6 +550,7 @@ export async function initScene(api) {
   }
   function showGalaxy(dir) {
     setWorld("galaxy");
+    setMood("galaxy");
     gGo(dir ? cats.findIndex(c => c.meta.dir === dir) : -1);
   }
   $("#wCop").onclick = () => setWorld("copilot");
@@ -611,6 +617,7 @@ export async function initScene(api) {
     o.alive = false; o.pop = 0; o.t = 5;
     burst3(o.mesh.position, o.mesh.material.color, 60);
     burst(e.clientX, e.clientY, 30);
+    sfx("orb");
     state.orbs++; $("#orbCount").textContent = state.orbs;
     const cp = COPILOTS[Math.floor(Math.random() * COPILOTS.length)];
     toast(`🔮 ${cp.emoji} ${cp.tips[Math.floor(Math.random() * cp.tips.length)]}`);

@@ -3,6 +3,7 @@ import { CATALOG } from "./catalog.js";
 import { openNote, initSearch } from "./notes.js";
 import { setCtx, urlFor } from "./ghlink.js";
 import { initWizard } from "./wizard.js";
+import { initAudio, sfx, setMood } from "./audio.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -40,6 +41,7 @@ function checkBadges() {
       state.badges.push(b.id);
       fresh = true;
       toast(`${b.icon} バッジ獲得：${b.name}`);
+      sfx("badge");
       burst(innerWidth / 2, innerHeight / 3, 80);
     }
   }
@@ -52,6 +54,7 @@ export function addXP(n, x, y) {
   if (x !== undefined) floatText(`+${n} XP`, x, y);
   if (level(state.xp) > before) {
     toast(`🎉 レベルアップ！ Lv.${level(state.xp)}`);
+    sfx("level");
     burst(innerWidth / 2, innerHeight / 2, 160);
   }
   renderXP();
@@ -263,6 +266,7 @@ function buildLab() {
   let lastScore = 0;
   $$("#paneLab input").forEach(inp => inp.onchange = e => {
     inp.closest(".part").classList.toggle("on", inp.checked);
+    sfx("pop");
     const picked = $$("#paneLab input:checked").map(i => i.dataset.k);
     const score = picked.reduce((s, k) => s + PART_LABELS[k].weight, 0);
     $("#meterFill").style.width = score + "%";
@@ -273,6 +277,7 @@ function buildLab() {
     lastScore = score;
     if (score === 100 && !state.labs.includes(cur.id)) {
       state.labs.push(cur.id);
+      sfx("fanfare");
       burst(innerWidth / 2, innerHeight / 2, 160);
       addXP(30, innerWidth / 2, innerHeight / 2);
     }
@@ -288,6 +293,7 @@ function buildQuiz() {
       pane.innerHTML = `<div class="result"><div class="big">${score === cur.quiz.length ? "🏆" : pass ? "🎉" : "💪"}</div><h3>${score} / ${cur.quiz.length} 正解</h3><p>${pass ? "ミッションクリア！" : "もう一度挑戦してみましょう。"}</p><button class="btn primary" id="retry">もう一度</button></div>`;
       $("#retry").onclick = () => { i = score = combo = 0; render(); };
       if (pass) {
+        sfx("fanfare");
         burst(innerWidth / 2, innerHeight / 2, 220);
         if (!state.done.includes(cur.id)) { state.done.push(cur.id); addXP(25); }
       }
@@ -299,7 +305,8 @@ function buildQuiz() {
     $$(".opt", pane).forEach(b => b.onclick = e => {
       const n = +b.dataset.n, ok = n === q.correct;
       $$(".opt", pane).forEach(o => { o.disabled = true; if (+o.dataset.n === q.correct) o.classList.add("ok"); });
-      if (!ok) { b.classList.add("ng"); combo = 0; } else {
+      if (!ok) { b.classList.add("ng"); combo = 0; sfx("ng"); } else {
+        sfx(combo >= 2 ? "combo" : "ok");
         score++; combo++; state.bestCombo = Math.max(state.bestCombo, combo);
         addXP(10 + combo * 2, e.clientX, e.clientY);
         burst(e.clientX, e.clientY, 40);
@@ -369,6 +376,7 @@ async function setMode(m, opts = {}) {
         }
       }
       mode = "3d";
+      sfx("whoosh"); setMood("space");
       $("#m2d").setAttribute("aria-selected", false); $("#m3d").setAttribute("aria-selected", true);
       savedY = scrollY;
       setCtx("cat", null);
@@ -383,6 +391,7 @@ async function setMode(m, opts = {}) {
       $("#bg").style.display = "none";
     } else {
       mode = "2d";
+      sfx("whooshBack"); setMood("calm");
       $("#m2d").setAttribute("aria-selected", true); $("#m3d").setAttribute("aria-selected", false);
       v2.classList.add("entering");
       v2.hidden = false;
@@ -457,6 +466,7 @@ window.addEventListener("note-copied", e => {
   checkBadges();
 });
 initSearch();
+initAudio();
 initWizard({ state, save, addXP, toast, burst, checkBadges, setMode, focusCat });
 renderXP(); renderCards(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
