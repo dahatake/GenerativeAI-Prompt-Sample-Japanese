@@ -88,7 +88,11 @@ function parse(text) {
 }
 
 /* ---------- コピー ---------- */
-async function copyText(s) {
+export async function getPrompts(dir, path) {
+  const text = (await loadDir(dir))[path];
+  return text == null ? [] : parse(text).blocks.filter(b => b.t === "code");
+}
+export async function copyText(s) {
   try { await navigator.clipboard.writeText(s); return true; } catch { /* fallback */ }
   const t = document.createElement("textarea");
   t.value = s; t.style.cssText = "position:fixed;opacity:0";

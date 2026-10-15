@@ -207,6 +207,7 @@ export const BADGES = [
   { id: "lab", icon: "🧪", name: "プロンプト錬金術師", cond: s => s.labs.length >= 1 },
   { id: "quiz3", icon: "🧠", name: "3連続正解", cond: s => s.bestCombo >= 3 },
   { id: "all", icon: "🏆", name: "全Copilot制覇", cond: s => s.done.length >= COPILOTS.length },
+  { id: "guide", icon: "🧭", name: "ガイド修了", cond: s => !!s.guideDone },
   { id: "orb", icon: "🔮", name: "オーブコレクター", cond: s => s.orbs >= 5 },
   { id: "lib", icon: "📚", name: "Prompt探検家", cond: s => (s.gcats || []).length >= 5 },
   { id: "dir", icon: "🎬", name: "カメラ監督", cond: s => s.cams.length >= 5 },

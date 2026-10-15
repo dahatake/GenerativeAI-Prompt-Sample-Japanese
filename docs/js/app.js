@@ -2,6 +2,7 @@ import { COPILOTS, PART_LABELS, BADGES } from "./data.js";
 import { CATALOG } from "./catalog.js";
 import { openNote, initSearch } from "./notes.js";
 import { setCtx, urlFor } from "./ghlink.js";
+import { initWizard } from "./wizard.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -456,6 +457,7 @@ window.addEventListener("note-copied", e => {
   checkBadges();
 });
 initSearch();
+initWizard({ state, save, addXP, toast, burst, checkBadges, setMode, focusCat });
 renderXP(); renderCards(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
 if (location.hash === "#galaxy") setMode("3d", { galaxy: true });
