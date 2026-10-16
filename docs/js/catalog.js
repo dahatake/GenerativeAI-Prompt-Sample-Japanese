@@ -10,6 +10,7 @@ const META = [
   { dir: "データ分析", kind: "persona", role: "データアナリスト", icon: "📊", color: "#58a6ff", desc: "アンケート分析・データのマージ・分類モデル作成・データソース洗い出しのPrompt。", start: "README.md" },
   { dir: "Security", kind: "persona", role: "セキュリティ担当", icon: "🛡️", color: "#e5484d", desc: "Prompt Injection / Leaking などAI固有のリスクとその緩和策。" },
   { dir: "日々のタスク", kind: "topic", icon: "✅", color: "#3fb950", desc: "タスクの振り返り・漏れチェック・次にやることの洗い出し・メール分析。", start: "README.md" },
+  { dir: "リソースマネジメント", kind: "topic", icon: "⏱️", color: "#00b7c3", desc: "自分の時間の使い方や、案件・プロジェクトの進捗状況を把握するPrompt。", start: "README.md" },
   { dir: "会議", kind: "topic", icon: "🗣️", color: "#7f85f5", desc: "議事録作成、ディスカッション、顧客ヒアリング中の情報整理。" },
   { dir: "ビジネス戦略や分析", kind: "topic", icon: "📈", color: "#ffb900", desc: "新規事業アイディア、AI投資判断、業務分析と改善策、報道状況の調査。" },
   { dir: "Agent", kind: "topic", icon: "🤖", color: "#ff8c00", desc: "戦略コンサルタントなど、特定の役割を持つAgentの作成Prompt。", start: "README.md" },
