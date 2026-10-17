@@ -155,6 +155,6 @@ export function initWizard(api) {
   $("#guideBtn").onclick = () => open();
   const hg = $("#heroGuide");
   if (hg) hg.onclick = () => open();
-  if (!state.guideSeen && location.hash !== "#3d" && location.hash !== "#galaxy") setTimeout(() => { if (modal.hidden && $("#noteModal").hidden) open(); }, 1200);
+  if (!state.guideSeen && location.hash !== "#3d" && location.hash !== "#rpg" && location.hash !== "#galaxy") setTimeout(() => { if (modal.hidden && $("#noteModal").hidden) open(); }, 1200);
   return { open };
 }

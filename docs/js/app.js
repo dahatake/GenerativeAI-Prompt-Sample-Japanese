@@ -1,5 +1,5 @@
 import { COPILOTS, PART_LABELS, BADGES } from "./data.js";
-import { CATALOG } from "./catalog.js";
+import { CATALOG, GROUPS } from "./catalog.js";
 import { openNote, initSearch } from "./notes.js";
 import { setCtx, urlFor } from "./ghlink.js";
 import { initWizard } from "./wizard.js";
@@ -320,7 +320,8 @@ addEventListener("keydown", e => {
 });
 
 /* ---------- Mode switch (2D / 3D) ---------- */
-let scene = null, mode = "2d", savedY = 0, switching = false;
+let scene = null, rpg = null, mode = "2d", savedY = 0, switching = false;
+const VIEWS = { "2d": "#view2d", "3d": "#view3d", rpg: "#viewRpg" };
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 function focusCat(dir) {
@@ -337,60 +338,64 @@ function focusCat(dir) {
 
 async function setMode(m, opts = {}) {
   if (switching) return;
-  const is3d = m === "3d";
-  const v2 = $("#view2d"), v3 = $("#view3d");
-  if (is3d && mode === "3d") { scene && scene.start(opts); return; }
-  if (!is3d && mode === "2d") return;
+  if (m === mode) { if (m === "3d" && scene) scene.start(opts); return; }
   switching = true;
+  const prev = mode;
   try {
-    if (is3d) {
-      if (!scene) {
-        toast("🪐 3Dワールドを読み込み中…");
-        try {
-          const mod = await import("./scene3d.js");
-          scene = await mod.initScene({ state, save, addXP, toast, burst, openLesson, checkBadges, goTo2D: dir => setMode("2d", { dir }) });
-        } catch (err) {
-          console.error(err);
-          toast("⚠️ 3Dを開始できませんでした（WebGL未対応またはCDN接続不可）");
-          return;
-        }
+    if (m === "3d" && !scene) {
+      toast("🪐 3Dワールドを読み込み中…");
+      try {
+        const mod = await import("./scene3d.js");
+        scene = await mod.initScene({ state, save, addXP, toast, burst, openLesson, checkBadges, goTo2D: dir => setMode("2d", { dir }) });
+      } catch (err) {
+        console.error(err);
+        toast("⚠️ 3Dを開始できませんでした（WebGL未対応またはCDN接続不可）");
+        return;
       }
-      mode = "3d";
-      sfx("whoosh"); setMood("space");
-      $("#m2d").setAttribute("aria-selected", false); $("#m3d").setAttribute("aria-selected", true);
-      savedY = scrollY;
-      setCtx("cat", null);
-      v3.classList.add("enter");
-      v3.hidden = false;
-      scene.start(opts);
-      void v3.offsetWidth;
-      v3.classList.remove("enter");
-      v2.classList.add("leaving");
-      await wait(750);
-      v2.hidden = true; v2.classList.remove("leaving");
-      $("#bg").style.display = "none";
-    } else {
-      mode = "2d";
-      sfx("whooshBack"); setMood("calm");
-      $("#m2d").setAttribute("aria-selected", true); $("#m3d").setAttribute("aria-selected", false);
-      v2.classList.add("entering");
-      v2.hidden = false;
+    }
+    if (m === "rpg" && !rpg) {
+      try {
+        const mod = await import("./rpg.js");
+        rpg = mod.initRpg({ state, save, addXP, toast, burst, checkBadges, sfx, setMood, exit: () => setMode("2d") });
+      } catch (err) {
+        console.error(err);
+        toast("⚠️ RPGモードを開始できませんでした");
+        return;
+      }
+    }
+    mode = m;
+    for (const k of Object.keys(VIEWS)) $("#m" + k).setAttribute("aria-selected", k === m);
+    const from = $(VIEWS[prev]), to = $(VIEWS[m]);
+    if (prev === "2d") savedY = scrollY;
+    sfx(m === "2d" ? "whooshBack" : "whoosh");
+    setMood({ "2d": "calm", "3d": "space", rpg: "rpgField" }[m]);
+    to.classList.add(m === "2d" ? "entering" : "enter");
+    to.hidden = false;
+    if (m === "2d") {
       $("#bg").style.display = "";
       setCatCtx(opts.dir || null);
       if (!focusCat(opts.dir)) scrollTo({ top: savedY, behavior: "instant" });
-      void v2.offsetWidth;
-      v2.classList.remove("entering");
-      v3.classList.add("leaving");
-      await wait(750);
-      v3.hidden = true; v3.classList.remove("leaving");
-      scene && scene.stop();
+    } else {
+      $("#bg").style.display = "none";
+      setCtx("cat", null);
+      if (m === "3d") scene.start(opts); else rpg.start(opts);
     }
+    void to.offsetWidth;
+    to.classList.remove("entering", "enter");
+    from.classList.add("leaving");
+    await wait(750);
+    from.hidden = true; from.classList.remove("leaving");
+    if (prev === "3d" && scene) scene.stop();
+    if (prev === "rpg" && rpg) rpg.stop();
   } finally {
     switching = false;
   }
 }
 $("#m2d").onclick = () => setMode("2d");
 $("#m3d").onclick = () => setMode("3d");
+$("#mrpg").onclick = () => setMode("rpg");
+$("#toRpg").onclick = () => setMode("rpg");
+$("#rpgBack").onclick = () => setMode("2d");
 $("#to3d").onclick = () => setMode("3d");
 $("#back2d").onclick = () => setMode("2d");
 $("#galaxyBtn").onclick = () => setMode("3d", { galaxy: true });
@@ -417,8 +422,16 @@ function catCard(c) {
 }
 function setCatCtx(dir) { setCtx("cat", dir ? { url: urlFor(dir), label: dir } : null); }
 function renderCatalog() {
-  $("#personaGrid").innerHTML = CATALOG.filter(c => c.kind === "persona").map(catCard).join("");
-  $("#topicGrid").innerHTML = CATALOG.filter(c => c.kind === "topic").map(catCard).join("");
+  const total = CATALOG.reduce((s, c) => s + c.count, 0);
+  const nav = `<nav class="grp-nav reveal" aria-label="カテゴリーの目次"><b>目次</b>${GROUPS.map(g => `<a href="#grp-${g.id}">${g.icon} ${esc(g.name)}<small>${g.dirs.length}</small></a>`).join("")}<span class="mini">全${CATALOG.length}カテゴリ／${total}Prompt</span></nav>`;
+  const body = GROUPS.map(g => {
+    const cs = CATALOG.filter(c => c.group === g.id);
+    const n = cs.reduce((s, c) => s + c.count, 0);
+    return `<section class="grp" id="grp-${g.id}" aria-labelledby="grp-${g.id}-h">
+      <h3 class="cat-h reveal" id="grp-${g.id}-h">${g.icon} ${esc(g.name)} <small>${esc(g.hint)}・${cs.length}カテゴリ／${n}件</small></h3>
+      <div class="${g.id === "role" ? "persona-grid" : "topic-grid"}">${cs.map(catCard).join("")}</div></section>`;
+  }).join("");
+  $("#catalogRoot").innerHTML = nav + body;
   $$(".cat").forEach(el => io.observe(el));
   $("#catalogRoot").onclick = e => {
     const card = e.target.closest(".cat");
@@ -450,4 +463,5 @@ initAudio();
 initWizard({ state, save, addXP, toast, burst, checkBadges, setMode, focusCat });
 renderXP(); renderBadges(); renderCatalog();
 if (location.hash === "#3d") setMode("3d");
+if (location.hash === "#rpg") setMode("rpg");
 if (location.hash === "#galaxy") setMode("3d", { galaxy: true });

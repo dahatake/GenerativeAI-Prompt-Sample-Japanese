@@ -11,11 +11,48 @@ const N = m => 440 * Math.pow(2, (m - 69) / 12);
 // C メジャーのやさしい進行（Cmaj7 - Am7 - Fmaj7 - G6）
 const CHORDS = [[48, 55, 59, 64], [45, 52, 57, 60], [41, 48, 57, 64], [43, 50, 55, 59]];
 const PENTA = [0, 2, 4, 7, 9];
+
+/* ---------- RPG用チップチューン（すべてオリジナル作曲） ---------- */
+const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+const seq = s => s.trim().split(/\s+/).map(t => {
+  const [n, d] = t.split(":"), m = /^([A-G])([#b]?)(\d)$/.exec(n);
+  return { m: m ? SEMI[m[1]] + (m[2] === "#" ? 1 : m[2] === "b" ? -1 : 0) + 12 * (+m[3] + 1) : null, d: +d };
+});
+const pairs = (a, b, n) => Array(n).fill(`${a}:.5 ${b}:.5`).join(" ");
 const MOODS = {
   calm: { bpm: 76, arp: .55, pad: 1400, shimmer: 0, bass: 0, root: 72 },
   space: { bpm: 64, arp: .4, pad: 900, shimmer: .5, bass: 1, root: 76 },
-  galaxy: { bpm: 70, arp: .65, pad: 1200, shimmer: .8, bass: 1, root: 79 }
+  galaxy: { bpm: 70, arp: .65, pad: 1200, shimmer: .8, bass: 1, root: 79 },
+  rpgField: { bpm: 120, seq: [
+    { type: "square", vol: .04, cutoff: 3200, notes: seq("E5:1 G5:1 C6:2 B5:1 G5:1 A5:2 F5:1 A5:1 C6:2 B5:1 A5:1 G5:2 E5:1 G5:1 C6:1 E6:1 D6:1 C6:1 B5:1 G5:1 A5:1 G5:1 F5:1 E5:1 D5:2 G5:2") },
+    { type: "triangle", vol: .11, wet: 0, notes: seq("C3:1 G3:1 C3:1 G3:1 A2:1 E3:1 A2:1 E3:1 F2:1 C3:1 F2:1 C3:1 G2:1 D3:1 G2:1 D3:1 C3:1 G3:1 C3:1 G3:1 E3:1 B3:1 E3:1 B3:1 F2:1 C3:1 D3:1 A3:1 G2:1 D3:1 G2:1 B2:1") }
+  ] },
+  rpgTown: { bpm: 96, seq: [
+    { type: "square", vol: .035, cutoff: 2600, notes: seq("A5:2 C6:1 A5:1 G5:2 F5:2 G5:2 Bb5:1 G5:1 F5:2 E5:2 A5:2 C6:1 D6:1 C6:2 A5:2 G5:2 F5:1 E5:1 F5:4") },
+    { type: "triangle", vol: .1, wet: 0, notes: seq("F2:2 C3:2 F2:2 C3:2 C3:2 G3:2 F2:2 C3:2 F2:2 C3:2 D3:2 A2:2 C3:2 G2:2 F2:4") }
+  ] },
+  rpgCastle: { bpm: 84, seq: [
+    { type: "square", vol: .035, cutoff: 2400, notes: seq("D5:2 G5:2 B5:3 A5:1 G5:2 E5:2 D5:4 E5:2 A5:2 C6:3 B5:1 A5:2 F#5:2 G5:4") },
+    { type: "triangle", vol: .1, wet: 0, notes: seq("G2:2 D3:2 G2:2 D3:2 C3:2 G3:2 G2:2 D3:2 A2:2 E3:2 C3:2 G3:2 D3:2 A2:2 G2:4") }
+  ] },
+  rpgBattle: { bpm: 156, seq: [
+    { type: "square", vol: .04, cutoff: 3600, notes: seq("A5:.5 A5:.5 C6:.5 A5:.5 E6:1 D6:1 C6:.5 B5:.5 A5:.5 G5:.5 A5:2 F5:.5 F5:.5 A5:.5 F5:.5 C6:1 B5:1 A5:.5 G#5:.5 A5:.5 B5:.5 E6:2 A5:.5 A5:.5 C6:.5 A5:.5 E6:1 G6:1 F6:.5 E6:.5 D6:.5 C6:.5 B5:2 C6:.5 B5:.5 A5:.5 G#5:.5 E5:1 G#5:1 A5:4") },
+    { type: "triangle", vol: .12, wet: 0, notes: seq([pairs("A2", "A3", 4), pairs("G2", "G3", 4), pairs("F2", "F3", 4), pairs("E2", "E3", 4), pairs("A2", "A3", 4), pairs("G2", "G3", 4), pairs("F2", "F3", 4), pairs("E2", "E3", 4)].join(" ")) }
+  ] }
 };
+let seqS = null;
+function scheduleSeq(M) {
+  const beat = 60 / M.bpm, now = ctx.currentTime;
+  if (!seqS || seqS.mood !== mood || seqS.v.some(s => s.t < now - .3)) seqS = { mood, v: M.seq.map(() => ({ i: 0, t: now + .08 })) };
+  M.seq.forEach((v, k) => {
+    const s = seqS.v[k];
+    while (s.t < now + .6) {
+      const n = v.notes[s.i % v.notes.length], d = n.d * beat;
+      if (n.m !== null) tone(s.t, N(n.m), d * .92, { type: v.type, vol: v.vol, a: .005, wet: v.wet ?? .1, cutoff: v.cutoff || 0 });
+      s.t += d; s.i++;
+    }
+  });
+}
 
 function build() {
   const AC = window.AudioContext || window.webkitAudioContext;
@@ -66,6 +103,7 @@ function noise(t, dur, { vol = .15, f0 = 800, f1 = 800, q = 1, type = "bandpass"
 function schedule() {
   if (!ctx || ctx.state !== "running") return;
   const M = MOODS[mood], beat = 60 / M.bpm, sub = beat / 2;
+  if (M.seq) return scheduleSeq(M);
   if (nextT < ctx.currentTime) nextT = ctx.currentTime + .05;
   while (nextT < ctx.currentTime + .6) {
     const bar = Math.floor(step / 8) % CHORDS.length, pos = step % 8, ch = CHORDS[bar];
@@ -117,7 +155,21 @@ const SE = {
   orb: t => [1047, 1319, 1568, 2093].forEach((f, i) => T(t + i * .045, f, .3, { vol: .1, wet: .7 })),
   star: t => { T(t, 587, .6, { vol: .14, wet: .7 }); T(t + .08, 880, .7, { vol: .1, wet: .7 }); },
   fanfare: t => { [392, 523, 659, 784].forEach((f, i) => T(t + i * .1, f, .5, { type: "triangle", vol: .12, wet: .5 })); [523, 659, 784, 1047].forEach(f => T(t + .45, f, 1, { type: "triangle", vol: .08, a: .03, wet: .6 })); },
-  toggle: t => T(t, 740, .1, { type: "square", vol: .05, cutoff: 2000 })
+  toggle: t => T(t, 740, .1, { type: "square", vol: .05, cutoff: 2000 }),
+  rpgStep: t => T(t, 160, .04, { type: "square", vol: .03, wet: 0 }),
+  rpgBump: t => T(t, 110, .08, { type: "square", vol: .06, wet: 0 }),
+  rpgCursor: t => T(t, 1000, .05, { type: "square", vol: .05, wet: 0 }),
+  rpgOk: t => { T(t, 784, .07, { type: "square", vol: .06, wet: 0 }); T(t + .06, 1175, .1, { type: "square", vol: .06, wet: 0 }); },
+  rpgCancel: t => { T(t, 600, .07, { type: "square", vol: .06, wet: 0 }); T(t + .06, 400, .1, { type: "square", vol: .06, wet: 0 }); },
+  rpgTalk: t => T(t, 700 + Math.random() * 200, .035, { type: "square", vol: .03, wet: 0 }),
+  rpgEnter: t => [392, 494, 587, 784].forEach((f, i) => T(t + i * .07, f, .12, { type: "square", vol: .06, wet: 0 })),
+  rpgLeave: t => [784, 587, 494, 392].forEach((f, i) => T(t + i * .07, f, .12, { type: "square", vol: .06, wet: 0 })),
+  rpgEncounter: t => { for (let i = 0; i < 8; i++) T(t + i * .06, i % 2 ? 330 : 247, .06, { type: "square", vol: .07, wet: 0 }); noise(t, .5, { vol: .1, f0: 2500, f1: 200 }); },
+  rpgHit: t => { noise(t, .18, { vol: .25, f0: 3000, f1: 300, q: .6 }); T(t, 180, .15, { type: "square", vol: .1, glide: .4, wet: 0 }); },
+  rpgHurt: t => { noise(t, .22, { vol: .22, f0: 900, f1: 120, q: .6 }); T(t, 130, .25, { type: "sawtooth", vol: .08, glide: .5, cutoff: 800, wet: 0 }); },
+  rpgWin: t => { [523, 523, 523, 659, 523, 659, 784].forEach((f, i) => T(t + [0, .12, .24, .36, .6, .72, .84][i], f, i === 6 ? .9 : .15, { type: "square", vol: .06, wet: .1 })); },
+  rpgLose: t => [392, 370, 349, 330, 262].forEach((f, i) => T(t + i * .22, f, .3, { type: "square", vol: .06, wet: .2 })),
+  rpgFlee: t => { for (let i = 0; i < 5; i++) T(t + i * .05, 300 + i * 60, .05, { type: "square", vol: .05, wet: 0 }); }
 };
 export function sfx(name) {
   if (!ctx || !pref.se || ctx.state !== "running" || !SE[name]) return;
@@ -179,7 +231,7 @@ export function initAudio() {
     if (document.hidden) ctx.suspend(); else if (started) ctx.resume();
   });
 
-  const SPECIAL = ".copy,[data-copy],#wCopy,.opt,#wNext,#wBack,.w-dot,[role=tab],.d-tabs button,.tabs button,.note-x,#mClose,#wX,.dock button,.seg button";
+  const SPECIAL = ".copy,[data-copy],#wCopy,.opt,#wNext,#wBack,.w-dot,[role=tab],.d-tabs button,.tabs button,.note-x,#mClose,#wX,.dock button,.seg button,.rpg-pad button";
   document.addEventListener("pointerdown", e => {
     if (e.target.closest(".soundwrap")) return;
     if (e.target.closest("#wNext,.w-dot")) return sfx("next");

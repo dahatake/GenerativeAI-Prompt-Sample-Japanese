@@ -23,6 +23,10 @@ jobs:
           node-version: 20
       - name: Build site data from repository content
         run: node tools/build-notes.mjs
+      - name: Audit site structure (information design)
+        run: node tools/audit-structure.mjs
+      - name: Check JavaScript syntax
+        run: for f in docs/js/*.js; do node --input-type=module --check < "$f" || exit 1; done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

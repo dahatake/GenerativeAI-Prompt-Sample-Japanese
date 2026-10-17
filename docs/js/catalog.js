@@ -11,6 +11,7 @@ const META = [
   { dir: "Security", kind: "persona", role: "セキュリティ担当", icon: "🛡️", color: "#e5484d", desc: "Prompt Injection / Leaking などAI固有のリスクとその緩和策。" },
   { dir: "日々のタスク", kind: "topic", icon: "✅", color: "#3fb950", desc: "タスクの振り返り・漏れチェック・次にやることの洗い出し・メール分析。", start: "README.md" },
   { dir: "リソースマネジメント", kind: "topic", icon: "⏱️", color: "#00b7c3", desc: "自分の時間の使い方や、案件・プロジェクトの進捗状況を把握するPrompt。", start: "README.md" },
+  { dir: "管理業務", kind: "topic", icon: "🗂️", color: "#7f85f5", desc: "案件(Lead)や部署横断のプロジェクトを、メール・チャット・会議の記録から管理するPrompt。", start: "README.md" },
   { dir: "会議", kind: "topic", icon: "🗣️", color: "#7f85f5", desc: "議事録作成、ディスカッション、顧客ヒアリング中の情報整理。" },
   { dir: "ビジネス戦略や分析", kind: "topic", icon: "📈", color: "#ffb900", desc: "新規事業アイディア、AI投資判断、業務分析と改善策、報道状況の調査。" },
   { dir: "Agent", kind: "topic", icon: "🤖", color: "#ff8c00", desc: "戦略コンサルタントなど、特定の役割を持つAgentの作成Prompt。", start: "README.md" },
@@ -23,6 +24,19 @@ const META = [
   { dir: "Workshop", kind: "topic", icon: "🧑‍🏫", color: "#7f85f5", desc: "経営層向けなどワークショップ用のシナリオ。", start: "README.md" },
   { dir: "Workshop_English", kind: "topic", icon: "🌐", color: "#58a6ff", desc: "英語版のワークショップ。", start: "README.md" },
   { dir: "sample", kind: "topic", icon: "🧪", color: "#a4a8bd", desc: "各Promptで使える共通のサンプルデータと、その監査レポート。" }
+];
+
+// 情報設計：第1階層=グループ(4) → 第2階層=カテゴリ(フォルダー) → 第3階層=Prompt(ファイル)
+// グループは「誰が使うか／何をしたいか／何をつくるか／どう学ぶか」の心的モデルで分類（各グループ3〜9件）。
+export const GROUPS = [
+  { id: "role", icon: "👤", name: "職種から探す", hint: "自分の仕事に近いものから", dirs: ["Software Engineer", "営業", "管理職", "人事", "教育", "行政", "データ分析", "Security"],
+    rpg: { place: "ロールの王国", kind: "castle", king: "ロールおう" } },
+  { id: "work", icon: "✅", name: "仕事の進め方から探す", hint: "日々の業務シーンから", dirs: ["日々のタスク", "リソースマネジメント", "管理業務", "会議", "音声入力", "ビジネス戦略や分析", "数理最適化問題"],
+    rpg: { place: "ギョウムの街", kind: "town", king: "まちちょう" } },
+  { id: "make", icon: "🛠️", name: "つくる・自動化する", hint: "文書・画像・コード・Agentを作る", dirs: ["Agent", "文書・画像作成", "DALL-E", "Code Interpreter"],
+    rpg: { place: "ソウゾウの城", kind: "castle", king: "ソウゾウおう" } },
+  { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "Workshop", "Workshop_English", "sample"],
+    rpg: { place: "マナビの村", kind: "town", king: "むらおさ" } }
 ];
 
 const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\]\s*/, m => m.trim() + " ");
@@ -38,5 +52,6 @@ export const CATALOG = META.map(m => {
     group: p.includes("/") ? p.split("/").slice(0, -1).join("/") : ""
   }));
   const start = files.find(f => f.path === "README.md") || files[0];
-  return { ...m, vx: VX[m.dir] || m.icon, files, count: files.length, startPath: start ? start.path : null };
+  const g = GROUPS.find(x => x.dirs.includes(m.dir));
+  return { ...m, group: g ? g.id : "", vx: VX[m.dir] || m.icon, files, count: files.length, startPath: start ? start.path : null };
 });

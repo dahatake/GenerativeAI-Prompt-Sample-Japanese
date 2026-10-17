@@ -33,6 +33,7 @@
     <div class="seg" role="tablist" aria-label="表示モード">
       <button role="tab" id="m2d" aria-selected="true">2D</button>
       <button role="tab" id="m3d" aria-selected="false">3D</button>
+      <button role="tab" id="mrpg" aria-selected="false">RPG</button>
     </div>
     <button class="btn small guide-btn" id="guideBtn" title="はじめての方へ：使い方ガイド">🧭 使い方ガイド</button>
     <div class="soundwrap">
@@ -63,6 +64,7 @@
       <a class="btn" href="#samples">📚 サンプルPromptを探す</a>
       <a class="btn" href="#tips">Promptのコツを見る</a>
       <button class="btn" id="to3d">🪐 3Dモードへ</button>
+      <button class="btn" id="toRpg">⚔️ RPGモードへ</button>
       <button class="btn ghost" id="roulette">🎲 ランダムお題</button>
     </div>
     <div class="stats reveal">
@@ -76,16 +78,11 @@
   <section class="section" id="samples">
     <p class="eyebrow reveal">Sample Prompts</p>
     <h2 class="reveal">サンプルPrompt：どこに何がある？</h2>
-    <p class="sub reveal">はじめての方は <b>①自分の職種</b> を選び、見つからなければ <b>②やりたいこと（テーマ）</b> から探しましょう。Promptをクリックすると<b>ノート</b>が開き、ワンクリックでコピーして Copilot や ChatGPT に貼り付けられます。画面上部の検索からも探せます。</p>
+    <p class="sub reveal">はじめての方は、下の<b>目次（4つのグループ）</b>から <b>①職種</b>・<b>②仕事の進め方</b>・<b>③つくる</b>・<b>④学ぶ</b> のどれかを選びましょう。Promptをクリックすると<b>ノート</b>が開き、ワンクリックでコピーして Copilot や ChatGPT に貼り付けられます。画面上部の検索からも探せます。</p>
     <div class="finder reveal">
       <button class="btn primary" id="galaxyBtn">🪐 3D「Prompt銀河」で探索する</button>
     </div>
-    <div id="catalogRoot">
-      <h3 class="cat-h reveal">👤 職種（ペルソナ）から探す</h3>
-      <div class="persona-grid" id="personaGrid"></div>
-      <h3 class="cat-h reveal">🧩 テーマ・シナリオから探す</h3>
-      <div class="topic-grid" id="topicGrid"></div>
-    </div>
+    <div id="catalogRoot"></div>
   </section>
 
   <section class="section" id="tips">
@@ -146,6 +143,18 @@
   </div>
   <aside class="galcard acrylic" id="galCard" hidden aria-live="polite"></aside>
   <div class="fps" id="fps3d"></div>
+</section>
+
+<section id="viewRpg" hidden aria-label="RPGモード">
+  <div class="rpg-wrap">
+    <div class="rpg-top"><button class="btn small acrylic" id="rpgBack">← 2Dへ戻る</button><span class="rpg-loc" id="rpgLoc"></span></div>
+    <div class="rpg-screen" id="rpgScreen"><canvas id="rpgCanvas" width="256" height="224" tabindex="0" aria-label="RPGの画面。矢印キーまたはWASDで移動、ZキーかEnterで決定、XキーかEscでキャンセル"></canvas></div>
+    <div class="rpg-pad" id="rpgPad" aria-label="タッチ操作">
+      <div class="dpad"><button data-k="ArrowUp" aria-label="上">▲</button><button data-k="ArrowLeft" aria-label="左">◀</button><button data-k="ArrowRight" aria-label="右">▶</button><button data-k="ArrowDown" aria-label="下">▼</button></div>
+      <div class="abtn"><button data-k="x" aria-label="Bボタン">B</button><button data-k="z" aria-label="Aボタン">A</button></div>
+    </div>
+    <p class="rpg-help">十字キー／WASD：うごく　Z・Enter・Space：Aボタン（コマンド／きめる）　X・Esc：Bボタン（キャンセル）</p>
+  </div>
 </section>
 
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">

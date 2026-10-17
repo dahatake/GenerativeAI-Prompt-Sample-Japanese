@@ -467,3 +467,48 @@ kbd{background:var(--card-h);border:1px solid var(--line);border-bottom-width:3p
 @keyframes ptConf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
 @media (max-width:600px){.pt-stage{padding:20px 14px 14px}.pt-view{min-height:760px}.pt-dot{width:32px;height:32px}}
 @media (prefers-reduced-motion:reduce){.pt-stage *{animation:none!important;transition:none!important}.pt-orb{display:none}}
+/* ---------- 情報設計：カテゴリーの目次とグループ ---------- */
+.grp-nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0 4px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+.grp-nav b{margin-right:4px}
+.grp-nav a{display:inline-flex;gap:6px;align-items:center;padding:4px 12px;border-radius:99px;border:1px solid var(--line);text-decoration:none;color:var(--fg);font-weight:600;transition:.3s var(--ease)}
+.grp-nav a:hover{background:var(--accent);color:#fff;border-color:transparent}
+.grp-nav small{opacity:.7}
+.grp-nav .mini{margin-left:auto;color:var(--mute)}
+.grp{scroll-margin-top:84px}
+.cat-h small{font-size:.8rem;font-weight:500;color:var(--mute);margin-left:8px}
+
+/* ---------- RPGモード（ファミコン風） ---------- */
+#viewRpg{position:fixed;inset:0;z-index:40;background:#05060d;overflow:auto;transition:opacity .75s var(--ease),transform .9s var(--ease)}
+#viewRpg[hidden]{display:none}
+#viewRpg.enter{opacity:0;transform:scale(.88)}
+#viewRpg.leaving{opacity:0;transform:scale(1.12);pointer-events:none}
+.rpg-wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:100px 12px 14px;color:#f4f4fa}
+.rpg-top{display:flex;gap:12px;align-items:center;width:min(96vw,calc((100vh - 300px) * 1.1428));min-width:260px}
+.rpg-loc{font-weight:700;color:#f4f4fa}
+.rpg-screen{position:relative;container-type:inline-size;width:min(96vw,calc((100vh - 300px) * 1.1428));min-width:260px;aspect-ratio:8/7;background:#000;border:4px solid #3a3a48;border-radius:6px;box-shadow:0 0 0 2px #101018,0 12px 40px rgba(0,0,0,.6);overflow:hidden}
+.rpg-screen canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;outline:none}
+.rpg-win{position:absolute;box-sizing:border-box;background:#000;color:#fff;border:.8cqw solid #fff;border-radius:1cqw;box-shadow:0 0 0 .5cqw #000;font:700 4.4cqw/1.45 "DotGothic16","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",monospace;padding:1.6cqw 2.4cqw;letter-spacing:.05em;z-index:2}
+.rpg-win[hidden]{display:none}
+.rpg-msg{left:3cqw;right:3cqw;bottom:3cqw;min-height:25cqw;cursor:pointer}
+.rpg-msg .nx{position:absolute;right:2.4cqw;bottom:1cqw;font-style:normal;animation:rpgblink .7s steps(2) infinite}
+@keyframes rpgblink{50%{opacity:0}}
+.rpg-menu{cursor:pointer}
+.rpg-menu .it{display:flex;white-space:nowrap}
+.rpg-menu .it b{display:inline-block;width:1.4em;font-weight:700}
+.rpg-menu.m-tl{left:3cqw;top:3cqw}
+.rpg-menu.m-ans{right:3cqw;bottom:30cqw;max-width:70cqw}
+.rpg-menu.m-ans .it{white-space:normal}
+.rpg-menu.m-wide{left:3cqw;right:3cqw;bottom:30cqw;font-size:3.7cqw;line-height:1.35}
+.rpg-menu.m-wide .it{white-space:normal}
+.rpg-status{top:3cqw;left:auto;right:3cqw;bottom:auto}
+.rpg-pad{display:flex;justify-content:space-between;align-items:center;width:min(96vw,calc((100vh - 300px) * 1.1428));min-width:260px;touch-action:none;user-select:none}
+.rpg-pad button{font:700 1.1rem/1 system-ui,sans-serif;color:#f4f4fa;background:#2a2a38;border:2px solid #101018;box-shadow:inset 0 -3px 0 #101018;cursor:pointer;touch-action:none}
+.rpg-pad button:active{transform:translateY(2px);box-shadow:none;background:#3a3a50}
+.dpad{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);grid-template-areas:". u ." "l . r" ". d ."}
+.dpad button{border-radius:6px}
+.dpad [data-k=ArrowUp]{grid-area:u}.dpad [data-k=ArrowLeft]{grid-area:l}.dpad [data-k=ArrowRight]{grid-area:r}.dpad [data-k=ArrowDown]{grid-area:d}
+.abtn{display:flex;gap:14px;transform:rotate(-14deg)}
+.abtn button{width:54px;height:54px;border-radius:50%;background:#b02030}
+.rpg-help{margin:0;color:#a4a8bd;font-size:.8rem;text-align:center;max-width:min(96vw,720px)}
+@media(hover:hover) and (pointer:fine) and (min-width:900px){.rpg-pad{display:none}}
+@media(prefers-reduced-motion:reduce){.rpg-msg .nx{animation:none}}
