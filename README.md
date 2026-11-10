@@ -3,6 +3,28 @@ GenerativeAI の Prompt のサンプルです。
 
 🌐 **インタラクティブ学習サイト（GitHub Pages）**: `docs/` 配下に 2D/3D で Copilot を遊んで学べるサイトがあります。Settings → Pages → Source を **GitHub Actions** にすると公開されます。
 
+## GitHub Pages の自動更新
+
+`main` ブランチへ変更を push（またはプルリクエストをマージ）すると、[公開ワークフロー](.github/workflows/pages.yml)が自動実行されます。Markdown だけでなく、サイトの JavaScript・CSS・生成ツールの変更も対象です。
+
+1. Markdown 同期の回帰テストを実行します。
+2. [生成ツール](tools/build-notes.mjs)が Markdown から `docs/data/`（本文・検索用データ）と `docs/js/files.js`（一覧）を再生成します。
+3. 構造監査と JavaScript 構文チェックに成功した場合だけ、`docs/` を GitHub Pages に公開します。失敗時は前回の公開内容が維持されます。
+
+サイトはこのデータを読み込んで HTML に表示するため、Markdown の更新ごとに HTML を手で編集する必要はありません。既存カテゴリ内の Markdown の追加・更新・改名・削除が反映されます。Markdown がなくなったカテゴリは一覧・3D・RPGから外れ、再追加すると復帰します。
+
+公開対象は各カテゴリ配下の `.md` です。ルートの `README.md`、隠しファイル、`docs/`・`tools/`・`node_modules/`、カテゴリ内の `sample`・`output`・`package`・`font`・`images`・`data`・`Archive`・末尾が `-Data` のフォルダーは対象外です。トップレベルの `sample/` は共通資料カテゴリとして対象です。新しいトップレベルカテゴリを作る場合は、[カテゴリ定義](docs/js/catalog.js)の `META` と `GROUPS` にも登録してください。未登録カテゴリは監査でエラーになります。
+
+更新後は GitHub の **Actions → Deploy GitHub Pages** で成功を確認し、[公開サイト](https://dahatake.github.io/GenerativeAI-Prompt-Sample-Japanese/)で対象ノートを開いてください。反映待ちやブラウザーのキャッシュで古い内容が見える場合は、公開完了後に再読み込みしてください。**Run workflow** から手動で再公開することもできます。生成済みデータの手動更新・コミットは不要です。
+
+ローカルで確認する場合（Node.js 20 以降、追加パッケージ不要）:
+
+```shell
+node --test tools/build-notes.test.mjs
+node tools/build-notes.mjs
+node tools/audit-structure.mjs
+```
+
 # 注意点
 全ては自己責任です。ご利用は十二分に注意をしてください。以下は ChatGPT に限らず情報管理の一般論とも言えますが。
 

@@ -37,7 +37,7 @@ export const GROUPS = [
     rpg: { place: "ソウゾウの城", kind: "castle", king: "ソウゾウおう" } },
   { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "Workshop", "Workshop_English", "sample"],
     rpg: { place: "マナビの村", kind: "town", king: "むらおさ" } }
-];
+].map(g => ({ ...g, dirs: g.dirs.filter(dir => FILES[dir]?.length || !META.some(m => m.dir === dir)) }));
 
 const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\]\s*/, m => m.trim() + " ");
 
@@ -45,7 +45,7 @@ const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\
 // 3D ピクセル・ジオラマに使う「テーマを象徴する」アイコン（未指定は icon を使用）
 const VX = { "Software Engineer": "💻", "人事": "👥", "教育": "🎓", "会議": "🎤", "Agent": "🤖", "数理最適化問題": "🧮" };
 
-export const CATALOG = META.map(m => {
+export const CATALOG = META.filter(m => FILES[m.dir]?.length).map(m => {
   const files = (FILES[m.dir] || []).map(p => ({
     path: p,
     title: p === "README.md" ? "はじめに（README）" : titleOf(p),
