@@ -3,7 +3,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import test from "node:test";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -41,6 +41,10 @@ function build(dir) {
 
 function audit(dir) {
   return spawnSync(process.execPath, [join(dir, "tools", "audit-structure.mjs")], { env, encoding: "utf8" });
+}
+
+async function loadCatalog(dir) {
+  return import(pathToFileURL(join(dir, "docs", "js", "catalog.js")).href);
 }
 
 test("Markdown edits, additions, renames and deletions update the published data", t => {
@@ -85,24 +89,48 @@ test("empty or removed categories disappear from all catalog views and can retur
   assert.equal(audit(dir).status, 0);
 });
 
-test("unknown categories still fail the deployment audit", t => {
+test("new top-level folders appear in the catalog and disappear when removed", async t => {
   const dir = fixture(t);
-  mkdirSync(join(dir, "unregistered"));
-  writeFileSync(join(dir, "unregistered", "README.md"), "# Unknown\n");
-  assert.ok(build(dir).dirs.unregistered);
-  const result = audit(dir);
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /unregistered/);
+  const folder = join(dir, "リッチメディア");
+  mkdirSync(folder);
+  writeFileSync(join(folder, "README.md"), "# リッチメディア\n");
+  const index = build(dir);
+  const { CATALOG, GROUPS } = await loadCatalog(dir);
+  assert.ok(index.dirs["リッチメディア"]);
+  assert.ok(CATALOG.some(category => category.dir === "リッチメディア"));
+  assert.ok(GROUPS.some(group => group.dirs.includes("リッチメディア")));
+  assert.equal(audit(dir).status, 0);
+
+  rmSync(folder, { recursive: true });
+  const removed = build(dir);
+  assert.equal(removed.dirs["リッチメディア"], undefined);
+  assert.equal(audit(dir).status, 0);
 });
 
-test("unknown group entries still fail the deployment audit", t => {
+test("additional folders are grouped automatically without breaking the audit", async t => {
+  const dir = fixture(t);
+  for (let i = 0; i < 6; i++) {
+    const folder = join(dir, `new-category-${i}`);
+    mkdirSync(folder);
+    writeFileSync(join(folder, "README.md"), `# Category ${i}\n`);
+  }
+  build(dir);
+  const { CATALOG, GROUPS } = await loadCatalog(dir);
+  const autoGroups = GROUPS.filter(group => group.id.startsWith("auto-"));
+  assert.equal(CATALOG.filter(category => category.dir.startsWith("new-category-")).length, 6);
+  assert.ok(autoGroups.length > 0);
+  assert.ok(autoGroups.every(group => group.dirs.length >= 2 && group.dirs.length <= 9));
+  assert.equal(audit(dir).status, 0);
+});
+
+test("stale group entries disappear when their folders are absent", async t => {
   const dir = fixture(t);
   const catalog = join(dir, "docs", "js", "catalog.js");
   writeFileSync(catalog, readFileSync(catalog, "utf8").replace('dirs: ["Software Engineer"', 'dirs: ["unregistered", "Software Engineer"'));
   build(dir);
-  const result = audit(dir);
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /unregistered/);
+  const { GROUPS } = await loadCatalog(dir);
+  assert.ok(!GROUPS.some(group => group.dirs.includes("unregistered")));
+  assert.equal(audit(dir).status, 0);
 });
 
 test("sample assets and root documentation stay excluded, but shared samples remain included", t => {

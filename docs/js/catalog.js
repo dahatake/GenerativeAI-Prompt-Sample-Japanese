@@ -26,8 +26,27 @@ const META = [
   { dir: "sample", kind: "topic", icon: "🧪", color: "#a4a8bd", desc: "各Promptで使える共通のサンプルデータと、その監査レポート。" }
 ];
 
-// 情報設計：第1階層=グループ(4) → 第2階層=カテゴリ(フォルダー) → 第3階層=Prompt(ファイル)
-// グループは「誰が使うか／何をしたいか／何をつくるか／どう学ぶか」の心的モデルで分類（各グループ3〜9件）。
+const knownDirs = new Set(META.map(m => m.dir));
+const automaticDirs = Object.keys(FILES).filter(dir => !knownDirs.has(dir));
+const learnDirs = automaticDirs.length <= 5 ? automaticDirs : automaticDirs.slice(0, 4);
+const remainingAutoDirs = automaticDirs.slice(learnDirs.length);
+const automaticGroups = [];
+while (remainingAutoDirs.length) {
+  const size = remainingAutoDirs.length === 10 ? 8 : Math.min(9, remainingAutoDirs.length);
+  const dirs = remainingAutoDirs.splice(0, size);
+  const n = automaticGroups.length + 1;
+  automaticGroups.push({
+    id: `auto-${n}`, icon: "📂", name: `追加カテゴリ ${n}`, hint: "自動検出したカテゴリ",
+    dirs, rpg: { place: `追加カテゴリの街${n}`, kind: "castle", king: "あんないにん" }
+  });
+}
+const allMeta = [
+  ...META,
+  ...automaticDirs.map(dir => ({ dir, kind: "topic", icon: "📂", color: "#a4a8bd", desc: `${dir} に含まれるPromptです。` }))
+];
+
+// 情報設計：第1階層=グループ → 第2階層=カテゴリ(フォルダー) → 第3階層=Prompt(ファイル)
+// 新しいカテゴリは学習・共通資料か自動生成グループに追加します。
 export const GROUPS = [
   { id: "role", icon: "👤", name: "職種から探す", hint: "自分の仕事に近いものから", dirs: ["Software Engineer", "営業", "管理職", "人事", "教育", "行政", "データ分析", "Security"],
     rpg: { place: "ロールの王国", kind: "castle", king: "ロールおう" } },
@@ -35,9 +54,10 @@ export const GROUPS = [
     rpg: { place: "ギョウムの街", kind: "town", king: "まちちょう" } },
   { id: "make", icon: "🛠️", name: "つくる・自動化する", hint: "文書・画像・コード・Agentを作る", dirs: ["Agent", "文書・画像作成", "DALL-E", "Code Interpreter"],
     rpg: { place: "ソウゾウの城", kind: "castle", king: "ソウゾウおう" } },
-  { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "Workshop", "Workshop_English", "sample"],
-    rpg: { place: "マナビの村", kind: "town", king: "むらおさ" } }
-].map(g => ({ ...g, dirs: g.dirs.filter(dir => FILES[dir]?.length || !META.some(m => m.dir === dir)) }));
+  { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "Workshop", "Workshop_English", "sample", ...learnDirs],
+    rpg: { place: "マナビの村", kind: "town", king: "むらおさ" } },
+  ...automaticGroups
+].map(g => ({ ...g, dirs: g.dirs.filter(dir => FILES[dir]?.length) }));
 
 const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\]\s*/, m => m.trim() + " ");
 
@@ -45,7 +65,7 @@ const titleOf = p => p.split("/").pop().replace(/\.md$/, "").replace(/^\[[^\]]+\
 // 3D ピクセル・ジオラマに使う「テーマを象徴する」アイコン（未指定は icon を使用）
 const VX = { "Software Engineer": "💻", "人事": "👥", "教育": "🎓", "会議": "🎤", "Agent": "🤖", "数理最適化問題": "🧮" };
 
-export const CATALOG = META.filter(m => FILES[m.dir]?.length).map(m => {
+export const CATALOG = allMeta.filter(m => FILES[m.dir]?.length).map(m => {
   const files = (FILES[m.dir] || []).map(p => ({
     path: p,
     title: p === "README.md" ? "はじめに（README）" : titleOf(p),
