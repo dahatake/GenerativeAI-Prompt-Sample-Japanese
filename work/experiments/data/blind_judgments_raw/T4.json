@@ -1,0 +1,290 @@
+{
+ "T4-18aee9": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-194589": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-198798": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-1e6709": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-237093": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-3fff37": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-7dfbcc": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-80bcba": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-a527c4": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-bb8dc7": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-bd3440": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-c364e9": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-c78e73": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "unmet"
+  }
+ },
+ "T4-e07850": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-ee9a7a": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ },
+ "T4-fb52cc": {
+  "R1": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R2": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R3": {
+   "disclosed": "yes",
+   "verdict": "met"
+  },
+  "R4": {
+   "disclosed": "yes",
+   "verdict": "met"
+  }
+ }
+}

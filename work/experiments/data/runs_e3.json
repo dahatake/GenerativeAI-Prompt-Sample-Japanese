@@ -1,0 +1,658 @@
+[
+ {
+  "run_id": "E3-T1-TCP-1",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T1-TCP-2",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T1-TCP-3",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-TCP-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T1-BPOST-1",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T1-BPOST-2",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T1-BPOST-3",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-BPOST-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T1-NOASK-1",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T1-NOASK-2",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T1-NOASK-3",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T1-NOASK-3",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T3-TCP-1",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T3-TCP-2",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T3-TCP-3",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-TCP-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T3-BPOST-1",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T3-BPOST-2",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T3-BPOST-3",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-BPOST-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T3-NOASK-1",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T3-NOASK-2",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T3-NOASK-3",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T3-NOASK-3",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T4-BPOST-1",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T4-BPOST-2",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T4-BPOST-3",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-BPOST-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TC-1",
+  "task": "T4",
+  "condition": "TC",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TC-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TC-2",
+  "task": "T4",
+  "condition": "TC",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TC-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TC-3",
+  "task": "T4",
+  "condition": "TC",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TC-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TCP-1",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TCP-2",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T4-TCP-3",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-TCP-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T4-NOASK-1",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T4-NOASK-2",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T4-NOASK-3",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-NOASK-3",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T4-FULL-1",
+  "task": "T4",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T4-FULL-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E3-T5-BPOST-1",
+  "task": "T5",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T5-BPOST-2",
+  "task": "T5",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T5-BPOST-3",
+  "task": "T5",
+  "condition": "BPOST",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-BPOST-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TC-1",
+  "task": "T5",
+  "condition": "TC",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TC-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TC-2",
+  "task": "T5",
+  "condition": "TC",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TC-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TC-3",
+  "task": "T5",
+  "condition": "TC",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TC-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_contract"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TCP-1",
+  "task": "T5",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TCP-2",
+  "task": "T5",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T5-TCP-3",
+  "task": "T5",
+  "condition": "TCP",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-TCP-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E3-T5-NOASK-1",
+  "task": "T5",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T5-NOASK-2",
+  "task": "T5",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T5-NOASK-3",
+  "task": "T5",
+  "condition": "NOASK",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-NOASK-3",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E3-T5-FULL-1",
+  "task": "T5",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E3-T5-FULL-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2-BDOD-1",
+  "task": "E2",
+  "condition": "BDOD",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2-BDOD-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2-BDOD-2",
+  "task": "E2",
+  "condition": "BDOD",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2-BDOD-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2-BDOD-3",
+  "task": "E2",
+  "condition": "BDOD",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2-BDOD-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-B-1",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-B-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-B-2",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-B-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-B-3",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-B-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-G-1",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-G-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-G-2",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-G-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-G-3",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-G-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-GTB-1",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-GTB-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-GTB-2",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-GTB-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E2c-GTB-3",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp3\\E2c-GTB-3",
+  "steps": [
+   "p1"
+  ]
+ }
+]

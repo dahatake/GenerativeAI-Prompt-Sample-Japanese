@@ -1,0 +1,492 @@
+{
+ "cells": {
+  "T1|B": {
+   "n": 6,
+   "mean": 0.5
+  },
+  "T1|BPOST": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T1|FULL": {
+   "n": 1,
+   "mean": 1.0
+  },
+  "T1|NOASK": {
+   "n": 3,
+   "mean": 0.5
+  },
+  "T1|TC": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T1|TCP": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T2|B": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T2|FULL": {
+   "n": 1,
+   "mean": 1.0
+  },
+  "T2|TC": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T3|B": {
+   "n": 6,
+   "mean": 0.75
+  },
+  "T3|BPOST": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T3|FULL": {
+   "n": 1,
+   "mean": 1.0
+  },
+  "T3|NOASK": {
+   "n": 3,
+   "mean": 0.75
+  },
+  "T3|TC": {
+   "n": 3,
+   "mean": 0.75
+  },
+  "T3|TCP": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T4|B": {
+   "n": 3,
+   "mean": 0.25
+  },
+  "T4|BPOST": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T4|FULL": {
+   "n": 1,
+   "mean": 1.0
+  },
+  "T4|NOASK": {
+   "n": 3,
+   "mean": 0.25
+  },
+  "T4|TC": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T4|TCP": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T5|B": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T5|BPOST": {
+   "n": 3,
+   "mean": 0.944
+  },
+  "T5|FULL": {
+   "n": 1,
+   "mean": 1.0
+  },
+  "T5|NOASK": {
+   "n": 3,
+   "mean": 0.889
+  },
+  "T5|TC": {
+   "n": 3,
+   "mean": 1.0
+  },
+  "T5|TCP": {
+   "n": 3,
+   "mean": 1.0
+  }
+ },
+ "tests": {
+  "PREREG_H7_TC_vs_BPOST(T1,T3,T4,T5)": {
+   "diff": -0.049,
+   "p_one_sided": 0.975,
+   "method": "exact",
+   "n_perm": 160000,
+   "n_a": 12,
+   "n_b": 12
+  },
+  "PREREG_H7_BPOST_vs_TC(T1,T3,T4,T5)": {
+   "diff": 0.049,
+   "p_one_sided": 0.05,
+   "method": "exact",
+   "n_perm": 160000,
+   "n_a": 12,
+   "n_b": 12
+  },
+  "PREREG_H8_TC_vs_NOASK(T1,T3,T4,T5)": {
+   "diff": 0.34,
+   "p_one_sided": 0.0005,
+   "method": "exact",
+   "n_perm": 160000,
+   "n_a": 12,
+   "n_b": 12
+  },
+  "PREREG_H8b_B_vs_NOASK(T1,T3,T4,T5)": {
+   "diff": 0.028,
+   "p_one_sided": 0.19945,
+   "method": "monte_carlo",
+   "n_perm": 100000,
+   "n_a": 18,
+   "n_b": 12
+  },
+  "H7_BPOSTfinal_vs_TCany(T1,T3,T4,T5)": {
+   "diff": -0.017,
+   "p_one_sided": 0.83999,
+   "method": "monte_carlo",
+   "n_perm": 100000,
+   "n_a": 24,
+   "n_b": 12
+  },
+  "H8_TCany_vs_NOASK(T1,T3,T4,T5)": {
+   "diff": 0.372,
+   "p_one_sided": 2e-05,
+   "method": "monte_carlo",
+   "n_perm": 100000,
+   "n_a": 24,
+   "n_b": 12
+  },
+  "H8b_NOASK_vs_B(T1,T3,T4,T5)": {
+   "diff": -0.028,
+   "p_one_sided": 1.0,
+   "method": "monte_carlo",
+   "n_perm": 100000,
+   "n_a": 12,
+   "n_b": 18
+  },
+  "H9_TCP_vs_TCv1(T3)": {
+   "diff": 0.25,
+   "p_one_sided": 0.05,
+   "method": "exact",
+   "n_perm": 20,
+   "n_a": 3,
+   "n_b": 3
+  },
+  "H9b_TCP_vs_TCv1(T1,T3)": {
+   "diff": 0.125,
+   "p_one_sided": 0.05,
+   "method": "exact",
+   "n_perm": 400,
+   "n_a": 6,
+   "n_b": 6
+  },
+  "H10_TCany_vs_Bp1(T4,T5)": {
+   "diff": 0.375,
+   "p_one_sided": 0.0119,
+   "method": "exact",
+   "n_perm": 7056,
+   "n_a": 12,
+   "n_b": 6
+  },
+  "H10b_TCany_vs_Bp1(T4)": {
+   "diff": 0.75,
+   "p_one_sided": 0.0119,
+   "method": "exact",
+   "n_perm": 84,
+   "n_a": 6,
+   "n_b": 3
+  },
+  "pooled_TCany_vs_B(T1-T5,v1+v2)": {
+   "diff": 0.294,
+   "p_one_sided": 1e-05,
+   "method": "monte_carlo",
+   "n_perm": 100000,
+   "n_a": 27,
+   "n_b": 21
+  }
+ },
+ "timing_seconds": {
+  "T1|BPOST": {
+   "n": 3,
+   "p1_mean": 33.5,
+   "post_p1_mean": 38.0,
+   "total_mean": 71.5
+  },
+  "T1|NOASK": {
+   "n": 3,
+   "p1_mean": 55.2,
+   "post_p1_mean": 71.2,
+   "total_mean": 126.4
+  },
+  "T1|TCP": {
+   "n": 3,
+   "p1_mean": 56.0,
+   "post_p1_mean": 110.3,
+   "total_mean": 166.3
+  },
+  "T3|BPOST": {
+   "n": 3,
+   "p1_mean": 22.9,
+   "post_p1_mean": 20.9,
+   "total_mean": 43.9
+  },
+  "T3|NOASK": {
+   "n": 3,
+   "p1_mean": 56.2,
+   "post_p1_mean": 68.2,
+   "total_mean": 124.3
+  },
+  "T3|TCP": {
+   "n": 3,
+   "p1_mean": 52.5,
+   "post_p1_mean": 73.4,
+   "total_mean": 125.8
+  },
+  "T4|BPOST": {
+   "n": 3,
+   "p1_mean": 35.6,
+   "post_p1_mean": 42.3,
+   "total_mean": 77.8
+  },
+  "T4|FULL": {
+   "n": 1,
+   "p1_mean": 34.6,
+   "post_p1_mean": null,
+   "total_mean": 34.6
+  },
+  "T4|NOASK": {
+   "n": 3,
+   "p1_mean": 59.9,
+   "post_p1_mean": 74.1,
+   "total_mean": 134.0
+  },
+  "T4|TC": {
+   "n": 3,
+   "p1_mean": 60.7,
+   "post_p1_mean": 111.8,
+   "total_mean": 172.5
+  },
+  "T4|TCP": {
+   "n": 3,
+   "p1_mean": 66.3,
+   "post_p1_mean": 94.9,
+   "total_mean": 161.2
+  },
+  "T5|BPOST": {
+   "n": 3,
+   "p1_mean": 46.9,
+   "post_p1_mean": 37.5,
+   "total_mean": 84.4
+  },
+  "T5|FULL": {
+   "n": 1,
+   "p1_mean": 54.5,
+   "post_p1_mean": null,
+   "total_mean": 54.5
+  },
+  "T5|NOASK": {
+   "n": 3,
+   "p1_mean": 67.6,
+   "post_p1_mean": 88.8,
+   "total_mean": 156.5
+  },
+  "T5|TC": {
+   "n": 3,
+   "p1_mean": 74.5,
+   "post_p1_mean": 159.0,
+   "total_mean": 233.4
+  },
+  "T5|TCP": {
+   "n": 3,
+   "p1_mean": 80.9,
+   "post_p1_mean": 146.4,
+   "total_mean": 227.3
+  }
+ },
+ "rework_changed_lines_BPOST": {
+  "T1": [
+   28,
+   31,
+   26
+  ],
+  "T3": [
+   4,
+   2,
+   2
+  ],
+  "T4": [
+   17,
+   25,
+   26
+  ],
+  "T5": [
+   29,
+   4,
+   2
+  ]
+ },
+ "tcp_followup_runs": [
+  "E3-T1-TCP-3"
+ ],
+ "T3S_R2_future_valid": {
+  "E3-T3-BPOST-1": true,
+  "E3-T3-BPOST-1@p1": true,
+  "E3-T3-BPOST-2": true,
+  "E3-T3-BPOST-2@p1": true,
+  "E3-T3-BPOST-3": true,
+  "E3-T3-BPOST-3@p1": true,
+  "E3-T3-NOASK-1": true,
+  "E3-T3-NOASK-2": true,
+  "E3-T3-NOASK-3": true,
+  "E3-T3-TCP-1": true,
+  "E3-T3-TCP-2": true,
+  "E3-T3-TCP-3": true,
+  "T3-B-1": true,
+  "T3-B-2": true,
+  "T3-B-3": true,
+  "T3-FULL-1": true,
+  "T3-TC-1": false,
+  "T3-TC-2": true,
+  "T3-TC-3": true
+ },
+ "T5S_window28_(p1,final)": {
+  "E3-T5-BPOST-1": [
+   "False",
+   "True"
+  ],
+  "E3-T5-BPOST-2": [
+   "False",
+   "True"
+  ],
+  "E3-T5-BPOST-3": [
+   "False",
+   "True"
+  ],
+  "E3-T5-TC-1": [
+   "",
+   "True"
+  ],
+  "E3-T5-TC-2": [
+   "",
+   "True"
+  ],
+  "E3-T5-TC-3": [
+   "",
+   "True"
+  ],
+  "E3-T5-TCP-1": [
+   "",
+   "True"
+  ],
+  "E3-T5-TCP-2": [
+   "",
+   "True"
+  ],
+  "E3-T5-TCP-3": [
+   "",
+   "True"
+  ],
+  "E3-T5-NOASK-1": [
+   "",
+   "False"
+  ],
+  "E3-T5-NOASK-2": [
+   "",
+   "True"
+  ],
+  "E3-T5-NOASK-3": [
+   "",
+   "False"
+  ],
+  "E3-T5-FULL-1": [
+   "",
+   "True"
+  ]
+ },
+ "sensitivity_T5S_corrected": {
+  "T5_cells": {
+   "B": {
+    "n": 3,
+    "mean": 0.833
+   },
+   "BPOST": {
+    "n": 3,
+    "mean": 0.944
+   },
+   "FULL": {
+    "n": 1,
+    "mean": 1.0
+   },
+   "NOASK": {
+    "n": 3,
+    "mean": 0.778
+   },
+   "TC": {
+    "n": 3,
+    "mean": 1.0
+   },
+   "TCP": {
+    "n": 3,
+    "mean": 1.0
+   }
+  },
+  "tests": {
+   "H8_TCany_vs_NOASK(T1,T3,T4,T5)": {
+    "diff": 0.399,
+    "p_one_sided": 2e-05,
+    "method": "monte_carlo",
+    "n_perm": 100000
+   },
+   "PREREG_H8_TC_vs_NOASK(T1,T3,T4,T5)": {
+    "diff": 0.368,
+    "p_one_sided": 0.0005,
+    "method": "exact",
+    "n_perm": 160000
+   },
+   "PREREG_H7_TC_vs_BPOST(T1,T3,T4,T5)": {
+    "diff": -0.049,
+    "p_one_sided": 0.975,
+    "method": "exact",
+    "n_perm": 160000
+   },
+   "H10_TCany_vs_Bp1(T4,T5)": {
+    "diff": 0.458,
+    "p_one_sided": 0.00014,
+    "method": "exact",
+    "n_perm": 7056
+   },
+   "H10c_TCany_vs_Bp1(T5)": {
+    "diff": 0.167,
+    "p_one_sided": 0.0119,
+    "method": "exact",
+    "n_perm": 84
+   },
+   "H7_BPOSTfinal_vs_TCany(T1,T3,T4,T5)": {
+    "diff": -0.017,
+    "p_one_sided": 0.83999,
+    "method": "monte_carlo",
+    "n_perm": 100000
+   }
+  }
+ },
+ "fisher_one_sided": {
+  "H11_BDoD_dateflag_vs_B(v1 0/6)": {
+   "a": "2/3",
+   "b": "0/6",
+   "p": 0.0833
+  },
+  "BDoD_vs_G_GTB(v1 11/12)": {
+   "a": "11/12",
+   "b": "2/3",
+   "p": 0.3714
+  },
+  "E2c_filter_block_first_attempt_B_vs_G+GTB": {
+   "a": "3/3",
+   "b": "1/6",
+   "p": 0.0476,
+   "note": "first attempts only (retries were conditional on being blocked)"
+  }
+ }
+}

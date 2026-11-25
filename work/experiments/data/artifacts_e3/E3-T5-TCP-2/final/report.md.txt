@@ -1,0 +1,76 @@
+# 実行レポート: `reorder_plan(inventory_path, shipments_path, today)`
+
+- 実装: `solution.py`（標準ライブラリのみ: `csv`, `datetime`, `fractions`）
+- テスト: `test_solution.py`（unittest、12 件）。一時 CSV は作業ディレクトリ内の `_testdata/` に作り、各テストの後に削除します
+- 契約: `contract.md`（answers.md の回答で更新済み・承認済み）
+
+## 検証コマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_dod4_fractional_rop_rounds_up_to_lot ... ok
+test_dod4_need_exceeding_lot_uses_multiple ... ok
+test_dod4_position_above_rop_no_order ... ok
+test_dod4_position_equal_rop_orders_one_lot ... ok
+test_dod5_window_edges ... ok
+test_dod6_sorted_ints_lot_multiples_and_discontinued_excluded ... ok
+test_dod7_invalid_values ... ok
+test_dod7_missing_inventory_column ... ok
+test_dod7_missing_shipment_column ... ok
+test_dod1_sample_2026_11_10 ... ok
+test_dod2_today_types ... ok
+test_dod3_sample_2026_11_25 ... ok
+----------------------------------------------------------------------
+Ran 12 tests in 0.468s
+
+OK
+```
+
+例データでの品目ごとの計算（d = 直近 28 日の平均日次出荷、ROP = d × lead_time_days + safety_stock、pos = stock + on_order）:
+
+| today | sku | d | ROP | pos | 発注? | qty |
+|---|---|---|---|---|---|---|
+| 2026-11-10 | A100 | 3.000 | 41.00 | 40 | ○（40 ≤ 41、need 1 → lot 50） | **50** |
+| 2026-11-10 | A200 | 1.000 | 15.00 | 45 | × | – |
+| 2026-11-10 | B300 | 0.000 | 5.00 | 5 | ×（廃番のため除外） | – |
+| 2026-11-10 | C400 | 0.000 | 6.00 | 12 | × | – |
+| 2026-11-25 | A100 | 1.393 | 29.75 | 40 | × | – |
+| 2026-11-25 | A200 | 0.429 | 12.14 | 45 | × | – |
+| 2026-11-25 | B300 / C400 | 0 | 5 / 6 | 5 / 12 | × | – |
+
+結果: `today="2026-11-10"` → `[{"sku": "A100", "qty": 50}]`、`today="2026-11-25"` → `[]`
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | 2026-11-10 で `[{"sku":"A100","qty":50}]` | 完了 | `test_dod1_sample_2026_11_10`、上の計算表 |
+| 2 | date / datetime / 文字列で同じ結果 | 完了 | `test_dod2_today_types` |
+| 3 | 2026-11-25 で `[]` | 完了 | `test_dod3_sample_2026_11_25` |
+| 4 | position==ROP は 1 lot 発注、ROP+1 は発注しない、小数の ROP は lot に切り上げ | 完了（ただし position==ROP の扱いは **人間の確認が必要**。A10 を参照） | `test_dod4_*`（4 件） |
+| 5 | today-28 日は含み、today-29 日・当日・未来は含まない | 完了 | `test_dod5_window_edges` |
+| 6 | qty は正の int で lot の倍数、sku 昇順、廃番は除外 | 完了 | `test_dod6_*` |
+| 7 | 列の欠落・不正な値は `ValueError` | 完了 | `test_dod7_*`（3 件。数値・lot ≤ 0・真偽値・sku 重複・日付・小数の qty・today の書式を確認） |
+
+## 採用した仮定の一覧
+
+| # | 内容 | 出所 |
+|---|---|---|
+| Q1 | 平均日次出荷 = today の前日までの直近 28 日（today-28 〜 today-1）の出荷合計 ÷ 28 | 回答 (a) |
+| Q2 | stock + on_order ≤ ROP なら発注する。素の値 = ROP − 有効在庫 | 回答 (c) |
+| Q3 | 素の値を lot の倍数に切り上げる | 回答 (a) |
+| A1 | 有効在庫に on_order を含める | 回答で了承 |
+| A2 | ROP = 平均日次出荷 × lead_time_days + safety_stock | 契約の既定値（Q2 の前提） |
+| A3 | discontinued=true の品目は除外する（true/false 以外の値はエラー。大文字小文字は区別しない） | 回答で了承 |
+| A4 | today は date / datetime / `YYYY-MM-DD` 文字列で受け付ける。today 当日以降の出荷は集計しない | 回答で了承 |
+| A5 | 出荷行のない日は 0 として数え、常に 28 で割る | 回答で了承 |
+| A6 | inventory にない sku の出荷は無視する。出荷がない品目の需要は 0 | 推奨案（回答なし） |
+| A7 | qty > 0 の品目だけを sku 昇順で返し、qty は int にする | 回答で了承 |
+| A8 | 標準ライブラリのみを使う。ファイルは UTF-8（BOM も可）として読む | 推奨案（回答なし） |
+| A9 | 不正な入力（列の欠落、数値・日付・真偽値の不正、lot ≤ 0、sku の重複、未対応の today）は `ValueError` にする。集計期間外の出荷行も検証する | 推奨案（回答で指定なし） |
+| A10 | position == ROP のときは素の値が 0 になるが、「ROP ちょうども発注する」という回答の意図を優先して最低 1 lot を発注する（`qty = max(lot, ceil(need/lot)*lot)`） | **人間の確認が必要**（回答の文言どおりだと 0 個の発注になり、発注しないのと同じ結果になるため） |
+| A11 | 境界判定と切り上げは Fraction で正確に計算する（float の誤差を持ち込まない） | 契約の Constraints |
+| A12 | shipments の qty が負の値（返品など）でも整数ならそのまま合計する | 推奨案（例データには存在しない） |
+
+## 人間の確認が必要な点
+- **A10**: 有効在庫が発注点ちょうどのときに 1 lot 発注するか、0 として発注しないか（後者なら Q2 は実質 (a) と同じ判定になります）。例データにはこの境界に当たる品目がないため、例データの結果は変わりません。0 として発注しない方にする場合は、`solution.py` の `max(lots, 1)` を `lots` に変え、`test_dod4_position_equal_rop_orders_one_lot` の期待値を `[]` に変えてください。

@@ -1,0 +1,45 @@
+# Execution Report
+
+## 採用した仮定
+- 番号全体を完全一致で判定し、前後の空白は除去しない。
+- 接頭辞は大文字の `INV-` のみ許可する。
+- 年は2020～2099、月は01～12、連番は0001～9999とする。
+- ASCII数字 `[0-9]` のみ許可し、Unicode数字や「O」等は不許可とする。
+- 年・月の実在性（うるう日、暦上の特定日など）は検証しない。
+
+## Definition of Done 検証結果
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `solution.py` をインポートできる | 完了 | `test_module_import_and_function_exist` がOK |
+| `validate_invoice_id(value)` が存在する | 完了 | `test_module_import_and_function_exist` がOK |
+| 戻り値が常に `bool` 型である | 完了 | 有効値・無効値・非文字列入力の各テストで `assertIs(type(result), bool)` を確認 |
+| `samples.txt` の番号例4件がすべて `True` | 完了 | `test_samples_are_valid` がOK |
+| 有効範囲内の `INV-202603-1200` が `True` | 完了 | `test_valid_format_and_boundaries` がOK |
+| 小文字、前後空白、桁不足・桁超過、ハイフン欠落、月00または13、連番0000、年2019または2100、非数値文字は `False` | 完了 | `test_invalid_format_and_values` がOK |
+| `None`、整数、リストなど文字列以外の入力は `False` | 完了 | `test_non_string_inputs` がOK |
+
+## 検証コマンドと出力
+
+コマンド：
+
+```powershell
+python test_validate_invoice_id.py
+```
+
+出力：
+
+```text
+test_invalid_format_and_values (__main__.InvoiceIdValidationTests.test_invalid_format_and_values) ... ok
+test_module_import_and_function_exist (__main__.InvoiceIdValidationTests.test_module_import_and_function_exist) ... ok
+test_non_string_inputs (__main__.InvoiceIdValidationTests.test_non_string_inputs) ... ok
+test_samples_are_valid (__main__.InvoiceIdValidationTests.test_samples_are_valid) ... ok
+test_valid_format_and_boundaries (__main__.InvoiceIdValidationTests.test_valid_format_and_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.008s
+
+OK
+```
+
+すべてのDoD条件は完了です。証拠不足の項目、または人間の追加確認が必要な項目はありません。

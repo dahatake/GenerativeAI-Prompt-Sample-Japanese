@@ -1,0 +1,93 @@
+# 実行レポート: `validate_invoice_id`
+
+- 契約: `contract.md`（確定・承認済み。推奨既定案 Q1=(b) / Q2=(a) / Q3=(a) を採用）
+- 成果物: `solution.py`（実装）、`test_solution.py`（DoD 検証テスト）
+- 実行環境: Python 3.12.10（Windows）。標準ライブラリのみ使用。
+
+## 判定規則（実装内容）
+次の条件をすべて満たすときだけ `True` を返す。
+
+- `value` が `str` である。
+- `INV-([0-9]{4})([0-9]{2})-([0-9]{4})` に `re.fullmatch` で完全一致する。
+- 月が 01〜12 で、連番が 0001 以上である。
+
+それ以外は `False` を返す。例外は出さない。
+
+## 証拠
+
+### コマンド 1: DoD テストの実行
+```
+> python -m unittest -v test_solution
+test_import (test_solution.TestDoD1Import.test_import) ... ok
+test_samples_are_valid (test_solution.TestDoD2Samples.test_samples_are_valid) ... ok
+test_invalid_inputs_return_false (test_solution.TestDoD3Invalid.test_invalid_inputs_return_false) ... ok
+test_boundary_valid (test_solution.TestDoD4Boundary.test_boundary_valid) ... ok
+test_return_type_is_bool (test_solution.TestDoD5ReturnType.test_return_type_is_bool) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.010s
+
+OK
+```
+
+### コマンド 2: 入力ごとの判定結果（DoD 2〜4 の一覧）
+```
+> python -c "from test_solution import *; [print(ascii(v), '->', validate_invoice_id(v)) for v in load_samples()+VALID_BOUNDARY+INVALID_INPUTS]"
+'INV-202601-0001' -> True
+'INV-202601-0002' -> True
+'INV-202512-0347' -> True
+'INV-202603-1200' -> True
+'INV-202612-9999' -> True
+'INV-202501-0001' -> True
+'' -> False
+'INV-202601-001' -> False
+'INV-202601-00001' -> False
+'INV202601-0001' -> False
+'INV-20261-0001' -> False
+'inv-202601-0001' -> False
+'ABC-202601-0001' -> False
+'INV-2026-01-0001' -> False
+' INV-202601-0001' -> False
+'INV-202601-0001 ' -> False
+'INV-202601-0001\n' -> False
+'INV-\uff12\uff10\uff12\uff16\uff10\uff11-0001' -> False
+'INV-202601-\u0660\u0660\u0660\u0661' -> False
+'INV-202600-0001' -> False
+'INV-202613-0001' -> False
+'INV-202601-0000' -> False
+None -> False
+202601 -> False
+b'INV-202601-0001' -> False
+['INV-202601-0001'] -> False
+```
+
+最初は `print(repr(v))` で実行したところ、コンソールの文字コード（cp932）がアラビア・インド数字 `\u0660` を表示できず、`UnicodeEncodeError` で表示が止まりました。これは表示の問題で、判定とは関係ありません。上の出力は `ascii()` で再実行したものです。
+
+## DoD ごとの状態
+
+| # | DoD 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import validate_invoice_id` が成功する | **完了** | コマンド 1 `test_import` ok |
+| 2 | `samples.txt` の 4 件がすべて `True` | **完了** | コマンド 1 `test_samples_are_valid` ok（件数 4 も確認）。コマンド 2 の先頭 4 行 |
+| 3 | 無効な入力（形式違反、空白・改行、全角・非 ASCII 数字、意味の違反、`str` 以外の計 20 件）がすべて `False` で、例外も出ない | **完了** | コマンド 1 `test_invalid_inputs_return_false` ok。コマンド 2 の 7 行目以降 |
+| 4 | 境界値 `INV-202612-9999` と `INV-202501-0001` が `True` | **完了** | コマンド 1 `test_boundary_valid` ok。コマンド 2 の 5〜6 行目 |
+| 5 | どの入力でも戻り値の型が `bool` | **完了**（テストした入力の範囲で） | コマンド 1 `test_return_type_is_bool` ok（上記の全入力に `object()`、`1.5`、`dict` を加えて確認） |
+| — | 判定規則そのものが業務仕様に合っているか | **人間の確認が必要** | 質問への回答がなく、既定案で仮決めした。根拠は有効例 4 件だけで、無効例は 1 件もない |
+
+DoD 1〜5 は、いずれも契約で定めた条件として検証済みです。ただし、この契約そのものが仮定（既定案）の上に成り立っています。
+
+## 採用した仮定
+
+1. A1: 形式は `INV-YYYYMM-NNNN`。接頭辞は `INV` 固定（大文字）、区切りは半角ハイフン。
+2. A2: 6 桁部分は年月（YYYYMM）を表す。
+3. A3 / Q3=(a): 連番は 4 桁固定でゼロ埋めする。5 桁以上（`10000` 以降）は `False`。
+4. A4: チェックディジットはない。
+5. A5: Python 3 の標準ライブラリのみを使う。
+6. A6: `samples.txt` の 4 件はすべて有効な番号である。
+7. Q1=(b): 中身のチェックは「月が 01〜12」「連番が 0001 以上」の 2 つだけ。年の範囲（4 桁なら何でも可）と未来の年月はチェックしない。現在日時は参照しない。
+8. Q2=(a): 判定は厳密に行う。`str` 以外は例外を出さず `False`。前後の空白、小文字、全角や非 ASCII の数字、末尾の改行もすべて `False`。正規化はしない。
+9. `str` のサブクラスは `str` として扱う（`isinstance` で判定）。
+
+## 人間に確認してほしい点
+- 上の仮定 3、7、8（連番の上限、年の範囲と未来の年月、表記ゆれの扱い）が業務仕様と合っているか。
+- 無効と判定すべき実例があれば、ほしい（`test_solution.py` の `INVALID_INPUTS` に追加する）。

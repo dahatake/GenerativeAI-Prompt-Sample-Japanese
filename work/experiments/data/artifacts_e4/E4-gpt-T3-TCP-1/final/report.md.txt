@@ -1,0 +1,36 @@
+# 請求書番号バリデーター 検証報告
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+|---|---|---|
+| 1. インポートと戻り値の型 | 完了 | テストモジュールの `from solution import validate_invoice_id` が成功。全入力で `assertIs` により戻り値が `True` または `False` そのものであることを検証。 |
+| 2. 実例4件と不正入力 | 完了 | `test_accepts_all_four_sample_ids`、`test_rejects_malformed_ids`、`test_rejects_non_strings_without_coercion` が合格。 |
+| 3. 接頭辞、空白、年月、連番の境界 | 完了 | `test_prefix_is_case_sensitive_and_whitespace_is_not_trimmed`、`test_year_and_month_boundaries`、`test_serial_number_boundaries` が合格。 |
+
+## 採用した仮定と決定事項
+
+- `answers.md` の指定どおり、接頭辞は大文字 `INV-` 固定。前後の空白や改行の除去、大小文字や全角文字の変換はしない。
+- 数字と区切りは ASCII の `0`〜`9` と `-` に限定する。年 `2020`〜`2099`、月 `01`〜`12`、4桁の連番 `0001`〜`9999` はいずれも両端を含む。
+- `str` とそのサブクラスを文字列として扱う。それ以外は文字列化せず、例外も出さずに `False` を返す。
+- 年月は現在日付と比較しない。番号の実在性・一意性は検証しない。
+
+## 検証コマンドと出力
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_accepts_all_four_sample_ids (test_solution.TestInvoiceId.test_accepts_all_four_sample_ids) ... ok
+test_prefix_is_case_sensitive_and_whitespace_is_not_trimmed (test_solution.TestInvoiceId.test_prefix_is_case_sensitive_and_whitespace_is_not_trimmed) ... ok
+test_rejects_malformed_ids (test_solution.TestInvoiceId.test_rejects_malformed_ids) ... ok
+test_rejects_non_strings_without_coercion (test_solution.TestInvoiceId.test_rejects_non_strings_without_coercion) ... ok
+test_serial_number_boundaries (test_solution.TestInvoiceId.test_serial_number_boundaries) ... ok
+test_year_and_month_boundaries (test_solution.TestInvoiceId.test_year_and_month_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK
+```

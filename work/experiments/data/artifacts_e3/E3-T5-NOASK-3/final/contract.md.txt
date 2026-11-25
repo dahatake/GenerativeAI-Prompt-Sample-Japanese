@@ -1,0 +1,151 @@
+# Task Contract 案: `reorder_plan(inventory_path, shipments_path, today)`
+
+状態: **確定・承認済み（Execution Mode）** — 2026-11-25。質問への回答は得られなかったため、Q1〜Q3 はすべて**推奨既定案 (a)** で確定（依頼者指示による）。
+
+---
+
+## 1. 調査結果
+
+作業ディレクトリ内のファイル: `inventory.csv`, `shipments.csv`, `timing.txt`（既存コード・テスト・仕様書は無し）
+
+### 1.1 確認できた事実
+
+**inventory.csv**（UTF-8、4行、ヘッダー: `sku,name,stock,on_order,lead_time_days,safety_stock,lot,discontinued`）
+
+| sku | name | stock | on_order | lead_time_days | safety_stock | lot | discontinued |
+|---|---|---|---|---|---|---|---|
+| A100 | ボルトM6 | 40 | 0 | 7 | 20 | 50 | false |
+| A200 | ナットM6 | 15 | 30 | 5 | 10 | 20 | false |
+| B300 | ワッシャー | 5 | 0 | 10 | 5 | 100 | **true** |
+| C400 | ブラケット | 12 | 0 | 14 | 6 | 10 | false |
+
+- `name` に日本語あり → UTF-8 で読む必要がある。
+- `discontinued` は文字列 `true` / `false`。
+- 数値列はすべて整数。
+
+**shipments.csv**（ヘッダー: `date,sku,qty`、70行、日付は `YYYY-MM-DD`）
+
+- 期間: 2026-10-01 〜 2026-11-09（最終出荷日 11-09）。
+- A100: 毎日 3 個（10-01〜11-09、40日連続）。
+- A200: 隔日 2 個（10-01, 03, 05, …, 11-08）→ 平均 1 個/日。
+- C400: 10-01〜10-10 の毎日 5 個、**10-11 以降は出荷ゼロ**（需要が途絶）。
+- B300: 出荷履歴なし（かつ廃番）。
+- 出荷ゼロの日は行が存在しない（＝ゼロ日を分母に含めるかで平均が変わる）。
+- 1日・1SKU で複数行のケースは現データには無い。
+
+**依頼文から確定している事項**
+
+- 関数名・シグネチャ: `reorder_plan(inventory_path, shipments_path, today)`、ファイルは `solution.py`。
+- 戻り値: `[{"sku": str, "qty": int}, ...]`（dict のリスト）。
+
+### 1.2 仮定（回答が無ければこの前提で進める）
+
+- A1. 計算式の骨格は一般的な発注点方式: `発注点 = 日平均出荷 × lead_time_days + safety_stock`、`在庫ポジション = stock + on_order`。
+- A2. 発注数は `lot` の倍数に切り上げる（`lot` = 発注単位）。
+- A3. `discontinued=true` の品目は発注対象外。
+- A4. `today` は `datetime.date` / `datetime.datetime` / `"YYYY-MM-DD"` 文字列のいずれも受け付ける。
+- A5. 出荷履歴に存在し inventory に無い SKU は無視。inventory にあり出荷が無い SKU は需要 0 として扱う。
+- A6. 戻り値は `qty > 0` の品目のみ、`sku` 昇順。
+- A7. 標準ライブラリのみ使用（pandas 等は使わない）。
+
+### 1.3 不足情報
+
+- N1. 日平均出荷（需要）の算出期間と分母（直近 N 日か全期間か、ゼロ出荷日を含むか、`today` 当日を含むか）。
+- N2. 発注トリガーの境界（`<` か `<=`）と発注数の定義（不足分を lot 切上げか、目標在庫まで補充か）。
+- N3. 端数処理（日平均が小数のときの発注点の扱い）、`today` 以降の日付の出荷行の扱い。
+
+---
+
+## 2. 質問（最大3問・手戻りが大きいもののみ）
+
+### Q1. 日平均出荷（需要）の算出方法は？
+C400 は 10-11 以降出荷ゼロのため、この選択で C400 の発注有無が変わります（today=2026-11-10 の例）。
+
+| 選択肢 | 内容 | C400 の結果例 |
+|---|---|---|
+| **(a) 推奨** | `today` の前日までの**直近30暦日**の出荷合計 ÷ 30（出荷ゼロ日も分母に含む、`today` 当日以降は除外） | 日平均 0 → 発注なし |
+| (b) | 出荷履歴の**全期間**（最初の出荷日〜today前日）の合計 ÷ 暦日数 | 日平均 1.25 → 発注 20 |
+| (c) | 直近 N 日（N を指定: 7 / 14 / 28 など）、他は (a) と同じ | N による |
+
+### Q2. 発注トリガーと発注数の式は？
+
+| 選択肢 | 内容 |
+|---|---|
+| **(a) 推奨** | `発注点 ROP = 日平均 × lead_time_days + safety_stock`。`stock + on_order < ROP` のとき発注。`qty = ceil((ROP − (stock + on_order)) / lot) × lot` |
+| (b) | (a) と同じだがトリガーを `<=`（在庫ポジション＝発注点でも発注。この場合不足0のため最低 1 lot 発注） |
+| (c) | 目標在庫補充型: トリガーは (a) と同じ、`qty = ceil((ROP + 日平均 × lead_time_days − ポジション) / lot) × lot` など別の目標水準（目標水準を指定してください） |
+
+### Q3. 例外・境界の扱い（まとめて確認）
+
+| 項目 | **推奨既定** | 代替 |
+|---|---|---|
+| 廃番 (`discontinued=true`) | 常に除外 | 在庫が安全在庫を割ったら発注 |
+| 日平均の端数 | 小数のまま計算し、最後に lot 切上げ | 日平均を先に切上げ整数化 |
+| `today` 当日以降の出荷行 | 需要計算から除外 | 含める |
+| 出力 | `qty > 0` のみ、`sku` 昇順 | inventory の行順 / qty 0 も含める |
+
+---
+
+## 3. 推奨既定案での期待結果（today = 2026-11-10）
+
+| sku | 日平均(直近30日) | ROP | ポジション | 判定 | qty |
+|---|---|---|---|---|---|
+| A100 | 3.0 | 3×7+20 = 41 | 40 | 40 < 41 → 不足1 | **50**（lot 50 切上げ） |
+| A200 | 1.0 | 1×5+10 = 15 | 15+30 = 45 | 発注不要 | – |
+| B300 | 0 | – | – | 廃番で除外 | – |
+| C400 | 0.0 | 0×14+6 = 6 | 12 | 発注不要 | – |
+
+→ 戻り値: `[{"sku": "A100", "qty": 50}]`
+
+---
+
+## 4. Task Contract 案
+
+### Outcome
+`solution.py` に `reorder_plan(inventory_path, shipments_path, today)` を実装し、発注が必要な品目と発注数を `[{"sku": str, "qty": int}, ...]` で返す。
+
+### Scope
+- `inventory.csv` / `shipments.csv` の読込（UTF-8、ヘッダー付き CSV）。
+- 日平均出荷の算出（Q1 の方式）、発注点・発注数の計算（Q2 の方式）、例外処理（Q3 の方式）。
+- `today` の型（`date` / `datetime` / `"YYYY-MM-DD"`）の正規化。
+
+### Out of scope
+- 発注の実行・ファイル出力・DB 更新、CLI/UI。
+- 需要予測モデル（季節性・トレンド・移動平均以外の手法）。
+- 価格・仕入先・MOQ（lot 以外）・予算制約。
+- （テストは依頼により `test_solution.py` として同梱する）
+
+### Data sources
+- `inventory.csv`: `sku, name, stock, on_order, lead_time_days, safety_stock, lot, discontinued`
+- `shipments.csv`: `date, sku, qty`
+- 引数 `today`
+
+### Constraints
+- Python 標準ライブラリのみ（`csv`, `datetime`, `math`）。
+- 入力ファイルを変更しない。副作用なし（純関数）。
+- 作業ディレクトリ外のファイルを読み書きしない。
+- `qty` は `int`、`lot` の正の倍数。
+
+### Definition of Done（検証可能な条件）
+1. `from solution import reorder_plan` が成功する。
+2. 同梱データ・`today=date(2026,11,10)` で、推奨既定案なら `[{"sku": "A100", "qty": 50}]` を返す（回答により期待値を更新）。
+3. `today` を `"2026-11-10"` 文字列で渡しても 2 と同じ結果。
+4. 返却される全要素について `qty > 0` かつ `qty % lot == 0`、`discontinued=true` の SKU を含まない。
+5. 発注後ポジション `stock + on_order + qty >= ROP` を満たす（不足が解消される）。
+6. 境界: ポジション == ROP の場合の挙動が Q2 の回答どおり（推奨 (a) では発注しない）。
+7. `today` 以降の日付の出荷行を追加しても結果が変わらない（Q3 推奨時）。
+8. 出荷履歴が無い SKU でもエラーにならない（需要 0 として扱う）。
+9. 結果は `sku` 昇順。
+
+### Evidence
+- DoD 1–9 を検証する `test_solution.py`（unittest）と、その実行コマンド・出力（`report.md` に記載）。テスト用の一時データは作業ディレクトリ内 `_test_fixtures/` に作り、テスト後に削除する。
+- 各 SKU の日平均・ROP・ポジション・qty の計算表（§3 形式）を `report.md` に記載。
+
+### 確定した決定（旧 Open questions）
+- Q1 → (a): `today` の前日までの直近30暦日（`today-30` 〜 `today-1`）の出荷合計 ÷ 30。出荷ゼロ日も分母に含む。
+- Q2 → (a): `ROP = 日平均 × lead_time_days + safety_stock`。`stock + on_order < ROP` で発注、`qty = ceil((ROP − ポジション) / lot) × lot`。
+- Q3 → 推奨既定: 廃番は除外／日平均は小数のまま（厳密な有理数で計算）し最後に lot 切上げ／`today` 当日以降の出荷は除外／`qty > 0` のみ `sku` 昇順。
+- 補足: CSV の数値が空欄・不正値の場合は `ValueError` を送出（`int()` の標準挙動）。`lot <= 0` も `ValueError`。
+
+### Open questions
+- なし（残る確認事項は `report.md` の「人間の確認が必要」を参照）。

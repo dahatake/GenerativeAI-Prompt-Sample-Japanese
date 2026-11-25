@@ -1,0 +1,10 @@
+{HEADER}
+{TIMING}
+依頼: {SHORT}
+
+すぐに実装を始めないでください。まず私と Task Contract を作成します（Spec Mode）。
+1. 作業ディレクトリ内のファイルを調べ、依頼に関係する事実を整理してください。
+2. 「確認できた事実」「仮定」「不足情報」を分けてください。
+3. 回答によって実装が変わり、外れたときの手戻りが大きい点だけを、最大3問質問してください。各質問には選択肢と推奨の既定案を付けてください。
+4. 次の項目で Task Contract 案を作ってください: Outcome / Scope・Out of scope / Data sources / Constraints / Definition of Done（検証できる条件）/ Evidence / Open questions。
+5. 質問と契約案を contract.md に書いてください。この段階では contract.md と timing.txt 以外のファイルを作成・変更しないでください。終わったら終了してください。

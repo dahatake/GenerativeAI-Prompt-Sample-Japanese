@@ -1,0 +1,58 @@
+# 実行結果レポート
+
+## サマリー
+実装と自己検証を完了しました。Task Contractの推奨既定案を承認済み仕様として採用しています。
+
+## DoD条件の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `monthly_work_hours('shifts.csv')` がE001/E002/E003の期待合計を返す | 完了 | 全サンプル合計を検証するテストがOK。E001=14.833333333333332、E002=14.0、E003=9.25。 |
+| 日またぎ勤務を処理し、分を小数時間へ変換する | 完了 | E002の22:00-06:00を8時間、かつ整数・分を含む合計を検証。 |
+| 有給休暇行を労働時間へ加算しない | 完了 | `paid_leave`行を含むshifts.csvでE001は通常2勤務分の14.833333333333332時間となり休暇分は加算されないことを検証。 |
+| 戻り値の全valueがfloat型 | 完了 | unittestで全値の`float`型を検証。 |
+| 関数がインポート可能で指定パスから実行できる | 完了 | import、指定絶対/相対パスの実行、dict型・従業員キーを検証。 |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python test_monthly_work_hours.py
+```
+
+出力:
+
+```text
+test_all_values_are_float (__main__.MonthlyWorkHoursTests.test_all_values_are_float) ... ok
+test_function_import_and_csv_path (__main__.MonthlyWorkHoursTests.test_function_import_and_csv_path) ... ok
+test_overnight_and_minute_conversion (__main__.MonthlyWorkHoursTests.test_overnight_and_minute_conversion) ... ok
+test_paid_leave_is_not_present_as_extra_work (__main__.MonthlyWorkHoursTests.test_paid_leave_is_not_present_as_extra_work) ... ok
+test_sample_totals_and_paid_leave_exclusion (__main__.MonthlyWorkHoursTests.test_sample_totals_and_paid_leave_exclusion) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+```
+
+追加の直接実行コマンド:
+
+```powershell
+python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+出力:
+
+```text
+{'E001': 14.833333333333332, 'E002': 14.0, 'E003': 9.25}
+```
+
+## 採用した仮定
+- 複数月が混在する場合、年月で分割せず従業員ごとに全勤務行を合計する。
+- 終了時刻が開始時刻以下なら、翌日の時刻として日またぎ勤務を計算する。
+- 不正時刻・欠損行は無視し、正常な勤務行の集計を継続する。
+- `employee`を従業員ID、`type=work`だけを勤務対象とする。
+- 有給休暇行や休憩情報は労働時間へ加算・控除しない。
+- 時刻形式は`HH:MM`、CSVはカンマ区切り・UTF-8互換とする。
+- 出力は従業員IDから合計労働時間（float）へのdictとする。

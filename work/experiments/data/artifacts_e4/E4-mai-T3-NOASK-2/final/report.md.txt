@@ -1,0 +1,50 @@
+# 実装・検証レポート
+
+## 総評
+Execution Modeで実装および自己テストを完了。Task Contractは推奨既定案で確定済み。
+
+## DoD条件の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `solution.py` に `validate_invoice_id(value)` を定義 | 完了 | 作業ディレクトリ内の `solution.py` に関数を定義。`test_solution.py` が正常に import。 |
+| `samples.txt` の4件がすべて `True` | 完了 | `test_samples_are_valid` が OK。 |
+| 不正な桁数・区切り・空値・型・空白・大小文字・全角文字が `False` | 完了 | `test_invalid_shapes_and_types` が OK。形状、型、厳密な文字表現を検証。 |
+| 月 `00`/`13`、末尾区切り、末尾桁の不正が `False` | 完了 | `test_month_boundary_and_tail` が OK。月境界と末尾形式を検証。 |
+| 戻り値がすべて実値の `bool` 型 | 完了 | `test_all_results_are_exact_bool` が OK。`type(...) is bool` 相当で検証。 |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```text
+python -m unittest -v test_solution.py
+```
+
+出力:
+
+```text
+test_all_results_are_exact_bool (test_solution.ValidateInvoiceIdTests.test_all_results_are_exact_bool) ... ok
+test_invalid_shapes_and_types (test_solution.ValidateInvoiceIdTests.test_invalid_shapes_and_types) ... ok
+test_month_boundary_and_tail (test_solution.ValidateInvoiceIdTests.test_month_boundary_and_tail) ... ok
+test_month_year_and_serial_edges (test_solution.ValidateInvoiceIdTests.test_month_year_and_serial_edges) ... ok
+test_samples_are_valid (test_solution.ValidateInvoiceIdTests.test_samples_are_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+```
+
+## 採用した仮定一覧
+- 請求書番号の形式は `INV-YYYYMM-NNNN`。
+- 月は `01`～`12`。
+- 年はASCII数字4桁で、範囲は `0000`～`9999`。
+- 連番はASCII数字4桁で、範囲は `0000`～`9999`。
+- プレフィックスは大文字の `INV` のみ。
+- 区切りは通常のASCIIハイフンのみ。
+- 全角文字・小文字・前後空白・改行は許容しない。
+- `str`以外は例外を出さず `False`。
+
+## 人間の確認事項
+- 採用仕様について追加の確認が必要な項目はありません。推奨既定案を承認済み仕様として採用しています。

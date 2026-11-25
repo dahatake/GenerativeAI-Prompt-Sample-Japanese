@@ -1,0 +1,31 @@
+# Report
+
+## 実行した検証
+```
+python -m unittest -v test_solution
+  Ran 7 tests ... OK
+python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+  {'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | sales.csv の期待値と一致 | 完了 | test_sample_file、上記出力 |
+| 2 | キー昇順・値は int | 完了 | test_keys_ascending_and_int_values |
+| 3 | JST で月判定 | 完了 | test_jst_month_boundary（UTC 14:59:59 / 15:00:00 の境界） |
+| 4 | cancelled 除外・負の金額は差し引く | 完了 | test_cancelled_excluded、test_negative_subtracts |
+| 5 | 欠損月を 0 で補完（年またぎ含む） | 完了 | test_zero_fill_across_year、3 月が 0 |
+| 6 | 空・ヘッダのみは {} | 完了 | test_empty_and_header_only |
+| - | 丸め方（行ごとの切り捨て） | 人間の確認が必要 | 回答で未指定。sales.csv は全行が 1100 の倍数で結果に影響しないため、テストでは区別できない |
+
+## 採用した仮定
+- 丸め: 税抜を行ごとに `amount*10//11` で切り捨て（負数は負の無限大方向）。回答で未指定のため推奨既定案を採用。
+- 補完範囲: completed 行がある最初〜最後の月。cancelled のみの月は範囲の端を決めない。
+- 税率は 10% 固定。標準ライブラリのみ。UTF-8。
+- 不正行は例外を送出。重複排除なし。status は完全一致 `completed`。
+- 空ファイル・ヘッダのみは `{}`。
+- キーは `YYYY-MM`、月昇順。
+
+## 成果物
+`solution.py`, `test_solution.py`, `contract.md`, `report.md`, `timing.txt`

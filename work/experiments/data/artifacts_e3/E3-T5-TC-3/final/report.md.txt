@@ -1,0 +1,89 @@
+# 実行レポート: `reorder_plan`
+
+- 契約: `contract.md`（承認済み。answers.md の回答を反映）
+- 実装: `solution.py`
+- テスト: `test_solution.py`（標準ライブラリの unittest。一時 CSV は作業ディレクトリの下に作り、テスト後に自動で削除）
+
+## 1. 検証コマンドと出力
+
+コマンド:
+```
+python -m unittest -v test_solution
+```
+
+出力:
+```
+test_dod1_today_2026_11_10 (test_solution.RealDataTests.test_dod1_today_2026_11_10) ... ok
+test_dod2_today_types (test_solution.RealDataTests.test_dod2_today_types) ... ok
+test_dod3_today_2026_11_25_no_orders (test_solution.RealDataTests.test_dod3_today_2026_11_25_no_orders) ... ok
+test_dod4_rows_on_or_after_today_ignored (test_solution.RealDataTests.test_dod4_rows_on_or_after_today_ignored) ... ok
+test_dod6_qty_positive_int_multiple_of_lot (test_solution.RealDataTests.test_dod6_qty_positive_int_multiple_of_lot) ... ok
+test_dod5_window_boundaries (test_solution.SyntheticTests.test_dod5_window_boundaries) ... ok
+test_dod7_discontinued_excluded (test_solution.SyntheticTests.test_dod7_discontinued_excluded) ... ok
+test_dod8_equal_to_rop_orders_one_lot (test_solution.SyntheticTests.test_dod8_equal_to_rop_orders_one_lot) ... ok
+test_dod8_fractional_rop_exact (test_solution.SyntheticTests.test_dod8_fractional_rop_exact) ... ok
+test_dod8_no_shipments_uses_safety_stock (test_solution.SyntheticTests.test_dod8_no_shipments_uses_safety_stock) ... ok
+test_dod8_one_above_rop_no_order (test_solution.SyntheticTests.test_dod8_one_above_rop_no_order) ... ok
+test_dod8_shortfall_rounds_up_to_lot (test_solution.SyntheticTests.test_dod8_shortfall_rounds_up_to_lot) ... ok
+test_dod8_unknown_sku_shipments_ignored (test_solution.SyntheticTests.test_dod8_unknown_sku_shipments_ignored) ... ok
+test_sorted_by_sku (test_solution.SyntheticTests.test_sorted_by_sku) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.308s
+
+OK
+```
+
+## 2. 実データでの計算過程
+
+today=2026-11-10（集計期間 2026-10-13〜2026-11-09）の結果は `[{'sku': 'A100', 'qty': 50}]` です。
+
+| SKU | 28日間の出荷合計 | 日次需要 | ROP | 有効在庫 | 判定 |
+|---|---|---|---|---|---|
+| A100 | 84 | 3.0 | 41.0 | 40 | 40 ≤ 41 → 不足 1 → **50**（lot 50） |
+| A200 | 28 | 1.0 | 15.0 | 45 | 発注なし |
+| B300 | 0 | 0.0 | 5.0 | 5 | 5 ≤ 5 だが廃番のため除外 |
+| C400 | 0 | 0.0 | 6.0 | 12 | 発注なし |
+
+today=2026-11-25（集計期間 2026-10-28〜2026-11-24）の結果は `[]` です。
+
+| SKU | 合計 | 日次需要 | ROP | 有効在庫 | 判定 |
+|---|---|---|---|---|---|
+| A100 | 39 | 1.3929 | 29.75 | 40 | 発注なし |
+| A200 | 12 | 0.4286 | 12.1429 | 45 | 発注なし |
+| B300 | 0 | 0.0 | 5.0 | 5 | 廃番のため除外 |
+| C400 | 0 | 0.0 | 6.0 | 12 | 発注なし |
+
+（この表は、上の検証と同じ手順で `python -` に計算スクリプトを渡して出力した結果です。）
+
+## 3. Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | today=2026-11-10 → `[{"sku":"A100","qty":50}]` | **完了** | `test_dod1_today_2026_11_10`、§2 の表 |
+| 2 | `date` / `datetime` で渡しても同じ結果 | **完了** | `test_dod2_today_types` |
+| 3 | today=2026-11-25 → `[]` | **完了** | `test_dod3_today_2026_11_25_no_orders`、§2 の表 |
+| 4 | today 当日以降の行は結果に影響しない | **完了** | `test_dod4_rows_on_or_after_today_ignored`（today=2026-11-05、該当行を除いたデータと比較） |
+| 5 | 28日間の境界（today-28 を含め、today-29 と today は含めない） | **完了** | `test_dod5_window_boundaries` |
+| 6 | qty が正の整数で、lot の倍数 | **完了** | `test_dod6_qty_positive_int_multiple_of_lot`（実データで today を 2026-10-01 から60日分ずらして確認）。補足: 実データで発注が出るのは A100 だけのため、複数 lot への切り上げは `test_dod8_shortfall_rounds_up_to_lot` で確認 |
+| 7 | 廃番品の除外（`TRUE` などの表記も含む） | **完了** | `test_dod7_discontinued_excluded`。実データの B300（5 ≤ ROP 5）も除外されている（§2） |
+| 8 | 境界ケース（= ROP で 1 lot、ROP+1 は発注なし、出荷なし、inventory にない SKU、小数の ROP） | **完了（テストは合格）／ = ROP の仕様は人間の確認が必要** | `test_dod8_*` の 7 件。= ROP のとき 1 lot にする挙動は、仮定 A10 に基づいている |
+
+## 4. 採用した仮定の一覧
+
+| ID | 内容 | 根拠 |
+|---|---|---|
+| A1 | Python 3 の標準ライブラリだけを使う | answers.md で「指定なし」→ 推奨既定案 |
+| A2 | `today` は `date`、`datetime`、`"YYYY-MM-DD"` 文字列のどれでも受け付ける | 同上 |
+| A3 | 有効在庫は `stock + on_order` | Q2 の回答で確定 |
+| A4 | ROP は丸めずに `Fraction` で正確に比較する（float では 60.999… のような誤差で判定が変わる場合があるため） | 推奨既定案。`test_dod8_fractional_rop_exact` で確認 |
+| A5 | 発注数は `ceil(不足量 / lot) × lot` | Q2 の回答で確定 |
+| A6 | 戻り値は qty > 0 の品目だけで、sku の昇順。qty は int | 推奨既定案 |
+| A7 | today 当日と、それより後の出荷は使わない | Q1 の回答で確定 |
+| A8 | inventory にない SKU の出荷行は無視する | 推奨既定案 |
+| A9 | CSV は UTF-8 で読む（BOM 付きでも可）。`discontinued` は前後の空白を除き、大文字・小文字を区別せずに `"true"` かどうかで判定する | 推奨既定案 |
+| A10 | `有効在庫 == ROP`（不足 0）のときは **1 lot** を発注する | 回答「発注点以下なら発注対象」と「不足量の切り上げ」を同時に満たすための解釈。**人間の確認が必要** |
+| — | 記録のない日は出荷0として数え、集計期間は today の前日で終える | answers.md の補足で確定 |
+
+## 5. 人間に確認してほしい点
+- **A10**: 有効在庫がちょうど発注点に等しいときの発注数。現在は 1 lot を発注します。「発注しない」や「qty=0 で返す」に変える場合は、`solution.py` の `max(1, ...)` と、それに対応するテストを修正します。なお、実データの非廃番品は 2026-11-10 と 2026-11-25 ではこのケースに当たらないため、この2日の結果は A10 の解釈に左右されません。

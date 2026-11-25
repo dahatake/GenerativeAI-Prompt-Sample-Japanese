@@ -1,0 +1,77 @@
+# 実行レポート: `monthly_work_hours(path)`
+
+## 成果物
+
+- `solution.py`: `monthly_work_hours(path)` を実装しました（標準ライブラリのみ使用）。
+- `test_solution.py`: DoD を検証する unittest です（8 テスト）。テスト用の一時 CSV は作業ディレクトリ内に作り、テスト後に削除します。
+- `contract.md`: answers.md の回答を反映し、承認済みとして更新しました。
+
+## 証拠（実行したコマンドと出力）
+
+### unittest
+
+```
+> python -B -m unittest -v test_solution
+test_break_boundary ... ok
+test_column_order_and_bom ... ok
+test_errors ... ok
+test_floor_per_shift ... ok
+test_header_only ... ok
+test_overnight_across_month_end ... ok
+test_paid_leave_only ... ok
+test_sample_file ... ok
+----------------------------------------------------------------------
+Ran 8 tests in 0.147s
+
+OK
+```
+
+### `shifts.csv` に対する実際の戻り値
+
+```
+> python -B -c "from solution import monthly_work_hours as m; r=m('shifts.csv'); print(r); print({k: type(v).__name__ for k,v in r.items()})"
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+{'E001': 'float', 'E002': 'float', 'E003': 'float'}
+```
+
+## DoD ごとの状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `solution` から import できる | 完了 | テストモジュールの import が成功し、全テストが実行された |
+| 2 | shifts.csv → E001=21.25、E002=13.0、E003=8.25 | 完了（期待値の前提 H1 は「人間の確認が必要」を参照） | `test_sample_file`、実際の戻り値の出力 |
+| 3 | 値がすべて `float` 型 | 完了 | `test_sample_file`、型の出力 |
+| 4 | 休憩控除の境界（6h00m→6.0、6h01m→5.0、6h10m→5.0） | 完了（判定基準は H1 の仮定に基づく） | `test_break_boundary` |
+| 5 | シフト単位の 15 分切り捨て | 完了 | `test_floor_per_shift` |
+| 6 | paid_leave だけの従業員 → 7.5 | 完了 | `test_paid_leave_only` |
+| 7 | 月をまたぐ夜勤は開始日の月に計上し、エラーにしない | 完了 | `test_overnight_across_month_end` |
+| 8 | 不正な入力 5 種類で `ValueError` | 完了 | `test_errors`（5 つの subTest） |
+| 9 | 列の順序入れ替え・BOM 付きでも同じ結果 | 完了 | `test_column_order_and_bom` |
+| 10 | ヘッダーのみ → `{}` | 完了 | `test_header_only` |
+
+### 人間の確認が必要な点
+
+- **H1（DoD 2、4 に影響）**: 休憩控除の判定を、15 分切り捨て前の拘束時間で行っています。
+  - 切り捨て後の時間で判定する運用であれば、6h01m〜6h14m のシフトの結果が変わります（現状 5.0 → 6.0）。
+  - サンプルの `shifts.csv` にはこの範囲のシフトがないため、DoD 2 の値は変わりません。
+- 期待値（21.25 / 13.0 / 8.25）は、回答のルールから私が手計算した値です。給与・勤怠の担当者による照合はまだ行っていません。
+
+## 採用した仮定の一覧
+
+| ID | 内容 | 出典 |
+|---|---|---|
+| Q1 | 拘束時間が 6h を超えるシフトは 60 分控除。6h ちょうどは控除しない | answers.md |
+| Q2 | paid_leave は 7.5h として計上 | answers.md |
+| Q3 | 1 ファイル = 1 か月。月が混在していれば `ValueError` | 推奨既定案 |
+| A1 | `end < start` は翌日終了として扱い、開始日の月に計上する | answers.md と推奨既定案 |
+| A2 | `start == end` の work 行は 0h | 推奨既定案 |
+| A3 | シフトごとの実労働時間（休憩控除後）を 15 分単位で切り捨てる | answers.md |
+| A4 | 未知の type、work 行の時刻の欠損・不正、必須列の欠如は `ValueError`（スキップしない）。日付の不正と従業員 ID が空の行も `ValueError` | 推奨既定案（範囲を一部拡張） |
+| A5 | 標準ライブラリのみを使う | 推奨既定案 |
+| A6 | `utf-8-sig` で読み、列名ベースで処理する（列順に依存しない） | 推奨既定案 |
+| A7 | キーは `employee` の文字列そのまま（前後の空白は除去） | 推奨既定案 |
+| D1 | 同一従業員・同一日の複数行は単純に合計する | 推奨既定案 |
+| H1 | 休憩控除の判定は、15 分切り捨て前の拘束時間で行う | 回答の文言からの解釈 |
+| H2 | 処理順は「拘束時間 → 休憩控除 → 15 分切り捨て」 | 回答の文言からの解釈 |
+| H3 | paid_leave は時刻の有無・値に関係なく 7.5h 固定。休憩控除と切り捨ては適用しない | 解釈 |
+| H4 | ヘッダーだけの CSV は `{}` を返す | 解釈 |

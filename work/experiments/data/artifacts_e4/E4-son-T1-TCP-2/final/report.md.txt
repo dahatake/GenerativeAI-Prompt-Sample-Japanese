@@ -1,0 +1,41 @@
+# Report
+
+## 実行した検証コマンドと出力
+```
+> python -m unittest -v test_solution
+test_cancelled_excluded ... ok
+test_empty ... ok
+test_gap_months_zero_filled_across_year ... ok
+test_jst_boundaries ... ok
+test_negative_summed ... ok
+test_rounding_per_row_half_up ... ok
+test_sales_csv_exact ... ok
+test_types_and_keys_order ... ok
+Ran 8 tests in 0.108s
+OK
+
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## DoD の状態
+| DoD | 内容 | 状態 | 証拠 |
+|---|---|---|---|
+| DoD1 | sales.csv の結果が期待値と一致 | 完了 | `test_sales_csv_exact`、上記の出力 |
+| DoD2 | 値が int、キーが YYYY-MM、昇順 | 完了 | `test_types_and_keys_order` |
+| DoD3 | JST 月境界 | 完了 | `test_jst_boundaries`（15:00:00Z ちょうどと 14:59:59Z）、A-1004→2月、A-1010→5月 |
+| DoD4 | cancelled 除外 | 完了 | `test_cancelled_excluded`、sales.csv で A-1003, A-1007 を除外 |
+| DoD5 | 負の金額を合算 | 完了 | `test_negative_summed`、A-1006 が 2月に -1000 として反映 |
+| DoD6 | 注文のない月を 0 で含める | 完了 | 2026-03 が 0、年またぎは `test_gap_months_zero_filled_across_year` |
+| DoD7 | 各行で四捨五入して合算 | 完了 | `test_rounding_per_row_half_up`（合計後丸めと結果が異なる入力で確認） |
+
+「人間の確認が必要」な項目: 丸め方（各行・四捨五入）、および 0 埋め範囲の決め方（下記の仮定 2）は、依頼者が「推奨案で」としたもので、現在の sales.csv では結果に影響しません。他のデータで業務上の期待と合うかは確認してください。
+
+## 採用した仮定の一覧
+1. 丸め方は「各行を四捨五入（0.5 は +∞ 方向へ切り上げ）して整数化してから月ごとに合算」（Q2-追加で「推奨案」と回答）。整数演算 `(20*a+11)//22` で実装し、浮動小数点誤差を避けた。sales.csv の金額はすべて 1100 の倍数なので、どの方式でも結果は同じ。
+2. 0 埋めの範囲は、cancelled を除外した後の最初の月〜最後の月。completed が1件もなければ `{}`。
+3. 負の金額は返金としてそのまま換算・合算（-1100 → -1000）。
+4. `status` は前後の空白を除いたうえで `completed` と完全一致したものだけ集計し、それ以外（`cancelled` を含む）は除外。
+5. 不正行・欠損・BOM は特別扱いしない（例外のまま）。入力は UTF-8、ヘッダ行あり。
+6. `ordered_at` は末尾 Z（UTC）の ISO8601。
+7. 標準ライブラリのみ使用。

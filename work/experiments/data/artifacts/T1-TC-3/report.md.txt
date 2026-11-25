@@ -1,0 +1,62 @@
+# Report: monthly_sales(path)
+
+## 結果
+`monthly_sales("sales.csv")` の戻り値:
+```
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## 実行したコマンドと出力（作業ディレクトリで実行）
+```
+> python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+
+> python -B -m unittest -v test_solution
+test_dod2_sales_csv_exact ... ok
+test_dod3_types_and_key_format ... ok
+test_dod4_cancelled_excluded ... ok
+test_dod5_jst_month_boundary ... ok
+test_dod6_zero_fill_including_year_end ... ok
+test_dod7_rounding_to_nearest ... ok
+test_dod8_header_only_returns_empty ... ok
+test_dod8_invalid_rows_raise ... ok
+test_dod8_missing_column_raises ... ok
+Ran 9 tests in 0.202s
+OK  (exit=0)
+
+> (Get-FileHash sales.csv -Algorithm SHA256).Hash
+C6D43F26291C5523E093222EF4167EFC5F3E1CD037D5852E3DA0B4EDB9BD94EA   （実装前に記録した値と同じ）
+```
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `from solution import monthly_sales` が成功する | 完了 | `python -c` の実行と、test_solution のインポートが成功 |
+| 2 | sales.csv の結果が期待値と完全一致する（キーの順序も含む） | 完了 | `test_dod2_sales_csv_exact`、`python -c` の出力 |
+| 3 | 値はすべて int、キーはすべて `YYYY-MM` 形式 | 完了 | `test_dod3_types_and_key_format` |
+| 4 | cancelled を除外（合計 49000、cancelled だけの CSV ではすべて 0） | 完了 | `test_dod4_cancelled_excluded` |
+| 5 | JST の月境界（A-1004 は 2 月、A-1010 は 5 月、UTC 14:59:59 と 15:00:00 の境界） | 完了 | `test_dod5_jst_month_boundary` |
+| 6 | 0 件の月を 0 で埋める（2026-03、年をまたぐ場合も） | 完了（範囲の定義は**人間の確認が必要**） | `test_dod6_zero_fill_including_year_end`。0 で埋める範囲は仮定 A6 |
+| 7 | 税抜換算の端数は最も近い整数に丸める | 完了（端数処理の方針は**人間の確認が必要**） | `test_dod7_rounding_to_nearest`。sales.csv は全件が 11 の倍数なので、実データでは丸めが発生しない |
+| 8 | ヘッダーだけなら `{}`、読み取れない行・列不足は `ValueError` | 完了 | `test_dod8_*`（3 件） |
+| 9 | 最終的なファイル構成が想定どおりで、sales.csv は変更なし | 完了 | SHA256 が一致。ファイル一覧は sales.csv、contract.md、solution.py、test_solution.py、report.md。テストの一時ディレクトリは作業ディレクトリ内に作り削除済み。`-B` オプションで `__pycache__` は作られない |
+
+## 採用した仮定
+ユーザー回答で確定した点（D1〜D4）: JST で月を判定する／cancelled を除外する／税抜（÷1.1）で返す／0 件の月は 0 で埋める。
+
+指定がなかったために採用した仮定:
+- A1: 標準ライブラリ（`csv`、`datetime`）だけを使う。JST は固定オフセット UTC+9 で扱う。
+- A2: 集計対象は `status == "completed"` の行だけ。未知の status は集計しない（エラーにもしない）。
+- A3: 負の金額（返金と推定）は差し引いて純額にする。
+- A4: 読み取れない行（日時・金額が不正、タイムゾーン情報がない、列が足りない）は `ValueError`（行番号付き）を送出する。この検証は cancelled の行にも適用する。金額は整数表記だけを受け付ける（`1100.5` はエラー）。
+- A5: 税抜への換算は**月ごとの税込合計**に対して整数演算で `×10/11` を行い、最も近い整数に丸める（同点は発生しない）。行ごとの換算ではない。
+- A6: 0 で埋める範囲は、ファイル内の有効な全行（cancelled を含む）の最も古い月から最も新しい月まで。
+- A7: キーの昇順で返す。
+- A8: `utf-8-sig` で読み込む（BOM があっても扱える）。
+- A9: データ行がなければ `{}` を返す。
+
+## 人間の確認が必要な点
+1. 端数処理（A5）: 月計で四捨五入相当にするか、行ごとに処理するか、切り捨てにするか。今回のデータではどの方式でも結果は同じ。
+2. 0 で埋める範囲（A6）: データに含まれる月の範囲でよいか、会計期間などで固定するか。
+3. 未知の status（A2）: 集計しないままでよいか、エラーにすべきか。

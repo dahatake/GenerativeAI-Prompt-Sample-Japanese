@@ -1,0 +1,84 @@
+# 実行レポート: `reorder_plan`
+
+## 成果物
+- `solution.py`: `reorder_plan(inventory_path, shipments_path, today)` の実装（標準ライブラリのみ）
+- `test_solution.py`: DoD 1〜9 と仮定の検証テスト（unittest、11件）
+- `contract.md`: answers.md の回答を反映した承認済み Task Contract
+
+## 検証コマンドと出力（Python 3.12.10）
+
+```
+> python -m unittest -v test_solution
+test_h7_unknown_shipment_sku_ignored (test_solution.TestAssumptions.test_h7_unknown_shipment_sku_ignored) ... ok
+test_inputs_not_modified (test_solution.TestAssumptions.test_inputs_not_modified) ... ok
+test_dod1_today_2026_11_10 (test_solution.TestDoD.test_dod1_today_2026_11_10) ... ok
+test_dod2_today_2026_11_25 (test_solution.TestDoD.test_dod2_today_2026_11_25) ... ok
+test_dod3_date_object (test_solution.TestDoD.test_dod3_date_object) ... ok
+test_dod4_discontinued_excluded (test_solution.TestDoD.test_dod4_discontinued_excluded) ... ok
+test_dod5_on_order_counted (test_solution.TestDoD.test_dod5_on_order_counted) ... ok
+test_dod6_qty_positive_int_lot_multiple_sorted (test_solution.TestDoD.test_dod6_qty_positive_int_lot_multiple_sorted) ... ok
+test_dod7_window_bounds (test_solution.TestDoD.test_dod7_window_bounds) ... ok
+test_dod8_boundary (test_solution.TestDoD.test_dod8_boundary) ... ok
+test_dod9_invalid_data (test_solution.TestDoD.test_dod9_invalid_data) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.504s
+
+OK
+```
+
+同梱データの計算表（今回の出力。窓 = today-28日 ≤ date < today、ROP = d×LT + SS、IP = stock + on_order）:
+
+| today | sku | 窓内出荷 | d | ROP | IP | discontinued | 結果 |
+|---|---|---|---|---|---|---|---|
+| 2026-11-10 | A100 | 84 | 3.0000 | 41.0000 | 40 | false | 不足1 → **50** |
+| 2026-11-10 | A200 | 28 | 1.0000 | 15.0000 | 45 | false | 発注なし |
+| 2026-11-10 | B300 | 0 | 0.0000 | 5.0000 | 5 | true | 対象外 |
+| 2026-11-10 | C400 | 0 | 0.0000 | 6.0000 | 12 | false | 発注なし |
+| 2026-11-25 | A100 | 39 | 1.3929 | 29.7500 | 40 | false | 発注なし |
+| 2026-11-25 | A200 | 12 | 0.4286 | 12.1429 | 45 | false | 発注なし |
+| 2026-11-25 | B300 | 0 | 0.0000 | 5.0000 | 5 | true | 対象外 |
+| 2026-11-25 | C400 | 0 | 0.0000 | 6.0000 | 12 | false | 発注なし |
+
+```
+2026-11-10 [{'sku': 'A100', 'qty': 50}]
+2026-11-25 []
+```
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | today=2026-11-10 → `[{"sku":"A100","qty":50}]` | 完了 | test_dod1 ok、計算表 |
+| 2 | today=2026-11-25 → `[]` | 完了 | test_dod2 ok、計算表 |
+| 3 | `date`（と `datetime`）を渡しても 1 と同じ結果 | 完了 | test_dod3 ok |
+| 4 | B300（廃番）はどの today でも結果に含まれない | 完了 | test_dod4 ok（10/01〜12/09 の70日分を確認。discontinued=false に変えると B300 が 100 で出ることも確認し、除外の原因が廃番フラグであることを示した） |
+| 5 | A200 は on_order を含めるため発注なし | 完了 | test_dod5 ok（on_order=0 にすると 20 で発注されることも確認） |
+| 6 | qty は正の int で lot の倍数、sku 昇順 | 完了 | test_dod6 ok（70日分の today を確認） |
+| 7 | today 当日・以降・28日より前の出荷が影響しない | 完了 | test_dod7 ok（当日・翌日・today-29 に 999 個の行を足しても不変。today-28 の行は集計に含まれることも確認） |
+| 8 | IP = ROP で発注（1 lot）、IP = ROP+1 で発注なし | 完了（**仕様解釈は人間の確認が必要**） | test_dod8 ok。IP=ROP のとき 1 lot を出すのは推奨既定案の補足による（下の「確認が必要な点」1を参照） |
+| 9 | 不正データで `ValueError` | 完了 | test_dod9 ok（列の欠落・空欄・数値でない値・負数・lot=0・フラグ不正・sku 重複・日付形式不正・today の形式不正） |
+
+## 採用した仮定の一覧
+
+| ID | 内容 | 根拠 |
+|---|---|---|
+| Q1 | 日平均需要 = 直近28日（today-28 ≤ date < today）の合計 ÷ 28。出荷の無い日は 0 | answers.md |
+| Q2 | IP ≤ ROP で発注。qty = 不足分を lot の倍数に切り上げ | answers.md |
+| Q2 補足 | 不足が 0（IP = ROP）のときは 1 lot を発注する | 推奨既定案（Q2-A 原案の記述） |
+| Q3 | discontinued=true は対象外。出荷実績ゼロの品目は需要 0 として計算 | answers.md |
+| H1 | today は `date` / `datetime` / `"YYYY-MM-DD"` のどれでも受け付ける | 推奨既定案 |
+| H2 | IP = stock + on_order | answers.md |
+| H3 | ROP = d × lead_time_days + safety_stock（Fraction で正確に計算） | answers.md |
+| H4 | lot は発注単位（倍数）として扱う | answers.md |
+| H5 | qty > 0 の品目だけを sku 昇順で返し、qty は int | answers.md |
+| H6 | today 当日以降の出荷は集計に含めない | answers.md |
+| H7 | inventory に無い sku の出荷行は無視する | 推奨既定案 |
+| H8 | 標準ライブラリのみを使う | 推奨既定案 |
+| E1 | 不正データは `ValueError` を出す（行を飛ばさない） | 推奨既定案 |
+| E2 | 戻り値は sku と qty だけ（name や ROP は含めない） | 推奨既定案 |
+| E3 | CSV は UTF-8 として読む（BOM 付きも可） | 推奨既定案 |
+
+## 人間の確認が必要な点
+1. **IP = ROP のときの発注数**: answers.md の「発注数 = (ROP − IP) を lot の倍数に切り上げ」を文字どおりに読むと 0 になり、「≤ なら発注」と矛盾します。今回は Q2-A 原案のとおり 1 lot を発注する実装にしました。同梱データではこのケースは起きません（起きうるのは B300 だけで、廃番として除外されるため）。
+2. **受け入れ時の today**: 出荷データは 2026-11-09 で終わっています。today=2026-11-25（現在日）だと直近28日のうち15日分にデータが無く、0 として扱われます。そのため A100 の平均需要は 1.39/日と低く出て、発注なしになります（today=11-10 なら 50 個発注）。データの最新性を確認してください。

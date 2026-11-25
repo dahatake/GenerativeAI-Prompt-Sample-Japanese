@@ -1,0 +1,141 @@
+# Task Contract: 月次請求書生成 `make_invoices(data_dir, month)`
+
+状態: **承認済み（Execution Mode）**。answers.md の回答を反映しました。
+
+## 0. 回答の反映内容（answers.md）
+- Q1 → **(A) JST（UTC+9）**。`ordered_at` を JST に変換し、その日付で計上月と価格の適用日の両方を判定する。
+- Q2 → **(A) `completed` と `shipped` を請求する**。`returned` と `cancelled` は除外する。
+- Q3 → **(A) `gold` の顧客は、税率区分ごとの小計から 5% を税計算の前に値引きし、区分ごとに1円未満を切り捨てる**。`standard` の値引きは 0。
+- A2・A3・A4・A7 → 仮定どおりで確定。税額は「(区分小計 − 区分値引き) × 税率」を計算し、1円未満を切り捨てる。
+- A8 → **変更**: `invoice_id` は `INV-YYYYMM-NNNN`。その月の請求書に customer_id の昇順で 0001 から連番を振る（例: `INV-202610-0001`）。
+- A9 → 仮定どおりで確定。lines は ordered_at の昇順（同時刻なら order_id の昇順）。
+- A1・A10・A11 → 指定なし。推奨案で進める。
+
+---
+
+## 1. 確認できた事実（data/ を調べて分かったこと）
+
+| ファイル | 列 | 内容 |
+|---|---|---|
+| customers.csv | customer_id, name, tier | 5件（C001〜C005）。tier は `gold`（C001, C003）/ `standard`（C002, C004, C005）。並び順はバラバラ |
+| products.csv | sku, name, category | 4件。category は `general`（A100, A200）/ `food`（F100, F200） |
+| prices.csv | sku, effective_from, unit_price | 6行。日付から有効になる価格の履歴。改定は A100: 1200→**1300（2026-10-16〜）**、F100: 1580→**1680（2026-10-10〜）** |
+| orders.csv | order_id, customer_id, ordered_at, sku, qty, status | 24行（O1001〜O1024）。並び順はバラバラ。1注文が1明細 |
+
+- 文字コードは UTF-8（BOM なし）、ヘッダー行あり、区切りはカンマ。
+- `ordered_at` は **UTC（末尾が `Z`）** の ISO 8601 形式。
+- `status` は `completed` / `shipped` / `returned` / `cancelled` の4種類。
+- 注文の期間は 2026-09-28 〜 2026-11-03（UTC）。
+- **境界にかかる注文があり、タイムゾーンをどう扱うかで結果が変わる**:
+  - O1002 `2026-09-30T15:30Z` → JST では 10/01 00:30（9月か10月か）
+  - O1021 `2026-10-31T16:00Z` → JST では 11/01 01:00（10月か11月か）
+  - O1008 `2026-10-09T15:10Z` → JST では 10/10（F100 の価格が 1580 か 1680 か）
+  - O1012 `2026-10-15T15:20Z` → JST では 10/16（A100 の価格が 1200 か 1300 か）
+- C005 は 10月の注文が `returned` / `cancelled` だけ。
+- データには割引率・税率・請求書番号の形式・出力形式の定義がありません。
+- 作業ディレクトリには、ほかに仕様書・テスト・既存コードはありません（`data/` と `timing.txt` だけ）。
+
+## 2. 仮定（既定値で埋める点）
+
+- A1 `unit_price` は**税抜**価格。
+- A2 消費税率は category で決める: `general` = 10%、`food` = 8%（軽減税率）。
+- A3 税額は**請求書ごと・税率ごとに1回だけ端数処理し、切り捨て**て合計する（インボイス制度に合わせる）。行ごとには端数処理しない。
+- A4 値引きは**税抜金額に対して税計算の前**に適用する。値引きは税率グループごとに計算し、グループごとに切り捨てる。`discount` は各グループの値引きの合計。
+- A5 `amount = qty × unit_price`。`subtotal = Σ amount`。`total = subtotal − discount + tax`。
+- A6 適用する単価は、`effective_from ≤ 注文日` を満たす行のうち最新のもの（`effective_from` 当日から有効）。注文日は Q1 で決めるタイムゾーンで日付に変換する。
+- A7 請求書は顧客ごと・月ごとに1通。請求対象の明細がない顧客には請求書を作らない（金額0の請求書も作らない）。
+- A8 （回答により変更）`invoice_id` = `INV-{YYYYMM}-{NNNN}`。その月の請求書に customer_id の昇順で 0001 から連番を振る（例: `INV-202610-0001`）。
+- A9 並び順: 請求書は customer_id の昇順。lines は注文日時の昇順、同時刻なら order_id の昇順。
+- A10 出力 CSV: UTF-8（BOM なし）、ヘッダー行 `invoice_id,customer_id,subtotal,discount,tax,total`、行の並びは A9 と同じ。請求書が0件ならヘッダーだけを出力する。
+- A11 異常な入力ではエラーにして止める（黙って飛ばさない）: month が `YYYY-MM` 形式でない、存在しない customer_id / sku を参照している、注文日時点で有効な価格がない。
+- A12 標準ライブラリだけで実装する（Python 3.x、追加パッケージなし）。
+
+## 3. 不足情報 → 質問（外れると手戻りが大きいもの、3問）
+
+> どの選択肢にも当てはまらない場合は、**具体的な値**（例: 「UTC+9、価格は UTC 日付で判定」「gold かつ税抜1万円以上で3%、四捨五入」）で回答してください。
+
+### Q1. 月の判定と価格の適用日に使うタイムゾーンは？
+影響: 10月分では O1002 と O1021 がどちらの月に入るか、O1008 と O1012 の単価が変わります。C001 の subtotal は 27,180（JST）と 28,780（UTC）、C003 は 20,960（JST）と 16,220（UTC）になります。
+- **(A) 推奨: JST（UTC+9）**。`ordered_at` を JST に変換し、その日付で月と価格の両方を判定する。
+- (B) UTC。`ordered_at` の日付をそのまま使い、月と価格の両方を判定する。
+- (C) 月の判定は JST、価格の適用日は UTC（またはその逆）。どちらをどちらにするかを指定してください。
+
+### Q2. 請求対象にする status は？
+- **(A) 推奨: `completed` と `shipped` を請求する**。`returned` と `cancelled` は除外する。
+- (B) `completed` だけを請求する（`shipped` は除外する。完了月にも請求しない）。
+- (C) `completed` と `shipped` を請求し、`returned` はマイナス明細（qty を負にする）として同じ月に計上する。`cancelled` は除外する。
+
+### Q3. 値引き（discount）のルールは？（データに定義がないので、値で指定してください）
+- **(A) 推奨: `gold` の顧客は税抜 subtotal の 5% を値引きする**（A4 のとおり税率グループごとに切り捨て）。`standard` は 0。
+- (B) `gold` の顧客は 10% を値引きする（端数処理は A と同じ）。`standard` は 0。
+- (C) `gold` の顧客で、税抜 subtotal が 10,000円以上のときだけ 5% を値引きする（端数処理は A と同じ）。それ以外は 0。
+- (D) 値引きはしない（全員 `discount = 0`）。
+
+---
+
+## 4. Task Contract 案
+
+### Outcome
+`solution.py` に `make_invoices(data_dir, month)` を実装する。指定した月（`"YYYY-MM"`）の請求書を、顧客ごとに dict のリストとして返す。あわせて、`python solution.py <data_dir> <YYYY-MM> <out.csv>` で請求書一覧の CSV を書き出せるようにする。
+
+### Scope / Out of scope
+- Scope:
+  - CSV 4種類の読み込み
+  - 月の判定（Q1）と、請求対象の注文の抽出（Q2）
+  - 価格履歴からの単価決定（A6）
+  - 明細・小計・値引き（Q3）・消費税（A2〜A4）・請求額の計算
+  - 返り値の構造: 請求書は `invoice_id, customer_id, lines, subtotal, discount, tax, total` を持つ。lines の各行は `order_id, sku, qty, unit_price, amount` を持つ
+  - CLI と CSV の出力
+- Out of scope:
+  - PDF・帳票のレイアウト
+  - 顧客名・品名の出力（返り値の構造に含めない）
+  - 通貨換算
+  - 前月の調整や繰越
+  - データベースや外部サービスとの連携
+  - 入力 CSV の修正
+
+### Data sources
+`<data_dir>/customers.csv`, `products.csv`, `prices.csv`, `orders.csv`（列は §1 のとおり）。これ以外の入力は使わない。
+
+### Constraints
+- 金額はすべて `int`（円）。浮動小数点は使わず、整数演算で端数を処理する（例: `x * 8 // 100`）。
+- Python 標準ライブラリだけを使う。入力ファイルは変更しない。
+- 結果は決定的にする（同じ入力からは同じ順序・同じ値を返す）。
+- 作業ディレクトリの外のファイルは読み書きしない。
+
+### Definition of Done（検証できる条件）
+1. `make_invoices("data", "2026-10")` が list を返す。各要素は上記7つのキーを持ち、金額はすべて `int`。
+2. どの請求書でも次が成り立つ: `amount == qty*unit_price`、`subtotal == Σamount`、`total == subtotal − discount + tax`。
+3. 2026-10 の結果は次と一致する（回答した値で再計算済み）:
+
+   | invoice_id | customer_id | subtotal | discount | tax | total |
+   |---|---|---|---|---|---|
+   | INV-202610-0001 | C001 | 27180 | 1359 | 2351 | 28172 |
+   | INV-202610-0002 | C002 | 12560 | 0 | 1124 | 13684 |
+   | INV-202610-0003 | C003 | 20960 | 1048 | 1717 | 21629 |
+   | INV-202610-0004 | C004 | 10280 | 0 | 994 | 11274 |
+
+   - C005 の請求書は作らない。
+   - O1012 の単価は 1300、O1008 の単価は 1680。
+   - O1002 は 10月に入り、O1021 は11月に入る。
+4. 注文のない月（例: `2026-12`）では空リストを返す。CLI では、ヘッダーだけの CSV を出力する。
+5. `python solution.py data 2026-10 out.csv` が終了コード0で終わる。出力される CSV のヘッダーと各行は、DoD 3 の表と一致する。
+6. 不正な month（例: `2026-13`、`202610`）を渡すと `ValueError` になる。CLI では引数が足りないとき、使い方を表示して0以外の終了コードで終わる。
+
+### Evidence（完了時に提示するもの）
+- DoD 1〜6 を確かめるテスト（または検証スクリプト）の実行ログ
+- `python solution.py data 2026-10 out.csv` の実行結果と、出力された CSV の内容
+- 境界にかかる4件（O1002 / O1008 / O1012 / O1021）がどう扱われたかを示す明細の抜粋
+
+### Open questions
+- Q1〜Q3（§3）は回答済み（§0）。未解決の質問はありません。
+- 以下は回答前の記載です（A8 は回答により変更済み。§0 を参照）:
+  - 単価は税抜（A1）
+  - 税率は general 10% / food 8%（A2）
+  - 税額は請求書ごと・税率ごとに切り捨て（A3）
+  - 値引きは税計算の前に、税率グループごとに切り捨て（A4）
+  - 明細のない顧客には請求書を作らない（A7）
+  - ~~invoice_id の形式は `INV-YYYYMM-<customer_id>`（A8）~~ → `INV-YYYYMM-NNNN` に変更
+  - 並び順（A9）
+  - CSV は UTF-8（BOM なし）・ヘッダー付き（A10）。Excel で開く用途で BOM が必要なら指摘してください。
+  - 異常な入力ではエラーにして止める（A11）

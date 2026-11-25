@@ -1,0 +1,213 @@
+# 実行レポート: `reorder_plan`
+
+- 契約: `contract.md`（承認済み、answers.md の回答を反映）
+- 成果物: `solution.py`
+- followup.md: 作成していません。answers.md の回答で、実装に必要な値（28暦日、`<=`、1ロット、廃番品の除外）がすべてそろっていたためです。
+
+## 実装の概要
+- 日平均需要 = (`today-28` 〜 `today-1` の出荷数合計) ÷ 28
+- ROP = 日平均 × `lead_time_days` + `safety_stock`
+- ポジション = `stock + on_order`
+- `ポジション <= ROP` なら発注します。発注数は `max(1, ceil((ROP − ポジション)/lot)) × lot` です。
+- 廃番品は除外します。戻り値は sku の昇順で、qty は int です。
+- `fractions.Fraction` で厳密に計算するため、境界値（等しいかどうか）の判定に浮動小数の誤差は入りません。
+
+## 実データでの計算表
+
+| today | sku | 28日合計 | 日平均 | ROP | ポジション | 判定 | qty |
+|---|---|---|---|---|---|---|---|
+| 2026-11-10 | A100 | 84 | 3.0 | 41 | 40 | 40 <= 41 | **50** |
+| 2026-11-10 | A200 | 28 | 1.0 | 15 | 45 | 発注しない | – |
+| 2026-11-10 | B300 | 0 | 0 | 5 | 5 | 廃番のため除外 | – |
+| 2026-11-10 | C400 | 0 | 0 | 6 | 12 | 発注しない | – |
+| 2026-11-25 | A100 | 39 | 1.393 | 29.75 | 40 | 発注しない | – |
+| 2026-11-25 | A200 | 12 | 0.429 | 12.14 | 45 | 発注しない | – |
+| 2026-11-25 | B300 | 0 | 0 | 5 | 5 | 廃番のため除外 | – |
+| 2026-11-25 | C400 | 0 | 0 | 6 | 12 | 発注しない | – |
+
+## 検証コマンドと出力
+
+### 1) DoD テスト（`test_dod.py`。一時スクリプトのため実行後に削除し、ソースは末尾に掲載）
+
+```
+> python -B test_dod.py
+test_assumptions_validation (__main__.DoD.test_assumptions_validation) ... ok
+test_dod1_import (__main__.DoD.test_dod1_import) ... ok
+test_dod2_real_data (__main__.DoD.test_dod2_real_data) ... ok
+test_dod3_boundary_equal_orders_one_lot (__main__.DoD.test_dod3_boundary_equal_orders_one_lot) ... ok
+test_dod3_fractional_rop_exact (__main__.DoD.test_dod3_fractional_rop_exact) ... ok
+test_dod4_discontinued_excluded (__main__.DoD.test_dod4_discontinued_excluded) ... ok
+test_dod5_qty_is_positive_int_multiple_of_lot (__main__.DoD.test_dod5_qty_is_positive_int_multiple_of_lot) ... ok
+test_dod6_window_edges (__main__.DoD.test_dod6_window_edges) ... ok
+test_dod7_sorted_and_keys (__main__.DoD.test_dod7_sorted_and_keys) ... ok
+----------------------------------------------------------------------
+Ran 9 tests in 0.105s
+OK
+```
+
+### 2) 実データでの直接実行
+
+```
+> python -B -c "from solution import reorder_plan; print(reorder_plan('inventory.csv','shipments.csv','2026-11-10')); print(reorder_plan('inventory.csv','shipments.csv','2026-11-25'))"
+[{'sku': 'A100', 'qty': 50}]
+[]
+```
+
+### 3) 境界値テストが機能していることの確認（ミューテーション）
+判定を `<=` から `<` に変えたコードを、`solution.py` を書き換えずにメモリ上で実行しました。
+
+```
+mutant(<) failures: 3
+FAIL: test_dod3_boundary_equal_orders_one_lot
+FAIL: test_dod3_fractional_rop_exact
+FAIL: test_dod4_discontinued_excluded
+Ran 3 tests
+```
+→ 判定を誤って `<` で実装すると、境界値のテストで検出されます。
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import reorder_plan` が成功する | **完了** | test_dod1_import |
+| 2 | 実データで 11-10 は `[{"sku":"A100","qty":50}]`、11-25 は `[]`。date 型でも文字列と同じ結果 | **完了** | test_dod2_real_data、直接実行の出力、計算表 |
+| 3 | ポジションと ROP が等しいときは1ロット発注し、ROP より1大きいときは発注しない | **完了** | test_dod3_*、ミューテーション確認 |
+| 4 | 廃番品は戻り値に含まれない（B300 は廃番でなければ100を発注する） | **完了** | test_dod4_discontinued_excluded |
+| 5 | qty は lot の正の整数倍で、型は int | **完了** | test_dod5 |
+| 6 | 当日と未来日は除外し、`today-28` は含み、`today-29` は除外する | **完了** | test_dod6_window_edges |
+| 7 | sku の昇順で、キーは `sku` と `qty` だけ | **完了** | test_dod7_sorted_and_keys |
+
+**人間の確認が必要な点**（DoD の範囲外ですが、業務上の妥当性に関わります）
+- shipments.csv の最終日は 2026-11-09 です。本日（2026-11-25）に実行すると、直近28日のうち15日分は出荷データがなく、0として計算されます。そのため A100 の日平均が 1.39 と低くなり、結果は `[]` になります。これは出荷が実際になかったからなのか、データの取り込みが遅れているだけなのかを確認してください。
+
+## 採用した仮定の一覧
+1. 需要の集計期間は `today-28` 〜 `today-1`（28暦日）で、分母は28で固定です。出荷のない日は0として数えます（Q1-C）。
+2. 判定は `stock + on_order <= ROP` です。等しいときは1ロット、それ以外は不足量を lot の倍数に切り上げます（Q2-A、`<=`）。
+3. `discontinued` が true の品目は常に除外します（Q3-A）。
+4. `today` は `date` / `datetime` / `"YYYY-MM-DD"` を受け付けます。
+5. 当日と未来日の出荷は集計しません。
+6. ROP は Fraction で厳密に計算し、丸めは最後の lot 単位の切り上げだけです。
+7. qty=0 の品目は戻り値に含めません（実際には、発注対象の qty は必ず lot 以上になります）。
+8. inventory にない sku の出荷は無視します。出荷履歴のない品目の需要は0です。
+9. `discontinued` は大文字小文字を区別せず、`true/1/yes` を true、`false/0/no/空` を false とみなします。それ以外の値は ValueError です。
+10. 数値の欠損や負数、`lot <= 0`、日付の形式不正、必須列の欠落、sku の重複は ValueError にします。
+11. CSV は UTF-8 として読みます（BOM 付きも許容）。
+
+## 変更したファイル
+- `contract.md`（承認済みに更新）、`solution.py`（新規）、`report.md`（新規）、`timing.txt`（時刻を追記）
+- 一時ファイル `test_dod.py` と `_testdata/` は削除済みです。入力の CSV と answers.md は変更していません。
+
+## 付録: 検証に使ったテストのソース（`test_dod.py`、削除済み）
+
+`python
+import datetime as dt
+import os
+import shutil
+import unittest
+
+from solution import reorder_plan
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+INV = os.path.join(HERE, "inventory.csv")
+SHP = os.path.join(HERE, "shipments.csv")
+TMP = os.path.join(HERE, "_testdata")
+
+INV_HEADER = "sku,name,stock,on_order,lead_time_days,safety_stock,lot,discontinued\n"
+
+
+def write(name, text):
+    os.makedirs(TMP, exist_ok=True)
+    path = os.path.join(TMP, name)
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write(text)
+    return path
+
+
+class DoD(unittest.TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TMP, ignore_errors=True)
+
+    def test_dod1_import(self):
+        import solution
+        self.assertTrue(callable(solution.reorder_plan))
+
+    def test_dod2_real_data(self):
+        self.assertEqual(reorder_plan(INV, SHP, "2026-11-10"), [{"sku": "A100", "qty": 50}])
+        self.assertEqual(reorder_plan(INV, SHP, "2026-11-25"), [])
+        self.assertEqual(reorder_plan(INV, SHP, dt.date(2026, 11, 10)),
+                         reorder_plan(INV, SHP, "2026-11-10"))
+
+    def test_dod3_boundary_equal_orders_one_lot(self):
+        # avg = 28/28 = 1/day, ROP = 1*7 + 3 = 10
+        shp = write("s3.csv", "date,sku,qty\n2026-11-01,X,28\n")
+        inv_eq = write("i3a.csv", INV_HEADER + "X,x,6,4,7,3,25,false\n")   # pos 10 == ROP
+        inv_gt = write("i3b.csv", INV_HEADER + "X,x,7,4,7,3,25,false\n")   # pos 11 > ROP
+        self.assertEqual(reorder_plan(inv_eq, shp, "2026-11-10"), [{"sku": "X", "qty": 25}])
+        self.assertEqual(reorder_plan(inv_gt, shp, "2026-11-10"), [])
+
+    def test_dod3_fractional_rop_exact(self):
+        # avg = 10/28, lead 14 -> ROP = 5 exactly; pos 5 == ROP
+        shp = write("s3c.csv", "date,sku,qty\n2026-11-01,X,10\n")
+        inv = write("i3c.csv", INV_HEADER + "X,x,5,0,14,0,10,false\n")
+        self.assertEqual(reorder_plan(inv, shp, "2026-11-10"), [{"sku": "X", "qty": 10}])
+
+    def test_dod4_discontinued_excluded(self):
+        with open(INV, encoding="utf-8") as f:
+            inv_text = f.read()
+        flipped = write("i4.csv", inv_text.replace("B300,ワッシャー,5,0,10,5,100,true",
+                                                   "B300,ワッシャー,5,0,10,5,100,false"))
+        self.assertIn({"sku": "B300", "qty": 100}, reorder_plan(flipped, SHP, "2026-11-10"))
+        self.assertNotIn("B300", [r["sku"] for r in reorder_plan(INV, SHP, "2026-11-10")])
+        self.assertNotIn("B300", [r["sku"] for r in reorder_plan(INV, SHP, "2026-11-25")])
+
+    def test_dod5_qty_is_positive_int_multiple_of_lot(self):
+        lots = {"A100": 50, "A200": 20, "B300": 100, "C400": 10}
+        shp = write("s5.csv", "date,sku,qty\n2026-11-09,A100,500\n2026-11-09,A200,500\n2026-11-09,C400,500\n")
+        res = reorder_plan(INV, shp, "2026-11-10")
+        self.assertEqual([r["sku"] for r in res], ["A100", "A200", "C400"])
+        for r in res:
+            self.assertIs(type(r["qty"]), int)
+            self.assertGreater(r["qty"], 0)
+            self.assertEqual(r["qty"] % lots[r["sku"]], 0)
+
+    def test_dod6_window_edges(self):
+        # ROP = avg*28 + 0, stock 0 -> qty = ceil(total/lot)*lot (lot=1), or 1 when total 0
+        inv = write("i6.csv", INV_HEADER + "X,x,0,0,28,0,1,false\n")
+        today = dt.date(2026, 11, 10)
+
+        def qty_for(day):
+            shp = write("s6.csv", f"date,sku,qty\n{day.isoformat()},X,100\n")
+            return reorder_plan(inv, shp, today)[0]["qty"]
+
+        self.assertEqual(qty_for(today - dt.timedelta(days=1)), 100)   # included
+        self.assertEqual(qty_for(today - dt.timedelta(days=28)), 100)  # included
+        self.assertEqual(qty_for(today - dt.timedelta(days=29)), 1)    # excluded
+        self.assertEqual(qty_for(today), 1)                            # today excluded
+        self.assertEqual(qty_for(today + dt.timedelta(days=3)), 1)     # future excluded
+
+    def test_dod7_sorted_and_keys(self):
+        inv = write("i7.csv", INV_HEADER + "Z9,z,0,0,1,1,1,false\nA1,a,0,0,1,1,1,false\nM5,m,0,0,1,1,1,false\n")
+        shp = write("s7.csv", "date,sku,qty\n")
+        res = reorder_plan(inv, shp, "2026-11-10")
+        self.assertEqual([r["sku"] for r in res], ["A1", "M5", "Z9"])
+        for r in res:
+            self.assertEqual(set(r), {"sku", "qty"})
+
+    def test_assumptions_validation(self):
+        shp = write("sa.csv", "date,sku,qty\n2026-11-01,UNKNOWN,5\n")
+        dup = write("ia.csv", INV_HEADER + "X,x,0,0,1,1,1,false\nX,x,0,0,1,1,1,false\n")
+        neg = write("ib.csv", INV_HEADER + "X,x,-1,0,1,1,1,false\n")
+        lot0 = write("ic.csv", INV_HEADER + "X,x,0,0,1,1,0,false\n")
+        ok = write("id.csv", INV_HEADER + "X,x,10,0,1,1,1,FALSE\n")
+        for bad in (dup, neg, lot0):
+            with self.assertRaises(ValueError):
+                reorder_plan(bad, shp, "2026-11-10")
+        self.assertEqual(reorder_plan(ok, shp, "2026-11-10"), [])  # unknown sku ignored
+        with self.assertRaises(ValueError):
+            reorder_plan(ok, shp, "2026/11/10")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
+`

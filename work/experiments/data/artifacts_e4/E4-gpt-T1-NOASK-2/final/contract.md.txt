@@ -1,0 +1,48 @@
+# Task Contract：`monthly_sales(path)`
+
+**状態：承認済み（Execution Mode）**。ユーザーの指示により、未回答の項目は仕様案の推奨既定値で確定した。
+
+## 確認できた事実
+
+- `sales.csv` の列は `order_id,ordered_at,amount_incl_tax,status`。データは 10 件（`completed` 8 件、`cancelled` 2 件）。
+- `ordered_at` は全件 UTC（末尾 `Z`）。`A-1004` と `A-1010` は、日本時間に直すとそれぞれ 2 月、5 月になる。`A-1006` の税込金額は `-1100`。3 月の行はない。
+
+## Outcome
+
+`solution.py` の `monthly_sales(path)` が指定された CSV を読み、`{"YYYY-MM": 金額(int)}` の辞書を返す。
+
+## Scope・Out of scope
+
+- **Scope:** 関数の実装、検証用テスト、検証証拠と採用した仮定を記載する `report.md`。
+- **Out of scope:** 集計用 CLI、入力データの変更、外部依存、集計結果ファイルの出力、税・通貨換算、重複排除、返金元注文との突合。
+
+## Data sources
+
+- `sales.csv` と依頼文。集計の必須列は `ordered_at`、`amount_incl_tax`、`status`。`order_id` は見本の行を特定するための列であり、集計には使わない。
+
+## Constraints
+
+- 作業ファイルは指定ディレクトリ内に限定し、Python 標準ライブラリを使う。指定されたパスから読み込み、入力を変更しない。開始・終了時刻を `timing.txt` に各 1 行追記する。
+- 入力はヘッダー付きのカンマ区切り UTF-8 CSV（BOM は任意）。集計対象行の日付は `YYYY-MM-DDTHH:MM:SSZ`、税込金額は符号付き 10 進整数（符号は任意）。必須列がない場合や集計対象行の日付・金額の欠損・不正は `ValueError`。読込時の OS エラーは伝播する。
+- `completed` の行のみ、UTC から JST（UTC+09:00）への変換後の月に集計する。負額を含め入力の金額をそのまま足す。対象行がない月は省略し、対象行があって合計 0 の月は保持する。キー順は要件外。
+
+## Definition of Done
+
+| ID | 検証できる条件 |
+| --- | --- |
+| D1 | `from solution import monthly_sales` が成功し、`monthly_sales("sales.csv")` の戻り値が下記の期待辞書と完全一致する。キーは `YYYY-MM` の文字列、値は `int`。 |
+| D2 | UTC の月末・年末で、日本時間に変換してから月を決める。 |
+| D3 | `cancelled` を含む `completed` 以外の行を除外し、`completed` の負額を合計に反映する。 |
+| D4 | 対象行のない月は省略し、対象行がある合計 0 の月は保持する。ヘッダーのみの CSV は `{}`。 |
+| D5 | 必須列の欠落、不正な日付・金額、対象行の日付・金額の空欄は `ValueError`。 |
+| D6 | UTF-8 BOM 付きファイルも読め、存在しない入力パスの `FileNotFoundError` は伝播する。 |
+| D7 | 集計・検証後も元の `sales.csv` の内容が変わっていない。 |
+
+## Evidence
+
+- D1 の期待値：`{"2026-01": 16500, "2026-02": 11000, "2026-04": 18700, "2026-05": 7700}`。`2026-03` キーは含まれない。
+- 合成 CSV で月境界・エラー経路も検証し、実行したコマンド、出力、各条件の状態を `report.md` に記録する。
+
+## Open questions
+
+なし。集計月は JST、売上は `completed` のみ、対象行がない月は省略と確定した。

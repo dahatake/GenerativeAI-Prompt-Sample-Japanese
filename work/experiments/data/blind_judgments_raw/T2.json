@@ -1,0 +1,128 @@
+{
+  "T2-6389b1": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-716b0d": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-7a932e": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-d1e582": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-d36939": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-d6d0c4": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T2-f5aff1": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  }
+}

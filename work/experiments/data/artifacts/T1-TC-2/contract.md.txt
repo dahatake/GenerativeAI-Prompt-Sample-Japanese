@@ -1,0 +1,92 @@
+# Task Contract: monthly_sales(path)
+
+ステータス: **承認済み（2026-11-25、Execution Mode）**
+
+## 1. 確認できた事実
+
+- 作業ディレクトリにあるのは `sales.csv`（488 bytes）だけ。`solution.py`、テスト、仕様書はない。
+- `sales.csv` の形式:
+  - UTF-8 で BOM なし。改行は CRLF。ヘッダー 1 行とデータ 10 行。
+  - 列は `order_id,ordered_at,amount_incl_tax,status`。
+  - `ordered_at` は ISO 8601 の UTC（末尾が `Z`）。
+  - `amount_incl_tax` は税込の整数で、全行が 1,100 の倍数。
+  - `status` の値は `completed` と `cancelled`（`cancelled` は A-1003 と A-1007）。
+  - 負の金額が 1 件ある（A-1006: `-1100`, completed）。
+  - 3 月のデータはない。
+  - JST に換算すると月が変わる行が 2 件ある: A-1004（JST では 2/1）、A-1010（JST では 5/1）。
+- 環境: Python 3.12.10。`zoneinfo` で Asia/Tokyo を使える。
+
+## 2. 質問への回答（確定事項）
+
+| # | 決定 |
+|---|---|
+| Q1 | JST（Asia/Tokyo）に変換してから月を判定する |
+| Q2 | `cancelled` の注文だけを除外し、それ以外の status（負の金額を含む）は集計対象にする |
+| Q3 | 金額は税抜（÷1.1 した整数） |
+| 追加 | 空き月は 0 で埋める |
+| 追加 | テストファイルは推奨案に従い、`test_solution.py` を成果物に含める |
+
+## 3. 仮定（回答のなかった点は推奨既定案を採用）
+
+- A1: シグネチャは `monthly_sales(path: str | os.PathLike) -> dict[str, int]`。標準ライブラリのみ使う。
+- A2: 税抜への変換は**行ごと**に行う。端数は四捨五入し、0.5 ちょうどは 0 から遠い側に丸める（`Decimal` の `ROUND_HALF_UP`）。その結果を合算する。
+- A3: 0 で埋める範囲は、集計対象の行がある最初の月から最後の月まで（JST 基準）とする。範囲の外側は出力しない。
+- A4: status は前後の空白を除き、大文字小文字を区別せずに比べる。除外するのは `cancelled` だけとし、米国式の綴り `canceled` は除外しない。
+- A5: 不正な行（日時が解釈できない、タイムゾーンがない、金額が整数でない、必要な列が欠けている）があれば `ValueError` を送出する。
+- A6: 集計対象の行が 0 件（ヘッダーのみ、または全行 cancelled）の場合は `{}` を返す。
+- A7: 戻り値のキーは昇順に並べる。
+- A8: ファイルは `utf-8-sig` で開く（BOM があってもなくても読める）。
+
+## 4. Task Contract
+
+### Outcome
+
+`solution.py` に `monthly_sales(path)` を実装する。この関数は、JST の月ごとに cancelled 以外の注文の税抜売上を合計し、`{"YYYY-MM": int}` を返す。空き月は 0 で埋める。
+
+### Scope
+
+- `solution.py` を作成し、`monthly_sales` を実装する。
+- `test_solution.py` を作成する（標準ライブラリの unittest を使う）。
+- `report.md` を作成する。
+
+### Out of scope
+
+- 通貨換算や、税率 10% 以外への対応
+- CLI、ファイル出力
+- 外部依存の追加
+- 作業ディレクトリ外へのアクセス
+
+### Data sources
+
+- `sales.csv`（作業ディレクトリ内）
+
+### Constraints
+
+- Python 3.12、標準ライブラリのみ。
+- 金額の計算は整数と Decimal で行い、float は使わない。
+- 作業ディレクトリ外のファイルは読み書きしない。
+
+### Definition of Done
+
+| ID | 条件 |
+|---|---|
+| DoD-1 | `monthly_sales('sales.csv')` の戻り値が `{"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}` と一致する |
+| DoD-2 | 戻り値の値はすべて `int` 型で、キーはすべて `^\d{4}-\d{2}$` に一致する |
+| DoD-3 | 月の境界を JST で判定している（UTC の 14:59:59 は当月、15:00:00 は翌月） |
+| DoD-4 | `cancelled` は除外され、それ以外の status（`pending` など）と負の金額は含まれる |
+| DoD-5 | 税抜金額は行ごとに ÷1.1 し、A2 の丸めルールに従った整数になる |
+| DoD-6 | 空き月が 0 で埋められる（年をまたぐ場合も含む） |
+| DoD-7 | ヘッダーのみ、または全行 cancelled の場合は `{}` を返す |
+| DoD-8 | 不正な行では `ValueError` を送出する |
+| DoD-9 | `solution.py` が import するのは標準ライブラリのみ |
+
+### Evidence
+
+- `python -m unittest -v test_solution` の出力（DoD-1〜9 と 1 対 1 に対応する）
+- `sales.csv` の行ごとの集計内訳
+- `report.md`
+
+### Open questions（人間の確認が必要な点）
+
+- A2: 税抜換算の単位（行ごとか月合計か）と丸め方。今回のデータは全行が割り切れるので、結果には影響しない。
+- A3: 0 埋めの範囲。期間を外部から指定したい場合は引数の追加が必要になる。

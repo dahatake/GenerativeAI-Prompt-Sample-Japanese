@@ -1,0 +1,76 @@
+# Task Contract: `monthly_sales(path)`（承認済み / Execution Mode）
+
+更新履歴
+- v1: Spec Mode の初版（質問 Q1〜Q3 と仮定 A1〜A7）
+- v2（本版）: answers.md と answers2.md の回答を反映し、承認済みとして実行
+
+## 回答の反映
+| 項目 | 回答 | 採用した仕様 |
+|---|---|---|
+| Q1 タイムゾーン | (a) JST | `ordered_at`（UTC）を UTC+09:00 固定に変換し、その年月で集計する |
+| Q2 税込／税抜 | 税抜（税込 ÷ 1.1 の整数） | 税率は 10%。丸めは followup の回答が「推奨案で」だったため、**行ごとに 0 方向へ切り捨て** `sign(x) × (|x| × 10 // 11)`。浮動小数点は使わず、整数演算で計算する |
+| Q3 行の扱い | cancelled は除外。負の金額は推奨案 | `status == "completed"` の行だけを集計する。負の金額は差し引く（純額） |
+| Q4 データがない月 | **仮定を訂正**: 最初の月から最後の月まで 0 で埋める | completed 行の JST 月の最小から最大までのすべての月をキーに含め、注文がない月は 0 にする |
+| Q5 キーの順序 | 推奨案 | `"YYYY-MM"` の昇順で返す |
+| Q6 不正な行 | 推奨案 | `ValueError` を送出する（スキップしない） |
+| Q7 未知の status | 推奨案 | 集計しない |
+| Q8 文字コード | 推奨案 | UTF-8 で読み、BOM 付きも許容する |
+
+## 確認できた事実（`sales.csv`）
+- 列は `order_id, ordered_at, amount_incl_tax, status`。UTF-8（BOM なし）、改行は CRLF、データは 10 行。
+- `ordered_at` は UTC（末尾 `Z`）。`amount_incl_tax` は税込の整数で、全件が 1,100 の倍数。
+- status は `completed` が 8 件、`cancelled` が 2 件。負の金額が 1 件ある（A-1006: -1100）。
+- JST に変換すると月が変わる行が 2 件ある: A-1004（JST では 2026-02-01）、A-1010（JST では 2026-05-01）。
+- 2026-03 の注文はない。
+
+## Outcome
+`solution.py` の `monthly_sales(path) -> dict[str, int]` が、completed 注文の税抜売上を JST の月ごとに合計し、最初の月から最後の月までを 0 で埋めた `{"YYYY-MM": int}` を昇順で返す。
+
+## Scope
+- `solution.py` の新規作成と、`monthly_sales(path)` の実装。
+- 検証用のテスト `test_solution.py`（標準の `unittest`）を作成して実行する。
+
+## Out of scope
+- CLI、ファイル出力、ログ出力、可視化。
+- `sales.csv` の変更。
+- 外部ライブラリの導入。
+- 10% 以外の税率や軽減税率、複数通貨への対応。
+
+## Data sources
+- 引数 `path` で渡される CSV。今回の検証データは `sales.csv`。
+
+## Constraints
+- Python 3.12 の標準ライブラリだけを使う（`csv`、`datetime`）。
+- 戻り値の値は `int` にする（`float` は使わない）。
+- 作業ディレクトリ外のファイルは読み書きしない。テストの一時ファイルは作業ディレクトリ内に作り、テスト後に自動で削除する。
+
+## 仮定（回答で値が指定されなかった細部）
+- B1: `ordered_at` にタイムゾーンがない場合は UTC とみなす（answers.md の「ordered_at は UTC で記録されています」に基づく）。
+- B2: 日時・金額の検証は status にかかわらず全行で行う。cancelled 行の値が不正な場合も `ValueError` を送出する。
+- B3: status の比較は前後の空白を除いたうえで、大文字と小文字を区別して `completed` と一致するかで判定する。
+- B4: 金額は整数文字列だけを受け付ける（`"11000.0"` や空文字は `ValueError`）。
+- B5: completed 行が 0 件（ヘッダーのみ、または全件 cancelled）の場合は `{}` を返す。
+- B6: 0 埋めの範囲は completed 行の月だけで決める（cancelled 行の月は範囲に影響しない）。
+
+## Definition of Done
+1. `from solution import monthly_sales` が成功する。
+2. `monthly_sales("sales.csv")` が `{"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}` と完全に一致する。
+3. 戻り値のすべての値が `type(v) is int` を満たす。キーは `^\d{4}-\d{2}$` に一致し、昇順で、月が連続している。
+4. 境界ケースをテストで確認する:
+   - 4a. JST の月境界: UTC で月末 15:00 の行は翌月、14:59 の行は当月に入る。
+   - 4b. cancelled 行と未知の status の行が除外される。
+   - 4c. 負の金額が差し引かれる。
+   - 4d. 税抜の丸め: 行ごとに 0 方向へ切り捨てる（1000 → 909、-1000 → -909、3300 → 3000 で浮動小数点誤差が出ない）。
+   - 4e. 0 埋めが年をまたいでも正しい（2025-11〜2026-02）。
+   - 4f. ヘッダーのみ、または全件 cancelled の場合に `{}` を返す。
+   - 4g. BOM 付きファイルでも同じ結果になる。
+   - 4h. 不正な日時、不正な金額、必須列の欠落で `ValueError` を送出する。
+5. 注文がない月（2026-03）が 0 でキーに含まれる。
+
+## Evidence
+- `python -m unittest -v test_solution` の実行ログ（全件 OK）。
+- `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"` の出力。
+- 結果は report.md にまとめる。
+
+## Open questions
+- なし（回答で値が指定されなかった細部は、上記の仮定 B1〜B6 で進めた）。

@@ -1,0 +1,66 @@
+# Report: `reorder_plan` 実装結果
+
+## 確定仕様（contract.md §0）
+- 日次平均需要 = `[today−28日, today)` の出荷合計 ÷ 28（Q1=a）
+- ROP = 日次平均需要 × lead_time_days + safety_stock（`Fraction` で厳密計算、途中丸めなし）
+- 有効在庫 = stock + on_order。`有効在庫 <= ROP` なら発注（Q3=b）
+- qty = `ceil((ROP − 有効在庫)/lot) × lot`（Q2=a）。不足0（同値）のときは最低1 lot
+- 廃番除外、sku 昇順、qty は int
+
+## 検証コマンドと出力
+
+```
+> python -c "from solution import reorder_plan; print('DoD1 import OK', reorder_plan)"
+DoD1 import OK <function reorder_plan at 0x000002B7DD790B80>
+
+> python -m unittest -v test_solution
+test_dod2_bundled_data ... ok
+test_dod3_string_today ... ok
+test_dod6_qty_positive_lot_multiple ... ok
+test_dod10_invalid_data_and_unknown_sku ... ok
+test_dod4_discontinued_excluded ... ok
+test_dod5_window_bounds ... ok
+test_dod7_equal_orders_one_lot_and_on_order_counts ... ok
+test_dod8_no_history ... ok
+test_dod9_fractional_rop_not_rounded ... ok
+Ran 9 tests in 0.575s
+OK
+```
+
+### 同梱データの中間値（today = 2026-11-10）
+| sku | 日次平均 | ROP | 有効在庫 | ROP−有効在庫 | 廃番 | 結果 |
+|---|---|---|---|---|---|---|
+| A100 | 3.0 | 41 | 40 | 1 | false | **50**（1 → lot 50 に切り上げ） |
+| A200 | 1.0 | 15 | 45 | −30 | false | 発注なし |
+| B300 | 0.0 | 5 | 5 | 0 | true | 除外（廃番） |
+| C400 | 0.0 | 6 | 12 | −6 | false | 発注なし |
+
+戻り値: `[{'sku': 'A100', 'qty': 50}]`
+
+## DoD 状態
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import reorder_plan` 成功 | 完了 | import コマンド出力 |
+| 2 | 同梱データ・2026-11-10 → `[{"sku":"A100","qty":50}]` | 完了 | test_dod2、中間値表 |
+| 3 | 文字列 today でも同結果 | 完了 | test_dod3 |
+| 4 | 廃番は常に除外 | 完了 | test_dod4（在庫0・需要ありでも除外）、test_dod6 |
+| 5 | 窓 `[today−28, today)` の境界 | 完了 | test_dod5（today/today−29 除外、today−1/today−28 含む） |
+| 6 | qty > 0 かつ lot の倍数、sku 昇順 | 完了 | test_dod6（同梱データ・today 24通り） |
+| 7 | 有効在庫 == ROP で発注（qty = lot）、ROP+1 で発注なし、on_order を含む | 完了（ただし同値時 qty=1 lot は**人間の確認が必要**） | test_dod7 |
+| 8 | 出荷履歴なしは需要0で判定 | 完了 | test_dod8 |
+| 9 | 非整数 ROP を丸めずに比較・切り上げ | 完了 | test_dod9 |
+| 10 | 不正データで ValueError、未知 sku の出荷は無視 | 完了 | test_dod10 |
+
+## 採用した仮定
+1. **同値時の発注数 = 1 lot**（Q2 の式では0になるが、Q3=b の「同値でも発注」を優先）— 回答に値がないための推奨既定案。**人間の確認が必要**。
+2. today 当日の出荷は集計しない（回答で確認済み）。
+3. ROP は丸めず厳密な有理数で比較し、丸めは発注数の lot 切り上げのみ（推奨案）。
+4. `discontinued=true`（大文字小文字無視）は除外（回答で確認済み）。
+5. 出荷履歴のない品目は需要0、ROP = safety_stock（推奨案）。
+6. inventory にない sku の出荷は無視（推奨案）。
+7. 出力は発注対象のみ・sku 昇順・qty は int（回答で確認済み）。
+8. 不正データ（必須列欠損、数値でない値、負数、不正日付、lot ≤ 0、重複 sku、true/false 以外の discontinued）は `ValueError`（推奨案）。負の出荷数（返品）も不正扱い。
+9. `today` は `date` / `datetime`（日付部分）/ `"YYYY-MM-DD"` を受け付ける。CSV は UTF-8（BOM 可）、CRLF/LF 両対応。
+
+## 成果物
+- `solution.py`（実装）、`test_solution.py`（DoD 検証テスト）、`contract.md`（承認済みに更新）、`report.md`、`timing.txt`

@@ -1,0 +1,30 @@
+# Task Contract（Execution Mode・承認済み）
+
+## Outcome
+`solution.py` の `validate_invoice_id(value)` が、請求書番号の合意済み規則への適合を `bool` で返す。
+
+## Scope・Out of scope
+- 対象: 実際の型が `str` またはそのサブクラスの入力に対し、文字列全体を判定する。文字列以外には例外や変換なしで `False` を返す。
+- 正規形は `INV-YYYYMM-NNNN`。接頭辞は大文字 `INV-` 固定、数字と区切りは ASCII の `0`〜`9` と `-` に限定する。前後の空白や改行は除去せず、不正とする。
+- 年は `2020`〜`2099`、月は `01`〜`12`、連番は4桁固定で `0001`〜`9999`。範囲の両端を含む。現在日付との前後関係は判定しない。
+- 対象外: 請求書の実在・発行済みかどうかの照会、番号の採番・一意性の保証、外部システムとの連携。
+
+## Data sources
+- 依頼文: 関数名、実装先、戻り値の型、検証・報告手順。
+- `answers.md`: Q1 は A、Q2 は独自指定（年 `2020`〜`2099`、月 `01`〜`12`）、Q3 は A。質問にしなかった仮定も承認済み。
+- `samples.txt`: 最近発行された番号の実例4件。無効例はない。書式と値域の決定は `answers.md` に従う。
+
+## Constraints
+- 作業ファイルの読み書きは指定された作業ディレクトリ内に限る。Python 標準ライブラリのみを使い、外部データや実行時刻には依存しない。
+- 開始・終了時に `python -c "import time;print(time.time())"` の出力を `timing.txt` に1行ずつ追記する。
+
+## Definition of Done
+1. `from solution import validate_invoice_id` が成功し、すべての検証ケースの結果が `bool`。
+2. `samples.txt` の4件がすべて `True`。空文字、`None`、整数などの非文字列、桁不足・桁超過、区切り誤り、全角数字、末尾改行は `False`。
+3. 小文字の接頭辞、前後の ASCII スペース・タブ、月 `00`・`13`、年 `0000`・`1999`・`2019`・`2100`、連番 `0000` を拒否する。年 `2020`・`2099`、月 `01`・`12`、連番 `0001`・`9999` を有効な境界値として受理する。
+
+## Evidence
+- `test_solution.py` に各 DoD の検証を記録し、`python -B -m unittest -v test_solution` で実行する。実行結果と各条件の状態は `report.md` に記録する。
+
+## Open questions
+なし。`answers.md` は実装に必要な値をすべて確定している。

@@ -1,0 +1,21 @@
+# 実装レポート
+
+## 実装内容
+- `solution.py` に `make_invoices(data_dir, month)` を実装。CLI: `python solution.py <data_dir> <YYYY-MM> <out.csv>`（列: invoice_id, customer_id, subtotal, discount, tax, total）。
+- 処理の流れ:
+  1. `ordered_at`（UTC）を JST に変換し、計上月が `month` の注文だけを対象にする。
+  2. status が `completed` / `shipped` の注文だけを残す。
+  3. 単価は、注文日(JST)以前で `effective_from` が最も新しい価格を使う。amount = unit_price × qty。
+  4. 顧客ごとに、税率区分（food=8%、それ以外=10%）別に小計を出す。gold の顧客は区分ごとに `floor(小計×5%)` を値引きする。消費税は区分ごとに `floor((小計−値引き)×税率)` で計算する。
+  5. total = subtotal − discount + tax。invoice_id は customer_id の昇順に `INV-YYYYMM-0001` から連番で振る。
+- 端数の誤差を出さないよう、率を整数パーセントで持ち、整数演算（`//`）で切り捨てている。
+- 2026-10 と 2026-11 で動作確認し、C001・C003 の値は手計算と一致した。
+
+## 前提にしたこと
+- `subtotal` は値引き前の税抜合計、`discount` は税率区分ごとの値引き額の合計、`tax` は区分ごとの税額の合計とした。
+- lines は ordered_at（UTC 時刻）の昇順に並べる。同じ時刻の注文は order_id の昇順にした。
+- customer_id の昇順は文字列の比較で決める（現在のデータの `C001` 形式なら問題ない）。
+- customers.csv にない顧客の注文は、gold ではない扱いで請求書を作る。
+- 有効な価格がない注文や、products.csv にない SKU の注文はエラー（ValueError）にする。黙って捨てることはしない。
+- status とカテゴリーは、大文字・小文字を区別せずに比較する。列の値の前後にある空白は取り除く。
+- 請求対象がない月は、空のリスト（CSV はヘッダー行だけ）を返す。

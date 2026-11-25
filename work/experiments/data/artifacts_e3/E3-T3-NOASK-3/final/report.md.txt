@@ -1,0 +1,48 @@
+# 実行レポート: validate_invoice_id
+
+確定した契約: `contract.md`（推奨既定案 Q1-a / Q2-a / Q3-a）
+成果物: `solution.py`（実装）、`test_solution.py`（検証テスト）
+
+## 検証コマンドと出力
+
+```
+> python -c "from solution import validate_invoice_id; print('import OK', validate_invoice_id)"
+import OK <function validate_invoice_id at 0x000001992F06DBC0>
+
+> python -m pytest test_solution.py -q -p no:cacheprovider
+.................................................                        [100%]
+49 passed in 0.05s
+```
+
+テストは 49 件です（サンプル 1 件、無効入力 19 件、境界値 3 件、戻り値の型 26 件）。
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `from solution import validate_invoice_id` が成功する | 完了 | 上の import コマンドの出力 `import OK` |
+| 2 | `samples.txt` の 4 例がすべて True（見出し行は除外） | 完了 | `test_samples_are_valid`。件数が 4 件であることも assert しています |
+| 3 | 戻り値が常に `bool`（`type(r) is bool`） | 完了 | `test_return_type_is_bool`。全入力 26 件で確認しました |
+| 4 | 契約に列挙した無効入力がすべて False | 完了 | `test_invalid_inputs`（19 件）。契約の列挙に加えて、アラビア数字の `INV-٢٠٢٦٠١-0001` も確認しています |
+| 5 | 境界値 `INV-202601-9999` / `INV-202612-0001` / `INV-000001-0001` が True | 完了 | `test_valid_boundaries`（3 件） |
+| 6 | 上記をまとめたアサーションがすべて成功する | 完了 | pytest の結果 `49 passed` |
+| 7 | `timing.txt` に開始と終了の行がある（Spec Mode と合わせて 4 行） | 完了 | `timing.txt` に 4 行あります（最終行はこのレポートを書いた後に追記） |
+| — | 既定案が実際の業務仕様と一致すること | **人間の確認が必要** | 正式な採番仕様と無効例のサンプルがないため、検証できません |
+
+## 採用した仮定（確定事項として扱ったもの）
+
+- A1: 形式は `INV-` + 数字 6 桁 + `-` + 数字 4 桁です。ASCII だけを使い、`INV` は大文字固定です。`re.fullmatch` と `[0-9]` で判定しています。
+- A2: 中央 6 桁は `YYYYMM` です。月は 01〜12 だけを有効にし、年の範囲は制限しません（`0000` 年も有効）。
+- A3: 連番は 4 桁固定で、`0001`〜`9999` が有効です。`0000` と 5 桁以上は無効です。
+- A4: 入力は厳格に扱います。前後の空白、改行、小文字、全角文字、Unicode 数字は False です。
+- A5: `str` 以外（`None`、`int`、`bytes` など）は、例外を出さずに False を返します。`str` のサブクラスは `str` として扱います。
+- A6: チェックディジット、台帳照合、「未来の年月は無効」などのルールはありません。関数は純粋関数で、現在日時を使いません。
+- A7: 標準ライブラリだけを使います（テストには pytest を使用）。
+
+## 残課題
+
+- Q1〜Q3 は回答がないまま既定案で確定しました。次の点が仕様と違う場合は、変更が必要です。
+  - 月の妥当性チェックをするか
+  - `0000` を無効にするか
+  - 入力を厳格に扱うか
+- 年の範囲や未来日付の扱いについて要件がある場合は、Q1-c として追加対応が必要です。

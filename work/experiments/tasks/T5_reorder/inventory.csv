@@ -1,0 +1,5 @@
+sku,name,stock,on_order,lead_time_days,safety_stock,lot,discontinued
+A100,ボルトM6,40,0,7,20,50,false
+A200,ナットM6,15,30,5,10,20,false
+B300,ワッシャー,5,0,10,5,100,true
+C400,ブラケット,12,0,14,6,10,false

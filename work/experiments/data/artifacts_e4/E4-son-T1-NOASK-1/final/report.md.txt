@@ -1,0 +1,47 @@
+# 実行レポート — monthly_sales(path)
+
+成果物: `solution.py`（実装）、`test_solution.py`（検証テスト）、`contract.md`（確定契約）
+
+## 検証コマンドと出力
+```
+python -m unittest -v test_solution
+  test_apr_may_boundary ... ok
+  test_expected_dict ... ok
+  test_feb_includes_negative_and_boundary ... ok
+  test_jan_excludes_cancelled_and_jst_boundary ... ok
+  test_no_empty_month_int_values_sorted_keys ... ok
+  test_path_argument_used ... ok
+  Ran 6 tests in 0.016s — OK
+
+python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+  {'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+```
+
+## DoD の状態
+| DoD 条件 | 状態 | 証拠 |
+|---|---|---|
+| 2026-01 = 16500（cancelled 除外、A-1004 は JST で 2 月） | 完了 | test_jan_excludes_cancelled_and_jst_boundary |
+| 2026-02 = 11000（負額 -1100 を合算、A-1007 cancelled 除外） | 完了 | test_feb_includes_negative_and_boundary |
+| 2026-04 = 18700、2026-05 = 7700（A-1010 は JST で 5 月） | 完了 | test_apr_may_boundary |
+| 期待 dict 全体と一致 | 完了 | test_expected_dict、上記コマンド出力 |
+| 3 月キーなし・値は int・キー昇順 | 完了 | test_no_empty_month_int_values_sorted_keys |
+| 例外なく実行できる | 完了 | 上記コマンド出力 |
+| `path` 引数で渡したファイルを読む（JST 境界 14:59:59Z/15:00:00Z も確認） | 完了 | test_path_argument_used |
+| Q1〜Q3（JST / completed のみ / 税込）が依頼者の意図と一致 | **人間の確認が必要** | 回答なし。推奨案を採用したのみ |
+| 負額（返品）を合算する扱いが意図と一致 | **人間の確認が必要** | 仮定B。回答なし |
+| `timing.txt` の開始・終了時刻 | 完了（終了時刻は最終手順で追記） | timing.txt |
+
+「証拠不足」の項目はなし。
+
+## 採用した仮定
+1. 月の判定は JST（UTC+9 固定オフセット。日本は夏時間なし）。
+2. `status == "completed"` のみ集計し、`cancelled` は除外。
+3. 税込金額（`amount_incl_tax`）をそのまま合計。税抜換算はしない。
+4. 負の金額（completed）は返品として合算。
+5. データのない月はキーを出力しない。
+6. キーは昇順、値は int。
+7. 標準ライブラリのみ、UTF-8（BOM 許容）。
+8. `ordered_at` は `Z` 付き ISO 8601、金額は整数文字列。重複 order_id・不正行は特別扱いしない（不正値は例外になる）。
+
+## 注意
+- Q1〜Q3 のいずれかが異なる場合、結果が変わる。UTC・completed のみ・税込なら `{"2026-01": 19800, "2026-02": 7700, "2026-04": 26400}`。

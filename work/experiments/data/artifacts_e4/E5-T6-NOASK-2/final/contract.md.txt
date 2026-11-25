@@ -1,0 +1,147 @@
+# Task Contract（案）: 月次請求書生成 `make_invoices(data_dir, month)`
+
+ステータス: **確定・承認済み（Execution Mode）** — 2026-11-25。質問 Q1〜Q3 への回答は得られなかったため、依頼者の指示によりすべて推奨既定案（各 (A)）と仮定 A1〜A9 で確定。
+
+### 確定事項（要約）
+- Q1 → (A) 月判定・単価適用日とも JST（UTC+9）の日付で行う。
+- Q2 → (A) gold は 10% 値引き / standard 0%。food 8%・general 10%。税率区分ごとに「区分値引き = floor(区分小計×値引率)」「区分税額 = floor((区分小計−区分値引き)×税率)」。discount・tax はその合計。
+- Q3 → (A) `completed`・`shipped` を請求、`returned`・`cancelled` は除外。
+- 仮定 A1〜A9 は下記のとおり確定。
+
+---
+
+## 1. 調査結果（作業ディレクトリ内の事実整理）
+
+作業ディレクトリには `data/` 配下の CSV 4 ファイルのみ存在（`solution.py`・テスト・仕様書・README なし）。
+
+| ファイル | 列 | 行数 | 内容の要点 |
+|---|---|---|---|
+| `customers.csv` | customer_id, name, tier | 5 | C001〜C005。tier は `gold`（C001, C003）と `standard`（C002, C004, C005）。行は ID 順ではない |
+| `products.csv` | sku, name, category | 4 | category は `general`（A100, A200）と `food`（F100, F200） |
+| `prices.csv` | sku, effective_from, unit_price | 6 | 履歴型の単価表。A100: 1200→**1300（2026-10-16〜）**、F100: 1580→**1680（2026-10-10〜）**、A200=2980、F200=540 |
+| `orders.csv` | order_id, customer_id, ordered_at, sku, qty, status | 24 | `ordered_at` は **UTC（末尾 Z）** の ISO 8601。status は `completed` / `shipped` / `returned` / `cancelled`。1 注文 = 1 SKU。行は順不同 |
+
+### タイムゾーンで結果が変わる注文（UTC 日付 → JST 日付）
+| order_id | UTC | JST | 影響 |
+|---|---|---|---|
+| O1002 (C003) | 2026-09-30 15:30 | 2026-10-01 00:30 | 9月分か10月分かが変わる |
+| O1021 (C001) | 2026-10-31 16:00 | 2026-11-01 01:00 | 10月分か11月分かが変わる |
+| O1008 (C001, F100×4) | 2026-10-09 15:10 | 2026-10-10 00:10 | 単価 1580 / 1680 が変わる |
+| O1012 (C001, A100×7) | 2026-10-15 15:20 | 2026-10-16 00:20 | 単価 1200 / 1300 が変わる |
+| O1022 (C002) | 2026-10-31 14:50 | 2026-10-31 23:50 | どちらでも 10 月 |
+
+### その他の観察
+- 2026-10 に C005 の注文は `cancelled`（O1006）と `returned`（O1017）のみ → 請求対象 0 件になりうる。
+- データ範囲は 2026-09-28〜2026-11-03（UTC）。
+- 値引き率・税率・端数処理・請求書番号の形式を示すデータや文書は**存在しない**。
+
+---
+
+## 2. 確認できた事実 / 仮定 / 不足情報
+
+### 確認できた事実
+- F1: 入力は上記 4 CSV（UTF-8、ヘッダー付き、カンマ区切り）。
+- F2: 単価は SKU ごとの履歴で、`effective_from` により期間ごとに変わる。
+- F3: 注文日時は UTC 表記。月境界・単価切替日付近に UTC/JST で結果が変わる注文が 4 件ある。
+- F4: 顧客には `tier`（gold/standard）、商品には `category`（general/food）があり、値引き・税率区分に使う意図が推測される。
+- F5: 依頼上の戻り値の形（invoice_id, customer_id, lines[order_id, sku, qty, unit_price, amount], subtotal, discount, tax, total）、金額は整数円、CLI `python solution.py <data_dir> <YYYY-MM> <out.csv>`。
+
+### 仮定（回答がなければこの既定で進める）
+- A1: 適用単価 = 注文日（Q1 で決めたタイムゾーンの日付）以前で `effective_from` が最大の行の単価。
+- A2: `amount = unit_price × qty`。`subtotal = Σ amount`（税抜）。`total = subtotal − discount + tax`。
+- A3: 請求書は「その月に請求対象明細が 1 件以上ある顧客」ごとに 1 枚。対象 0 件の顧客（例: 2026-10 の C005）は請求書を作らない。
+- A4: `invoice_id = "INV-{YYYYMM}-{customer_id}"`（例: `INV-202610-C001`）。
+- A5: 並び順: 請求書は customer_id 昇順、lines は ordered_at 昇順→order_id 昇順。
+- A6: CSV 出力は UTF-8（BOM なし）、ヘッダー `invoice_id,customer_id,subtotal,discount,tax,total`、行順は A5 と同じ。対象 0 件ならヘッダーのみ。
+- A7: 標準ライブラリのみ使用（Python 3.x）。
+- A8: 不正入力はエラー: `month` が `YYYY-MM` でない → `ValueError`。注文の customer_id/sku がマスタにない、注文日時点の単価がない、未知の status → `ValueError`（黙って捨てない）。
+- A9: 戻り値の各金額は Python `int`。
+
+### 不足情報
+- N1: 月の判定・単価適用日のタイムゾーン（→ Q1）
+- N2: 値引きルール（対象 tier、率、計算基準）、税率、端数処理、計算順序（→ Q2）
+- N3: 請求対象とする status（→ Q3）
+- N4: invoice_id の形式、0 件顧客の扱い、並び順（→ A3〜A5 で仮置き。手戻りは小さい）
+
+---
+
+## 3. 質問（最大 3 問・手戻りが大きいもののみ）
+
+### Q1. 月の判定と単価の適用日は、どのタイムゾーンの日付で行いますか？
+- **(A) JST（Asia/Tokyo, UTC+9）で判定 ← 推奨既定**（円建て・日本企業の請求のため。月判定と単価適用日の両方に適用）
+- (B) UTC のまま（`ordered_at` の日付部分）で判定
+- (C) 月判定と単価適用日で別々のタイムゾーン（要指定）
+
+影響: O1002・O1021 の帰属月、O1008・O1012 の単価が変わる（上表）。
+
+### Q2. 値引き・消費税の計算ルールはどれですか？
+- **(A) 推奨既定:**
+  - 値引き: `tier=gold` の顧客は税抜小計の **10%**、standard は 0。
+  - 税率: `category=food` は **8%（軽減税率）**、`general` は **10%**。
+  - 計算順序と端数: 税率区分ごとに `区分小計 → 区分値引き = floor(区分小計 × 値引率) → 課税標準 = 区分小計 − 区分値引き → 区分税額 = floor(課税標準 × 税率)`。請求書単位・税率ごとに 1 回だけ切り捨て（インボイス制度の端数処理に準拠）。`discount = Σ区分値引き`、`tax = Σ区分税額`。
+- (B) 値引き率・税率は (A) と同じだが、値引きは請求書全体で `floor(subtotal × 率)` を計算し、税額は区分ごとに値引き前の小計で計算（値引きは税計算に影響させない）
+- (C) 別のルール（値引き率・対象・閾値・税率・端数処理〔切り捨て/四捨五入/切り上げ〕を指定してください）
+
+影響: discount・tax・total の全値。データに根拠がないため、最も手戻りが大きい論点です。
+
+### Q3. どの status の注文を請求対象にしますか？
+- **(A) `completed` と `shipped` を請求、`returned` と `cancelled` は除外（明細にも出さない） ← 推奨既定**
+- (B) `completed` のみ請求
+- (C) `completed`・`shipped` を請求し、`returned` はマイナス明細（返品控除）として計上、`cancelled` は除外
+
+影響: 請求対象の明細・顧客と全金額。
+
+---
+
+## 4. Task Contract 案
+
+### Outcome
+`solution.py` に `make_invoices(data_dir, month)` を実装し、指定月（`"YYYY-MM"`）の顧客別請求書を dict のリストで返す。同ファイルを CLI として実行すると請求書一覧を CSV に出力できる。
+
+### Scope
+- `make_invoices(data_dir: str, month: str) -> list[dict]`
+  - 請求書 dict: `invoice_id, customer_id, lines, subtotal, discount, tax, total`
+  - line dict: `order_id, sku, qty, unit_price, amount`
+- 4 CSV の読み込み、月フィルタ（Q1）、status フィルタ（Q3）、履歴単価の解決（A1）、値引き・税計算（Q2）。
+- CLI: `python solution.py <data_dir> <YYYY-MM> <out.csv>` → 列 `invoice_id,customer_id,subtotal,discount,tax,total` の CSV を書き出す。引数不足時は使い方を stderr に出して非 0 終了。
+- 入力検証とエラー（A8）。
+
+### Out of scope
+- PDF/帳票レイアウト、顧客名・商品名の出力、明細 CSV の出力。
+- 複数通貨、税率の期間変更、前月繰越・入金消込。
+- `data/` の CSV の変更、外部ライブラリの追加。
+- テストファイルの追加は当初対象外としていたが、Execution Mode の指示により DoD 検証用の `test_solution.py` を追加する。
+
+### Data sources
+- `data/customers.csv`（tier → 値引き判定）
+- `data/products.csv`（category → 税率判定、SKU 存在確認）
+- `data/prices.csv`（SKU × 有効開始日 → 単価）
+- `data/orders.csv`（対象注文の抽出）
+- 上記以外のデータソースは使わない。
+
+### Constraints
+- 金額はすべて `int`（円）。浮動小数点で丸め誤差を出さない（整数演算 or `Decimal`）。
+- Python 標準ライブラリのみ。作業ディレクトリ外を読み書きしない。
+- 入力 CSV の行順に依存しない（結果は A5 の順で決定的）。
+- 同じ入力に対し常に同じ出力（決定的）。
+
+### Definition of Done（検証可能な条件）
+1. `from solution import make_invoices; make_invoices("data", "2026-10")` が例外なく list を返し、各要素が上記 7 キー、各 line が 5 キーを持つ。
+2. 全請求書で `amount == unit_price * qty`、`subtotal == Σamount`、`total == subtotal - discount + tax`、全金額が `int`。
+3. 各 line の `unit_price` が A1 のルール（Q1 のタイムゾーン）で `prices.csv` から引いた値と一致する（O1008・O1012 で確認）。
+4. 帰属月が Q1 に従う（JST 既定なら O1002 は 2026-10 に含まれ、O1021 は 2026-10 に含まれず 2026-11 に含まれる）。
+5. status フィルタが Q3 に従う（既定なら O1006・O1010・O1013・O1017 はどの請求書にも出ない。2026-10 に C005 の請求書がない）。
+6. discount・tax が Q2 のルールで手計算した値と全請求書で一致する。
+7. `python solution.py data 2026-10 out.csv` が終了コード 0 で、`out.csv` のヘッダーと各行が `make_invoices` の結果と一致する。
+8. データのない月（例: `2026-08`）は空リスト／ヘッダーのみの CSV。不正な月（例: `2026-13`, `202610`）は `ValueError`（CLI は非 0 終了）。
+9. 対象月 2026-09・2026-10・2026-11 すべてで 1〜8 が成り立つ。
+
+### Evidence（完了時に提示するもの）
+- DoD 1〜9 を確認するワンライナー/スクリプトの実行ログ（作業ディレクトリ内で実行）。
+- 2026-10 の請求書一覧（`out.csv` の内容）と、1 顧客分（例: C001）の手計算との突き合わせ表。
+- 境界注文（O1002, O1008, O1012, O1021）の帰属月・単価の確認結果。
+
+### Open questions
+- 回答なしのため Q1〜Q3 は推奨既定 (A) で確定済み。ただし値引き率・税率・端数処理（Q2）はデータに根拠がない業務ルールのため、実運用前に人間の確認が必要。
+- 低影響のため仮置きしたもの（変更は容易）: A3（0 件顧客は請求書なし）、A4（invoice_id 形式）、A5（並び順）、A6（CSV 形式）、A8（不正データはエラー）。
+- テストについて: 「Out of scope」にある「テストファイルの追加」は、Execution Mode の指示（DoD 検証用テストを自分で書いて実行）により `test_solution.py` を追加する形に変更。

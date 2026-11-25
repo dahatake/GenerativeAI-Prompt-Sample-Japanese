@@ -1,0 +1,32 @@
+{
+  "T1": {
+    "function": "monthly_sales(path: str) -> dict[str, int]",
+    "file": "solution.py",
+    "requirements": {
+      "R1": "status が cancelled の注文は集計から除外する。",
+      "R2": "月の判定は日本時間(JST, UTC+9)で行う。ordered_at は UTC で記録されている。",
+      "R3": "金額は税込(10%)で記録されている。レポートは税抜金額(税込 / 1.1、整数)で返す。",
+      "R4": "最初の月から最後の月まで、注文がない月も 0 として必ず含める(欠損月を飛ばさない)。"
+    }
+  },
+  "T2": {
+    "function": "dedupe(records: list[dict]) -> list[dict]",
+    "file": "solution.py",
+    "requirements": {
+      "R1": "同一人物の判定はメールアドレスで行い、前後の空白を除去し大文字小文字を区別せずに比較する。",
+      "R2": "重複がある場合は updated_at が最も新しいレコードを残す。",
+      "R3": "出力の並び順は、各メールアドレスが入力で最初に現れた順にする(残すレコードが後ろにあっても、位置は最初の出現位置)。",
+      "R4": "メールアドレスが空文字または null のレコードは重複判定の対象外とし、すべてそのまま残す。"
+    }
+  },
+  "T3": {
+    "function": "validate_invoice_id(value) -> bool",
+    "file": "solution.py",
+    "requirements": {
+      "R1": "形式は 'INV-YYYYMM-NNNN' で、英字は大文字のみ許可する(小文字や区切り違いは不正)。",
+      "R2": "YYYY は 2020〜2099、MM は 01〜12 のみ有効。",
+      "R3": "連番 NNNN の 0000 は不正。",
+      "R4": "文字列以外(None や数値など)が渡された場合は例外を出さずに False を返す。"
+    }
+  }
+}

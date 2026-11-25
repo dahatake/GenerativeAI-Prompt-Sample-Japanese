@@ -1,0 +1,48 @@
+# 実行レポート: monthly_sales(path)
+
+## 成果物
+- `solution.py`: `monthly_sales(path)`
+- `test_solution.py`: DoD 検証用テスト（7件）
+
+## 検証コマンドと出力
+```
+> python -m unittest -v test_solution
+test_cancelled_has_no_effect ... ok
+test_expected_values_for_sales_csv ... ok
+test_input_file_unchanged ... ok
+test_jst_boundary_rows ... ok
+test_negative_amount_is_subtracted ... ok
+test_no_empty_month ... ok
+test_types_and_key_format ... ok
+Ran 7 tests in 0.085s
+OK
+
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+```
+
+## DoD の状態
+| DoD 条件 | 状態 | 証拠 |
+|---|---|---|
+| 戻り値が期待値 4 件（01:16500 / 02:11000 / 04:18700 / 05:7700）と完全一致 | 完了 | `test_expected_values_for_sales_csv`、実行出力 |
+| 3 月はキーなし | 完了 | `test_no_empty_month` |
+| 全値が `int`、キーが `YYYY-MM` | 完了 | `test_types_and_key_format` |
+| cancelled 行（22000, 4400）が結果に影響しない | 完了 | `test_cancelled_has_no_effect`、期待値の一致 |
+| JST 境界行（A-1004→02月、A-1010→05月）の月判定 | 完了 | `test_jst_boundary_rows`（境界の直前 14:59:59Z は 1 月）、実データの期待値 |
+| 負の金額（返金）の差し引き | 完了 | `test_negative_amount_is_subtracted` |
+| 入力ファイルを変更しない | 完了 | `test_input_file_unchanged`（内容のバイト比較） |
+| Q1〜Q3 の方針が業務上正しいこと（JST・税込・返金差引） | 人間の確認が必要 | 回答が得られず、推奨既定案で確定した。テストは仕様どおりに動くことしか示さない |
+| 3 月を出力しない（0 を出さない）方針 | 人間の確認が必要 | 仮定として採用したもの。他の選択肢は検証していない |
+
+証拠不足の項目はない。
+
+## 採用した仮定
+1. 月の境界は JST（UTC+9）。固定オフセットで実装した（JST に夏時間はないため）。
+2. 金額は `amount_incl_tax` を税込のまま合算し、税抜換算はしない。
+3. `status` が `cancelled` の行は除外する。比較は大文字小文字を区別しない。
+4. 負の金額は返金として、その月の売上から差し引く。
+5. 注文のない月は出力しない。キーは月昇順。
+6. 標準ライブラリのみ使用。金額は整数で、小数・カンマ区切りは想定しない。
+7. `ordered_at` は ISO8601 の `Z` 付き。タイムゾーンなしの場合は UTC とみなす。
+8. 列名はヘッダで参照する。BOM 付き UTF-8 も読める。
+9. 空行や不正行はないものとし、エラー処理は入れていない。

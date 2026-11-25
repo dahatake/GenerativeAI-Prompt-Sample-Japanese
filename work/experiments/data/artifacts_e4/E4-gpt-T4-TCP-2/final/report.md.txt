@@ -1,0 +1,49 @@
+# 月間労働時間集計：実行報告
+
+`answers.md` の指定を反映した承認済み `contract.md` に従い、`solution.py` に `monthly_work_hours(path)` を実装した。不足する値はなく、追加確認は不要だった。
+
+## Definition of Done
+
+| 条件 | 状態 | 検証した内容・テスト |
+| --- | --- | --- |
+| 1. 公開 API | 完了 | `test_api_types_zero_and_row_order`：インポート、`str` キー・`float` 値、先頭ゼロ、0 時間、行順の変更。 |
+| 2. サンプル | 完了 | `test_sample`：`shifts.csv` から E001 = 21.25、E002 = 13.0、E003 = 8.25 時間。 |
+| 3. 休憩と切り捨て | 完了 | `test_break_and_rounding_boundaries`：360/361 分の境界と 15 分単位の境界。`test_rounding_is_per_shift`：59 分の 2 シフトは 45 分ずつで計 1.5 時間。 |
+| 4. 日・月またぎと月の混在 | 完了 | `test_overnight_at_month_end`：10 月末の夜勤 7 時間を 10 月に全計上。`test_mixed_months_are_invalid`：他月または別年同月の有給休暇行が混在すると `ValueError`。 |
+| 5. 有給・入力仕様・異常値 | 完了 | `test_paid_leave_ignores_times`、`test_csv_bom_named_columns_and_blank_lines`、`test_invalid_input`、`test_missing_file`：有給 7.5 時間、許容形式、ヘッダーのみ、契約の不正入力・ファイル不在。 |
+
+## 採用した仮定と回答で確定した値
+
+- 全データ行の `date` が同じ年月であることを要求する。開始日で対象月を決め、月をまたぐ勤務も分割しない。終了時刻が開始時刻より前なら翌日、同時刻なら 0 分。
+- 拘束時間が 360 分を超える勤務だけ、60 分控除する。控除後の勤務時間をシフトごとに 15 分単位で切り捨てる。有給休暇は時刻を参照せず 1 行 450 分とする。
+- 重複・重なりは補正せず、行ごとの整数分を合計して 60 で割る。結果の小数桁は丸めない。0 時間の従業員も残し、ID は先頭ゼロを含め文字列のまま保持する。
+- UTF-8（BOM 可）のカンマ区切り。必須列は名前で参照し、追加列・空行は無視する。ヘッダーのみは空辞書。不正な入力は `ValueError`、ファイルが存在しなければ `FileNotFoundError`。
+
+## 検証コマンドと出力
+
+指定作業ディレクトリで実行。Pylance は `solution.py` をユーザーファイルとして認識しなかったため、構文は同じファイルを Python で直接コンパイルして確認した。
+
+```powershell
+python -B -c "from pathlib import Path; p = Path('solution.py'); compile(p.read_bytes(), str(p), 'exec'); print('solution.py: syntax OK')"
+python -B -m unittest -v test_solution
+```
+
+```text
+solution.py: syntax OK
+test_api_types_zero_and_row_order (test_solution.MonthlyWorkHoursTest.test_api_types_zero_and_row_order) ... ok
+test_break_and_rounding_boundaries (test_solution.MonthlyWorkHoursTest.test_break_and_rounding_boundaries) ... ok
+test_csv_bom_named_columns_and_blank_lines (test_solution.MonthlyWorkHoursTest.test_csv_bom_named_columns_and_blank_lines) ... ok
+test_invalid_input (test_solution.MonthlyWorkHoursTest.test_invalid_input) ... ok
+test_missing_file (test_solution.MonthlyWorkHoursTest.test_missing_file) ... ok
+test_mixed_months_are_invalid (test_solution.MonthlyWorkHoursTest.test_mixed_months_are_invalid) ... ok
+test_overnight_at_month_end (test_solution.MonthlyWorkHoursTest.test_overnight_at_month_end) ... ok
+test_paid_leave_ignores_times (test_solution.MonthlyWorkHoursTest.test_paid_leave_ignores_times) ... ok
+test_rounding_is_per_shift (test_solution.MonthlyWorkHoursTest.test_rounding_is_per_shift) ... ok
+test_sample (test_solution.MonthlyWorkHoursTest.test_sample) ... ok
+sample result: {'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.097s
+
+OK
+```

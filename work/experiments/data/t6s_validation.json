@@ -1,0 +1,87 @@
+{
+ "full": {
+  "S56": true,
+  "S7": true,
+  "E2E": true
+ },
+ "M1_utc": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M2_completed_only": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M2_not_cancelled": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M3_latest": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M3_first": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M4_flat10": {
+  "S56": false,
+  "S7": false,
+  "E2E": false
+ },
+ "M5_no_discount": {
+  "S56": false,
+  "S7": true,
+  "E2E": false
+ },
+ "M5_after_tax": {
+  "S56": false,
+  "S7": true,
+  "E2E": false
+ },
+ "M6_round": {
+  "S56": false,
+  "S7": true,
+  "E2E": true
+ },
+ "M7_per_line": {
+  "S56": true,
+  "S7": false,
+  "E2E": false
+ },
+ "M7_round": {
+  "S56": true,
+  "S7": false,
+  "E2E": false
+ },
+ "M8_csv_order": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M8_first_order": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M9_zero_invoices": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "M10_file_order": {
+  "S56": true,
+  "S7": true,
+  "E2E": false
+ },
+ "naive": {
+  "S56": false,
+  "S7": false,
+  "E2E": false
+ }
+}

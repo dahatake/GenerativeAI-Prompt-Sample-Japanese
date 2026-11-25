@@ -1,0 +1,37 @@
+# 実行レポート
+
+成果物: `solution.py`（`monthly_work_hours(path)`）、`test_solution.py`（11件）。
+
+## 検証コマンドと結果
+```
+python -m pytest -v -p no:cacheprovider   -> 11 passed in 0.36s
+python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+  -> {'E001': 14.833333333333332, 'E002': 14.0, 'E003': 9.25}
+```
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | E001/E002/E003 の3キーを返す | 完了 | `test_sample_shifts_csv`（キー集合の assert） |
+| 2 | E001 ≈ 14.8333h（paid_leave は 0h） | 完了 | 出力 14.8333…、同テスト |
+| 3 | E002 = 14.0h（日跨ぎ 8h + 6h） | 完了 | 出力 14.0、`test_overnight` |
+| 4 | E003 = 9.25h | 完了 | 出力 9.25 |
+| 5 | 値は float、誤差 1e-6 以内 | 完了 | `isinstance(v, float)` と `pytest.approx(abs=1e-6)` |
+| 6 | 日跨ぎ・paid_leave・不正時刻・空ファイルのテスト | 完了 | `test_overnight` / `test_paid_leave_is_zero_but_key_kept` / `test_invalid_rows_raise`(5件) / `test_empty_file` |
+| 7 | 回答が既定案と異なる場合に期待値を更新して再検証 | 該当なし（回答なし。既定案で確定） | — |
+
+人間の確認が必要な点（DoD の判定自体は完了だが、業務上の妥当性は未確認）:
+- 休憩を控除しないこと（Q1）。9:00-18:00 を 9h とする扱いが実運用に合うか。
+- 有給を 0h とすること（Q2）。
+- 複数月が混在するデータの扱い（Q3）。既定案では月を分けず全行を合算する。月別が必要なら `month` 引数の追加が必要。
+
+## 採用した仮定
+1. 休憩は控除しない（end − start）。
+2. `paid_leave` など `work` 以外の行は 0h。従業員キーは 0.0 で含める。
+3. 複数月が混在していても全行を従業員ごとに合算する（月での絞り込みなし）。
+4. end < start は日跨ぎで翌日終了。日跨ぎの月またぎは開始日の月に帰属する（月別集計をしないため現状は影響なし）。
+5. start == end の work 行は曖昧（0h か 24h か不明）なので `ValueError`。
+6. 不正行は黙って無視せず `ValueError`。対象は時刻形式不正、work 行の start/end 欠落、employee 欠落。完全な空行は無視する。
+7. 文字コードは UTF-8（BOM 許容）。値の前後空白は除去する。
+8. 丸めはしない（小数時間のまま）。
+9. 標準ライブラリのみ使用。

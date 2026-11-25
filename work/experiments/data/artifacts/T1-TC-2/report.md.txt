@@ -1,0 +1,77 @@
+# 実行レポート: monthly_sales(path)
+
+## 成果物
+
+- `solution.py`: `monthly_sales(path)` の実装
+- `test_solution.py`: DoD-1〜9 に対応する unittest
+- `contract.md`: 承認済みの Task Contract
+
+## 検証コマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_dod1_sales_csv_expected_result ... ok
+test_dod2_types_and_key_format ... ok
+test_dod3_jst_month_boundary ... ok
+test_dod4_cancelled_excluded_others_included ... ok
+test_dod5_tax_excluded_rounding ... ok
+test_dod6_zero_fill_across_year ... ok
+test_dod7_header_only_and_all_cancelled ... ok
+test_dod8_invalid_row_raises ... ok
+test_dod9_stdlib_only ... ok
+----------------------------------------------------------------------
+Ran 9 tests in 0.116s
+OK
+
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+### sales.csv の行ごとの集計内訳
+
+```
+A-1001 2026-01-05T02:15:00Z -> 2026-01 JST   11000 -> 10000
+A-1002 2026-01-12T09:40:00Z -> 2026-01 JST    5500 -> 5000
+A-1003 2026-01-20T23:30:00Z -> 2026-01 JST   22000 -> EXCLUDED(cancelled)
+A-1004 2026-01-31T16:20:00Z -> 2026-02 JST    3300 -> 3000
+A-1005 2026-02-03T05:00:00Z -> 2026-02 JST    8800 -> 8000
+A-1006 2026-02-14T11:11:00Z -> 2026-02 JST   -1100 -> -1000
+A-1007 2026-02-27T13:45:00Z -> 2026-02 JST    4400 -> EXCLUDED(cancelled)
+A-1008 2026-04-02T00:30:00Z -> 2026-04 JST   16500 -> 15000
+A-1009 2026-04-18T08:05:00Z -> 2026-04 JST    2200 -> 2000
+A-1010 2026-04-30T15:30:00Z -> 2026-05 JST    7700 -> 7000
+```
+
+## DoD ごとの状態
+
+| ID | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| DoD-1 | sales.csv の結果が期待値と一致する | 完了 | test_dod1 が ok。上記の実行出力 |
+| DoD-2 | 値はすべて int、キーはすべて `YYYY-MM` 形式 | 完了 | test_dod2 が ok |
+| DoD-3 | 月の境界を JST で判定している | 完了 | test_dod3 が ok（UTC 14:59:59 は当月、15:00:00 は翌月）。内訳では A-1004 が 2 月、A-1010 が 5 月に入っている |
+| DoD-4 | cancelled を除外し、それ以外の status と負の金額を含める | 完了 | test_dod4 が ok。内訳の A-1003 と A-1007 が除外され、A-1006 は含まれている |
+| DoD-5 | 行ごとに ÷1.1 し、丸めて整数にする | 完了（丸め方は人間の確認が必要） | test_dod5 が ok（100→91、105→95、-100→-91）。丸め方は仮定 A2 に基づく |
+| DoD-6 | 空き月を 0 で埋める（年またぎを含む） | 完了（範囲の定義は人間の確認が必要） | test_dod6 が ok。DoD-1 の `2026-03: 0`。範囲は仮定 A3 に基づく |
+| DoD-7 | 対象行が 0 件なら `{}` を返す | 完了 | test_dod7 が ok |
+| DoD-8 | 不正な行では ValueError を送出する | 完了 | test_dod8 が ok（日付が不正、金額が不正、タイムゾーンなしの 3 パターン） |
+| DoD-9 | 標準ライブラリのみを使う | 完了 | test_dod9 が ok（AST で import を調べ、`sys.stdlib_module_names` と照合） |
+
+## 採用した仮定
+
+| ID | 内容 | 由来 |
+|---|---|---|
+| A1 | シグネチャは `monthly_sales(path: str \| os.PathLike) -> dict[str, int]`。標準ライブラリのみ使う | 推奨既定案 |
+| A2 | 税抜換算は行ごとに ÷1.1 し、`ROUND_HALF_UP`（0.5 ちょうどは 0 から遠い側）で整数にしてから合算する | 推奨既定案（**要確認**） |
+| A3 | 0 埋めの範囲は、集計対象の行がある最初の月から最後の月まで（JST 基準） | 推奨既定案（**要確認**） |
+| A4 | status は前後の空白を除き、大文字小文字を区別せずに比べる。除外するのは `cancelled` だけ（`canceled` は除外しない） | 推奨既定案 |
+| A5 | 不正な行（日時が不正、タイムゾーンなし、金額が整数でない、列の欠落）では `ValueError` を送出する | 推奨既定案 |
+| A6 | 対象行が 0 件なら `{}` を返す | 推奨既定案 |
+| A7 | 戻り値のキーは昇順に並べる | 推奨既定案 |
+| A8 | ファイルは `utf-8-sig` で読む（BOM があってもなくてもよい） | 推奨既定案 |
+| — | 月の判定は JST、除外するのは cancelled のみ、金額は税抜、空き月は 0 埋め、テストファイルを含める | ユーザーの回答 |
+
+## 人間の確認が必要な点
+
+1. **A2 の税抜換算の単位と丸め方**: 行ごとに換算するか月合計で換算するか、丸め方を四捨五入・切り捨て・切り上げのどれにするか。今回の sales.csv は全行が 1,100 の倍数なので、結果は変わらない。
+2. **A3 の 0 埋めの範囲**: 会計年度の全月など、固定の期間で出したい場合は引数の追加が必要になる。
+3. **A4 の status の綴り**: `canceled`（米国式の綴り）などの表記ゆれがデータに入ってくる可能性があるか。

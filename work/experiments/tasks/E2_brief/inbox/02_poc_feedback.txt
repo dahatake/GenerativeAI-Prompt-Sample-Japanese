@@ -1,0 +1,8 @@
+From: 小林 由美 <yumi.kobayashi@contoso-manufacturing.example>
+To: 営業担当 <sales@ourcompany.example>
+Date: 2026-11-12 16:40
+Subject: PoC 第1フェーズの所感
+
+PoC の検出精度は目標の 95% に対して 93.8% でした。
+誤検出の多くは照明条件の変化によるものと見ています。
+第2フェーズでは照明の安定化をセットで検討したいです。

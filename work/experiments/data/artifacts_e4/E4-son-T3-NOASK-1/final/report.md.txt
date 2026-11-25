@@ -1,0 +1,48 @@
+# Report — validate_invoice_id
+
+## 成果物
+- `solution.py`: `validate_invoice_id(value) -> bool`（`re.fullmatch` で `INV-YYYYMM-NNNN`、MM=01-12、NNNN≠0000、`str` 以外は False）
+- `test_solution.py`: DoD 検証用 unittest（標準ライブラリのみ）
+- `contract.md`: 推奨既定案で確定
+
+## 検証コマンドと出力
+```
+python -m unittest -v test_solution
+test_boundaries_true ... ok
+test_dod1_samples_true ... ok
+test_dod2_invalid_strings_false ... ok
+test_dod3_non_str_false_no_exception ... ok
+test_dod4_return_type_is_bool ... ok
+Ran 5 tests in 0.001s
+OK
+
+python -c "from solution import validate_invoice_id; print('import ok')"
+import ok
+```
+
+## DoD の状態
+| # | 条件 | 状態 | 根拠 |
+|---|------|------|------|
+| 1 | samples.txt の4件が True | 完了 | `test_dod1_samples_true`（samples.txt から読み込み、4件を確認） |
+| 2 | 不正文字列13パターンが False | 完了 | `test_dod2_invalid_strings_false` |
+| 3 | `None`/`123`/bytes/`[]` ほかで例外なく False | 完了 | `test_dod3_non_str_false_no_exception`（`{}`、`1.5`、`True` も含む） |
+| 4 | 戻り値が常に `bool` | 完了 | `test_dod4_return_type_is_bool`。検証したのは True/False 両方と非 str 入力 |
+| 5 | import 成功 | 完了 | `import ok` |
+| - | 変更ファイルが想定範囲内 | 完了（補足あり） | 追加したのは `solution.py`、`test_solution.py`、`report.md`。`__pycache__` は実行で自動生成された |
+| - | 仕様そのものの正しさ（採番ルール） | 人間の確認が必要 | 仕様書・NG例が無く、サンプル4件からの推測のみ |
+
+## 採用した仮定
+- A1. 形式は `INV-YYYYMM-NNNN`。年は4桁の数字なら何でも可で、範囲は制限しない（`0000` 年も True）。
+- A2. 「正しい」は形式の妥当性のみ。存在確認・重複確認はしない。
+- A3. `str` 以外は False（`str` のサブクラスも False）。
+- A4. 厳密一致。空白、小文字、末尾改行は不可。
+- A5. 数字は ASCII の `0-9` のみ。全角数字は不可。
+- A6. チェックサムは無い。
+- Q1=a: 月は 01〜12。
+- Q2=a: 連番は 0001〜9999 で、`0000` は無効。
+- Q3=a: 前後の空白除去や大文字化の寛容処理はしない。
+
+## 未解決・人間の確認が望ましい点
+- 年の範囲（例: 2000〜2099 に制限するか）は決めていない。
+- 連番が将来5桁以上になる可能性は考慮していない。
+- 実運用の採番ルールとの突き合わせは未実施。

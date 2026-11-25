@@ -1,0 +1,47 @@
+# 月次売上集計 — 実行報告
+
+推奨既定案で確定した `contract.md` に従い、`solution.py` に `monthly_sales(path)` を実装した。
+
+## Definition of Done
+
+| 条件 | 状態 | 検証した内容 |
+| --- | --- | --- |
+| 1. インポート・サンプル集計・入出力 | 完了 | `test_sample_totals_types_and_unchanged_input` で実ファイルを渡し、期待する辞書、整数値、入力のバイト単位での不変を確認。 |
+| 2. JST 月境界・キャンセル・負数 | 完了 | `test_jst_month_boundaries` で A-1004・A-1010 と月の切り替わり前後を確認。`test_cancellations_excluded_and_negative_amount_subtracted` でキャンセル2行の除外と、2月の `-1100` の反映を確認。 |
+| 3. 欠月・ゼロ・対象行ゼロ | 完了 | `test_no_sales_month_omitted_but_zero_net_preserved` で対象行のない3月は省略、相殺された2月は `0`。`test_header_only_and_all_cancelled_are_empty` でヘッダーのみ・キャンセルのみは `{}`。 |
+| 4. 入力検証 | 完了 | `test_missing_required_column_raises_value_error` と `test_invalid_or_empty_field_raises_value_error` で必須列不足、空欄、不正な日時・金額・ステータスに対する `ValueError` を確認。 |
+
+## 採用した仮定
+
+- 入力の `Z` 付き UTC 日時を JST（UTC+09:00）に変換してから暦月を決める。
+- `completed` の `amount_incl_tax` を符号付きで合計し、`cancelled` は除く。税の再計算、単位換算、`order_id` による重複排除は行わない。
+- 対象行のない月は省略し、対象行がある月は合計がゼロでも返す。対象行が一件もなければ空の辞書を返す。キーの順序は保証しない。
+- UTF-8（BOM は任意）のヘッダー付きカンマ区切り CSV。必須列は `ordered_at`、`amount_incl_tax`、`status`。日時は `YYYY-MM-DDTHH:MM:SSZ`、金額は半角十進数字に任意の先頭符号。
+- 必須列の不足と必須値の空欄、不正な日時・整数、`completed`・`cancelled` 以外のステータスは `ValueError`。集計対象外の行も入力として検証する。
+
+## 検証コマンドと出力
+
+作業ディレクトリで実行:
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_cancellations_excluded_and_negative_amount_subtracted (test_solution.MonthlySalesTests.test_cancellations_excluded_and_negative_amount_subtracted) ... ok
+test_header_only_and_all_cancelled_are_empty (test_solution.MonthlySalesTests.test_header_only_and_all_cancelled_are_empty) ... ok
+test_invalid_or_empty_field_raises_value_error (test_solution.MonthlySalesTests.test_invalid_or_empty_field_raises_value_error) ... ok
+test_jst_month_boundaries (test_solution.MonthlySalesTests.test_jst_month_boundaries) ... ok
+test_missing_required_column_raises_value_error (test_solution.MonthlySalesTests.test_missing_required_column_raises_value_error) ... ok
+test_no_sales_month_omitted_but_zero_net_preserved (test_solution.MonthlySalesTests.test_no_sales_month_omitted_but_zero_net_preserved) ... ok
+test_sample_totals_types_and_unchanged_input (test_solution.MonthlySalesTests.test_sample_totals_types_and_unchanged_input) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.025s
+
+OK
+```
+
+サンプルテストで照合した結果: `{"2026-01": 16500, "2026-02": 11000, "2026-04": 18700, "2026-05": 7700}`。
+
+補足として、実装前とテスト後の `(Get-FileHash -LiteralPath '.\sales.csv' -Algorithm SHA256).Hash` がともに `C6D43F26291C5523E093222EF4167EFC5F3E1CD037D5852E3DA0B4EDB9BD94EA` で一致した。

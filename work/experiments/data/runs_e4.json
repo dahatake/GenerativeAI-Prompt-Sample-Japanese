@@ -1,0 +1,1120 @@
+[
+ {
+  "run_id": "E4-mai-T1-BPOST-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T1-BPOST-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T1-TCP-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T1-TCP-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T1-NOASK-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T1-NOASK-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T1-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-BPOST-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-BPOST-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-TCP-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-TCP-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-NOASK-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T3-NOASK-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T3-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-BPOST-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-BPOST-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-TCP-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-TCP-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-NOASK-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-T4-NOASK-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-T4-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-mai-E2c-B-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-E2c-B-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-mai-E2c-G-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-E2c-G-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-mai-E2c-G-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-E2c-G-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-mai-E2c-GTB-1",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-E2c-GTB-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-mai-E2c-GTB-2",
+  "experiment": "E4",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-mai-E2c-GTB-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-BPOST-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-BPOST-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-TCP-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-TCP-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-NOASK-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-T1-NOASK-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T1-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-BPOST-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-BPOST-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-TCP-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-TCP-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-NOASK-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-T3-NOASK-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T3-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-BPOST-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-BPOST-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-TCP-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-TCP-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-NOASK-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-T4-NOASK-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-T4-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E4-son-E2c-B-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-E2c-B-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-son-E2c-G-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-E2c-G-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-son-E2c-G-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-E2c-G-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-son-E2c-GTB-1",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-E2c-GTB-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-son-E2c-GTB-2",
+  "experiment": "E4",
+  "model": "claude-sonnet-5.5",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E4-son-E2c-GTB-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E4-gpt-T1-BPOST-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T1-BPOST-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T1-TCP-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T1-TCP-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T1-NOASK-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T1-NOASK-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T1-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-BPOST-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-BPOST-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-TCP-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-TCP-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-NOASK-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T3-NOASK-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T3",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T3-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-BPOST-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-BPOST-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-TCP-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-TCP-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-NOASK-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-T4-NOASK-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-T4-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-E2c-B-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "E2c",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-E2c-B-1",
+  "steps": [
+   "p1"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-E2c-G-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-E2c-G-1",
+  "steps": [
+   "p1"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-E2c-G-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-E2c-G-2",
+  "steps": [
+   "p1"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-E2c-GTB-1",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-E2c-GTB-1",
+  "steps": [
+   "p1"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E4-gpt-E2c-GTB-2",
+  "experiment": "E4",
+  "model": "gpt-6.2-sol",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox\\E4-gpt-E2c-GTB-2",
+  "steps": [
+   "p1"
+  ],
+  "note": "D-v3-1: first attempt in %TEMP% refused by model (no files written); rerun here"
+ },
+ {
+  "run_id": "E5-T6-BPOST-1",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "BPOST",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-BPOST-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E5-T6-BPOST-2",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "BPOST",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-BPOST-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E5-T6-BPOST-3",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "BPOST",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-BPOST-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E5-T6-TCP-1",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E5-T6-TCP-2",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E5-T6-TCP-3",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "TCP",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-TCP-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E5-T6-NOASK-1",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "NOASK",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-NOASK-1",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E5-T6-NOASK-2",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "NOASK",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-NOASK-2",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E5-T6-NOASK-3",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "NOASK",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-NOASK-3",
+  "steps": [
+   "p1",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E5-T6-FULL-1",
+  "experiment": "E5",
+  "model": "harness-default",
+  "task": "T6",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp4\\E5-T6-FULL-1",
+  "steps": [
+   "p1"
+  ]
+ }
+]

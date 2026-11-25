@@ -1,0 +1,67 @@
+# 実行レポート: `dedupe(records)`
+
+## 成果物
+- `solution.py`: `dedupe(records) -> list[dict]` の実装
+- `test_solution.py`: DoD 1〜7 の検証テスト（pytest、12 ケース）
+- `contract.md`: 回答を反映した Task Contract（承認済み）
+
+## 実行コマンドと結果
+```
+> python -m pytest -v -p no:cacheprovider test_solution.py
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+collected 12 items
+test_solution.py::test_dod1_import PASSED
+test_solution.py::test_dod2_members_json PASSED
+test_solution.py::test_dod3_case_and_whitespace_merge[emails0] PASSED
+test_solution.py::test_dod3_case_and_whitespace_merge[emails1] PASSED
+test_solution.py::test_dod3_case_and_whitespace_merge[emails2] PASSED
+test_solution.py::test_dod3_latest_wins_regardless_of_position PASSED
+test_solution.py::test_dod3_different_timezones_compared_as_instants PASSED
+test_solution.py::test_dod4_empty_and_none_emails_all_kept PASSED
+test_solution.py::test_dod5_tie_keeps_first PASSED
+test_solution.py::test_dod5_tie_with_same_instant_different_offset_keeps_first PASSED
+test_solution.py::test_dod6_input_not_mutated PASSED
+test_solution.py::test_dod7_empty_list PASSED
+12 passed in 0.08s
+
+> py -3.14 -m pytest -q -p no:cacheprovider test_solution.py
+12 passed in 0.02s
+```
+
+`members.json` を入力したときの実際の出力（`python -B -c "import json,solution; ..."`）:
+```
+[3, 2, 4, 5, 7]
+{"id": 3, "name": "山田 太郎", "email": " Taro.Yamada@example.co.jp", "updated_at": "2026-03-15T18:30:00+09:00"}
+{"id": 2, "name": "佐藤 花子", "email": "hanako.sato@example.co.jp", "updated_at": "2026-02-01T09:00:00+09:00"}
+{"id": 4, "name": "鈴木 一郎", "email": "", "updated_at": "2026-01-20T10:00:00+09:00"}
+{"id": 5, "name": "高橋 次郎", "email": null, "updated_at": "2026-02-11T10:00:00+09:00"}
+{"id": 7, "name": "田中 美咲", "email": "misaki.tanaka@example.co.jp", "updated_at": "2026-02-20T12:00:00+09:00"}
+```
+
+## Definition of Done の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `from solution import dedupe` が成功する | 完了 | `test_dod1_import` |
+| 2 | `members.json` の出力 id 列が `[3, 2, 4, 5, 7]` | 完了 | `test_dod2_members_json` と上の実際の出力 |
+| 3 | email の大文字小文字・前後の空白だけが違うレコードは 1 件にまとまる | 完了 | `test_dod3_*`（5 ケース。位置によらず最新を残すこと、タイムゾーンが違う時刻の比較を含む） |
+| 4 | email が `""` / `None` のレコードはすべて残る | 完了 | `test_dod4_empty_and_none_emails_all_kept`（空白だけの email、email キーがない場合を含む） |
+| 5 | 同時刻なら入力で先に出たものが残る | 完了 | `test_dod5_tie_keeps_first`、`test_dod5_tie_with_same_instant_different_offset_keeps_first` |
+| 6 | 入力リストと各 dict が変更されない | 完了 | `test_dod6_input_not_mutated`（deepcopy と比較。戻り値を変更しても入力に波及しないことも確認） |
+| 7 | 空リストで空リストを返す | 完了 | `test_dod7_empty_list` |
+
+### 人間の確認が必要な点
+- **id 3 の email の先頭に空白が残る:** id 3 の email は `" Taro.Yamada@..."` のまま返ります。これは「値は元のまま返す」という合意（A2）に従った結果です。出力側でも空白を除くべきなら、仕様の変更が必要です。
+- **Python 3.9 / 3.10 / 3.11 は未検証:** 3.9 以上を想定していますが、実際に検証したのは 3.12.10 と 3.14 だけです。この環境に 3.9〜3.11 がないため、これらのバージョンでの動作は証拠不足です。コードは 3.9 で使えない構文を使っていませんが、`updated_at` が `Z` で終わる形式（例: `...T00:00:00Z`）は、`datetime.fromisoformat` が 3.11 未満では解釈できず、例外になります。
+
+## 採用した仮定
+- **Q1 = (a)（回答）:** 重複キーは、email の前後の空白を除いて小文字化したもの。
+- **Q2 = (a)（回答）:** `updated_at` が最新のものを残す。同時刻なら入力で先に出たものを残す。
+- **Q3 = (a)（回答）:** email が空文字・null のレコードは判定対象外にして全件残す。
+- **A1:** 入力は `list[dict]`。関数は入力を変更しない。標準ライブラリだけを使う。
+- **A2:** 残すレコードの値は元のまま返す。正規化は比較のためだけに行う。
+- **A3:** 出力の順序は、各グループが入力で最初に現れた位置の順にする。
+- **A4:** `dedupe` はファイルの読み書きをしない。
+- **A6:** 空白だけの email と、`email` キーがないレコードは、空文字と同じく判定対象外にする。
+- **A7:** `updated_at` は `datetime.fromisoformat` で解釈し、時刻として比較する。email のあるレコードで値がない、または解釈できない場合は例外（`KeyError` / `ValueError`）を送出する。email のないレコードの `updated_at` は参照しない。
+- **A8:** 戻り値は浅いコピーの dict。
+- **既定案:** 対象は Python 3.9 以上。テストは pytest。

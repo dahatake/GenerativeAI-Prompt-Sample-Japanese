@@ -1,0 +1,60 @@
+# 実行レポート: `monthly_work_hours(path)`
+
+- 契約: `contract.md`（推奨既定案 Q1=A / Q2=A / Q3=A で確定・承認済み）
+- 成果物: `solution.py`（実装）、`test_solution.py`（DoD 検証用のテスト）
+- 環境: Python 3.12.10、pytest 9.1.1（Windows）
+
+## 証拠
+
+### コマンド 1（DoD 1, 2）
+```
+> python -c "from solution import monthly_work_hours as f; print(f('shifts.csv'))"
+{'E001': 14.833333333333334, 'E002': 14.0, 'E003': 9.25}
+```
+
+### コマンド 2（DoD 2〜8）
+```
+> python -m pytest -v -p no:cacheprovider test_solution.py
+test_solution.py::test_shifts_csv_expected_values PASSED                 [ 10%]
+test_solution.py::test_overnight_shift PASSED                            [ 20%]
+test_solution.py::test_paid_leave_only_employee_is_zero PASSED           [ 30%]
+test_solution.py::test_line_endings_and_bom_give_same_result PASSED      [ 40%]
+test_solution.py::test_invalid_work_row_raises[A,2026-10-01,work,,18:00] PASSED [ 50%]
+test_solution.py::test_invalid_work_row_raises[A,2026-10-01,work,09:00,] PASSED [ 60%]
+test_solution.py::test_invalid_work_row_raises[A,2026-10-01,work,9am,18:00] PASSED [ 70%]
+test_solution.py::test_invalid_work_row_raises[A,2026-10-01,work,25:00,18:00] PASSED [ 80%]
+test_solution.py::test_multiple_months_raises PASSED                     [ 90%]
+test_solution.py::test_month_end_overnight_counts_in_start_month PASSED  [100%]
+============================= 10 passed in 0.17s ==============================
+```
+テストの一時ファイルは作業ディレクトリ内の `_test_data/` に作成し、各テストの終了時に削除しています。
+
+## DoD 状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `python -c ...` がエラーなく実行できる | **完了** | コマンド 1 |
+| 2 | E001=14.8333… / E002=14.0 / E003=9.25、キーがちょうど 3 件、値が float | **完了**（ただし期待値そのものは既定案に基づく。下記参照） | コマンド 1、`test_shifts_csv_expected_values` |
+| 3 | 日付をまたぐシフト 22:00→06:00 が 8.0h | **完了** | `test_overnight_shift` |
+| 4 | `paid_leave` だけの従業員が 0.0 | **完了** | `test_paid_leave_only_employee_is_zero` |
+| 5 | LF / CRLF の混在と BOM の有無で結果が同じ | **完了** | `test_line_endings_and_bom_give_same_result`（実データ自体も LF と CRLF が混在） |
+| 6 | `work` 行の時刻が空欄または不正な形式なら `ValueError` | **完了** | `test_invalid_work_row_raises`（4 ケース） |
+| 7 | 複数の月を含む CSV で `ValueError` | **完了** | `test_multiple_months_raises`。補足として、月末の日付またぎが開始月に計上されることも `test_month_end_overnight_counts_in_start_month` で確認 |
+| 8 | 上記をテストにし、すべて通る | **完了** | コマンド 2（10 passed） |
+| — | 既定案（休憩を差し引かない／有給は 0h／1 ファイル 1 か月）が実際の業務ルールと合っているか | **人間の確認が必要** | Q1〜Q3 の回答が得られていないため、テストでは「既定案どおりに動くこと」しか証明できません |
+
+## 採用した決定事項と仮定
+
+確定した決定事項（いずれも推奨既定案。ユーザーの明示的な承認はありません）:
+- Q1=A: 休憩は差し引かない。労働時間は `end - start` そのまま。
+- Q2=A: `type` が `work`（大文字小文字は区別しない）の行だけを集計する。`paid_leave` と未知の type は 0 時間として扱い、従業員キーは残す。
+- Q3=A: ファイルを 1 か月分とみなす。`date` の年月が複数あれば `ValueError`。日付またぎのシフトは開始日の月に全時間を計上する。
+
+仮定:
+- A1: `end <= start` なら翌日終了とみなし、24 時間を足す。この結果、`start == end`（例: 09:00→09:00）は 24h になる。
+- A2: 丸めない（分 ÷ 60）。比較には許容誤差を使う。
+- A3: CSV に現れる全従業員をキーに含める（0 時間でも `0.0`）。
+- A4: 標準ライブラリだけを使う。`utf-8-sig` で読み込む（BOM の有無に対応）。改行の混在に対応する。
+- A5: 前後の空白は無視する。空行は読み飛ばす。
+- A6: `work` 行の時刻の欠落や不正な形式、不正な日付、従業員 ID の空欄、必須列の欠落は `ValueError` にする。
+- A7: 同じ従業員・同じ日の複数の `work` 行は合算する（重複の判定はしない）。

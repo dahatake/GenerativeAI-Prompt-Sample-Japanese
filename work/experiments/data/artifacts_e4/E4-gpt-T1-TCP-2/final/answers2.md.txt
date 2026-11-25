@@ -1,0 +1,1 @@
+Q2: B でお願いします。`status == "cancelled"` の行だけを除外し、それ以外（`pending`、`refunded`、空欄を含む）はすべて集計してください。

@@ -1,0 +1,53 @@
+# Report: `monthly_work_hours(path)`
+
+## 結果
+- `answers.md` の回答には、必要な値（6h 超で 60 分控除、有給 7.5h、シフトごとに 15 分単位で切り捨て）がすべて含まれていた。そのため followup.md は作らずに実装した。
+- 成果物: `solution.py`（実装）、`test_solution.py`（DoD を確認するテスト）、`contract.md`（回答を反映して承認済みに更新）。
+- サンプルの結果: `monthly_work_hours("shifts.csv")` → `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}`
+
+## 証拠（実行したコマンドと出力）
+```
+> python -m unittest -v test_solution
+test_dod1_import ... ok
+test_dod2_sample_expected_values ... ok
+test_dod3_return_types ... ok
+test_dod4_overnight_shift ... ok
+test_dod5_paid_leave ... ok
+test_dod6_invalid_work_rows_raise ... ok
+test_dod7_bom_utf8 ... ok
+test_dod8_break_threshold_boundary ... ok
+test_dod9_floor_15min_per_shift ... ok
+----------------------------------------------------------------------
+Ran 9 tests in 0.051s
+OK
+
+> python -c "from solution import monthly_work_hours as m; print(m('shifts.csv'))"
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+テスト用の一時 CSV は作業ディレクトリ内の `_test_tmp/` に作成し、テスト終了時に削除した。
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `from solution import monthly_work_hours` が成功する | 完了 | test_dod1 |
+| 2 | shifts.csv → E001=21.25, E002=13.0, E003=8.25 | 完了 | test_dod2・CLI 出力 |
+| 3 | dict[str, float] を返す | 完了 | test_dod3 |
+| 4 | 22:00–06:00 → 7.0h | 完了 | test_dod4 |
+| 5 | paid_leave は 1 行 7.5h。有給だけの従業員もキーとして返る | 完了 | test_dod5 |
+| 6 | start / end が空または不正なら ValueError | 完了 | test_dod6 |
+| 7 | BOM 付き UTF-8 でも同じ結果 | 完了 | test_dod7 |
+| 8 | 休憩控除の境界（6:00→6.0, 6:01→5.0, 7:00→6.0, 7:15→6.25） | 完了 | test_dod8 |
+| 9 | 15 分の切り捨てはシフトごと（5h50+5h44→11.25） | 完了 | test_dod9 |
+
+人間の確認が必要な点: 6h01〜6h59 の勤務は、60 分を控除すると 6h 未満になり、控除しない 6h ちょうどの勤務より短く計上される（例: 6:30 → 5.5h）。これは回答どおりの仕様だが、業務上それでよいかは確認を推奨する。
+
+## 採用した仮定
+- A1（回答で確定）: end < start の場合は、翌日に終了した勤務として扱う。
+- A2: 日付をまたぐ勤務は、全時間を開始日の勤務として数える。
+- A3: ファイル内の全行を合計する。月でフィルタしたり分割したりはしない。
+- A4: `work` と `paid_leave` 以外の type は 0h とする（その従業員もキーとして返す）。
+- A5: start == end の work 行は 0h とする。
+- A6: `utf-8-sig` で読み込み、列はヘッダー名で参照する。employee は前後の空白を除いてキーにする。
+- A7: work 行の start / end が空または不正な場合、employee が空の場合は ValueError を送出する。
+- A8: 標準ライブラリだけを使う。
+- 補足: 計算は整数の分で行い、最後に /60 して float にする。paid_leave 行の start / end は無視する。休憩控除と切り捨ては paid_leave には適用しない（7.5h は 15 分の倍数なので結果に影響はない）。

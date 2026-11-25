@@ -1,0 +1,46 @@
+# 実行レポート: `monthly_work_hours(path)`
+
+Task Contract（`contract.md`）は推奨既定案 Q1-a / Q2-a / Q3-a で確定しました（質問への回答がなかったため）。この契約に沿って `solution.py` を実装し、`test_solution.py` で検証しました。
+
+## 検証コマンドと結果
+
+```
+python -m pytest -v -p no:cacheprovider --basetemp=.\.pytest_tmp test_solution.py
+→ 14 passed in 0.48s（Python 3.12.10, pytest 9.1.1）
+
+python -c "from solution import monthly_work_hours as f; print(f('shifts.csv'))"
+→ {'E001': 14.833333333333332, 'E002': 14.0, 'E003': 9.25}
+```
+
+一時ファイルは作業ディレクトリ内の `.pytest_tmp` に作り、実行後に削除しました。`shifts.csv` は変更していません（224 bytes のまま）。
+
+## DoD 状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `shifts.csv` → E001=14.8333…, E002=14.0, E003=9.25（許容誤差 1e-9） | **完了** | `test_dod1_sample_file` PASSED。実際の出力は上記のとおり |
+| 2 | 日またぎ勤務 22:00→06:00 が 8.0h になる | **完了** | `test_dod2_overnight_shift` PASSED |
+| 3 | paid_leave だけの従業員は 0.0 で返り、paid_leave の行は合計に影響しない | **完了** | `test_dod3_paid_leave_only_employee_is_zero`、`test_dod3_paid_leave_does_not_change_total` PASSED |
+| 4 | BOM 付きや改行コード混在の CSV でも DoD 1 と同じ結果になる | **完了** | `test_dod4_bom_and_crlf` PASSED（BOM / CRLF / BOM+CRLF を検証。元ファイル自体が LF と CRLF の混在） |
+| 5 | 複数月、work 行の時刻が空、不正な時刻 → `ValueError` | **完了** | `test_dod5_invalid_input_raises`（8 ケース）、`test_dod5_missing_column_raises` PASSED |
+| 6 | pytest の全テストが成功する | **完了** | 14 passed |
+| ― | 業務ルール（休憩控除なし・有給 0h・開始日の月に計上）の妥当性 | **人間の確認が必要** | Q1〜Q3 は未回答のまま既定案を採用しました。テストはこの既定案に沿っているかを確かめるもので、業務上正しいかどうかは検証できていません |
+| ― | 実データ（shifts.csv 以外）での動作 | **証拠不足** | サンプルは 6 行・1 か月分だけです。実運用の CSV（ほかの type、文字コード、規模）では検証していません |
+
+## 採用した仮定・決定事項
+
+1. **Q1-a:** 休憩は差し引かず、`end - start` をそのまま労働時間にする。
+2. **Q2-a:** `type != "work"` の行（`paid_leave` や未知の type を含む）は 0 時間とする。ただし従業員キーは `0.0` で返す。
+3. **Q3-a:** `end < start` なら翌日の終了とみなし、時間はすべて開始日の月に計上する。ファイルに複数月が含まれていたら（休暇の行を含めて判定）`ValueError` にする。
+4. **A1:** 文字コードは UTF-8 とし、`utf-8-sig` で読むので BOM があっても読める。改行コードの混在は `csv` モジュールで吸収する。
+5. **A2:** 戻り値は丸めない float とする（例: 14.833333333333332）。
+6. **A3:** 1 シフトは 24 時間未満とする。そのため `start == end` の work 行は 0h か 24h か判断できず、`ValueError` にする（実装中に追加で決めた事項）。
+7. **A4:** 入力 CSV は 1 か月分だけを含む。
+8. **A5:** 標準ライブラリ（`csv`, `datetime`）だけを使う。
+9. **A6 / 補足:** 同じ従業員・同じ日付の重複行はそのまま合算する。必須列の欠落、従業員 ID が空、日付が不正な場合も `ValueError` にする。ヘッダだけの CSV では `{}` を返す。
+
+## 成果物
+- `solution.py`: 実装
+- `test_solution.py`: DoD 検証用のテスト
+- `contract.md`: 確定済みの Task Contract
+- `timing.txt`: 開始時刻・終了時刻の記録

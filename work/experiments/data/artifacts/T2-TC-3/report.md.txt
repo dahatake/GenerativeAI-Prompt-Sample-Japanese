@@ -1,0 +1,50 @@
+# 実行レポート: `dedupe(records)`
+
+## 成果物
+- `solution.py`: `dedupe(records) -> list[dict]` の実装
+- `test_solution.py`: Definition of Done を検証する unittest
+- `contract.md`: 回答（Q1=a, Q2=a, Q3=a）を反映した承認済み契約
+
+## 検証コマンドと出力
+```
+> python -m unittest -v test_solution
+test_dod1_members_json ... ok
+test_dod2_empty_list ... ok
+test_dod3_input_not_mutated ... ok
+test_dod4_missing_emails_all_kept ... ok
+test_dod5_tie_keeps_first ... ok
+test_latest_wins_across_timezones ... ok
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK
+```
+実行環境: Python 3.12.10（Windows）
+
+## Definition of Done の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `members.json` を渡すと `id` が `[3, 2, 4, 5, 7]` の順になる | 完了 | `test_dod1_members_json`（元の dict がそのまま返ることも確認） |
+| 2 | `dedupe([])` が `[]` を返す | 完了 | `test_dod2_empty_list` |
+| 3 | 入力のリストと各 dict を変更しない | 完了 | `test_dod3_input_not_mutated`（deepcopy と比較） |
+| 4 | email が `""`、`None`、空白のみ、またはキー自体がないレコードが複数あっても全件残る | 完了 | `test_dod4_missing_emails_all_kept` |
+| 5 | `updated_at` が同時刻の重複では先に現れたレコードを残す | 完了 | `test_dod5_tie_keeps_first` |
+| 6 | 上の 1〜5 を unittest で実行し、すべて成功する | 完了 | 上記コマンドの出力（6件 OK） |
+
+補足テスト: タイムゾーンが異なる `updated_at`（`+09:00` と `Z`）を時刻として比較できることを `test_latest_wins_across_timezones` で確認しました。
+
+## 人間の確認が必要な点
+- 本番データの規模と、`updated_at` が欠けているレコードや不正な形式のレコードがあるかどうか。今の実装では、メールアドレスがあるレコードに `updated_at` がないと `KeyError`、形式が不正だと `ValueError` になります。
+- 判定対象外にしたレコードの中に、同一人物の重複が残っている可能性があります。たとえば `members.json` の id4 と id5 は、メールアドレスがないため重複判定をしていません。
+
+## 採用した仮定
+- Q1（回答）: 重複判定のキーは、メールアドレスの前後の空白を除き（`strip()`）、大文字小文字を区別しない（`casefold()`）値です。
+- Q2（回答）: 重複したレコードは `updated_at` が最も新しいものを残し、項目のマージはしません。
+- Q3（回答）: メールアドレスが空または `null` のレコードは重複判定から外し、すべて残します。
+- A1: Python 3（3.12 で検証済み）と標準ライブラリだけを使います。入力はすでに読み込まれた `list[dict]` で、ファイル入出力はしません。
+- A2: 返すのは入力の dict そのものです。メールアドレスを正規化した値に書き換えず、入力も変更しません。
+- A3: 出力は、各重複グループが最初に現れた位置の順に並べます。
+- A4: `updated_at` は時刻として比較します。同時刻の場合は先に現れたレコードを残します。
+- A5: 空のリストを渡されたら空のリストを返します。
+- A6: 空白だけのメールアドレス、文字列でない値、`email` キーがない場合も、「空」として判定対象外にします。
+- A7: `updated_at` は `datetime.fromisoformat` で解釈できる形式とします。末尾の `Z` は UTC として扱います。タイムゾーン付きとタイムゾーンなしの時刻が混在するデータは想定していません。

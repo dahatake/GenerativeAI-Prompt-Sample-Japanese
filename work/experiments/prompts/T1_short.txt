@@ -1,0 +1,1 @@
+sales.csv の売上を月次で集計する関数 monthly_sales(path) を solution.py に実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。

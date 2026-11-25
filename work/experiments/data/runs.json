@@ -1,0 +1,275 @@
+[
+ {
+  "run_id": "T1-B-1",
+  "task": "T1",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-B-1"
+ },
+ {
+  "run_id": "T1-B-2",
+  "task": "T1",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-B-2"
+ },
+ {
+  "run_id": "T1-B-3",
+  "task": "T1",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-B-3"
+ },
+ {
+  "run_id": "T1-TC-1",
+  "task": "T1",
+  "condition": "TC",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-TC-1"
+ },
+ {
+  "run_id": "T1-TC-2",
+  "task": "T1",
+  "condition": "TC",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-TC-2"
+ },
+ {
+  "run_id": "T1-TC-3",
+  "task": "T1",
+  "condition": "TC",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-TC-3"
+ },
+ {
+  "run_id": "T1-FULL-1",
+  "task": "T1",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T1-FULL-1"
+ },
+ {
+  "run_id": "T2-B-1",
+  "task": "T2",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-B-1"
+ },
+ {
+  "run_id": "T2-B-2",
+  "task": "T2",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-B-2"
+ },
+ {
+  "run_id": "T2-B-3",
+  "task": "T2",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-B-3"
+ },
+ {
+  "run_id": "T2-TC-1",
+  "task": "T2",
+  "condition": "TC",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-TC-1"
+ },
+ {
+  "run_id": "T2-TC-2",
+  "task": "T2",
+  "condition": "TC",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-TC-2"
+ },
+ {
+  "run_id": "T2-TC-3",
+  "task": "T2",
+  "condition": "TC",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-TC-3"
+ },
+ {
+  "run_id": "T2-FULL-1",
+  "task": "T2",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T2-FULL-1"
+ },
+ {
+  "run_id": "T3-B-1",
+  "task": "T3",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-B-1"
+ },
+ {
+  "run_id": "T3-B-2",
+  "task": "T3",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-B-2"
+ },
+ {
+  "run_id": "T3-B-3",
+  "task": "T3",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-B-3"
+ },
+ {
+  "run_id": "T3-TC-1",
+  "task": "T3",
+  "condition": "TC",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-TC-1"
+ },
+ {
+  "run_id": "T3-TC-2",
+  "task": "T3",
+  "condition": "TC",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-TC-2"
+ },
+ {
+  "run_id": "T3-TC-3",
+  "task": "T3",
+  "condition": "TC",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-TC-3"
+ },
+ {
+  "run_id": "T3-FULL-1",
+  "task": "T3",
+  "condition": "FULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\T3-FULL-1"
+ },
+ {
+  "run_id": "E2-B-1",
+  "task": "E2",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-B-1"
+ },
+ {
+  "run_id": "E2-B-2",
+  "task": "E2",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-B-2"
+ },
+ {
+  "run_id": "E2-B-3",
+  "task": "E2",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-B-3"
+ },
+ {
+  "run_id": "E2-G-1",
+  "task": "E2",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-G-1"
+ },
+ {
+  "run_id": "E2-G-2",
+  "task": "E2",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-G-2"
+ },
+ {
+  "run_id": "E2-G-3",
+  "task": "E2",
+  "condition": "G",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-G-3"
+ },
+ {
+  "run_id": "E2-GTB-1",
+  "task": "E2",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-GTB-1"
+ },
+ {
+  "run_id": "E2-GTB-2",
+  "task": "E2",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-GTB-2"
+ },
+ {
+  "run_id": "E2-GTB-3",
+  "task": "E2",
+  "condition": "GTB",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2-GTB-3"
+ },
+ {
+  "run_id": "E2b-B-1",
+  "task": "E2b",
+  "condition": "B",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-B-1"
+ },
+ {
+  "run_id": "E2b-B-2",
+  "task": "E2b",
+  "condition": "B",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-B-2"
+ },
+ {
+  "run_id": "E2b-B-3",
+  "task": "E2b",
+  "condition": "B",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-B-3"
+ },
+ {
+  "run_id": "E2b-G-1",
+  "task": "E2b",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-G-1"
+ },
+ {
+  "run_id": "E2b-G-2",
+  "task": "E2b",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-G-2"
+ },
+ {
+  "run_id": "E2b-G-3",
+  "task": "E2b",
+  "condition": "G",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-G-3"
+ },
+ {
+  "run_id": "E2b-GTB-1",
+  "task": "E2b",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-GTB-1"
+ },
+ {
+  "run_id": "E2b-GTB-2",
+  "task": "E2b",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-GTB-2"
+ },
+ {
+  "run_id": "E2b-GTB-3",
+  "task": "E2b",
+  "condition": "GTB",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp\\E2b-GTB-3"
+ }
+]

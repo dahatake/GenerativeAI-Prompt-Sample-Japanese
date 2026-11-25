@@ -1,0 +1,34 @@
+# Report — validate_invoice_id
+
+成果物: `solution.py`（実装）、`test_solution.py`（検証）、`contract.md`（更新済み）
+
+## 検証コマンドと結果
+```
+python -m unittest test_solution -v
+test_non_str ... ok
+test_samples_true ... ok
+test_sequence ... ok
+test_strict_format ... ok
+test_year_month_range ... ok
+Ran 5 tests in 0.001s  OK
+```
+
+## DoD 状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | samples.txt の4件すべて True | 完了 | `test_samples_true`（ファイルから読み込み、4件を確認） |
+| 2 | 不正例が False／境界が True（年2019/2100、月00/13、連番0000・桁違い、INX、小文字、区切り違い、全角、空白・改行付き、空文字、None/int/bytes 等） | 完了 | `test_year_month_range`, `test_sequence`, `test_strict_format`, `test_non_str` |
+| 3 | 戻り値が常に bool | 完了 | 全テストで `assertIs(..., True/False)` |
+| 4 | テスト全件パス | 完了 | 上記出力 |
+| - | 実際の業務ルールとの一致（サンプル外の番号体系、未来年 2099 までの扱い等） | 人間の確認が必要 | 仕様はサンプルと回答のみに基づく |
+
+## 採用した仮定
+- 形式: `INV-YYYYMM-NNNN`、`INV` 大文字固定、半角ハイフン、桁数固定、半角数字(0-9)のみ。
+- 年 2020〜2099、月 01〜12、連番 0001〜9999（回答による）。
+- 厳密一致（前後空白・改行・小文字・全角は不正）。`str` 以外は例外なしで False。
+- 形式チェックのみ（実在・重複・チェックディジット確認なし）。
+- 日付の整合（未来月かどうか）は検証しない。
+- 実装は標準ライブラリ `re` の `fullmatch`（末尾改行を許さないため `$` ではなく fullmatch を使用）。
+
+## 備考
+- 前回ターンで `timing.txt` を誤って別ディレクトリに作成し、直後に削除済み。

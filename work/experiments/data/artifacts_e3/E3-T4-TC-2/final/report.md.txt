@@ -1,0 +1,79 @@
+# 実行レポート: monthly_work_hours(path)
+
+## 成果物
+- `solution.py`: `monthly_work_hours(path) -> dict[str, float]` の実装
+- `test_solution.py`: DoD 検証用テスト（unittest、10ケース）
+- `contract.md`: 承認済みの Task Contract（answers.md の回答を反映済み）
+
+## 証拠
+
+### テストの実行（Python 3.12.10）
+```
+> python -m unittest -v test_solution
+test_break_boundary ... ok
+test_empty_inputs ... ok
+test_encoding_and_newlines ... ok
+test_invalid_rows_raise ... ok
+test_missing_column_raises ... ok
+test_overnight_shift ... ok
+test_paid_leave ... ok
+test_return_types ... ok
+test_rounding_down_per_shift ... ok
+test_sample_file ... ok
+----------------------------------------------------------------------
+Ran 10 tests in 0.372s
+
+OK
+```
+
+### サンプルファイルの出力
+```
+> python -c "from solution import monthly_work_hours as m; print(m('shifts.csv'))"
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import monthly_work_hours` が成功する | 完了 | テストモジュールの import が成功し、全テストを実行できた |
+| 2 | shifts.csv の結果が `{E001: 21.25, E002: 13.0, E003: 8.25}` になる | 完了 | `test_sample_file` と上記の出力 |
+| 3 | キーが `str`、値が `float` である | 完了 | `test_return_types` |
+| 4 | 夜勤 22:00→06:00 が 7.0h になる | 完了 | `test_overnight_shift`（23:30→02:00 = 2.5h も確認） |
+| 5 | 有給が1行 7.5h になり、有給だけの従業員も出力に含まれる | 完了 | `test_paid_leave` |
+| 6 | 休憩控除の境界: 6:00 → 6.0、6:01 → 5.0、6:15 → 5.25 | 完了 | `test_break_boundary` |
+| 7 | 15分の切り捨て（合計する前にシフトごとに行う） | 完了 | `test_rounding_down_per_shift`（0:10 ×2 → 0.0 で、シフトごとの切り捨てを確認） |
+| 8 | ヘッダだけ・空ファイルが `{}` になる | 完了 | `test_empty_inputs` |
+| 9 | 不正な入力で `ValueError` になる | 完了 | `test_invalid_rows_raise`（10パターン）と `test_missing_column_raises` |
+| 10 | BOM あり/なし、LF/CRLF で同じ結果になる | 完了 | `test_encoding_and_newlines`（4通りの組み合わせ） |
+| 11 | テストがすべて成功する | 完了 | 上記のテスト実行結果（10 tests OK） |
+
+### 人間の確認が必要な点
+DoD はすべて満たしていますが、次の点は解釈に依存しています。業務ルールとして正しいかを確認してください。
+- 「拘束時間」の扱い: end − start をそのまま拘束時間とし、6時間を「超える」かどうかで判定しています（6:00 ちょうどは控除なし、6:01 は控除あり）。
+- 有給の行に時刻が書かれている場合: 時刻は無視して 7.5h として計上しています（A8）。半日有給などの種別は想定していません。
+- 控除と切り捨ての順序: 「控除してから切り捨てる」順で実装しました。控除の60分は15分の倍数なので、順序を逆にしても結果は同じです。
+
+## 採用した仮定・決定の一覧
+
+| ID | 内容 | 根拠 |
+|---|---|---|
+| Q1 | 拘束時間が6時間を超えるシフトは60分を控除し、6時間ちょうどは控除しない | answers.md |
+| Q2 | `paid_leave` の1行を 7.5h として計上する | answers.md |
+| Q3 | シフトごとに、実労働時間を15分単位で切り捨ててから合計する | answers.md |
+| A1 | 1ファイルを1か月分とみなし、全行を合計する（月の絞り込みはしない） | 既定案 |
+| A2 | end < start は翌日終了とみなし、開始日の分として計上する | answers.md で承認 |
+| A3 | start == end はエラーにする。時刻は H:MM/HH:MM 形式で、0:00〜23:59 の範囲とする | 既定案 |
+| A4 | 標準ライブラリだけを使い、`utf-8-sig` で読み込む | 既定案 |
+| A5 | ファイルに出てくる従業員はすべて出力に含める | 既定案 |
+| A6 | 未知の type、時刻の欠落・書式エラー、日付の書式エラー、必須列の欠落、空のIDは `ValueError` にする | 既定案 |
+| A7 | 空ファイル、またはヘッダだけのファイルは `{}` を返す | 既定案 |
+| A8 | `paid_leave` 行の start/end は無視する | 実装時に追加（要確認） |
+| OQ4 | 複数月が混ざっていても全行を合計する | 既定案 |
+| OQ5 | 月末をまたぐ夜勤は開始日の月に計上する | 既定案 |
+| OQ6 | 値の前後の空白を除き、IDの大文字・小文字は区別する | 既定案 |
+| OQ7 | 時間帯の重複は検出せず、単純に合計する | 既定案 |
+
+## 補足
+- 計算は整数の分で行い、最後に 60 で割って float にしています。15分単位の値は2進の浮動小数点数で誤差なく表せるので、結果は厳密な値になります。
+- テスト用の CSV は作業ディレクトリ内の `_testdata\` に作り、テストが終わるたびに削除しています。

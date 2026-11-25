@@ -1,0 +1,65 @@
+# Report: `reorder_plan` 実装結果
+
+Contract: `contract.md`（推奨既定案 Q1=a / Q2=a / Q3=a で確定・承認済み）
+成果物: `solution.py`（実装）、`test_solution.py`（DoD 検証テスト, unittest）
+
+## 検証コマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_dod1_today_2026_11_10 ... ok
+test_dod2_today_2026_11_25 ... ok
+test_dod3_date_object ... ok
+test_dod4_discontinued_excluded_even_when_short ... ok
+test_dod4_discontinued_never_included ... ok
+test_dod5_on_order_changes_decision ... ok
+test_dod5_on_order_counted_for_a200 ... ok
+test_dod6_qty_positive_lot_multiple_sorted ... ok
+test_dod7_today_and_future_rows_ignored ... ok
+----------------------------------------------------------------------
+Ran 9 tests in 0.281s
+
+OK
+```
+
+計算内訳（直近30日需要・ROP・在庫ポジション）:
+
+```
+today 2026-11-10 -> [{'sku': 'A100', 'qty': 50}]
+  A100 disc=false 30d=90 daily=3.000 ROP=41.00 pos=40
+  A200 disc=false 30d=30 daily=1.000 ROP=15.00 pos=45
+  B300 disc=true  30d=0  daily=0.000 ROP=5.00  pos=5
+  C400 disc=false 30d=0  daily=0.000 ROP=6.00  pos=12
+today 2026-11-25 -> []
+  A100 disc=false 30d=45 daily=1.500 ROP=30.50 pos=40
+  A200 disc=false 30d=14 daily=0.467 ROP=12.33 pos=45
+  B300 disc=true  30d=0  daily=0.000 ROP=5.00  pos=5
+  C400 disc=false 30d=0  daily=0.000 ROP=6.00  pos=12
+```
+
+## DoD 条件の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `today="2026-11-10"` → `[{"sku":"A100","qty":50}]` | 完了 | test_dod1 |
+| 2 | `today="2026-11-25"` → `[]` | 完了 | test_dod2 |
+| 3 | `datetime.date` 引数でも同結果 | 完了 | test_dod3 |
+| 4 | 廃番 B300 は常に含まれない | 完了 | test_dod4_*（実データでは B300 は ROP=5, pos=5 で元々発注されないため、在庫0に変更した派生データで「廃番なら除外／廃番でなければ100発注」を確認） |
+| 5 | A200 は on_order 算入により 2026-11-10 で対象外 | 完了 | test_dod5_*（実データでは on_order を除いても 15 vs 15 で発注されないため、stock=14 の派生データで on_order の有無が判定を変えることを確認） |
+| 6 | qty は正の int・lot の倍数、sku 昇順 | 完了 | test_dod6（2026-10-01〜12-29 の90日分の today で検査） |
+| 7 | today 当日・未来日付の出荷は結果に影響しない | 完了 | test_dod7（11/10〜11/30 に大量出荷行を追加しても結果不変） |
+
+全条件はテストで検証済みです。ただし**ビジネス上の妥当性**（下記の仮定が業務ルールと一致するか）は質問への回答が得られていないため、**人間の確認が必要**です。特に Q1（集計期間）は C400 の発注要否を、`today` の想定値は A100 の結果を左右します（contract.md の試算表を参照）。
+
+## 採用した仮定
+
+1. （Q1=a）日次平均需要 = `today` の前日までの直近30暦日（`today-30`〜`today-1`）の出荷合計 ÷ 30。出荷ゼロの日も分母に含める。
+2. （Q2=a）`ROP = 日次平均 × lead_time_days + safety_stock`。在庫ポジション = `stock + on_order`。`在庫ポジション < ROP`（厳密な小なり）のとき発注し、発注数 = `ROP − 在庫ポジション` を `lot` の倍数に切り上げ。
+3. （Q3=a）`discontinued=true` の品目は常に発注対象外。
+4. 計算は `fractions.Fraction` で厳密に行い、浮動小数点の境界誤差を避ける。
+5. `today` は `date` / `datetime` / `"YYYY-MM-DD"` 文字列を受け付ける。当日・未来日付の出荷は集計しない。
+6. 戻り値は `qty > 0` の品目のみ、`sku` 昇順。`qty` は int。発注不要なら `[]`。
+7. CSV は UTF-8（BOM 付き可）。`discontinued` は true/false（大文字小文字無視、1/0, yes/no も可）。
+8. 在庫表にない SKU の出荷行は無視。出荷のない SKU は需要0。
+9. 不正データ（負数、非数値、日付形式違い、lot=0）は `ValueError` を送出。
+10. 標準ライブラリのみ使用。

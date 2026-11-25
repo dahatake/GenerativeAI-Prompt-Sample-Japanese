@@ -1,0 +1,63 @@
+# 実行レポート: `monthly_work_hours(path)`
+
+対象契約: `contract.md`（v2・承認済み）。回答の出典: `answers.md`。
+
+## 成果物
+- `solution.py`: `monthly_work_hours(path) -> dict[str, float]`（標準ライブラリのみ）
+- `test_solution.py`: DoD を検証する pytest（23ケース）
+
+## 証拠（実行したコマンドと出力）
+
+```
+> $env:PYTHONDONTWRITEBYTECODE=1
+> python -c "from solution import monthly_work_hours as f; print(f('shifts.csv'))"
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+
+> python -m pytest -q -p no:cacheprovider --basetemp=.pytest_tmp test_solution.py
+.......................                                                  [100%]
+23 passed in 0.44s
+
+> (Get-FileHash shifts.csv).Hash    # 実装前と実装後
+00C7C0D32C998203671520610F84CABF5F01FEEF9AB86C6A87029AD4BFC56028   (実装前)
+00C7C0D32C998203671520610F84CABF5F01FEEF9AB86C6A87029AD4BFC56028   (実装後)
+```
+
+pytest の一時ディレクトリ（`.pytest_tmp`）は作業ディレクトリ内に作り、実行後に削除しました。
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `python -c ...` が例外なく終了する | **完了** | 上記の出力 |
+| 2 | キーが `{E001,E002,E003}`、値がすべて `float` | **完了** | `test_sample_values` |
+| 3 | E001=21.25 / E002=13.0 / E003=8.25 | **完了**（ただし期待値の妥当性は **人間の確認が必要**。下記参照） | 上記の出力、`test_sample_values` |
+| 4 | 追加ケース（ヘッダのみ、休憩の境界、15分切り捨て、日付またぎ、有給 7.5h、未知の type、start==end、不正値、列の欠落、BOM） | **完了** | `test_header_only`, `test_work_rules`（8件）, `test_paid_leave_counts_7_5_hours`, `test_unknown_type_listed_as_zero`, `test_invalid_rows_raise`（7件）, `test_missing_column_raises`, `test_utf8_bom_same_result` |
+| 5 | `python -m pytest -q` が全件成功 | **完了** | `23 passed` |
+| 6 | `shifts.csv` が変更されていない | **完了** | 実装前後の SHA256 が一致、`test_sample_file_unchanged` |
+
+DoD 3 の期待値は、私が回答を解釈して手計算したものです。テストは同じ解釈で書いたため、解釈そのものが正しいかはテストでは確認できません。業務担当者が次の内訳を確認してください。
+- E001: 09:00–18:00 → 9h−1h=8h ／ 09:00–14:50 → 5h50m（6h以下なので控除なし）→ 15分切り捨てで 5.75h ／ 有給 7.5h → **21.25h**
+- E002: 22:00–06:00 → 8h−1h=7h ／ 13:00–19:00 → ちょうど6h（控除なし）→ 6h → **13.0h**
+- E003: 08:30–17:45 → 9h15m−1h=8h15m → **8.25h**
+
+## 採用した規則・仮定の一覧
+
+| ID | 内容 | 根拠 |
+|---|---|---|
+| R1 | `end < start` は翌日終了とみなし +24h | Q2 回答 |
+| R2 | 拘束時間が 6h を **超える** シフトは一律 60分控除。ちょうど 6h は控除なし | Q1 回答 |
+| R3 | `paid_leave` 行は 7.5h（`start`/`end` は無視） | Q3 回答 |
+| R4 | 各シフトの実労働時間（控除後）を15分単位で切り捨て。有給には適用しない（7.5h は15分の倍数） | Q4 回答 |
+| A3 | `work`/`paid_leave` 以外の type は 0h。その従業員は `0.0` で結果に含める | Q5 指定なし → 推奨既定 |
+| A4 | ファイル全体を1か月分として合算する。月の帰属は勤務開始日。複数月を含んでも検出しない | Q2 対象月の指定なし → 推奨既定 |
+| A5 | 内部は整数の分で計算し、`分/60` の float で返す。R4 以外の丸めはしない | 既定 |
+| A6 | 標準ライブラリのみ。`utf-8-sig` で読む（BOM 可）。`str` と `PathLike` を受け付ける | 既定 |
+| A7 | 従業員 ID・列名・値は前後の空白を除去する | 既定 |
+| A8 | 不正行は行番号付きの `ValueError` で止める（スキップしない）。対象: work 行の時刻の欠損や不正（00:00〜23:59 の `H:MM`/`HH:MM` 以外）、employee が空、date が不正、必須列の欠落 | Q6 指定なし → 推奨既定 |
+| A9 | `start == end` の work 行は 0h（24h 勤務とはみなさない） | 既定 |
+| A10 | 同一従業員・同一日の複数行は別シフトとして合算する | 既定 |
+
+## 人間の確認が必要な点
+1. **休憩判定の逆転**: R2 を回答どおり実装したため、拘束 6:01〜6:59 の実労働時間は 5.0〜5.75h になり、ちょうど 6:00 の 6.0h より短くなります（`test_work_rules` で確認済み）。この挙動が意図どおりか確認してください。
+2. DoD 3 の期待値（上記の内訳）が業務上の計算と一致するか。
+3. A3（未知の type は 0h）と A4（複数月を検出しない）は、回答がなかったため既定にしました。エラーにしたい場合は変更が必要です。

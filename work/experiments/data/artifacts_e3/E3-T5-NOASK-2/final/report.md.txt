@@ -1,0 +1,71 @@
+# 実行レポート: reorder_plan
+
+この契約（`contract.md`）は、ユーザーから質問への回答が得られなかったため、推奨既定案（Q1=a, Q2=a, Q3=a）で確定しました。
+
+## 成果物
+- `solution.py`: `reorder_plan(inventory_path, shipments_path, today)` を実装
+- `test_solution.py`: DoD 検証用テスト（unittest、9件）
+- `contract.md`: 確定版に更新
+
+## 検証コマンドと出力
+
+```
+> python -m unittest test_solution -v
+test_boundary_equal_to_reorder_point_orders_one_lot ... ok
+test_discontinued_never_ordered ... ok
+test_dod1_expected_result_for_given_data ... ok
+test_dod2_today_accepts_date_and_datetime ... ok
+test_dod3_rows_on_or_after_today_are_ignored ... ok
+test_dod4_qty_is_positive_lot_multiple_and_sorted ... ok
+test_on_order_counts_toward_position ... ok
+test_shortfall_rounds_up_to_multiple_lots ... ok
+test_window_excludes_shipments_older_than_28_days ... ok
+----------------------------------------------------------------------
+Ran 9 tests in 0.250s
+OK
+```
+
+SKU 別の中間値（today = 2026-11-10、集計期間 2026-10-13〜2026-11-09）:
+
+| sku | discontinued | 28日出荷合計 | 日平均 | ROP | 在庫ポジション | qty |
+|---|---|---|---|---|---|---|
+| A100 | false | 84 | 3.0 | 41.0 | 40 | 50 |
+| A200 | false | 28 | 1.0 | 15.0 | 45 | 0（発注なし） |
+| B300 | true | 0 | 0.0 | 5.0 | 5 | 0（廃番で対象外） |
+| C400 | false | 0 | 0.0 | 6.0 | 12 | 0（発注なし） |
+
+戻り値: `[{'sku': 'A100', 'qty': 50}]`
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `reorder_plan(..., "2026-11-10") == [{"sku": "A100", "qty": 50}]` | 完了 | `test_dod1_expected_result_for_given_data` の合格と上の中間値表 |
+| 2 | `today` に `date` を渡しても結果が同じ（`datetime` も確認） | 完了 | `test_dod2_today_accepts_date_and_datetime` の合格 |
+| 3 | `today` 以降の出荷行を追加しても結果が不変 | 完了 | `test_dod3_rows_on_or_after_today_are_ignored` の合格（当日・翌日・翌月の行を追加して確認） |
+| 4 | qty は lot の倍数かつ正の int、結果は sku 昇順 | 完了 | `test_dod4_qty_is_positive_lot_multiple_and_sorted` の合格（全品目が発注対象になる在庫で、3つの基準日を確認） |
+| 5 | 期待値の固定 | 完了 | `contract.md` の確定事項を更新済み |
+| — | 業務ルールとしての妥当性（発注式・28日の集計期間・廃番の扱い） | **人間の確認が必要** | 回答がなかったため既定案を採用しました。テストで確かめられるのは既定案どおりに実装されていることだけで、業務上の正しさは確かめられません。 |
+
+補足テスト（境界・切り上げ・発注残・集計期間の端・廃番）もすべて合格しています。
+
+## 採用した仮定・決定の一覧
+1. **発注点（Q1=a）:** ROP = 日平均需要 × lead_time_days + safety_stock とします。
+2. **在庫ポジション（Q1=a）:** stock + on_order とし、発注残を含めます。
+3. **発注判定（Q1=a）:** 在庫ポジション <= ROP のときに発注します。等しい場合も発注します。
+4. **発注数（Q1=a）:** `max(1, ceil((ROP − ポジション) / lot)) × lot` です。不足が 0 のときも最低 1 lot を発注します。
+5. **集計期間（Q2=a）:** 需要は `today-28 <= date < today` の出荷合計を 28 で割った値です。暦日で数え、出荷のない日は 0 として平均に含めます。
+6. **廃番品（Q3=a）:** discontinued=true の品目は常に発注しません。
+7. **`today` の型（A1）:** `"YYYY-MM-DD"` 文字列、`date`、`datetime` を受け付けます。
+8. **当日以降の出荷（A2）:** `today` 当日以降の出荷は需要に含めません。
+9. **戻り値（A4・A5）:** qty=0 の品目は戻り値に含めません。並びは sku 昇順で、各要素は `{"sku", "qty"}` のみです。
+10. **ライブラリ（A6）:** 標準ライブラリのみを使います。ROP は `Fraction` で厳密に計算し、境界判定で浮動小数誤差が出ないようにしています。
+11. **出荷履歴（A7）:** inventory にない SKU の出荷は無視します。出荷履歴のない SKU は需要 0 とします。
+12. **文字コード（A8）:** CSV は `utf-8-sig` で読み込むため、BOM の有無に関係なく読めます。
+13. **入力検証:** `discontinued` は true/false/1/0/yes/no/空文字を受け付け、それ以外は ValueError です。lot <= 0 も ValueError です。
+
+## 人間に確認してほしい点
+- Q1〜Q3 の既定案が業務ルールに合っているか。特に次の 2 点です。
+  - C400 は直近 28 日の出荷がないため発注しない、という判断でよいか。
+  - A200 は発注残 30 を含めると発注不要になる、という判断でよいか。
+- 呼び出し側の `today` の型と、既存の受け入れテストの有無。

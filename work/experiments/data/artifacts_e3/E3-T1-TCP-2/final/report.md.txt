@@ -1,0 +1,41 @@
+# Report: monthly_sales(path)
+
+## 実行した検証
+
+```
+> python -m pytest -q -p no:cacheprovider test_solution.py
+..........                                                          [100%]
+10 passed, 5 subtests passed in 0.48s
+
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `sales.csv` → `{"2026-01":15000,"2026-02":10000,"2026-03":0,"2026-04":17000,"2026-05":7000}` | 完了 | `test_sales_csv_expected` と上の実行出力 |
+| 2 | 値が int、キーが `YYYY-MM`、昇順 | 完了 | `test_types_keys_and_order` |
+| 3 | 欠損月を 0 で含める（年跨ぎも） | 完了 | `test_zero_fill_across_year`、出力の `"2026-03": 0` |
+| 4 | cancelled・未知 status を除外 | 完了 | `test_cancelled_and_unknown_status_excluded` |
+| 5 | JST 月境界（`01-31T15:00Z` → 2026-02、`01-31T14:59:59Z` → 2026-01） | 完了 | `test_jst_month_boundary` |
+| 6 | 税抜は行ごとに 0 方向切り捨て（1000→909、-1000→-909、2 行→1818） | 完了（丸め方は人間の確認を推奨） | `test_tax_exclusion_truncates_per_row_toward_zero`。丸めは回答で実装側に委任されたため当方で決定 |
+| 7 | ヘッダのみ／completed 行なしで `{}` | 完了 | `test_empty_results` |
+| 8 | 非整数金額・不正日付・列欠落で `ValueError` | 完了 | `test_invalid_rows_raise`、`test_missing_column_raises` |
+| 9 | テスト全件 pass | 完了 | 10 passed, 5 subtests passed |
+
+## 採用した仮定
+
+- 月判定は `Asia/Tokyo`（回答 Q1）。`ordered_at` の `Z` は UTC。タイムゾーン表記がない日時も UTC とみなす。
+- 金額は税抜（税込 ÷ 1.1、回答 Q2）。**行ごとに 1 円未満を 0 方向へ切り捨て**てから月合計（整数演算、float 不使用）。丸めは実装側に委任されたため当方で決定。会計ルール（月合計後の丸め、四捨五入など）と違う場合は要確認。なお `sales.csv` は全行が 1100 の倍数なので、丸め方による差は出ない。
+- `completed` のみ集計し、cancelled と未知の status は除外（回答 Q3）。status は前後空白を除去し、大文字小文字を区別しない。
+- 欠損月は 0 で含める（回答）。範囲（最初〜最後の月）は**集計対象（completed）行**の月で決める。
+- 負の金額は返金として相殺する（-1100 → 税抜 -1000）。
+- キーは昇順。文字コードは UTF-8（BOM 許容）。空行は無視。
+- 不正行（日付・金額・列欠落）の検出は status に関係なく全行に適用し、行番号付きの `ValueError` を送出する。
+- 標準ライブラリのみ（Python 3.9+、`zoneinfo` 使用）。検証は Python 3.12.10 / pytest 9.1.1 で実施。
+
+## 成果物
+
+- `solution.py`、`test_solution.py`、`contract.md`（承認済みに更新）、`report.md`

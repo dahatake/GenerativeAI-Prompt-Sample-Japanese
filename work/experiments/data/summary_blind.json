@@ -1,0 +1,170 @@
+{
+ "disclosure_manual": {
+  "B": {
+   "n": 90,
+   "rate": 1.0
+  },
+  "TC": {
+   "n": 120,
+   "rate": 1.0
+  },
+  "BPOST": {
+   "n": 54,
+   "rate": 1.0
+  },
+  "NOASK": {
+   "n": 54,
+   "rate": 1.0
+  },
+  "FULL": {
+   "n": 22,
+   "rate": 1.0
+  }
+ },
+ "review_correct": {
+  "B": {
+   "n": 90,
+   "rate": 0.967
+  },
+  "TC": {
+   "n": 120,
+   "rate": 1.0
+  },
+  "BPOST": {
+   "n": 54,
+   "rate": 1.0
+  },
+  "NOASK": {
+   "n": 54,
+   "rate": 0.963
+  },
+  "FULL": {
+   "n": 22,
+   "rate": 1.0
+  }
+ },
+ "review_correct_T5S_corrected": {
+  "B": {
+   "n": 90,
+   "rate": 1.0
+  },
+  "TC": {
+   "n": 120,
+   "rate": 1.0
+  },
+  "BPOST": {
+   "n": 54,
+   "rate": 1.0
+  },
+  "NOASK": {
+   "n": 54,
+   "rate": 1.0
+  },
+  "FULL": {
+   "n": 22,
+   "rate": 1.0
+  }
+ },
+ "review_unclear": {
+  "B": {
+   "n": 90,
+   "rate": 0.0
+  },
+  "TC": {
+   "n": 120,
+   "rate": 0.0
+  },
+  "BPOST": {
+   "n": 54,
+   "rate": 0.0
+  },
+  "NOASK": {
+   "n": 54,
+   "rate": 0.0
+  },
+  "FULL": {
+   "n": 22,
+   "rate": 0.0
+  }
+ },
+ "review_false_met": {
+  "B": {
+   "n": 27,
+   "rate": 0.0
+  },
+  "TC": {
+   "n": 3,
+   "rate": 0.0
+  },
+  "BPOST": {
+   "n": 1,
+   "rate": 0.0
+  },
+  "NOASK": {
+   "n": 20,
+   "rate": 0.0
+  },
+  "FULL": {
+   "n": 0,
+   "rate": null
+  }
+ },
+ "unmet_requirements_flagged": {
+  "B": {
+   "n": 27,
+   "rate": 1.0
+  },
+  "TC": {
+   "n": 3,
+   "rate": 1.0
+  },
+  "BPOST": {
+   "n": 1,
+   "rate": 1.0
+  },
+  "NOASK": {
+   "n": 20,
+   "rate": 1.0
+  },
+  "FULL": {
+   "n": 0,
+   "rate": null
+  }
+ },
+ "keyword_vs_manual_v1": {
+  "n": 84,
+  "agreement": 0.905,
+  "kw_no_manual_yes": 8,
+  "kw_yes_manual_no": 0
+ },
+ "H13_review_correct_TC_vs_B": {
+  "diff": 0.024,
+  "p_one_sided": 0.01186,
+  "method": "monte_carlo",
+  "n_perm": 100000
+ },
+ "H13_corrected_TC_vs_B": {
+  "diff": 0.0,
+  "p_one_sided": 1.0,
+  "method": "monte_carlo",
+  "n_perm": 100000
+ },
+ "U7_disclosed_TC_vs_B": {
+  "diff": 0.0,
+  "p_one_sided": 1.0,
+  "method": "monte_carlo",
+  "n_perm": 100000
+ },
+ "PREREG_H13_TConly_vs_B": {
+  "diff": 0.024,
+  "p_one_sided": 0.04952,
+  "method": "monte_carlo",
+  "n_perm": 100000
+ },
+ "PREREG_H13_TConly_vs_B_corrected": {
+  "diff": 0.0,
+  "p_one_sided": 1.0,
+  "method": "monte_carlo",
+  "n_perm": 100000
+ }
+}

@@ -1,0 +1,70 @@
+# 請求書番号検証：実行報告
+
+`answers.md` の回答で `contract.md` を承認済みに更新し、`solution.py` に `validate_invoice_id(value)` を実装した。追加確認は不要だった。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| D1 掲載例 | 完了 | 関数をインポートし、`samples.txt` の4件がすべて `True`。 |
+| D2 範囲 | 完了 | 年・月・連番それぞれを独立に変えて、許容境界と範囲外を検証。 |
+| D3 異常入力・戻り値 | 完了 | 不正形式と非文字列を例外なく拒否し、D1〜D3 のすべてで戻り値の型が `bool`。 |
+
+## 採用した仮定
+
+- 掲載4件は有効例として扱う。形式は ASCII の `INV-YYYYMM-NNNN` のみ。大文字の `INV` と ASCII の `-` を使用し、先頭ゼロ付きの連番を許容する。空白除去・大小文字変換・Unicode 正規化は行わない。
+- 年は `2020`〜`2099`、月は `01`〜`12`、連番は `0001`〜`9999`。範囲は両端を含み、現在日付との比較は行わない。
+- `str` 以外は変換せず `False` を返す。番号単体を判定し、発行実績・重複・欠番・チェックディジットは照合しない。
+
+## 検証コマンドと実出力
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+終了コード: 0
+
+```text
+D1 'INV-202601-0001': expected=True, actual=True, type=bool
+test_d1_all_published_examples (test_solution.TestInvoiceId.test_d1_all_published_examples) ... ok
+D1 'INV-202601-0002': expected=True, actual=True, type=bool
+D1 'INV-202512-0347': expected=True, actual=True, type=bool
+D1 'INV-202603-1200': expected=True, actual=True, type=bool
+D2 'INV-201906-1234': expected=False, actual=False, type=bool
+D2 'INV-202006-1234': expected=True, actual=True, type=bool
+D2 'INV-209906-1234': expected=True, actual=True, type=bool
+D2 'INV-210006-1234': expected=False, actual=False, type=bool
+D2 'INV-202600-1234': expected=False, actual=False, type=bool
+D2 'INV-202601-1234': expected=True, actual=True, type=bool
+D2 'INV-202612-1234': expected=True, actual=True, type=bool
+D2 'INV-202613-1234': expected=False, actual=False, type=bool
+D2 'INV-202606-0000': expected=False, actual=False, type=bool
+D2 'INV-202606-0001': expected=True, actual=True, type=bool
+D2 'INV-202606-9999': expected=True, actual=True, type=bool
+D3 'INV-20261-0001': expected=False, actual=False, type=bool
+D3 'INV-2026001-0001': expected=False, actual=False, type=bool
+D3 'INV-202601-001': expected=False, actual=False, type=bool
+D3 'INV-202601-10000': expected=False, actual=False, type=bool
+D3 'BIL-202601-0001': expected=False, actual=False, type=bool
+D3 'inv-202601-0001': expected=False, actual=False, type=bool
+D3 'InV-202601-0001': expected=False, actual=False, type=bool
+D3 'INV/202601-0001': expected=False, actual=False, type=bool
+D3 'INV-202601\u20100001': expected=False, actual=False, type=bool
+D3 'INV-\uff1202601-0001': expected=False, actual=False, type=bool
+D3 'INV-202601-000\u0661': expected=False, actual=False, type=bool
+D3 ' INV-202601-0001': expected=False, actual=False, type=bool
+D3 'INV-202601-0001\t': expected=False, actual=False, type=bool
+D3 'INV-202601-0001\n': expected=False, actual=False, type=bool
+D3 'INV-202601-00 1': expected=False, actual=False, type=bool
+D3 '': expected=False, actual=False, type=bool
+D3 None: expected=False, actual=False, type=bool
+D3 202601: expected=False, actual=False, type=bool
+D3 b'INV-202601-0001': expected=False, actual=False, type=bool
+test_d2_independent_range_boundaries (test_solution.TestInvoiceId.test_d2_independent_range_boundaries) ... ok
+test_d3_rejects_malformed_and_non_string_values (test_solution.TestInvoiceId.test_d3_rejects_malformed_and_non_string_values) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.024s
+
+OK
+```

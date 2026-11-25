@@ -1,0 +1,50 @@
+# Task Contract（承認済み）: validate_invoice_id(value) -> bool
+
+## 確認できた事実（samples.txt）
+- 作業ディレクトリには samples.txt のみ（既存コード・仕様書なし）。
+- 例は4件、すべて `INV-<6桁>-<4桁>` 形式: `INV-202601-0001`, `INV-202601-0002`, `INV-202512-0347`, `INV-202603-1200`
+- 6桁は `YYYYMM`、末尾4桁は連番と読める。例はすべて正しい番号。
+
+## 回答で確定した仕様（answers.md）
+- Q1: 月 MM は 01〜12 のみ有効。
+- Q2: 連番は 0001〜9999。`0000` は無効。
+- Q3: 完全一致のみ。前後空白・小文字・全角・末尾改行は False。str 以外（None, int など）は例外を出さず False。
+- 年 YYYY は 2020〜2099 のみ有効（当初仮定「範囲制限なし」から変更）。
+- 接頭辞は大文字 `INV` 固定、区切りは半角 `-` のみ。
+- 発行実績との照合はしない（形式検証のみ）。
+
+## 仮定
+- チェックディジットはない。
+- 年は 4 桁。上限・下限は 2020〜2099 の閉区間。
+- `str` のサブクラスも str として扱う。
+
+## Outcome
+`solution.py` に `validate_invoice_id(value) -> bool` を実装する。`INV-YYYYMM-NNNN`（YYYY=2020〜2099, MM=01〜12, NNNN=0001〜9999）のときのみ True。
+
+## Scope / Out of scope
+- Scope: `solution.py` の関数 1 つ（標準ライブラリのみ）と検証用テスト。
+- Out of scope: 重複・発行済みチェック、DB 照会、番号の生成・正規化、CLI / UI。
+
+## Data sources
+- `samples.txt`、`answers.md`。
+
+## Constraints
+- 戻り値は常に `bool`。例外を投げない。
+- 標準ライブラリのみ。`re.fullmatch` と ASCII 数字 `[0-9]` を使う（`$` と `\d` は使わない）。
+
+## Definition of Done（検証できる条件）
+- DoD1: samples.txt の 4 件がすべて True。
+- DoD2: 月不正が False: `INV-202613-0001`, `INV-202600-0001`。
+- DoD3: 連番不正が False: `INV-202601-0000`, `INV-202601-001`, `INV-202601-00001`。
+- DoD4: 年不正が False: `INV-201912-0001`, `INV-210001-0001`, `INV-20261-0001`。年の境界 `INV-202001-0001`, `INV-209912-9999` は True。
+- DoD5: 形式不正が False: `inv-202601-0001`, `INV202601-0001`, ` INV-202601-0001`, `INV-202601-0001\n`, 全角数字, 全角ハイフン, `""`。
+- DoD6: 非 str 入力（None, 202601, 1.5, b"INV-202601-0001", list）が例外なく False。
+- DoD7: 戻り値の型がすべてのケースで `bool`。
+
+## Evidence
+- テスト実行コマンドと出力（test_solution.py を pytest で実行）。
+- samples.txt を読み込んだ検証結果。
+- timing.txt の開始・終了時刻。
+
+## Open questions
+- なし（確認は完了）。

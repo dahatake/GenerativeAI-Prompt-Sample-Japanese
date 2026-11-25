@@ -1,0 +1,54 @@
+# 実装・検証レポート
+
+`answers.md` の Q1–Q6 を `contract.md` に反映し、`solution.py` に `monthly_work_hours(path)` を実装した。不足している実装値はなく、追加確認は行っていない。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| 1. インポート・戻り値の型 | 完了 | `test_return_types_and_zero_hours` とサンプルの直接実行。ID `001` は文字列のまま、0 分は `0.0` として返る。 |
+| 2. `shifts.csv` の集計結果 | 完了 | `test_sample` が絶対誤差 `1e-9` 時間以内を確認。直接実行でも `21.25`、`13.0`、`8.25` 時間。 |
+| 3. 休憩・丸めの境界と日またぎ | 完了 | `test_break_and_rounding_boundaries`、`test_rounding_is_per_shift_and_duplicate_rows_count`、`test_overnight_and_month_end_use_start_date`、`test_return_types_and_zero_hours`。 |
+| 4. 有給・年月・入力検証 | 完了 | `test_paid_leave_only`、`test_rejects_multiple_calendar_months`、`test_header_only`、`test_overnight_and_month_end_use_start_date`、`test_bom_reordered_and_extra_columns`、`test_bad_headers`、`test_invalid_rows_report_line_numbers`、`test_missing_file_error_propagates`。 |
+
+## 採用した仮定と既定案
+
+- 1 ファイルは `date` が示す単一の暦年・月分。異なる年月が混在すればエラー。開始日で所属月を決め、月またぎも分割しない。終了時刻が開始時刻より前なら翌日、同時刻なら 0 分。
+- 1 行につき 1 シフトまたは 1 休暇として加算し、重複排除・重なり調整はしない。勤務の拘束時間が 360 分以下なら休憩控除なし、361 分以上なら 60 分を控除。その後、シフトごとに 15 分単位で切り捨てる。有給は 1 行につき 450 分。従業員ごとに整数分で合算し、0 分も含め、最後に 60 で割る（月次合計の追加丸めなし）。
+- CSV は UTF-8（BOM 可）。5 列は必須、列順は任意、追加列は無視し、重複ヘッダーは拒否する。行の列数はヘッダーと一致させ、完全な空行は無視する。ID は空白のみを不可とし、その他は文字列のまま扱う。日付・時刻は `YYYY-MM-DD`、`HH:MM`。勤務は両時刻が必須、有給は両時刻とも空欄。不正なデータ行は行番号付き `ValueError`、ヘッダーのみは `{}`、ファイル読込エラーはそのまま伝える。
+
+## 実行コマンドと出力
+
+指定の作業ディレクトリで実行。いずれも終了コードは `0`。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_bad_headers (test_solution.MonthlyWorkHoursTests.test_bad_headers) ... ok
+test_bom_reordered_and_extra_columns (test_solution.MonthlyWorkHoursTests.test_bom_reordered_and_extra_columns) ... ok
+test_break_and_rounding_boundaries (test_solution.MonthlyWorkHoursTests.test_break_and_rounding_boundaries) ... ok
+test_header_only (test_solution.MonthlyWorkHoursTests.test_header_only) ... ok
+test_invalid_rows_report_line_numbers (test_solution.MonthlyWorkHoursTests.test_invalid_rows_report_line_numbers) ... ok
+test_missing_file_error_propagates (test_solution.MonthlyWorkHoursTests.test_missing_file_error_propagates) ... ok
+test_overnight_and_month_end_use_start_date (test_solution.MonthlyWorkHoursTests.test_overnight_and_month_end_use_start_date) ... ok
+test_paid_leave_only (test_solution.MonthlyWorkHoursTests.test_paid_leave_only) ... ok
+test_rejects_multiple_calendar_months (test_solution.MonthlyWorkHoursTests.test_rejects_multiple_calendar_months) ... ok
+test_return_types_and_zero_hours (test_solution.MonthlyWorkHoursTests.test_return_types_and_zero_hours) ... ok
+test_rounding_is_per_shift_and_duplicate_rows_count (test_solution.MonthlyWorkHoursTests.test_rounding_is_per_shift_and_duplicate_rows_count) ... ok
+test_sample (test_solution.MonthlyWorkHoursTests.test_sample) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.469s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+```text
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```

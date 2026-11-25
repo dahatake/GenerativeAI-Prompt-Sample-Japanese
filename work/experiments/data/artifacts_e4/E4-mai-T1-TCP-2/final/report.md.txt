@@ -1,0 +1,44 @@
+# 実装完了レポート
+
+## DoD 状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `solution.py` に `monthly_sales(path)` が定義されている | 完了 | `python -m unittest -v test_monthly_sales.py` のテストモジュールで `from solution import monthly_sales` に成功 |
+| 相対パスでサンプルを実行できる | 完了 | `test_sample_relative_path`: OK |
+| サンプルの JST 集計値を返す | 完了 | `test_sample_relative_path`: OK。期待値 `{"2026-01":16500,"2026-02":11000,"2026-03":0,"2026-04":18700,"2026-05":7700}` |
+| キャンセル除外・負額加算・JST 境界を反映する | 完了 | `test_cancelled_excluded_and_negative_included`: OK。`test_jst_month_boundary_and_missing_month`: OK |
+| 欠損月を最初の有効月から最後の有効月まで 0 として含める | 完了 | サンプルの 2026-03 と境界テストを検証済み |
+| 絶対パスと繰り返し呼び出しで再現可能な結果を返す | 完了 | `test_absolute_path_and_repeatability`: OK |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python -m unittest -v test_monthly_sales.py
+```
+
+出力:
+
+```text
+test_absolute_path_and_repeatability (test_monthly_sales.MonthlySalesTests.test_absolute_path_and_repeatability) ... ok
+test_cancelled_excluded_and_negative_included (test_monthly_sales.MonthlySalesTests.test_cancelled_excluded_and_negative_included) ... ok
+test_decimal_amount_raises_value_error (test_monthly_sales.MonthlySalesTests.test_decimal_amount_raises_value_error) ... ok
+test_jst_month_boundary_and_missing_month (test_monthly_sales.MonthlySalesTests.test_jst_month_boundary_and_missing_month) ... ok
+test_sample_relative_path (test_monthly_sales.MonthlySalesTests.test_sample_relative_path) ... ok
+
+Ran 5 tests in 0.011s
+
+OK
+```
+
+## 採用した仮定
+
+- `completed` のみを集計し、`cancelled` と未知ステータスは除外する。
+- 入力時刻を UTC とみなし、JST（UTC+9）へ変換して月を判定する。
+- 欠損月は最初の有効な完了・キャンセル認識月から最後の認識月まで 0 を含める。
+- 金額は符号付き整数文字列として扱い、小数・空欄・不正文字列は `ValueError` とする。
+- 負額はキャンセル処理とは別に通常の加算対象とする。
+- 最初の有効月・最後の有効月を認識済みステータス（`completed` または `cancelled`）に基づいて決める。
+- 入力 CSV は UTF-8互換でヘッダー付きとする。

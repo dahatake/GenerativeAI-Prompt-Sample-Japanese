@@ -1,0 +1,1 @@
+在庫(inventory.csv)と出荷履歴(shipments.csv)から、発注が必要な品目と発注数を返す関数 reorder_plan(inventory_path, shipments_path, today) を solution.py に実装してください。戻り値は {"sku": 品目コード, "qty": 発注数} の dict のリストです。

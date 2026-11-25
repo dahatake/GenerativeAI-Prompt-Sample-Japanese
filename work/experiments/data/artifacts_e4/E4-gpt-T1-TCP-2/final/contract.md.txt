@@ -1,0 +1,45 @@
+# Task Contract — `monthly_sales(path)`（承認済み）
+
+## Outcome
+
+`solution.py` の `monthly_sales(path)` は、指定された CSV の税込売上額を日本標準時の暦月ごとに合計し、`{"YYYY-MM": 金額(int)}` を返す。
+
+## Scope・Out of scope
+
+- 対象: 単一 CSV の読み込み、対象行の選定、JST への変換、月別の整数合計、欠けた月のゼロ補完。
+- 対象外: 税額の再計算、通貨換算、注文の突合・重複排除、製品別などの集計、CLI やレポート出力。
+
+## Data sources
+
+- `sales.csv`: ヘッダーは `order_id,ordered_at,amount_incl_tax,status`。`ordered_at` を月の判定に、`amount_incl_tax` を合計に、`status` を対象行の判定に使う。`order_id` は集計には使わない。
+- `answers.md`: JST（UTC+09:00 固定）、負額を符号どおり合算、最初から最後の集計対象月のゼロ補完、その他の推奨仮定を承認。
+- `answers2.md`: `followup.md` への回答 B。`cancelled` だけを除外し、`pending`、`refunded`、空欄などそれ以外のステータスをすべて含める。
+
+## Constraints
+
+- UTF-8（BOM 可）のカンマ区切り CSV。`ordered_at`、`amount_incl_tax`、`status` が必須列。列順は問わず、ほかの列は集計に用いない。
+- 各行の `status` を大文字・小文字を区別して完全一致で判定し、`cancelled` の場合は日時・金額の検証も行わず除外する。空文字列のステータスは有効で、短い行で `status` フィールドが欠落する場合とは区別する。
+- 集計対象行の日時は実在する UTC の `YYYY-MM-DDTHH:MM:SSZ`。JST（UTC+09:00 固定）に変換してから年月を判定する。
+- 集計対象行の金額は符号（`+` または `-`、省略可）付きの半角十進整数。入力と同じ単位で行ごとに符号を保って合計し、換算・丸め・重複排除は行わない。入力ファイルは変更しない。
+- 対象行の最初の月から最後の月まで（両端を含む）の全暦月を返す。行のない月は整数 `0`、対象行が一件もなければ `{}`。辞書の反復順は要件に含めない。
+
+## Definition of Done
+
+| ID | 検証できる条件 |
+| --- | --- |
+| D1 | `solution.py` から `monthly_sales` をインポートでき、渡したパスの CSV（BOM 付き、列順変更も可）を変更せずに読み、`YYYY-MM` の `str` キーと `int` 値を持つ辞書を返す。 |
+| D2 | `sales.csv` の結果が `{"2026-01": 16500, "2026-02": 11000, "2026-03": 0, "2026-04": 18700, "2026-05": 7700}` と完全一致する。 |
+| D3 | `cancelled` のみ除外し、`pending`・`refunded`・空欄・`Cancelled` も集計する。負額を差し引き、同じ `order_id` の複数行は個別に計上する。 |
+| D4 | JST の月境界で月を割り当て、年をまたぐ場合も範囲内の欠月だけを `0` で埋める。ヘッダーだけ、または `cancelled` の行だけなら `{}` を返す。 |
+| D5 | 必須列や行の `status` フィールドの欠落、集計対象行の不正な日時・金額には、部分集計を返さず `ValueError` を送出する。 |
+| D6 | 存在しないファイル等、開けないファイルの I/O 例外はそのまま送出する。 |
+
+## Evidence
+
+- `sales.csv` は 10 行。`completed` が 8 行（うち `A-1006` は `-1100`）、`cancelled` が 2 行。他のステータスはサンプルにない。
+- JST に変換すると `A-1004` は 2 月、`A-1010` は 5 月。3 月は該当行がないため `0` で補完する。
+- 回答で確定したルールとサンプルにない境界ケースは `test_solution.py` で検証し、実行証拠と各状態を `report.md` に記録する。
+
+## Open questions
+
+なし。`answers.md` と `answers2.md` に基づき承認済み。入力形式・例外処理などの既定案は Constraints と Definition of Done に反映済み。

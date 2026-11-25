@@ -1,0 +1,22 @@
+# 実装レポート
+
+`solution.py` の `monthly_work_hours(path, month=None)` が `{従業員ID: 労働時間(h, float)}` を返す。
+
+## 現在の仕様・前提
+- 列は `employee,date,type,start,end`。UTF-8（BOM可）。
+- `type == work`: 拘束時間（end − start）を加算。拘束時間が6時間超なら一律60分を控除（ちょうど6時間は控除なし）。
+- `type == paid_leave`: 所定労働時間 7.5 時間を計上（休憩控除なし）。それ以外の種別は 0 時間。
+- 日跨ぎ（end < start）は翌日終了として計算。休憩控除は日跨ぎ後の拘束時間に対して判定。
+- 夜勤は開始日の月に計上。
+- start/end が空の work 行は無視。start == end は 0h。
+- `month="YYYY-MM"` 指定でその月のみ集計（paid_leave にも適用）。省略時は全行合算。
+- 残業・深夜割増の換算はしない。
+
+## 今回修正した点（answers.md 反映）
+1. Q2: `paid_leave` を 0h から 7.5h 計上に変更。
+2. Q4: 休憩控除なしから「拘束6時間超なら一律60分控除（6時間ちょうどは控除しない）」に変更。
+3. 付随: 未使用の `datetime` import を削除、docstring を新仕様に更新。
+4. 回答なし／推奨案での進行（Q1, Q3, Q5〜Q8）は変更なし。
+
+## 確認
+shifts.csv: E001=21.3333h（8 + 5.8333 + 7.5）、E002=13.0h（夜勤 8h−1h=7 + 6h ちょうど=6）、E003=8.25h（9.25h−1h）。

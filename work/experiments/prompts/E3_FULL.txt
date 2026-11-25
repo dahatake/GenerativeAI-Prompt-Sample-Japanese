@@ -1,0 +1,6 @@
+{HEADER}
+{TIMING}
+{SHORT}
+要件:
+{REQUIREMENTS}
+作業が終わったら、実装内容と前提にしたことを report.md に簡潔に書いてください。

@@ -1,0 +1,24 @@
+# 実装レポート
+
+## 実装内容
+- `solution.py` の `make_invoices(data_dir, month)` が、指定月の請求書 dict のリストを返します。
+  - 顧客ごとに1枚、`customer_id` 昇順で並べます。請求書の行（lines）は注文日時の順です。その月に請求対象の注文がない顧客には請求書を作りません。
+  - `invoice_id` は `INV-YYYYMM-<customer_id>` です（例: `INV-202610-C001`）。
+- `python solution.py <data_dir> <YYYY-MM> <out.csv>` を実行すると、`invoice_id, customer_id, subtotal, discount, tax, total` を UTF-8 の CSV に書き出します。
+- データの不整合（顧客や SKU がマスタにない、該当日に有効な価格がない、month の形式が不正）は `ValueError` にしています。
+
+## 仕様（answers.md で確定した点）
+1. **計上月**: `ordered_at`（UTC）を日本時間（JST, UTC+9）に変換してから、どの月の注文かを判定します。例: `2026-10-31T16:00Z` は 11月分になります。（Q3）
+2. **値引き**: `tier=gold` の顧客は **5%** 値引きします。税計算の前に、税率区分ごとの小計に対して値引きし、1円未満は切り捨てます。ほかの tier は値引きなしです。（Q1・Q2）
+3. **消費税**: 請求書ごと・税率区分ごとに `(小計 − 値引き) × 税率` を計算し、1円未満を切り捨てます。（Q2）
+
+## 前提にしたこと（回答がなく、前回の実装のままの点）
+- **請求対象のステータス**: `completed` と `shipped` だけを請求します。`cancelled` と `returned` は除外します。
+- **単価**: JST の注文日の時点で有効な価格を使います。`effective_from` が注文日以前のもののうち、最も新しい価格です。価格は税抜とみなしています。
+- **税率**: `category=food` は軽減税率 8%、それ以外は 10% です。
+- **合計**: `subtotal` は値引き前の税抜合計、`total = subtotal − discount + tax` です。
+
+## 今回修正した点
+- gold 顧客の値引き率を 10% から 5% に変更しました（`solution.py` の `DISCOUNT_RATES`）。
+- 端数処理と計上月の判定は、回答の内容が今の実装と同じだったので、コードは変えていません。
+- report.md の「前提」と「確認したいこと」を、確定した仕様に合わせて書き直しました。

@@ -1,0 +1,89 @@
+# Task Contract: `reorder_plan(inventory_path, shipments_path, today)`
+
+ステータス: **承認済み / Execution Mode**（`answers.md` の回答を反映しました）
+
+---
+
+## 1. 作業ディレクトリの調査結果（Spec Mode 時点）
+
+| ファイル | 内容 |
+|---|---|
+| `inventory.csv` | 4行。UTF-8（BOMなし）。列: `sku,name,stock,on_order,lead_time_days,safety_stock,lot,discontinued` |
+| `shipments.csv` | 70行。CRLF改行。列: `date,sku,qty`。期間は 2026-10-01〜2026-11-09 |
+| `answers.md` | 質問への回答 |
+
+| sku | stock | on_order | lead_time_days | safety_stock | lot | discontinued | 出荷パターン |
+|---|---|---|---|---|---|---|---|
+| A100 | 40 | 0 | 7 | 20 | 50 | false | 10/01〜11/09 毎日3 |
+| A200 | 15 | 30 | 5 | 10 | 20 | false | 10/01〜11/08 隔日2 |
+| B300 | 5 | 0 | 10 | 5 | 100 | **true** | 出荷なし |
+| C400 | 12 | 0 | 14 | 6 | 10 | false | 10/01〜10/10 毎日5、以降なし |
+
+## 2. 質問と回答（answers.md）
+
+| # | 質問 | 回答 | 採用した内容 |
+|---|---|---|---|
+| Q1 | 1日あたり需要の算出方法 | **B（N=28）** | `today` の前日までの直近28日間（`today-28` 〜 `today-1`。`today` 当日は含めない）の出荷合計を **28** で割る |
+| Q2 | 発注するかどうかの判定 | **B** | `stock + on_order <= ROP` のとき発注する（等しい場合も発注する） |
+| Q3 | 発注数 | **A** | 不足分 `ROP − 在庫ポジション` を `lot` の倍数に切り上げる |
+| Q4 | 廃番品目の除外 | はい | `discontinued` が true の品目は除外する |
+| Q5 | 並び順と qty の型 | はい | `sku` の昇順。`qty` は `int` |
+| Q6 | today の値と期待される出力例 | 指定なし | 推奨案どおり、DoD に `2026-11-10` と `2026-11-25` を使う |
+| Q7 | テストファイルの追加 | 指定なし | 推奨案どおり、`test_solution.py` を追加する |
+
+### 回答の組み合わせで生じた矛盾と、その解消（要確認）
+Q2=B では在庫ポジションと ROP が等しいときも発注します。しかし Q3=A の不足分はこのとき **0** になり、`lot` の倍数に切り上げても 0 のままです。
+このままでは「発注するが発注数は 0」になり、Q2 で「等しい場合も発注する」とした意図が実現できません。
+→ **採用した解釈: 発注と判定した品目は、最低 1 lot を発注する**（`qty = max(1, ceil(不足分 / lot)) × lot`）。この点は人間の確認が必要です。
+
+## 3. Task Contract
+
+### Outcome
+`solution.py` の `reorder_plan(inventory_path, shipments_path, today)` が、発注が必要な品目を `[{"sku": str, "qty": int}, ...]` の形で `sku` の昇順に返します。
+
+### 計算式
+- 1日あたり需要 `d` = Σ qty（`today-28 <= date <= today-1`）÷ 28
+- `ROP = d × lead_time_days + safety_stock`
+- 在庫ポジション `pos = stock + on_order`
+- `pos <= ROP` なら発注し、`qty = max(1, ceil((ROP − pos) / lot)) × lot` とする
+- `discontinued` が true の品目は除外する
+
+### Scope
+- CSV の読み込み（UTF-8、BOM あり・なし、CRLF・LF 改行に対応）、需要の算出、発注の判定、発注数の算出、廃番品目の除外、並べ替え
+- `today` には `date`、`datetime`、`"YYYY-MM-DD"` 形式の文字列を受け付ける
+
+### Out of scope
+- CLI、ファイルへの出力、ログ出力
+- 需要予測の高度化（季節性、トレンドなど）
+- 発注先、価格、倉庫を分けた管理
+- 不正なデータの修復（列の欠損や数値に変換できない値は例外を送出する。`lot < 1` の場合は `ValueError` を送出する）
+
+### Data sources
+- `inventory_path`（`inventory.csv` と同じ形式）
+- `shipments_path`（`shipments.csv` と同じ形式）
+- `today`
+
+### Constraints
+- Python 3、標準ライブラリだけを使います。
+- 入力ファイルを変更しません。同じ入力には同じ出力を返します。
+- 境界の判定がぶれないよう、`fractions.Fraction` を使って正確に計算します。
+- 計算に使う出荷は `today-28`〜`today-1` の範囲だけで、`today` 以降の出荷は使いません。
+
+### Definition of Done（検証できる条件）
+1. `reorder_plan("inventory.csv", "shipments.csv", "2026-11-10")` が `[{"sku": "A100", "qty": 50}]` を返す。
+2. `date(2026,11,10)` または `datetime` を渡しても、1 と同じ結果になる。
+3. `today="2026-11-25"` のとき `[]` を返す。
+4. 境界: 在庫ポジションが ROP と等しい場合は 1 lot 発注し、ROP + 1 の場合は発注しない。ROP が小数の計算で出てくる場合も、ROP とちょうど等しいかどうかを正しく判定する。
+5. `on_order` を在庫ポジションに含めている（A200 で `on_order` が 30→0 になると発注し、20 個になる。`stock` を 14 にした場合も 20 個）。
+6. 28日の範囲外（`today` 当日以降、`today-29` 以前）の出荷を追加しても、結果が変わらない。`today-28` の出荷は計算に含める。
+7. 出荷履歴がない品目も、エラーにならずに処理できる（需要 0）。
+8. 廃番品目を除外し、戻り値は `sku` の昇順で、`qty` は `int` になる。`lot` の倍数に切り上げる。入力ファイルは変更しない。
+
+### Evidence
+- `solution.py`、`test_solution.py`
+- `python -W error::ResourceWarning -m unittest -v test_solution` の出力
+- 品目ごとの計算過程の表（`report.md` に記載）
+- `timing.txt`
+
+### Open questions
+- 在庫ポジションが ROP と等しく、不足分が 0 の場合に 1 lot を発注するという解釈でよいか（上記「矛盾と解消」）

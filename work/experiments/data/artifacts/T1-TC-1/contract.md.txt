@@ -1,0 +1,86 @@
+# Task Contract: monthly_sales(path)
+
+ステータス: **承認済み（Execution Mode）** — 2026-11-25 に回答を反映して改訂
+
+## 1. 調査結果
+
+### 確認できた事実
+- 作業ディレクトリに元々あったファイルは `sales.csv` のみ（UTF-8、BOM なし、CRLF、ヘッダー 1 行とデータ 10 行）。
+- 列は `order_id, ordered_at, amount_incl_tax, status` の 4 つ。
+- `ordered_at` はすべて UTC（末尾 `Z`）。
+- `amount_incl_tax` は税込の整数で、すべて 1.1 で割り切れる。
+- `status` の値は `completed`（8 行）と `cancelled`（2 行: A-1003, A-1007）のみ。
+- 負の金額が 1 件ある（A-1006: -1100, completed）。
+- 2026-03 のデータは 0 件。
+- JST にすると集計月が変わる行が 2 件ある:
+  - A-1004（UTC 01-31 → JST 02-01）
+  - A-1010（UTC 04-30 → JST 05-01）
+
+### 回答による決定事項
+| # | 決定 |
+|---|---|
+| Q1 | 月はJST（UTC+9）で区切る。 |
+| Q2 | `cancelled` の注文は除外する。 |
+| Q3 | 税込金額を 1.1 で割り戻した税抜金額を整数で返す。 |
+| OQ | 注文がない月も 0 として結果に含める。 |
+
+### 採用した仮定
+回答で指定がなかった点は、推奨既定案を採用した。
+
+- A1. 標準ライブラリのみで実装する（`csv` と `datetime`）。
+- A2. 「売上」には `amount_incl_tax` 列を使う。
+- A3'（回答により変更）. 結果に含める月の範囲は、**cancelled を含む全注文**の最初の月から最後の月まで連続とする。注文がない月は 0 にする。cancelled の注文しかない月も 0 として結果に含まれる。データ行が 0 件のときは `{}` を返す。
+- A4. 結果のキーは `"YYYY-MM"` で昇順に並べ、値は `int` とする。
+- A5. ファイルは `utf-8-sig` で開き、BOM があっても読めるようにする。
+- A6. `order_id` が重複していても除外せず、そのまま合算する。
+- A7. JST は固定オフセット UTC+9 として扱う（夏時間なし。`tzdata` に依存しない）。
+- A8. 次の場合は `ValueError` を送出する: `completed`/`cancelled` 以外の status、金額が整数として読めない、日時が不正またはタイムゾーンなし、必須列の欠落、列数の不足。
+- A9. 集計するのは `completed` の行のみ。負の金額（返品や値引き）はそのまま差し引く。
+- A10（Q3 の補足。丸め方法の指定がなかったため）. 税抜への換算は**注文ごと**に行う。内税額 `税込 × 10 / 110` の 1 円未満を切り捨て、税込から差し引く。負の金額は絶対値に同じ規則を適用し、符号を戻す。計算は整数演算のみで行い、float は使わない。現在の `sales.csv` は全行が割り切れるため、この規則によって結果は変わらない。
+
+## 2. Task Contract
+
+### Outcome
+`solution.py` の `monthly_sales(path) -> dict[str, int]` は、CSV を読み込み、JST 月ごとの税抜売上（cancelled を除く）を返す。結果には注文がない月も 0 として含める。
+
+### Scope
+- `solution.py` の実装
+- 検証用テスト `test_solution.py`（unittest）
+- `contract.md` と `report.md` の作成
+
+### Out of scope
+- CLI、ファイル出力、pandas の導入
+- 重複注文の除外
+- 税率 10% 以外への対応
+- `sales.csv` の変更
+- 作業ディレクトリ外の読み書き
+
+### Data sources
+- `sales.csv`（作業ディレクトリ内）
+- テスト用の小さな CSV。作業ディレクトリ内の一時サブディレクトリに作成し、テスト終了時に自動で削除する。
+
+### Constraints
+- Python 3（確認環境は 3.12.10）の標準ライブラリのみを使う。
+- 作成・変更するファイルは `solution.py`、`test_solution.py`、`contract.md`、`report.md` に限る。`__pycache__` は検証後に削除する。
+- 金額は float を経由せず、整数演算で計算する。
+
+### Definition of Done
+| # | 条件 |
+|---|---|
+| 1 | `from solution import monthly_sales` が成功する。 |
+| 2 | `monthly_sales("sales.csv")` の結果が `{"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}` と完全に一致する。 |
+| 3 | 返り値が dict で、キーはすべて `^\d{4}-\d{2}$` に一致して昇順に並び、値はすべて `int` 型である。 |
+| 4 | cancelled の注文が合計に含まれない。 |
+| 5 | 月の境界を JST で判定する（A-1004 → 2026-02、A-1010 → 2026-05、UTC 14:59:59 の注文は前月）。 |
+| 6 | 税抜換算が A10 の規則どおりに整数で行われる（割り切れない金額と負の金額を含む）。 |
+| 7 | 注文のない月が 0 で補完される（年をまたぐ場合を含む）。データ行が 0 件なら `{}` を返す。 |
+| 8 | 想定外のデータ（A8）では `ValueError` が送出される。 |
+
+### Evidence
+- `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"` の出力
+- `python -m unittest -v test_solution` の出力（DoD ごとにテスト名を対応づける）
+- `report.md` に、各 DoD の状態と採用した仮定を記載する。
+
+### Open questions
+- なし（指定がなかった点は推奨既定案を採用した）。
+- A10 の丸め方法は、人間による確認が望ましい。

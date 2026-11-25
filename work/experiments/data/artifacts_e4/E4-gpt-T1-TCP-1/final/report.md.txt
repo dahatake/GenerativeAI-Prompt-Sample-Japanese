@@ -1,0 +1,53 @@
+# 月次売上集計：実装・検証報告
+
+承認済みの `contract.md` に従い、`solution.py` に `monthly_sales(path)` を実装した。検証テストは `test_solution.py` にある。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠（`test_solution.py`） |
+| --- | --- | --- |
+| D1 — API と型 | 完了 | `test_api_reads_given_path_with_bom_and_named_columns`：インポート、指定パス、列名による読み取り、4桁年・2桁月のキー、`dict` と丸めなしの `int` を確認。 |
+| D2 — 実データ | 完了 | `test_sales_csv_matches_approved_totals`：`sales.csv` の辞書を完全一致で確認。下記の実行例にも実際の戻り値を記録。 |
+| D3 — 集計規則 | 完了 | `test_jst_boundary_negative_and_cancelled_rows`、`test_fills_year_gap_but_not_cancelled_endpoint_months`、`test_same_order_id_can_net_to_zero_in_present_month`：JSTの月境界、取消除外、負額、年越し補完、補完の両端、合計0の月を確認。 |
+| D4 — 空・不正入力 | 完了 | `test_header_only_and_all_cancelled_have_no_months`、必須列・必須値・CSV構文を検証する `test_rejects_*` 3件、`test_preserves_io_error_for_missing_file`：空の結果、`ValueError`、I/O例外を確認。 |
+
+## 採用した仮定
+
+- 金額は入力と同じ単位の税込額。整数の符号を保ったまま加算し、丸め、税額再計算、通貨換算はしない。同じ `order_id` の行も別々に加算し、合計が0の対象月は返す。
+- 入力はUTF-8のカンマ区切りヘッダー付きCSVで、BOMは許容する。必要な3列を列名で読み、その他の列は無視する。日時は実在する `YYYY-MM-DDTHH:MM:SSZ` のUTC時刻、金額は `-?[0-9]+`、ステータスは大文字・小文字を区別して `completed` または `cancelled` とする。
+- 必須列の欠落・重複、必須値の不正、CSV構文の不正は `ValueError` とする。取消行の必須値も検証する。対象日時がJST変換後に4桁の年で表せない場合も `ValueError` とする。ファイルを開けない場合はI/O例外をそのまま送出する。
+- 出力キーの並び順は契約に含めない。JSTの固定オフセット `+09:00`、`completed` のみ集計、最初と最後の対象月を含む範囲の空白月を `0` で補完することは、仮定ではなく `answers.md` の確定事項。
+
+## 実行証拠
+
+作業ディレクトリで実行したコマンド：
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_api_reads_given_path_with_bom_and_named_columns (test_solution.MonthlySalesTests.test_api_reads_given_path_with_bom_and_named_columns) ... ok
+test_fills_year_gap_but_not_cancelled_endpoint_months (test_solution.MonthlySalesTests.test_fills_year_gap_but_not_cancelled_endpoint_months) ... ok
+test_header_only_and_all_cancelled_have_no_months (test_solution.MonthlySalesTests.test_header_only_and_all_cancelled_have_no_months) ... ok
+test_jst_boundary_negative_and_cancelled_rows (test_solution.MonthlySalesTests.test_jst_boundary_negative_and_cancelled_rows) ... ok
+test_preserves_io_error_for_missing_file (test_solution.MonthlySalesTests.test_preserves_io_error_for_missing_file) ... ok
+test_rejects_invalid_csv_syntax (test_solution.MonthlySalesTests.test_rejects_invalid_csv_syntax) ... ok
+test_rejects_invalid_required_values_including_cancelled_rows (test_solution.MonthlySalesTests.test_rejects_invalid_required_values_including_cancelled_rows) ... ok
+test_rejects_missing_or_duplicate_required_header (test_solution.MonthlySalesTests.test_rejects_missing_or_duplicate_required_header) ... ok
+test_sales_csv_matches_approved_totals (test_solution.MonthlySalesTests.test_sales_csv_matches_approved_totals) ... ok
+test_same_order_id_can_net_to_zero_in_present_month (test_solution.MonthlySalesTests.test_same_order_id_can_net_to_zero_in_present_month) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.385s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 16500, '2026-02': 11000, '2026-03': 0, '2026-04': 18700, '2026-05': 7700}
+```

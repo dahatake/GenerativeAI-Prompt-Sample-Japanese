@@ -1,0 +1,9 @@
+[
+  {"id": 1, "name": "山田 太郎", "email": "taro.yamada@example.co.jp", "updated_at": "2026-01-10T09:00:00+09:00"},
+  {"id": 2, "name": "佐藤 花子", "email": "hanako.sato@example.co.jp", "updated_at": "2026-02-01T09:00:00+09:00"},
+  {"id": 3, "name": "山田 太郎", "email": " Taro.Yamada@example.co.jp", "updated_at": "2026-03-15T18:30:00+09:00"},
+  {"id": 4, "name": "鈴木 一郎", "email": "", "updated_at": "2026-01-20T10:00:00+09:00"},
+  {"id": 5, "name": "高橋 次郎", "email": null, "updated_at": "2026-02-11T10:00:00+09:00"},
+  {"id": 6, "name": "佐藤 花子", "email": "HANAKO.SATO@example.co.jp", "updated_at": "2026-01-05T09:00:00+09:00"},
+  {"id": 7, "name": "田中 美咲", "email": "misaki.tanaka@example.co.jp", "updated_at": "2026-02-20T12:00:00+09:00"}
+]

@@ -1,0 +1,56 @@
+# 実行レポート: validate_invoice_id
+
+実行日: 2026-11-25（JST） / Python 3.12.10 / 契約: `contract.md`（Approved）
+
+## 成果物
+- `solution.py`: `validate_invoice_id(value, *, today=None) -> bool`
+- `test_solution.py`: DoD 検証用の unittest（テスト名は `test_dodN_...` で DoD と対応）
+
+## 検証コマンドと出力
+```
+> $env:PYTHONDONTWRITEBYTECODE=1; python -m unittest -v test_solution
+test_dod2_samples_valid (test_solution.TestValidateInvoiceId.test_dod2_samples_valid) ... ok
+test_dod3_invalid_format_and_input (test_solution.TestValidateInvoiceId.test_dod3_invalid_format_and_input) ... ok
+test_dod4_out_of_range_values (test_solution.TestValidateInvoiceId.test_dod4_out_of_range_values) ... ok
+test_dod5_future_months (test_solution.TestValidateInvoiceId.test_dod5_future_months) ... ok
+test_dod6_boundaries_valid (test_solution.TestValidateInvoiceId.test_dod6_boundaries_valid) ... ok
+test_dod7_default_today_uses_jst (test_solution.TestValidateInvoiceId.test_dod7_default_today_uses_jst) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+exit=0
+```
+
+## DoD ごとの状態
+| DoD | 内容 | 状態 | 証拠 |
+|-----|------|------|------|
+| DoD1 | `from solution import validate_invoice_id` が成功する | 完了 | テストモジュールの import が成功し、全テストが実行された |
+| DoD2 | samples.txt の4件が True（today 指定時・省略時） | 完了 | `test_dod2_samples_valid`（samples.txt から4件を読み込んで検証） |
+| DoD3 | 形式・入力の不正14件が False | 完了 | `test_dod3_invalid_format_and_input` |
+| DoD4 | 月13・月00・連番0000・年1999 が False | 完了 | `test_dod4_out_of_range_values` |
+| DoD5 | today=2026-11-25 のとき当月は True、翌月以降は False | 完了 | `test_dod5_future_months` |
+| DoD6 | 境界値 200001 / 9999 / 12月 が True | 完了 | `test_dod6_boundaries_valid` |
+| DoD7 | today 省略時は JST の現在日付が基準 | 完了 | `test_dod7_default_today_uses_jst`（現在時刻を UTC 11-30 15:00 に固定すると True、14:59 に固定すると False） |
+| DoD8 | 全ケースで戻り値が bool | 完了 | 各テストの `assertIs(type(result), bool)` |
+| DoD9 | unittest が全件成功 | 完了 | 上記の出力（6 tests OK, exit=0） |
+
+**人間の確認が必要**: 下の仮定 A4・A5（年の下限、タイムゾーン、当月の扱い）は業務仕様の裏付けがありません。テストが確認しているのは「契約どおりに実装されていること」だけで、契約そのものが業務上正しいかは確認していません。
+
+## 採用した仮定
+| # | 仮定 | 根拠 |
+|---|------|------|
+| A1 | 形式は `INV-YYYYMM-NNNN`（固定長15文字、ASCII の大文字・数字だけ） | samples.txt の4例 |
+| A2 | 6桁は発行年月、4桁は月内の連番（ゼロ埋め） | samples.txt からの推定 |
+| A3 | 「正しい」は形式・日付の妥当性で、実在確認は含まない | 既定案 |
+| A4 | 年の下限は 2000 | Q1(c) で範囲の指定がなく、提示した例を既定値として採用（**要確認**） |
+| A5 | 未来判定の基準は JST の現在日付。基準日と同じ月は有効 | 既定案（**要確認**） |
+| A6 | 決定的にテストできるよう、キーワード専用のオプション引数 `today` を追加（`validate_invoice_id(value)` の呼び出しはそのまま使える） | 既定案 |
+| A7 | 入力は整えない。`str` 以外は False を返し、例外は出さない | Q3(a) |
+| A8 | 連番 0000 は無効（0001〜9999） | Q2(b) |
+| A9 | Python 3.8 以上、標準ライブラリのみ | 既定案 |
+| A10 | 検証テストは `test_solution.py` として残す | ユーザー指示 |
+
+## 注意点
+- `today` を省略すると、結果が実行時の日付で変わります（例: `INV-202612-0001` は JST で 2026-12-01 以降に True になる）。

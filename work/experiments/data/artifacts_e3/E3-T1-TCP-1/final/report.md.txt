@@ -1,0 +1,64 @@
+# Report: `monthly_sales(path)` の実装
+
+## 実行した証拠
+
+コマンド: `python -m unittest -v test_solution`
+```
+test_bom_and_crlf ... ok
+test_gap_months_filled_with_zero_across_year ... ok
+test_half_up ... ok
+test_header_only_returns_empty ... ok
+test_invalid_rows_raise ... ok
+test_jst_month_boundary ... ok
+test_missing_column_raises ... ok
+test_naive_datetime_is_utc ... ok
+test_range_ignores_cancelled_only_months ... ok
+test_rounding_on_monthly_total ... ok
+test_sales_csv_expected ... ok
+test_status_filter ... ok
+test_types_and_key_format ... ok
+----------------------------------------------------------------------
+Ran 13 tests in 0.187s
+
+OK
+```
+
+コマンド: `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"`
+```
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | import できる | 完了 | すべてのテストと実出力のコマンドで import に成功 |
+| 2 | sales.csv の期待値と一致する | 完了 | `test_sales_csv_expected`、実出力 |
+| 3 | 値が int、キーの形式が正しく、昇順に並ぶ | 完了 | `test_types_and_key_format` |
+| 4 | 欠損月を 0 で含める（年またぎも含む） | 完了 | `test_gap_months_filled_with_zero_across_year`、sales.csv の 2026-03 = 0 |
+| 5 | JST の月境界、オフセット付き日時、タイムゾーンなし日時の扱い | 完了 | `test_jst_month_boundary`、`test_naive_datetime_is_utc` |
+| 6 | cancelled だけを除外し、他の status と負の金額は加算する | 完了 | `test_status_filter`、`test_range_ignores_cancelled_only_months` |
+| 7 | 税抜額を月合計の四捨五入で求める | 完了（**丸め方の業務ルールは人間の確認が必要**） | `test_rounding_on_monthly_total`、`test_half_up`。丸め方は回答で「推奨案」に委任された。元の契約案では税抜の選択肢に推奨を付けていなかったため、エージェントの判断で月合計の四捨五入を選んだ |
+| 8 | 空のファイル、BOM 付きや CRLF、不正な入力で ValueError | 完了 | `test_header_only_returns_empty`、`test_bom_and_crlf`、`test_invalid_rows_raise`、`test_missing_column_raises` |
+| 9 | unittest がすべて成功する | 完了 | 13 件中 13 件成功 |
+
+## 採用した仮定の一覧
+
+- Q1: UTC の時刻を JST（UTC+9）に変換してから月を決める（回答）。
+- Q2: 税抜で返す。月ごとの税込合計 × 10/11 を Decimal で厳密に計算し、ROUND_HALF_UP で int にする。丸め方は推奨案への委任を受けてエージェントが決めた。なお、.5 ちょうどになるケースは数学的に発生しない。
+- Q3: `cancelled` の行だけを除外する。負の金額は純額として加算する（回答と推奨案）。
+- 未知の status: `cancelled` 以外はすべて集計に含める（回答）。
+- A2（変更）: 最初の月から最後の月までの欠損月を 0 で含める（回答）。
+- A1: キーは `"YYYY-MM"` で昇順に並べる。値は int。
+- A3: 標準ライブラリだけを使う。
+- A4: `utf-8-sig` で読み込む。CRLF と LF の両方に対応する。
+- A5: タイムゾーン情報のない日時は UTC とみなす。
+- A6: 不正な行や必須列の欠落があれば ValueError を送出する。金額は整数だけを受け付ける。
+- A7: `order_id` の重複は排除しない。
+- A8: status は前後の空白を除き、小文字にして比較する。
+- A9: 0 埋めする範囲は、集計対象の行（cancelled 以外）の最初の月から最後の月までとする。
+- A10: 集計対象の行が 0 件なら `{}` を返す。
+
+## 成果物
+- `solution.py`（実装）、`test_solution.py`（検証用テスト）、`contract.md`（承認済みの契約）、`report.md`（本書）。
+- followup.md は作成していない。数値が必要な項目はすべて回答で決まるか、推奨案に委任されていた。

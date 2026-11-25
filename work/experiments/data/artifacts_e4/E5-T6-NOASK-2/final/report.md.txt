@@ -1,0 +1,89 @@
+# 実行レポート: `make_invoices(data_dir, month)`
+
+- 契約: `contract.md`（推奨既定案で確定・承認済み）
+- 成果物: `solution.py`（実装 + CLI）、`test_solution.py`（DoD 検証テスト）
+- 実行環境: Python 3.12.10 / 標準ライブラリのみ
+
+## 検証コマンドと出力（証拠）
+
+### 1) DoD テスト一式
+```
+> python -m unittest -v test_solution
+test_returns_list_with_required_keys (test_solution.DoD1Structure...) ... ok
+test_invariants_all_months (test_solution.DoD2Arithmetic...) ... ok
+test_jst_price_switch_boundaries (test_solution.DoD3UnitPrice...) ... ok
+test_exact_order_set_and_line_order_2026_10 (test_solution.DoD4MonthAssignment...) ... ok
+test_jst_month_boundaries (test_solution.DoD4MonthAssignment...) ... ok
+test_excluded_statuses (test_solution.DoD5StatusFilter...) ... ok
+test_hand_calculated_values (test_solution.DoD6DiscountTax...) ... ok
+test_cli_usage_error (test_solution.DoD7Cli...) ... ok
+test_cli_writes_csv_matching_function (test_solution.DoD7Cli...) ... ok
+test_empty_month (test_solution.DoD8EmptyAndInvalid...) ... ok
+test_invalid_month (test_solution.DoD8EmptyAndInvalid...) ... ok
+test_invalid_reference_data_raises (test_solution.DoD8EmptyAndInvalid...) ... ok
+test_input_row_order_independent (test_solution.DoD9Determinism...) ... ok
+----------------------------------------------------------------------
+Ran 13 tests in 0.811s
+OK
+```
+
+### 2) CLI 実行
+```
+> python solution.py data 2026-10 out.csv   (exit=0)
+invoice_id,customer_id,subtotal,discount,tax,total
+INV-202610-C001,C001,27180,2718,2227,26689
+INV-202610-C002,C002,12560,0,1124,13684
+INV-202610-C003,C003,20960,2096,1627,20491
+INV-202610-C004,C004,10280,0,994,11274
+
+> python solution.py data 2026-13 out2.csv
+error: month must be 'YYYY-MM': '2026-13'   (exit=1)
+```
+（確認後に `out.csv` は削除済み）
+
+### 3) 手計算との突き合わせ（2026-10, C001, gold）
+| order | JST日付 | sku | qty | 単価 | 金額 | 区分 |
+|---|---|---|---|---|---|---|
+| O1003 | 10-02 | F200 | 10 | 540 | 5,400 | food 8% |
+| O1008 | 10-10 | F100 | 4 | 1,680（切替後） | 6,720 | food 8% |
+| O1012 | 10-16 | A100 | 7 | 1,300（切替後） | 9,100 | general 10% |
+| O1016 | 10-22 | A200 | 2 | 2,980 | 5,960 | general 10% |
+
+- food: 小計 12,120 → 値引 1,212 → 税 floor(10,908×8%)=872
+- general: 小計 15,060 → 値引 1,506 → 税 floor(13,554×10%)=1,355
+- subtotal 27,180 / discount 2,718 / tax 2,227 / total 26,689 → 関数出力と一致
+
+テストの期待値（`EXPECTED`）は 2026-09・10・11 の全 8 請求書について同じ手順で手計算した値です。
+
+## DoD 条件の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | list を返し、請求書 7 キー・明細 5 キー | 完了 | DoD1Structure |
+| 2 | amount=単価×数量、subtotal=Σamount、total=subtotal−discount+tax、金額はすべて int | 完了 | DoD2Arithmetic（3 か月分） |
+| 3 | 単価が JST の日付による履歴単価と一致（O1008=1680, O1012=1300） | 完了 | DoD3UnitPrice |
+| 4 | 帰属月が JST の日付どおり（O1002→10月, O1021→11月） | 完了 | DoD4MonthAssignment（2026-10 の注文の集合と並び順も完全一致） |
+| 5 | returned/cancelled を除外、2026-10 に C005 の請求書なし | 完了 | DoD5StatusFilter |
+| 6 | discount・tax が手計算値と一致 | 完了（計算の正しさ）／**人間の確認が必要**（ルール自体） | DoD6DiscountTax。値引き率 10%・税率 8%/10%・切り捨てはデータに根拠がない仮定（Q2） |
+| 7 | CLI が終了コード 0 で、CSV が関数の結果と一致 | 完了 | DoD7Cli + CLI 実行ログ |
+| 8 | 注文のない月は空、不正な月は ValueError／CLI は非 0 で終了 | 完了 | DoD8EmptyAndInvalid（不正な参照データ・未知の status・単価なしのエラーも確認） |
+| 9 | 2026-09〜11 の全月で成り立つ | 完了 | DoD2・5・6 は 3 か月すべて検証。加えて入力の行順に依存しない（決定的）ことを DoD9Determinism で確認 |
+
+総括: 実装・テストはすべて通過。ただし業務ルール（Q1〜Q3、特に Q2 の値引き・税・端数処理）は回答がないまま推奨既定で確定したため、本番利用の前に人間の確認が必要です。
+
+## 採用した仮定の一覧
+
+| ID | 内容 | 影響度 |
+|---|---|---|
+| Q1 | 月の判定と単価の適用日は JST（UTC+9）の日付で行う | 高（O1002/O1021 の帰属月、O1008/O1012 の単価） |
+| Q2 | gold は 10%、standard は 0% の値引き。food 8%・general 10%。税率区分ごとに 値引 = floor(区分小計×値引率)、税 = floor((区分小計−値引)×税率) を計算して合計（請求書単位・税率ごとに 1 回切り捨て） | 高（全金額） |
+| Q3 | completed・shipped を請求し、returned・cancelled は除外（マイナス明細は作らない） | 高 |
+| A1 | 適用単価は、注文日（JST）以前で effective_from が最大の行 | 中 |
+| A2 | amount = unit_price×qty、subtotal = Σamount（税抜）、total = subtotal − discount + tax | 低 |
+| A3 | 請求書は請求対象の明細が 1 件以上ある顧客にのみ作る（0 円請求書は作らない） | 低 |
+| A4 | invoice_id = `INV-{YYYYMM}-{customer_id}` | 低 |
+| A5 | 請求書は customer_id の昇順、明細は ordered_at → order_id の昇順 | 低 |
+| A6 | CSV は UTF-8（BOM なし）でヘッダー付き。対象がなければヘッダーのみ | 低 |
+| A7 | 標準ライブラリのみ | 低 |
+| A8 | 不正な month、未知の顧客・SKU・status・tier・category、単価のない注文は ValueError（CLI は exit 1、引数不足は exit 2） | 低 |
+| A9 | 金額はすべて Python の int（整数演算のみで、浮動小数点は使わない） | 低 |

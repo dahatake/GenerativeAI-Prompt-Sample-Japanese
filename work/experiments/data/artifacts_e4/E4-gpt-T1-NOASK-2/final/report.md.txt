@@ -1,0 +1,88 @@
+# 月次売上集計：実行報告
+
+`contract.md` を推奨既定値で確定し、`solution.py` に `monthly_sales(path)` を実装した。検証は指定作業ディレクトリで実施した。
+
+## Definition of Done
+
+| ID | 条件 | 状態 | 証拠 |
+| --- | --- | --- | --- |
+| D1 | インポート、実データの期待値、キーと値の型 | 完了 | `test_sample_totals_and_types` |
+| D2 | UTC の月末・年末を JST で正しく集計 | 完了 | `test_jst_month_and_year_boundaries` |
+| D3 | `completed` 以外を除外し、負額を反映 | 完了 | `test_only_completed_rows_and_signed_amounts` |
+| D4 | 空白月は省略、合計 0 は保持、ヘッダーだけなら `{}` | 完了 | `test_gaps_omitted_but_zero_total_retained`、`test_header_only` |
+| D5 | 必須列の欠落、不正値、空欄は `ValueError` | 完了 | `test_missing_required_column`、`test_invalid_or_empty_date_and_amount` |
+| D6 | UTF-8 BOM に対応し、`FileNotFoundError` は伝播 | 完了 | `test_utf8_bom`、`test_missing_file` |
+| D7 | `sales.csv` の内容は不変 | 完了 | 作業の開始時とテスト後の SHA-256 が一致 |
+
+## 採用した仮定
+
+- 日時は UTC の `YYYY-MM-DDTHH:MM:SSZ`。月は JST（UTC+09:00）への変換後に決める。
+- ステータスが `completed` に完全一致する行だけを計上する。取消やその他のステータスは除外する。
+- `amount_incl_tax` はファイル内の単位のまま、符号付き 10 進整数として足す。負額を含め、税額再計算、通貨換算、丸め、重複排除はしない。
+- 対象行のない月は省略する。対象行があり合計 0 の月は保持する。対象行がなければ空の辞書を返す。キー順は要件外。
+- 入力はヘッダー付きのカンマ区切り UTF-8（BOM は任意）。集計に必須なのは `ordered_at`、`amount_incl_tax`、`status` で、`order_id` は不要。必須列の欠落、集計対象行の日付・金額の欠損や不正は `ValueError`。読込時の OS エラーは伝播する。
+
+## 検証コマンドと出力
+
+### D1–D6：検証用テスト（`test_solution.py`）
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_gaps_omitted_but_zero_total_retained (test_solution.MonthlySalesTest.test_gaps_omitted_but_zero_total_retained) ... ok
+test_header_only (test_solution.MonthlySalesTest.test_header_only) ... ok
+test_invalid_or_empty_date_and_amount (test_solution.MonthlySalesTest.test_invalid_or_empty_date_and_amount) ... ok
+test_jst_month_and_year_boundaries (test_solution.MonthlySalesTest.test_jst_month_and_year_boundaries) ... ok
+test_missing_file (test_solution.MonthlySalesTest.test_missing_file) ... ok
+test_missing_required_column (test_solution.MonthlySalesTest.test_missing_required_column) ... ok
+test_only_completed_rows_and_signed_amounts (test_solution.MonthlySalesTest.test_only_completed_rows_and_signed_amounts) ... ok
+sales.csv: {'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+test_sample_totals_and_types (test_solution.MonthlySalesTest.test_sample_totals_and_types) ... ok
+test_utf8_bom (test_solution.MonthlySalesTest.test_utf8_bom) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.295s
+
+OK
+```
+
+### D7：原本の SHA-256
+
+開始時：
+
+```powershell
+Get-FileHash -LiteralPath '.\sales.csv' -Algorithm SHA256 | Select-Object -ExpandProperty Hash
+```
+
+```text
+C6D43F26291C5523E093222EF4167EFC5F3E1CD037D5852E3DA0B4EDB9BD94EA
+```
+
+テスト後：
+
+```powershell
+$expected = 'C6D43F26291C5523E093222EF4167EFC5F3E1CD037D5852E3DA0B4EDB9BD94EA'
+$actual = (Get-FileHash -LiteralPath '.\sales.csv' -Algorithm SHA256 -ErrorAction Stop).Hash
+if ($actual -ne $expected) { throw "sales.csv SHA256 mismatch: $actual" }
+Write-Output "sales.csv SHA256 unchanged: $actual"
+```
+
+```text
+sales.csv SHA256 unchanged: C6D43F26291C5523E093222EF4167EFC5F3E1CD037D5852E3DA0B4EDB9BD94EA
+```
+
+### 補足：構文と実行環境
+
+エディターの構文チェックは対象ファイルを認識しなかったため、ローカルの Python コンパイラーで両ファイルを確認した。
+
+```powershell
+python -B -c "from pathlib import Path; files = ('solution.py', 'test_solution.py'); [compile(Path(name).read_bytes(), name, 'exec') for name in files]; print('Syntax OK: solution.py, test_solution.py')"
+python --version
+```
+
+```text
+Syntax OK: solution.py, test_solution.py
+Python 3.12.10
+```

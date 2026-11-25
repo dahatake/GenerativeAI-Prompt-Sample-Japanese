@@ -1,0 +1,60 @@
+# 月間労働時間の集計 — 実行報告
+
+`contract.md` を推奨既定案で確定し、`solution.py` に `monthly_work_hours(path)` を実装した。DoD 全8項目が完了し、証拠不足・人間の確認が必要な項目はない。
+
+## Definition of Done の状態
+
+| 条件 | 状態 | 証拠（`test_solution.py`） |
+| --- | --- | --- |
+| サンプルのキー集合と `float` 値が期待値に一致 | 完了 | `test_sample_file`：E001 は14時間50分、E002 は14時間、E003 は9時間15分 |
+| 単独の `22:00–06:00` は8時間 | 完了 | `test_overnight_shift_is_eight_hours` |
+| 月末をまたぐ勤務の全時間を開始月に計上 | 完了 | `test_month_end_shift_is_credited_entirely_to_start_month`：12/31→1/1 の全8時間 |
+| `date` に複数の年月がある場合は `ValueError` | 完了 | `test_multiple_year_months_are_rejected`：月違いと、同じ月番号で年違い |
+| 開始・終了が空欄で、有給のみの従業員は `0.0` | 完了 | `test_paid_leave_only_employees_get_zero_hours`：時刻記入済みの有給も加算しないことを確認 |
+| ヘッダーのみは `{}` | 完了 | `test_header_only_returns_empty_dict` |
+| 必須列欠落は `ValueError` | 完了 | `test_missing_required_column_is_rejected` |
+| 不正時刻は `ValueError` | 完了 | `test_invalid_times_are_rejected`：範囲外、形式違反、`work` の必須時刻欠落、記入済み有給時刻の不正 |
+
+## 採用した仮定
+
+- ヘッダー付きのカンマ区切り UTF-8 CSV（BOM 可）を入力とし、`employee,date,type,start,end` を必須列とする。従業員IDは先頭ゼロを含め文字列のまま保持する。
+- 全行の `date`（実在する `YYYY-MM-DD` 日付）は単一の年月とする。対象年月の引数はなく、日付をまたぐ勤務も開始日の月に全時間を帰属させる。
+- 時刻はタイムゾーンなしのローカル時刻 `HH:MM`。終了時刻が開始時刻より早ければ翌日終了、同一なら0分とする。
+- `work` のみ積算する。`paid_leave` の開始・終了は省略可で、記入された時刻は検証するが、労働時間には加算しない。有給のみの従業員も `0.0` で返す。
+- 休憩は推定・控除せず、端数処理もしない。従業員ごとに整数の分単位で合計し、最後に60で割って `float` にする。
+- 必須列欠落、空の従業員ID、不正日付・時刻、未知の種別、複数年月は黙って処理せず `ValueError`。ヘッダーのみなら `{}` を返す。
+- Python 標準ライブラリのみを使い、入力は変更しない。重複・勤務の重なりの自動補正と、割増や給与計算は行わない。
+
+## 実行したコマンドと出力
+
+作業ディレクトリで実行。テスト10件すべて成功。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_bom_equal_times_and_string_employee_id (test_solution.MonthlyWorkHoursTests.test_bom_equal_times_and_string_employee_id) ... ok
+test_header_only_returns_empty_dict (test_solution.MonthlyWorkHoursTests.test_header_only_returns_empty_dict) ... ok
+test_invalid_employee_date_and_type_are_rejected (test_solution.MonthlyWorkHoursTests.test_invalid_employee_date_and_type_are_rejected) ... ok
+test_invalid_times_are_rejected (test_solution.MonthlyWorkHoursTests.test_invalid_times_are_rejected) ... ok
+test_missing_required_column_is_rejected (test_solution.MonthlyWorkHoursTests.test_missing_required_column_is_rejected) ... ok
+test_month_end_shift_is_credited_entirely_to_start_month (test_solution.MonthlyWorkHoursTests.test_month_end_shift_is_credited_entirely_to_start_month) ... ok
+test_multiple_year_months_are_rejected (test_solution.MonthlyWorkHoursTests.test_multiple_year_months_are_rejected) ... ok
+test_overnight_shift_is_eight_hours (test_solution.MonthlyWorkHoursTests.test_overnight_shift_is_eight_hours) ... ok
+test_paid_leave_only_employees_get_zero_hours (test_solution.MonthlyWorkHoursTests.test_paid_leave_only_employees_get_zero_hours) ... ok
+test_sample_file (test_solution.MonthlyWorkHoursTests.test_sample_file) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.290s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+```text
+{'E001': 14.833333333333334, 'E002': 14.0, 'E003': 9.25}
+```

@@ -1,0 +1,24 @@
+{
+  "T4": {
+    "function": "monthly_work_hours(path: str) -> dict[str, float]",
+    "file": "solution.py",
+    "requirements": {
+      "R1": "end が start より前の時刻の場合は、日付をまたいで翌日に終了した勤務として扱う。",
+      "R2": "1シフトの拘束時間が6時間を超える場合は、一律で休憩60分を控除する(6時間ちょうどは控除しない)。",
+      "R3": "各シフトの実労働時間は15分単位で切り捨てる。",
+      "R4": "type が paid_leave の行は、所定労働時間の7.5時間として計上する。"
+    }
+  },
+  "T5": {
+    "function": "reorder_plan(inventory_path: str, shipments_path: str, today) -> list[dict]",
+    "file": "solution.py",
+    "requirements": {
+      "R1": "1日平均出荷数は、today の前日までの直近28日間(today 当日は含めない)の出荷数合計 ÷ 28 とする。",
+      "R2": "在庫判定には、stock に on_order(発注済み未入荷)を加えた有効在庫を使う。",
+      "R3": "発注点 = 1日平均出荷数 × lead_time_days + safety_stock。発注数 = 発注点 − 有効在庫 を lot の倍数に切り上げた値とする。",
+      "R4": "discontinued が true の品目は発注対象から除外する。",
+      "R5": "結果は sku の昇順に並べ、qty は int とする。",
+      "R6": "有効在庫が発注点と等しい場合も発注対象とする(有効在庫 <= 発注点 で発注)。"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# 実装内容
+
+- `solution.py` の `monthly_sales(path)` は、CSVを読み込み、`status` が `completed`（前後空白・大小文字を正規化）の行だけを集計します。
+- `ordered_at` をISO 8601形式として解釈し、UTCから日本時間（JST, UTC+9）へ変換後、年月を `YYYY-MM` キーとして集計します。
+- `amount_incl_tax` を整数として合計し、`{"YYYY-MM": 金額(int)}` のdictを返します。
+
+# 今回の修正点
+
+- UTCのタイムスタンプをJSTへ変換する処理を追加しました。
+- 年月判定を、変換前の文字列先頭ではなく、JSTへ変換した日時の年月に変更しました。
+- `Z` をUTCとして扱い、タイムゾーン情報がない日時はUTCとして解釈するようにしました。
+
+# 前提
+
+- 入力はヘッダー `order_id,ordered_at,amount_incl_tax,status` を持つUTF-8系のCSVです。
+- `ordered_at` はUTCで記録されたISO 8601形式です。月判定はJSTへ変換して行います。
+- 金額は整数文字列であることを前提とします。

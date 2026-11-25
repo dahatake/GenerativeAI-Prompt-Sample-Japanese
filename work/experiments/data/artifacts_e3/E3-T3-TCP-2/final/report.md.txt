@@ -1,0 +1,54 @@
+# 実行レポート: `validate_invoice_id(value)`
+
+## 結果
+- 実装: `solution.py`（`validate_invoice_id(value) -> bool`）
+- テスト: `test_solution.py`（unittest。DoD 1〜4 に 1 つずつテストを用意し、各入力は subTest で個別に判定）
+- 契約: `contract.md`（`answers.md` を反映し、承認済みに更新）
+- `answers.md` の回答には必要な値がすべて含まれていたため、`followup.md` は作成していません。
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `samples.txt` の 4 件で True | 完了 | `test_dod1_samples_are_valid ... ok`。各行の判定結果は下の「samples.txt の各行の判定」を参照 |
+| 2 | 不正な入力 21 件（`None`、`int`、`bytes`、小文字、空白・改行付き、桁不足・桁超過、月 00・13、年 1999・2019・2000・2100、連番 0000、区切り違い、接頭辞違い、全角）で False、例外なし | 完了 | `test_dod2_invalid_inputs_return_false ... ok` |
+| 3 | 境界値 `INV-202001-0001`、`INV-209912-9999`、`INV-202612-0001`、`INV-209901-0001` で True | 完了 | `test_dod3_boundary_values_are_valid ... ok` |
+| 4 | 戻り値の型が常に `bool` | 完了 | `test_dod4_return_type_is_bool ... ok`（上記すべての入力で `type(...) is bool` を確認） |
+| 5 | `test_solution.py` がすべて成功 | 完了 | `Ran 4 tests ... OK` |
+
+人間の確認が必要な点: 業務上の正解データ（実際に発行された番号や、過去の不正な入力の実例）では検証していません。仕様の根拠は `samples.txt` の 4 件と `answers.md` の回答だけです。
+
+### 証拠（実行コマンドと出力）
+```
+> python -B test_solution.py
+test_dod1_samples_are_valid (__main__.TestValidateInvoiceId.test_dod1_samples_are_valid) ... ok
+test_dod2_invalid_inputs_return_false (__main__.TestValidateInvoiceId.test_dod2_invalid_inputs_return_false) ... ok
+test_dod3_boundary_values_are_valid (__main__.TestValidateInvoiceId.test_dod3_boundary_values_are_valid) ... ok
+test_dod4_return_type_is_bool (__main__.TestValidateInvoiceId.test_dod4_return_type_is_bool) ... ok
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
+```
+
+### samples.txt の各行の判定
+```
+> python -B -c "from solution import validate_invoice_id as v; [print(repr(l), v(l)) for l in open('samples.txt',encoding='utf-8').read().splitlines()]"
+'最近発行された請求書番号の例:' False   ← 見出し行（番号ではない）
+'INV-202601-0001' True
+'INV-202601-0002' True
+'INV-202512-0347' True
+'INV-202603-1200' True
+```
+（実際のコンソール出力では、出力の文字コードの都合で見出し行が文字化けしていました。判定結果は False です。）
+
+## 採用した仕様・仮定
+- 形式は `INV-YYYYMM-NNNN` で、ASCII のみ、文字列全体が完全一致すること（`re.fullmatch`。数字は `[0-9]` で判定）。
+- 年は 2020〜2099、月は 01〜12。実行日による未来判定はしません。（回答 Q1）
+- 連番はちょうど 4 桁で 0001〜9999。`0000` は不正です。（回答 Q2）
+- 厳密一致とし、正規化はしません。`str` 以外は例外を出さずに False を返します。（回答 Q3）
+- 接頭辞は `INV` 固定です。（回答 Q4: 了承済み）
+- 区切り文字は ASCII のハイフンだけです。（回答 Q5: 了承済み）
+- チェックディジットはありません。（Q6: 指定なし → 推奨案）
+- 連番の年月ごとの振り直し・連続性・重複は判定に使いません。（Q7: 指定なし → 推奨案）
+- `str` のサブクラスは `str` として扱います。（Q8: 指定なし → 推奨案）
+- テストファイル `test_solution.py` を追加しました。（Q9: 指定なし → 推奨案）

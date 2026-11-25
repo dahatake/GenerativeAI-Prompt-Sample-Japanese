@@ -1,0 +1,67 @@
+# 実行レポート：請求書番号の判定
+
+`contract.md` を推奨既定案で承認済みに更新し、`solution.py` に `validate_invoice_id(value)` を実装した。
+
+## Definition of Done
+
+| ID | 状態 | 検証と結果 |
+| --- | --- | --- |
+| D1 | 完了 | `test_solution.py` で `from solution import validate_invoice_id` が成功。全27件を例外なく実行し、`assertIs(actual, expected)` により戻り値が厳密に `True` または `False` であることを確認。 |
+| D2 | 完了 | `test_examples`：`samples.txt` の4件がすべて `True`。 |
+| D3 | 完了 | `test_valid_boundaries_not_in_examples`：年・月・連番の最小／最大の組み合わせがともに `True`。 |
+| D4 | 完了 | `test_invalid_calendar_and_sequence_values`：月 `00`・`13`、年 `0000`、連番 `0000` がすべて `False`。 |
+| D5 | 完了 | `test_noncanonical_spellings`：桁不足・桁超過、区切り違い、小文字、全角数字、前後の空白、末尾改行、空文字がすべて `False`。 |
+| D6 | 完了 | `test_non_strings_are_not_coerced`：`None`、整数、真偽値、`bytes`、有効な番号に文字列化できるオブジェクトがすべて `False`。 |
+
+## 採用した仮定
+
+- `samples.txt` の4件はすべて有効例であり、発行済み番号の全件リストではない。
+- 形式は大文字 `INV-`、固定桁の ASCII 数字、ASCII ハイフンからなる `INV-YYYYMM-NNNN` の完全一致。空白・末尾改行の除去や大小文字・全角文字の補正、旧形式への対応はしない。文字列以外は変換せず拒否する。
+- 年は `0001`〜`9999`、月は `01`〜`12`、連番は4桁にゼロ埋めした `0001`〜`9999`。現在日付による制限はない。
+- 発行の有無や重複は確認せず、サンプルにない番号でもルールを満たせば有効とする。
+
+## 実行証拠
+
+コマンド: `python -X utf8 -B -m unittest -v test_solution`
+
+終了コード: `0`。出力（標準出力・標準エラー、全27入力の期待値と実測値）:
+
+```text
+test_examples (test_solution.InvoiceIdTests.test_examples) ... ok
+'INV-202601-0001': expected=True, actual=True
+'INV-202601-0002': expected=True, actual=True
+'INV-202512-0347': expected=True, actual=True
+'INV-202603-1200': expected=True, actual=True
+'INV-202600-0001': expected=False, actual=False
+'INV-202613-0001': expected=False, actual=False
+'INV-000001-0001': expected=False, actual=False
+'INV-202601-0000': expected=False, actual=False
+None: expected=False, actual=False
+2026010001: expected=False, actual=False
+True: expected=False, actual=False
+b'INV-202601-0001': expected=False, actual=False
+Stringifiable(): expected=False, actual=False
+'INV-20261-0001': expected=False, actual=False
+'INV-2026010-0001': expected=False, actual=False
+'INV-202601-001': expected=False, actual=False
+'INV-202601-00001': expected=False, actual=False
+'INV-202601_0001': expected=False, actual=False
+'inv-202601-0001': expected=False, actual=False
+'INV-\uff12\uff10\uff12\uff16\uff10\uff11-0001': expected=False, actual=False
+test_invalid_calendar_and_sequence_values (test_solution.InvoiceIdTests.test_invalid_calendar_and_sequence_values) ... ok
+test_non_strings_are_not_coerced (test_solution.InvoiceIdTests.test_non_strings_are_not_coerced) ... ok
+test_noncanonical_spellings (test_solution.InvoiceIdTests.test_noncanonical_spellings) ... ok
+test_valid_boundaries_not_in_examples (test_solution.InvoiceIdTests.test_valid_boundaries_not_in_examples) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+'INV-202601-\uff10\uff10\uff10\uff11': expected=False, actual=False
+' INV-202601-0001': expected=False, actual=False
+'INV-202601-0001 ': expected=False, actual=False
+'INV-202601-0001\n': expected=False, actual=False
+'': expected=False, actual=False
+'INV-000101-0001': expected=True, actual=True
+'INV-999912-9999': expected=True, actual=True
+```

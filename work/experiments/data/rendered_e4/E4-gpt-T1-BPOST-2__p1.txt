@@ -1,0 +1,5 @@
+作業ディレクトリ: C:\Users\dahatake\AppData\Local\Temp\tc-exp4\E4-gpt-T1-BPOST-2
+このディレクトリの外にあるファイルは読まない・書かないでください。ask_user などユーザーに問い合わせるツールは使わないでください（質問がある場合は最終回答に書いて終了してください）。
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。
+sales.csv の売上を月次で集計する関数 monthly_sales(path) を solution.py に実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+作業が終わったら、実装内容と前提にしたことを report.md に簡潔に書いてください。

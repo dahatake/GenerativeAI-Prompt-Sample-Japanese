@@ -1,0 +1,83 @@
+# Task Contract: `reorder_plan(inventory_path, shipments_path, today)`
+
+ステータス: **承認済み / Execution Mode**（answers.md の回答を反映。回答の無い点は推奨既定案を採用）
+
+---
+
+## 1. 調査結果（Spec Mode 時点）
+
+### 確認できた事実
+- `inventory.csv`（UTF-8、ヘッダ付き、4行）列: `sku,name,stock,on_order,lead_time_days,safety_stock,lot,discontinued`
+
+  | sku | stock | on_order | lead_time_days | safety_stock | lot | discontinued |
+  |---|---|---|---|---|---|---|
+  | A100 | 40 | 0 | 7 | 20 | 50 | false |
+  | A200 | 15 | 30 | 5 | 10 | 20 | false |
+  | B300 | 5 | 0 | 10 | 5 | 100 | true |
+  | C400 | 12 | 0 | 14 | 6 | 10 | false |
+- `shipments.csv`（70行）列: `date,sku,qty`。期間は 2026-10-01〜2026-11-09。A100 は毎日 3 個、A200 は1日おきに 2 個、C400 は 10/01〜10/10 に毎日 5 個（以降ゼロ）、B300 は出荷履歴なし。出荷の無い日は行が無い。
+
+### 回答で確定した事項（answers.md）
+- Q1: 日平均需要 = **today の前日までの直近28日間**（`today-28日 ≤ date < today`）の出荷合計 ÷ 28。出荷の無い日は 0 として数える。
+- Q2: **A**。在庫ポジション（stock + on_order）≤ 発注点 なら発注。発注数 = (発注点 − 在庫ポジション) を lot の倍数に切り上げた値。
+- Q3: **A**。`discontinued=true` の品目は発注対象外。
+- H2〜H6 はそのとおり（qty は int、sku 昇順）。
+
+### 推奨既定案を採用した事項（回答に指定が無かったもの）
+- H1: `today` は `datetime.date`（`datetime.datetime` を含む）と `"YYYY-MM-DD"` 文字列のどちらでも受け付ける。
+- H7: `shipments.csv` にあって `inventory.csv` に無い sku は無視する。
+- H8: 標準ライブラリだけで実装する。
+- Q2-A の補足: 在庫ポジション = 発注点（不足 0）の場合は **1 lot** を発注する（Q2-A 原案の記述どおり。「≤ なら発注」と「qty > 0 のみ返す」を両立させるため）。
+- 出荷実績ゼロの品目は需要 0 として通常どおり計算する（Q3-A）。
+- 不正データ（必須列の欠落、空欄、数値でない値、負数、lot ≤ 0、日付形式不正、discontinued が true/false 以外、inventory 内の sku 重複）は `ValueError` を出す。
+- 戻り値は `sku` と `qty` だけ（name や計算根拠は含めない）。
+- 受け入れ時の `today` は特に指定が無いため、DoD では 2026-11-10 と 2026-11-25 の両方を検証する。
+
+---
+
+## 2. Task Contract
+
+### Outcome
+`solution.py` に `reorder_plan(inventory_path, shipments_path, today)` を実装する。発注が必要な品目について `[{"sku": str, "qty": int}, ...]` を返す。
+
+### 計算仕様
+- 集計期間: `today - 28日 ≤ date < today`（today 当日と today 以降は含めない）
+- 日平均需要 `d` = 期間内の出荷数合計 ÷ 28
+- 発注点 `ROP` = `d × lead_time_days + safety_stock`（誤差を避けるため有理数で正確に計算）
+- 在庫ポジション `IP` = `stock + on_order`
+- `discontinued=true` の品目は除外する
+- `IP ≤ ROP` なら発注する。`qty = max(ceil((ROP − IP) / lot), 1) × lot`
+- 戻り値は qty > 0 の品目だけを sku 昇順で返す。qty は int。
+
+### Scope
+- CSV 2つの読み込みと検証、上記の計算、`today` の型の正規化。
+
+### Out of scope
+- 実際の発注処理、ファイル出力、CLI、需要予測（季節性・トレンド）、MOQ・最大在庫・予算の制約、複数倉庫、CSV の列名の揺れや UTF-8 以外の文字コードへの対応。
+
+### Data sources
+- `inventory.csv`、`shipments.csv`（出荷 = 需要実績とみなす）、引数 `today`
+
+### Constraints
+- 標準ライブラリだけを使う。入力ファイルは読み取り専用。
+- 純粋関数にする（現在時刻に依存しない）。
+- 作業ディレクトリ外のファイルは読み書きしない。
+
+### Definition of Done（同梱データで検証する）
+1. `reorder_plan("inventory.csv", "shipments.csv", "2026-11-10") == [{"sku": "A100", "qty": 50}]`（A100: d=3、ROP=41、IP=40）
+2. `reorder_plan("inventory.csv", "shipments.csv", "2026-11-25") == []`（A100: d=39/28、ROP=29.75、IP=40）
+3. `today=datetime.date(2026, 11, 10)` を渡しても 1 と同じ結果になる。
+4. B300（discontinued=true）は、どの `today` でも結果に含まれない。
+5. A200 は on_order を含めるため発注されない（IP=45 > ROP=15）。
+6. qty はすべて正の int で lot の倍数、結果は sku 昇順。
+7. `today` 当日以降の出荷行を追加しても結果が変わらない。28日より前の出荷も結果に影響しない。
+8. 境界: IP = ROP のとき発注される（1 lot）。IP = ROP + 1 のときは発注されない。
+9. 不正データでは `ValueError` を出す。
+
+### Evidence
+- `python -m unittest -v test_solution` の実行コマンドと出力（report.md に記載）。
+- 同梱データの品目ごとの計算表。
+
+### Open questions（人間の確認が必要な点）
+- IP = ROP（不足 0）のときに 1 lot を発注する解釈でよいか。answers.md の「発注数 = 差分を lot の倍数に切り上げ」を文字どおりに読むと 0 になる。
+- 受け入れ時の `today`。データは 11/09 で終わっているため、today=11/25 だと直近28日の平均が実際の需要より低くなる。

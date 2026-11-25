@@ -1,0 +1,5 @@
+作業ディレクトリ: C:\Users\dahatake\AppData\Local\Temp\tc-exp4\E5-T6-BPOST-1
+このディレクトリの外にあるファイルは読まない・書かないでください。ask_user などユーザーに問い合わせるツールは使わないでください（質問がある場合は最終回答に書いて終了してください）。
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。
+data/ フォルダーの CSV（customers.csv、products.csv、prices.csv、orders.csv）から、指定した月の請求書を作る関数 make_invoices(data_dir, month) を solution.py に実装してください。month は "YYYY-MM" の文字列です。戻り値は請求書の dict のリストで、各請求書は invoice_id、customer_id、lines、subtotal（税抜の合計）、discount（値引き額）、tax（消費税額）、total（請求額）を持ちます。lines は各行が order_id、sku、qty、unit_price、amount を持つ dict のリストです。金額はすべて整数（円）です。あわせて、python solution.py <data_dir> <YYYY-MM> <out.csv> で、請求書の一覧（invoice_id, customer_id, subtotal, discount, tax, total）を CSV に書き出せるようにしてください。
+作業が終わったら、実装内容と前提にしたことを report.md に簡潔に書いてください。

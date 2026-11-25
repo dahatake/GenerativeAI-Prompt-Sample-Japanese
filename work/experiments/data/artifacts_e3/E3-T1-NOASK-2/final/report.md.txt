@@ -1,0 +1,78 @@
+# 実行レポート — monthly_sales(path)
+
+- 契約: `contract.md`（推奨既定案 Q1=a, Q2=a, Q3=a で確定。質問への回答はなかった）
+- 成果物: `solution.py`（実装）、`test_solution.py`（検証用テスト。標準ライブラリの `unittest`）
+- 実行環境: Python 3.12.10 / Windows
+
+## 実装の要点
+- `ordered_at`（UTC）を JST（UTC+9 の固定オフセット）に変換し、`YYYY-MM` で月を決める。
+- `status == "completed"` の行だけを集計し、負の金額は返金として差し引く。`cancelled` の行は除外する。
+- `amount_incl_tax` は税込のまま `int` で合計する。
+- 売上のない月はキーに含めない。キーは昇順。
+- 次の場合は `ValueError` を送出する: 必須列がない、日時を解析できない、日時にタイムゾーンがない、金額が整数でない・空、未知の status。
+
+## 証拠（Evidence）
+
+### コマンド 1（DoD 1, 2, 3）
+```
+python -c "from solution import monthly_sales; r=monthly_sales('sales.csv'); print(r); print({k: type(v).__name__ for k,v in r.items()})"
+```
+出力:
+```
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+{'2026-01': 'int', '2026-02': 'int', '2026-04': 'int', '2026-05': 'int'}
+```
+
+### コマンド 2（DoD 2〜6 の自動テスト）
+```
+python -m unittest -v test_solution
+```
+出力:
+```
+test_dod2_exact_result_on_sales_csv ... ok
+test_dod3_types_and_key_format ... ok
+test_dod4_cancelled_excluded_and_negative_netted ... ok
+test_dod4_jst_boundary ... ok
+test_dod4_month_with_only_cancelled_is_absent ... ok
+test_dod4_year_boundary ... ok
+test_dod5_empty_month_absent ... ok
+test_dod6_invalid_rows_raise ... ok
+test_dod6_missing_column_raises ... ok
+test_utf8_bom_accepted ... ok
+----------------------------------------------------------------------
+Ran 10 tests in 0.258s
+
+OK
+```
+（テストは一時 CSV を作業ディレクトリ内の `_testdata/` に作り、終了時に削除する。）
+
+## DoD の状態
+
+| # | 条件 | 状態 | 根拠 |
+|---|---|---|---|
+| 1 | `monthly_sales('sales.csv')` が例外なく実行できる | **完了** | コマンド 1 |
+| 2 | 結果が `{"2026-01": 16500, "2026-02": 11000, "2026-04": 18700, "2026-05": 7700}` と完全一致する | **完了**（既定案の解釈として）／**人間の確認が必要**（解釈が業務上正しいか） | コマンド 1、`test_dod2_*`。期待値は契約時に私が試算したもので、業務側の正解値と照合していない |
+| 3 | 値がすべて `int`、キーがすべて `^\d{4}-\d{2}$` に一致する | **完了** | コマンド 1、`test_dod3_*` |
+| 4 | 境界ケース（JST の月またぎ、`cancelled` の除外、負の金額の相殺） | **完了** | `test_dod4_*`（UTC 14:59:59 / 15:00:00 の境界、年またぎ、A-1010 相当の行、cancelled の除外、-300 の相殺）。`sales.csv` の A-1004→2月、A-1010→5月の振り分けは DoD 2 の一致で確認 |
+| 5 | 2026-03 のキーが存在しない | **完了** | `test_dod5_*` |
+| 6 | 不正な行を含む CSV では例外が送出される | **完了** | `test_dod6_*`（7 パターン＋必須列の欠落） |
+
+## 採用した仮定（すべて未確認。回答がなかったため既定案を採用）
+
+| ID | 内容 | 外れた場合の影響 |
+|---|---|---|
+| Q1=a | 月は JST（UTC+9）の暦月で区切る | UTC にすると `{"2026-01": 19800, "2026-02": 7700, "2026-04": 26400}` になる |
+| Q2=a | `completed` だけを集計する。負の金額は返金として相殺し、`cancelled` は除外する | 全件集計なら JST で `{"2026-01": 38500, "2026-02": 15400, ...}` になる |
+| Q3=a | 税込金額（`amount_incl_tax`）をそのまま合計する | 税抜にする場合は換算と端数処理の仕様が必要 |
+| A2 | 売上のない月（2026-03 など）はキーに含めない | 0 で埋める場合は期間の定義が必要 |
+| A3 | キーは昇順で構築する | dict の等価比較には影響しない |
+| A4 | 入力は UTF-8（BOM の有無は問わない）、ヘッダ付きのカンマ区切り | Shift_JIS などは読めない |
+| A5 | 標準ライブラリのみ。Python 3.11 以上（`str \| os.PathLike` 型注釈と `fromisoformat` の `Z` 対応のため） | 3.10 以下では動かない |
+| A6 | 不正な行はスキップせず `ValueError` を送出する。`cancelled` の行も検証対象 | スキップを望む場合は挙動の変更が必要 |
+| A7 | 金額は整数のみ受け付ける（`10.5` はエラー） | 小数を含むデータは読めない |
+| — | status の既知値は `completed` / `cancelled` の 2 つだけ。それ以外はエラー | `refunded` などが実データにあると失敗する |
+
+## 人間の確認が必要な点
+1. 月の締めが JST でよいか（2 件の振り分けと 2026-05 の有無が変わる）。
+2. `cancelled` の除外と、マイナス行（A-1006）を返金として相殺する扱いでよいか。
+3. 税込のままでよいか。

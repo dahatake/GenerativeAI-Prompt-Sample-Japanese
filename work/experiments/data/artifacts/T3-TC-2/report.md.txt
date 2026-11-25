@@ -1,0 +1,57 @@
+# 実行レポート: validate_invoice_id
+
+作業場所は `C:\Users\dahatake\AppData\Local\Temp\tc-exp\T3-TC-2` です。契約内容は `contract.md` を参照してください（承認済み）。
+
+## 作成・変更したファイル
+- `contract.md`：質問への回答を反映し、承認済みの契約に更新
+- `solution.py`：`validate_invoice_id` を実装（新規）
+- `test_solution.py`：DoD を検証するテスト（新規、`unittest`）
+- `report.md`：このレポート（新規）
+- `samples.txt`：変更なし
+
+## 実行したコマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_dod1_samples_are_valid (test_solution.TestValidateInvoiceId.test_dod1_samples_are_valid) ... ok
+test_dod2_invalid_formats (test_solution.TestValidateInvoiceId.test_dod2_invalid_formats) ... ok
+test_dod3_year_range (test_solution.TestValidateInvoiceId.test_dod3_year_range) ... ok
+test_dod4_non_str_returns_false (test_solution.TestValidateInvoiceId.test_dod4_non_str_returns_false) ... ok
+test_dod5_return_type_is_bool (test_solution.TestValidateInvoiceId.test_dod5_return_type_is_bool) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+exit=0
+
+> python -c "import solution; print('import OK')"
+import OK
+exit=0
+```
+
+実行環境は Python 3.12.10 です。実行時にできた `__pycache__` は、実行後に削除しました。
+
+## DoD の状態
+
+| DoD | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| DoD1 | `samples.txt` の4件がすべて True | 完了 | `test_dod1_samples_are_valid` ok。テストは `samples.txt` を直接読み込み、4件あることも確かめています |
+| DoD2 | 書式違反の12件がすべて False | 完了 | `test_dod2_invalid_formats` ok（12件それぞれを subTest で確認） |
+| DoD3 | 年 2000〜2099 の境界値 | 完了（ただし範囲そのものは**人間の確認が必要**） | `test_dod3_year_range` ok。2000 と 2099 は True、1999 と 2100 は False。範囲 2000〜2099 は仮定 A1 です |
+| DoD4 | `None`、`12345`、`bytes` は例外を出さず False | 完了 | `test_dod4_non_str_returns_false` ok |
+| DoD5 | 戻り値は常に `type(result) is bool` | 完了 | `test_dod5_return_type_is_bool` ok（有効値、無効値、`str` 以外の型で確認） |
+| DoD6 | `import solution` がエラーなく終わる | 完了 | `python -c "import solution"`、exit=0 |
+
+## 採用した仮定
+- **A1: 年の範囲は 2000〜2099**（人間の確認が必要）。Q1(c) の回答には具体的な範囲がなかったため、契約案に例として書いた値を採用しました。変えるときは `solution.py` の `MIN_YEAR` と `MAX_YEAR` を直します。
+- A2: 判定は書式だけで、台帳との照合はしません。未来の年月も弾きません（Q3=a）。
+- A3: 連番は4桁固定で 0001〜9999、接頭辞は大文字の `INV` だけです。
+- A4: 数字は ASCII の `0-9` だけを認めます。Python の `\d` は全角数字にも一致するため、`[0-9]` を使っています。
+- A5: 正規化はせず、`re.fullmatch` で完全一致を判定します。前後の空白や末尾の改行は False です（Q2=a）。`str` のサブクラスは `str` として扱い、`bytes` は False です。
+- A6: 検証用テスト `test_solution.py` は成果物として残しています（標準ライブラリだけ）。
+
+## 人間の確認が必要な事項
+1. 年の範囲 2000〜2099 で問題ないか（A1）。
+2. 連番が 9999 を超える運用、または `INV` 以外の接頭辞が今後出てくる予定があるか（A3）。
+3. `samples.txt` には有効な例しかないため、無効な例（DoD2 と DoD3）の期待値は、この契約の合意から導いたものです。実際の業務データで False になるべき例があれば、テストに追加することを推奨します。

@@ -1,0 +1,8 @@
+From: 社内SE 森 <mori@ourcompany.example>
+To: 営業担当 <sales@ourcompany.example>
+Date: 2026-11-13 09:05
+Subject: Re: PoC 第1フェーズの所感
+
+照明起因の誤検出は、撮影条件の前処理で 1〜1.5pt 改善できる見込みです。
+ただし第2フェーズの対象ライン数が確定しないと工数は出せません。
+次回、ライン数の確定時期を確認してください。

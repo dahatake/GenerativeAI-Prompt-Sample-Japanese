@@ -1,0 +1,48 @@
+# Report — validate_invoice_id
+
+## 成果物
+- `solution.py`: `validate_invoice_id(value) -> bool`。正規表現 `INV-[0-9]{4}(0[1-9]|1[0-2])-[0-9]{4}` を `fullmatch` で判定する。`str` 以外は `False`。
+- `test_solution.py`: DoD の検証用テスト（unittest）。
+- `contract.md`: 推奨既定案で確定した Task Contract。
+
+## 検証コマンドと出力
+コマンド: `python test_solution.py`
+
+```
+test_boundaries (__main__.ValidateInvoiceId.test_boundaries) ... ok
+test_dod1_samples_valid (__main__.ValidateInvoiceId.test_dod1_samples_valid) ... ok
+test_dod2_invalid_strings (__main__.ValidateInvoiceId.test_dod2_invalid_strings) ... ok
+test_dod3_non_str_no_exception (__main__.ValidateInvoiceId.test_dod3_non_str_no_exception) ... ok
+test_dod4_returns_bool (__main__.ValidateInvoiceId.test_dod4_returns_bool) ... ok
+
+Ran 5 tests in 0.000s
+OK
+```
+終了コード: 0
+
+## DoD の状態
+| DoD | 内容 | 状態 | 証拠 |
+|---|---|---|---|
+| DoD1 | `samples.txt` の4件がすべて `True` | 完了 | `test_dod1_samples_valid`（`samples.txt` を読み込んで4件を確認） |
+| DoD2 | 無効例11件がすべて `False`（契約の10件に、末尾空白の1件を追加） | 完了 | `test_dod2_invalid_strings` |
+| DoD3 | `None`・`123`・`bytes`・`list` で `False`、例外なし | 完了 | `test_dod3_non_str_no_exception` |
+| DoD4 | 戻り値が常に `bool` | 完了 | `test_dod4_returns_bool` |
+| DoD5 | 上記を実行するスクリプトがすべて通る | 完了 | 上記の実行ログ |
+| 仕様の正しさ | 採用した仮定が実際の業務ルールと一致するか | **人間の確認が必要** | 仕様書がなく、サンプルは有効例のみ。テストは仮定に対する検証にとどまる |
+
+補足: 境界テスト（月01〜12、連番 `0000`、`9999`）も `test_boundaries` で通過した。
+
+## 採用した仮定
+- A1: 6桁は `YYYYMM`。月は 01〜12 のみ有効で、年は4桁の数字なら何でも可（Q1 = a）。
+- A2: 末尾4桁は連番で、`0000` も許可（Q2 = a）。
+- A3: `INV-` + 6桁 + `-` + 4桁に完全一致する必要がある（`fullmatch`）。
+- A4: 大文字小文字を区別する。前後の空白や末尾改行は無効（Q3 = a）。
+- A5: ASCII の 0-9 のみ有効。全角数字は無効（`re.ASCII` 相当の `[0-9]` を使用）。
+- A6: `str` 以外は例外にせず `False`。
+- A7: 標準ライブラリ（`re`）のみ使用。
+
+## 未解決・要確認
+- 年の範囲制限（例: 2000〜2099）の要否。
+- 連番 `0000` を無効にすべきか。
+- 旧形式や他の接頭辞（例: `CN-`）を扱うか。
+- チェックディジットの有無。

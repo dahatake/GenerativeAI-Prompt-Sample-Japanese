@@ -1,0 +1,40 @@
+# 実行報告 — 請求書番号の検証
+
+`contract.md` を推奨既定案で承認済みに更新し、`solution.py` に `validate_invoice_id(value)` を実装した。
+
+## Definition of Done の状態
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| D1: 指定関数をインポートして呼び出せる | 完了 | `test_imported_function_is_callable`。`from solution import validate_invoice_id` が成功し、呼び出し可能。 |
+| D2: サンプル4件すべてが有効 | 完了 | `test_issued_samples_return_true`。`samples.txt` の4件を読み、すべて `True` を確認。 |
+| D3: 合意した境界ケースで期待値が一致 | 完了 | `test_valid_range_endpoints_return_true` と `test_invalid_inputs_return_false`。有効境界2件と無効入力15件を確認。 |
+| D4: 例外なく、厳密に `bool` を返す | 完了 | D2・D3 の計21件で例外がなく、`assertIs` で `True` または `False` そのものと確認。`1` や `0` は合格しない。 |
+
+## 採用した仮定
+
+- `samples.txt` の4件はすべて有効。形式は `INV-YYYYMM-NNNN` のみで、ASCII の数字とハイフンを使用する。
+- 年は `0001`〜`9999`、月は `01`〜`12`。現在日付や運用開始日による制限はない。
+- 連番は `0001`〜`9999` の4桁で、`0000` は無効。
+- 正規化は行わない。`INV` は大文字のみとし、前後の空白・末尾改行・全角数字・文字列以外の入力は無効。
+- 判定は入力の形式と値域のみを対象とする。発行台帳との照合、外部通信、現在時刻の参照は行わない。
+
+## 検証コマンドと実行出力
+
+作業ディレクトリで実行。終了コード: `0`。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_imported_function_is_callable (test_solution.ValidateInvoiceIdTests.test_imported_function_is_callable) ... ok
+test_invalid_inputs_return_false (test_solution.ValidateInvoiceIdTests.test_invalid_inputs_return_false) ... ok
+test_issued_samples_return_true (test_solution.ValidateInvoiceIdTests.test_issued_samples_return_true) ... ok
+test_valid_range_endpoints_return_true (test_solution.ValidateInvoiceIdTests.test_valid_range_endpoints_return_true) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+```

@@ -1,0 +1,59 @@
+# 実行レポート（Execution Mode）
+
+## 各 Definition of Done の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `contract.md` が承認済みTask Contractとして更新され、推奨既定案と仮定を含む | 完了 | `contract.md` の「承認ステータス」「仮定（採用済み）」「Outcome」「Scope」「Out of scope」「Constraints」「Definition of Done」を確認可能。 |
+| `timing.txt` に作業開始・終了時刻を追記する | 完了（終了時刻は本レポート作成後の最終コマンドで追記） | Execution Mode開始時刻と終了時刻は `timing.txt` の先頭・末尾へ追記済み。このレポート作成後、最終タイムスタンプ追記コマンドを実行する。 |
+| `solution.py` の `monthly_work_hours(path)` がサンプルCSVを正しく集計する | 完了 | コマンド: `python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"`。出力: `{'E001': 14.833333333333334, 'E002': 14.0, 'E003': 9.25}`。期待値との差は浮動小数点誤差の範囲内。 |
+| 自作テストでサンプル、夜間跨ぎ、有給スキップ、異常時刻を検証する | 完了 | コマンド: `python -m unittest -v test_solution.py`。出力は5件すべて `ok`、最後に `Ran 5 tests ... OK`。 |
+| `report.md` に各DoD状態、採用仮定、検証コマンドと出力を記録する | 完了 | 本ファイル自身を証拠とする。 |
+
+## 検証コマンドと出力
+
+### 1. サンプル集計
+コマンド:
+```text
+python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+出力:
+```text
+{'E001': 14.833333333333334, 'E002': 14.0, 'E003': 9.25}
+```
+
+### 2. 自作テスト
+コマンド:
+```text
+python -m unittest -v test_solution.py
+```
+出力:
+```text
+test_invalid_work_time_raises_value_error (test_solution.MonthlyWorkHoursTests.test_invalid_work_time_raises_value_error) ... ok
+test_missing_required_header_raises_value_error (test_solution.MonthlyWorkHoursTests.test_missing_required_header_raises_value_error) ... ok
+test_overnight_and_equal_times (test_solution.MonthlyWorkHoursTests.test_overnight_and_equal_times) ... ok
+test_paid_leave_is_not_counted (test_solution.MonthlyWorkHoursTests.test_paid_leave_is_not_counted) ... ok
+test_sample_csv (test_solution.MonthlyWorkHoursTests.test_sample_csv) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.014s
+
+OK
+```
+
+## 採用した仮定一覧
+1. 指定CSVの全行を一つの集計対象とし、従業員ごとに合計する。
+2. 戻り値は `{従業員ID: 労働時間（時間、float）}` のdict。
+3. `type=work` 行のみを集計し、`paid_leave`など他種別はスキップする。
+4. 終了時刻が開始時刻より前なら翌日終了とみなして24時間補正する。
+5. 開始時刻と終了時刻が同じ場合は0時間とする。
+6. 時刻形式は `HH:MM` の24時間表記とする。
+7. CSVはカンマ区切り、UTF-8またはUTF-8 BOM対応として読む。
+8. 複数月が含まれていても月別には分けずファイル全体を合計する。
+9. 不正な`work`行は暗黙にスキップせず、CSV行番号付きの`ValueError`を発生させる。
+10. 標準ライブラリのみ使用し、従業員キーと労働時間はそれぞれ文字列・floatとする。
+
+## 結果
+- 証拠不足のDoD条件: なし。
+- 人間の確認が必要なDoD条件: なし。
+

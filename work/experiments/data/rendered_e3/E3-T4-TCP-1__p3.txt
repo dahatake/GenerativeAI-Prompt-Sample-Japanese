@@ -1,0 +1,6 @@
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。
+followup.md の確認質問への回答が answers2.md にあります。読んでください。これ以上の確認はできません。値がない点は推奨既定案で進めてください。
+Task Contract を回答で更新し（contract.md を更新）、承認済みとして実行してください（Execution Mode）。
+- solution.py に実装してください。
+- Definition of Done の各条件について、自分で検証用のテストを書いて実行し、そのコマンドと出力を証拠として示してください。
+- 最後に report.md に、各 DoD 条件の状態（完了 / 証拠不足 / 人間の確認が必要）と、採用した仮定の一覧を書いてください。

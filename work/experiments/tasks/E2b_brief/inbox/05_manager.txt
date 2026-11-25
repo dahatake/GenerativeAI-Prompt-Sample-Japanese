@@ -1,0 +1,7 @@
+From: 営業部長 佐々木 <sasaki@ourcompany.example>
+To: 営業担当 <sales@ourcompany.example>
+Date: 2026-11-17 18:20
+Subject: コントソ製造 第2フェーズの方針
+
+第2フェーズは、対象ライン数が 3 以上なら年間契約での提案に切り替えたい。
+価格は社外秘なので、資料には金額を載せず「概算は別途」としてください。

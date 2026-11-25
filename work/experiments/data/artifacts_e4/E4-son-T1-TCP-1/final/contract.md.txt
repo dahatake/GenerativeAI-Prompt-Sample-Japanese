@@ -1,0 +1,38 @@
+# Task Contract（承認済み・answers.md 反映版）
+
+## 回答の反映
+- Q1: JST（UTC+9）で月を判定。
+- Q2: 税抜 = 税込 / 1.1 の整数。丸め方は指定なし → 推奨既定案「行ごとに切り捨て」を採用（整数演算 `amount*10//11`）。
+- Q3: cancelled は除外。負の金額は推奨案どおり completed なら差し引く。
+- Q4: 最初の月から最後の月まで、注文のない月も 0 として含める（前回の仮定を変更）。
+- Q5・Q6: 推奨案どおり。
+
+## Outcome
+`solution.py` に `monthly_sales(path)` を実装し、`{"YYYY-MM": 税抜金額(int)}` を返す。
+
+## Scope / Out of scope
+- Scope: CSV 読み込み、JST 月判定、completed 絞り込み、税抜変換、月合計、欠損月の 0 補完。
+- Out of scope: CLI、外部ライブラリ、sales.csv の変更。
+
+## Data sources
+- `sales.csv`（列: order_id, ordered_at(UTC ISO8601), amount_incl_tax, status）。
+
+## Constraints
+- 標準ライブラリのみ、UTF-8。値は int。作業ディレクトリ外は読み書きしない。
+- 税率は 10% 固定（/1.1）。丸めは行ごとの切り捨て（負数は負の無限大方向）。
+
+## Definition of Done
+1. `monthly_sales("sales.csv") == {"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}`
+2. キーは月昇順、値はすべて int。
+3. 月判定は JST（UTC 15:00 以降は翌月）。
+4. cancelled は集計しない。負の金額は差し引く。
+5. 注文のない月は 0 で補完（年またぎ含む）。
+6. 空ファイル・ヘッダのみは `{}`。
+
+## Evidence
+- `python -m unittest -v test_solution` の出力、`report.md`。
+
+## Open questions（この仮定で進めます）
+- 丸め方: 行ごとに切り捨て（sales.csv は全行が 1100 の倍数のため結果に影響しない。他データでは要確認）。
+- 補完範囲: completed 行が存在する最初〜最後の月（cancelled のみの月は範囲の端を決めない）。
+- 不正行は例外をそのまま送出。重複排除なし。status は完全一致。

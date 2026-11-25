@@ -1,0 +1,47 @@
+# 実装・検証レポート
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python -m unittest -v test_solution.py
+```
+
+出力:
+
+```text
+test_cancelled_and_negative_rows (test_solution.MonthlySalesTests.test_cancelled_and_negative_rows) ... ok
+test_result_types_and_key_format (test_solution.MonthlySalesTests.test_result_types_and_key_format) ... ok
+test_sales_csv_exact_totals (test_solution.MonthlySalesTests.test_sales_csv_exact_totals) ... ok
+test_timezone_is_normalized_to_utc_month (test_solution.MonthlySalesTests.test_timezone_is_normalized_to_utc_month) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.005s
+
+OK
+```
+
+## DoD条件の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `monthly_sales(sales.csv)` を実行できる | 完了 | `test_sales_csv_exact_totals` が実行され、`sales.csv` を読み込んだ |
+| 月次合計が `2026-01=19800`, `2026-02=7700`, `2026-04=26400` | 完了 | `test_sales_csv_exact_totals` と `test_cancelled_and_negative_rows` がOK |
+| `2026-03` をキーに含めない | 完了 | `test_cancelled_and_negative_rows` がOK |
+| 戻り値が辞書、月キーが `YYYY-MM`、金額が `int` | 完了 | `test_result_types_and_key_format` がOK |
+
+## 採用した仮定
+
+- `status == "completed"` の行のみ集計し、キャンセル行は除外する。
+- 負額は有符号金額として合算する。`-1100` は減額として処理する。
+- タイムスタンプはUTC暦月で集計する。
+- 売上行がない月（このデータでは2026-03）は辞書に含めない。
+- 戻り値は `dict` とし、金額は `int` とする。
+- 標準ライブラリのみを使用する。
+
+## 総合判定
+
+- 完了: 4件
+- 証拠不足: 0件
+- 人間の確認が必要: 0件

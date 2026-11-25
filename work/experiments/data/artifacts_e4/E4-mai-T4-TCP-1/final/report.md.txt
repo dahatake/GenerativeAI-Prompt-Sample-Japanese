@@ -1,0 +1,45 @@
+# 実装・検証レポート
+
+## Definition of Done 状態
+
+1. **完了** - サンプルCSV `shifts.csv` の集計を検証
+   - コマンド: `python -c "from solution import monthly_work_hours; print(monthly_work_hours(r'.\shifts.csv'))"`
+   - 出力: `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}`
+
+2. **完了** - 戻り値の値はすべて `float`
+   - 証拠: `test_shifts_sample` が全値の `isinstance(value, float)` を検証
+
+3. **完了** - `paid_leave` を7.5時間として加算
+   - 証拠: サンプルではE001の合計に7.5時間を加算し21.25
+   - 証拠: `test_paid_leave_only_employee_is_included` が `{"E004": 7.5}` を確認
+
+4. **完了** - 休憩ルールを検証
+   - 6時間ちょうどは休憩なし、6時間超は60分控除
+   - 証拠: `test_break_threshold_exactly_six_hours` がEX=6.0、EY=5.0を確認
+
+5. **完了** - 日跨ぎ勤務を翌日終了として計算
+   - 証拠: `test_overnight_and_missing_work_time` の22:00-02:00が4.0時間
+
+6. **完了** - 欠損時刻のwork行はスキップ、不正時刻は `ValueError`
+   - 証拠: 欠損行が従業員EMとして含まれないことを検証
+   - 証拠: `test_invalid_time_raises_value_error` が `25:00` に対して `ValueError` を確認
+
+7. **完了** - 空ファイルは `{}` を返す
+   - 証拠: `test_empty_file_returns_empty_dict` が通過
+
+8. **完了** - 検証テストスイートを実行
+   - コマンド: `python -m unittest -v test_monthly_work_hours.py`
+   - 出力: 7 tests、全て成功
+
+## 採用した仮定一覧
+- 複数月を含むCSVでも従業員ごとに全行を合計する。
+- 結果のキーは従業員文字列のみとし、月別キーには分割しない。
+- 各シフトの実労働時間を休憩控除後に15分単位で切り捨てる。
+- 休憩は拘束時間が6時間超の場合のみ60分控除する。
+- `end < start` の勤務は翌日終了として計算する。
+- `paid_leave` は従業員ごとに7.5時間として加算する。
+- 欠損時刻を持つ `work` 行はスキップする。
+- 不正な時刻形式・範囲は `ValueError` とする。
+- 空ファイルは `{}` とする。
+- CSVはUTF-8またはUTF-8 BOMであり、必要ヘッダーは存在する。
+- 欠損した従業員IDの行は集計対象外とする。

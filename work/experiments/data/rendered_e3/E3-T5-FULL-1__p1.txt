@@ -1,0 +1,12 @@
+作業ディレクトリ: C:\Users\dahatake\AppData\Local\Temp\tc-exp3\E3-T5-FULL-1
+このディレクトリの外にあるファイルは読まない・書かないでください。ask_user などユーザーに問い合わせるツールは使わないでください（質問がある場合は最終回答に書いて終了してください）。
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。
+在庫(inventory.csv)と出荷履歴(shipments.csv)から、発注が必要な品目と発注数を返す関数 reorder_plan(inventory_path, shipments_path, today) を solution.py に実装してください。戻り値は {"sku": 品目コード, "qty": 発注数} の dict のリストです。
+要件:
+- 1日平均出荷数は、today の前日までの直近28日間(today 当日は含めない)の出荷数合計 ÷ 28 とする。
+- 在庫判定には、stock に on_order(発注済み未入荷)を加えた有効在庫を使う。
+- 発注点 = 1日平均出荷数 × lead_time_days + safety_stock。発注数 = 発注点 − 有効在庫 を lot の倍数に切り上げた値とする。
+- discontinued が true の品目は発注対象から除外する。
+- 結果は sku の昇順に並べ、qty は int とする。
+- 有効在庫が発注点と等しい場合も発注対象とする(有効在庫 <= 発注点 で発注)。
+作業が終わったら、実装内容と前提にしたことを report.md に簡潔に書いてください。

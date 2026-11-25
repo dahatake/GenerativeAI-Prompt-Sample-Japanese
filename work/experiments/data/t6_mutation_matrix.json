@@ -1,0 +1,189 @@
+{
+ "full": {
+  "expected_fail": [],
+  "failed": [],
+  "R0": true,
+  "ok": true
+ },
+ "M1_utc": {
+  "expected_fail": [
+   "R1"
+  ],
+  "failed": [
+   "R1"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M2_completed_only": {
+  "expected_fail": [
+   "R2"
+  ],
+  "failed": [
+   "R2"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M2_not_cancelled": {
+  "expected_fail": [
+   "R2"
+  ],
+  "failed": [
+   "R2"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M3_latest": {
+  "expected_fail": [
+   "R3"
+  ],
+  "failed": [
+   "R3"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M3_first": {
+  "expected_fail": [
+   "R3"
+  ],
+  "failed": [
+   "R3"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M4_flat10": {
+  "expected_fail": [
+   "R4"
+  ],
+  "failed": [
+   "R4"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M5_no_discount": {
+  "expected_fail": [
+   "R5",
+   "R6"
+  ],
+  "failed": [
+   "R5",
+   "R6"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M5_after_tax": {
+  "expected_fail": [
+   "R5",
+   "R6"
+  ],
+  "failed": [
+   "R5",
+   "R6"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M6_round": {
+  "expected_fail": [
+   "R6"
+  ],
+  "failed": [
+   "R6"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M7_per_line": {
+  "expected_fail": [
+   "R7"
+  ],
+  "failed": [
+   "R7"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M7_round": {
+  "expected_fail": [
+   "R7"
+  ],
+  "failed": [
+   "R7"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M8_csv_order": {
+  "expected_fail": [
+   "R8"
+  ],
+  "failed": [
+   "R8"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M8_first_order": {
+  "expected_fail": [
+   "R8"
+  ],
+  "failed": [
+   "R8"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M9_zero_invoices": {
+  "expected_fail": [
+   "R9"
+  ],
+  "failed": [
+   "R9"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "M10_file_order": {
+  "expected_fail": [
+   "R10"
+  ],
+  "failed": [
+   "R10"
+  ],
+  "R0": true,
+  "ok": true
+ },
+ "naive": {
+  "mutations": [
+   "M1_utc",
+   "M2_completed_only",
+   "M3_latest",
+   "M4_flat10",
+   "M5_no_discount",
+   "M7_per_line",
+   "M8_csv_order",
+   "M9_zero_invoices",
+   "M10_file_order"
+  ],
+  "failed": [
+   "R1",
+   "R10",
+   "R2",
+   "R3",
+   "R4",
+   "R5",
+   "R6",
+   "R7",
+   "R8",
+   "R9"
+  ],
+  "R0": true,
+  "ok": true
+ }
+}

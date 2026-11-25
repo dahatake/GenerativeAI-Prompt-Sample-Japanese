@@ -1,0 +1,75 @@
+# 実行レポート: `monthly_sales(path)`
+
+## 実行したコマンドと出力
+
+### 1. 実データでの結果
+```
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+### 2. テスト（`test_solution.py`、標準の `unittest`）
+```
+> python -m unittest -v test_solution
+test_4a_jst_month_boundary ... ok
+test_4b_cancelled_and_unknown_status_excluded ... ok
+test_4c_negative_amount_subtracted ... ok
+test_4d_per_row_differs_from_per_month ... ok
+test_4d_per_row_truncation_toward_zero ... ok
+test_4e_zero_fill_across_year ... ok
+test_4f_empty_results ... ok
+test_4g_bom ... ok
+test_4h_invalid_input_raises ... ok
+test_dod2_sales_csv_exact ... ok
+test_dod3_types_keys_order_contiguous ... ok
+test_dod5_gap_month_zero ... ok
+----------------------------------------------------------------------
+Ran 12 tests in 0.305s
+
+OK
+```
+
+## Definition of Done の状態
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import monthly_sales` が成功する | 完了 | コマンド 1 とテスト全件の import が成功 |
+| 2 | `sales.csv` の結果が期待値と完全に一致する | 完了 | コマンド 1 の出力、`test_dod2_sales_csv_exact` |
+| 3 | 値は int、キーは `YYYY-MM` 形式で昇順、月が連続している | 完了 | `test_dod3_types_keys_order_contiguous` |
+| 4a | JST の月境界（UTC 14:59 は当月、15:00 は翌月） | 完了 | `test_4a_jst_month_boundary` |
+| 4b | cancelled 行と未知の status の行を除外する | 完了 | `test_4b_cancelled_and_unknown_status_excluded` |
+| 4c | 負の金額を差し引く | 完了 | `test_4c_negative_amount_subtracted` |
+| 4d | 税抜額を行ごとに 0 方向へ切り捨てる。浮動小数点誤差が出ない | 完了 | `test_4d_per_row_truncation_toward_zero`（1000→909、-1000→-909、3300→3000）、`test_4d_per_row_differs_from_per_month` |
+| 4e | 年をまたいでも 0 埋めが正しい | 完了 | `test_4e_zero_fill_across_year` |
+| 4f | ヘッダーのみ、または全件 cancelled の場合に `{}` を返す | 完了 | `test_4f_empty_results` |
+| 4g | BOM 付きファイルでも同じ結果になる | 完了 | `test_4g_bom` |
+| 4h | 不正な日時、不正な金額、空の金額、列不足、必須列の欠落で `ValueError` を送出する | 完了 | `test_4h_invalid_input_raises` |
+| 5 | 注文がない月（2026-03）を 0 で含める | 完了 | `test_dod5_gap_month_zero`、コマンド 1 の出力 |
+
+**人間の確認が必要な点:** 税抜の丸め方（行ごとに 0 方向へ切り捨て）は、回答が「推奨案で」だったため推奨の既定案を採用しました。今回の `sales.csv` は全件が 11 で割り切れるので結果に影響しません。ただし、端数が出るデータで経理ルールと合っているかは確認してください。
+
+## 採用した仮定の一覧
+回答で指定された仕様:
+- 月の判定: `ordered_at`（UTC）を JST（UTC+09:00 固定）に変換して判定する（Q1）。
+- 金額: 税抜（税率 10%）にする。各行で `sign(x) × (|x| × 10 // 11)` を計算して 0 方向へ切り捨て、月ごとに合計する。整数演算だけを使う（Q2、followup は推奨案）。
+- 対象行: `status == "completed"` の行だけを集計する。cancelled は除外する（Q3）。
+- 注文がない月: 最初の月から最後の月まで 0 で埋める（Q4、仮定を訂正）。
+
+推奨既定案（回答で「推奨案で」と指定された点）:
+- 負の金額は差し引く（純額）（Q3）。
+- キーは昇順にする（Q5）。
+- 不正な行は `ValueError` を送出し、スキップしない（Q6）。
+- 未知の status の行は集計しない（Q7）。
+- UTF-8 で読み、BOM 付きも許容する（Q8）。
+
+値が指定されなかった細部（contract.md の B1〜B6）:
+- B1: タイムゾーンのない `ordered_at` は UTC とみなす。
+- B2: 日時と金額の検証は status にかかわらず全行で行う。
+- B3: status は前後の空白を除いたうえで、大文字と小文字を区別して比較する。
+- B4: 金額は整数文字列だけを受け付ける。
+- B5: completed 行が 0 件の場合は `{}` を返す。
+- B6: 0 埋めの範囲は completed 行の月の最小から最大までとする。
+
+## 成果物
+- `solution.py`: 実装
+- `test_solution.py`: 検証用テスト。一時ファイルは作業ディレクトリ内に作り、テスト後に自動で削除する。
+- `contract.md`: 承認済みの Task Contract（v2）

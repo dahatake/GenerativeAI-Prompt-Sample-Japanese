@@ -1,0 +1,82 @@
+# 実行レポート: `reorder_plan`
+
+## 成果物
+- `solution.py`: `reorder_plan(inventory_path, shipments_path, today)` の実装（標準ライブラリだけを使用）
+- `test_solution.py`: DoD を検証する unittest（13件）。テスト用の CSV は作業ディレクトリ内の一時サブディレクトリに作り、テストのたびに削除します。
+- `contract.md`: 回答を反映して承認済みにした Task Contract
+
+## 検証コマンドと出力
+
+```
+> python -W error::ResourceWarning -m unittest -v test_solution
+test_dod1_sample_data_2026_11_10 ... ok
+test_dod2_date_and_datetime_accepted ... ok
+test_dod3_sample_data_2026_11_25 ... ok
+test_dod4_boundary_equal_orders_one_lot ... ok
+test_dod4_boundary_just_above_does_not_order ... ok
+test_dod4_fractional_rop_exact_boundary ... ok
+test_dod5_on_order_counted ... ok
+test_dod6_shipments_outside_window_ignored ... ok
+test_dod6_window_includes_today_minus_28 ... ok
+test_dod7_sku_without_shipments ... ok
+test_dod8_discontinued_excluded ... ok
+test_dod8_input_files_unchanged ... ok
+test_dod8_sorted_int_and_lot_roundup ... ok
+----------------------------------------------------------------------
+Ran 13 tests in 0.162s
+OK
+exit=0
+```
+
+```
+> python -c "from solution import reorder_plan as r; print(r('inventory.csv','shipments.csv','2026-11-10')); print(r('inventory.csv','shipments.csv','2026-11-25'))"
+[{'sku': 'A100', 'qty': 50}]
+[]
+```
+
+### 品目ごとの計算過程（サンプルデータ）
+需要は直近28日間の出荷合計 ÷ 28、ROP = 需要 × リードタイム + 安全在庫、在庫ポジション = stock + on_order です。
+
+| today | sku | 需要/日 | ROP | 在庫ポジション | 不足分 | 判定 |
+|---|---|---|---|---|---|---|
+| 2026-11-10 | A100 | 3.0000 | 41.00 | 40 | 1.00 | 発注。1 を lot 50 に切り上げて **50** |
+| 2026-11-10 | A200 | 1.0000 | 15.00 | 45 | −30.00 | 発注しない |
+| 2026-11-10 | B300 | 0.0000 | 5.00 | 5 | 0.00 | 廃番のため除外（除外しなければ 5 ≤ 5 で発注対象になる） |
+| 2026-11-10 | C400 | 0.0000 | 6.00 | 12 | −6.00 | 発注しない（出荷は 10/10 で止まっていて、28日の範囲に入らない） |
+| 2026-11-25 | A100 | 1.3929 | 29.75 | 40 | −10.25 | 発注しない |
+| 2026-11-25 | A200 | 0.4286 | 12.14 | 45 | −32.86 | 発注しない |
+| 2026-11-25 | B300 | 0.0000 | 5.00 | 5 | 0.00 | 廃番のため除外 |
+| 2026-11-25 | C400 | 0.0000 | 6.00 | 12 | −6.00 | 発注しない |
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠・備考 |
+|---|---|---|---|
+| 1 | 2026-11-10 → `[{"sku":"A100","qty":50}]` | **完了** | `test_dod1` と、上の `python -c` の出力 |
+| 2 | `date` / `datetime` を渡しても同じ結果 | **完了** | `test_dod2` |
+| 3 | 2026-11-25 → `[]` | **完了** | `test_dod3` と、上の `python -c` の出力 |
+| 4 | 境界: 在庫ポジション == ROP なら 1 lot 発注し、ROP+1 なら発注しない。小数の ROP でも正確に判定する | **人間の確認が必要** | `test_dod4_*` の3件は通過しています。ただし「等しいときは最低 1 lot を発注する」は、Q2=B と Q3=A の矛盾を解消するために私が選んだ解釈です（下記の仮定 A1） |
+| 5 | `on_order` を在庫ポジションに含める | **人間の確認が必要** | `test_dod5` は通過しています。`on_order` を含めていることは確認できました。ただし「on_order=0 → 20個」のケースは在庫ポジションと ROP が等しい（15 == 15）ため、仮定 A1 に依存しています。`stock=14` のケース（不足 1 → 20個）は仮定 A1 に依存しません |
+| 6 | 28日の範囲外の出荷は使わず、`today-28` の出荷は含める | **完了** | `test_dod6_*` の2件（`today` 当日、`today` より後、`today-29` の出荷を追加しても結果は変わらない。`today-28` の出荷は計算に含まれる） |
+| 7 | 出荷履歴がない品目も処理できる（需要 0） | **完了** | `test_dod7` |
+| 8 | 廃番品目の除外、`sku` 昇順、`qty` が int、lot の倍数への切り上げ、入力ファイルを変更しない | **完了** | `test_dod8_*` の3件。補足: `test_dod8_discontinued_excluded` の期待値のうち、廃番でない B301 の 100個は仮定 A1 に依存します。廃番品目を除外していることの検証は、A1 に依存しません |
+
+## 採用した仮定の一覧
+
+| # | 仮定 | 根拠 |
+|---|---|---|
+| A1 | **発注と判定した品目（在庫ポジション <= ROP）は、最低 1 lot を発注する**: `qty = max(1, ceil((ROP−在庫ポジション)/lot)) × lot` | Q2=B（等しい場合も発注する）と Q3=A（不足分を切り上げる）を組み合わせると、等しいときに発注数が 0 になって矛盾するため。**確認が必要です** |
+| A2 | 需要の計算期間は `today-28` 〜 `today-1`（両端を含む）で、割る数は常に 28（出荷がない日も含む。履歴が28日未満でも 28 で割る） | Q1=B（N=28）の回答 |
+| A3 | 在庫ポジション = `stock + on_order` | Q2=B の回答 |
+| A4 | `discontinued` は大文字・小文字を区別せず、`true` / `1` / `yes` / `y` / `t` を廃番として扱う | Q4 の回答と、表記ゆれへの対応 |
+| A5 | 戻り値は `sku` の昇順で、`qty` は `int`。発注不要の品目は含めない | Q5 の回答と、推奨案 |
+| A6 | `today` には `date`、`datetime`（日付部分だけを使う）、`"YYYY-MM-DD"` 形式の文字列を受け付ける | 推奨案 |
+| A7 | `stock` は `today` 時点の在庫とする | 推奨案（データに時点の情報がないため） |
+| A8 | 出荷履歴がない品目の需要は 0 とする | 推奨案 |
+| A9 | 境界の判定は `Fraction` で正確に行う | Constraints |
+| A10 | CSV は UTF-8 として読む（BOM あり・なしの両方に対応）。列の値の前後の空白は除く。`lot < 1` の場合は `ValueError` を送出する。そのほかの不正なデータでは例外をそのまま送出する | 推奨案 |
+| A11 | `inventory.csv` にない sku の出荷は無視する | 発注対象は在庫マスタにある品目に限られるため |
+| A12 | テストファイル `test_solution.py` を追加する | Q7「推奨案で進めて」 |
+
+## 人間に確認したいこと
+- **A1**: 在庫ポジションが ROP と等しいとき（不足分 0）に 1 lot を発注するという解釈でよいでしょうか。別の扱い（例: 等しい場合は実質的に発注しない、または等しい場合も不足分に安全在庫を足すなど）を希望される場合は、`solution.py` の1行と、該当するテストの期待値を変更します。

@@ -1,0 +1,136 @@
+# Task Contract（案）: 月次請求書生成 `make_invoices(data_dir, month)`
+
+ステータス: **確定・承認済み（Execution Mode）** — 2026-11-25
+質問への回答が得られなかったため、Q1〜Q3 はすべて推奨の既定案 (a) で確定した。仮定 A1〜A12 もそのまま採用する。
+
+### 確定した決定事項
+- **D1（Q1 = a）**: `ordered_at` を JST（Asia/Tokyo）に変換して、請求月と価格の適用日を判定する。
+- **D2（Q2 = a）**: gold の割引額は `floor(subtotal × 5 / 100)`。割引額は税率ごとの小計の比率で按分する。8% 側への按分額は `floor(discount × 食品小計 / subtotal)` とし、残りを 10% 側に配分する。税は請求書ごと・税率ごとに `floor((税率別小計 − 按分した割引) × 税率)` で計算して合計する。standard の割引額は 0。
+- **D3（Q3 = a）**: `completed` と `shipped` の注文を請求に含める。`returned` と `cancelled` は含めない。
+
+---
+
+## 1. 調査結果
+
+### 1.1 確認できた事実（作業ディレクトリ内のファイルから確認）
+
+| ファイル | 内容 |
+|---|---|
+| `data/customers.csv` | 列 `customer_id,name,tier`。5件（C001〜C005）。tier は `gold`（C001, C003）/ `standard`（C002, C004, C005） |
+| `data/products.csv` | 列 `sku,name,category`。4件。category は `general`（A100, A200）/ `food`（F100, F200） |
+| `data/prices.csv` | 列 `sku,effective_from,unit_price`。**期間別価格**あり: A100 = 1200（2026-01-01〜）→ 1300（2026-10-16〜）、F100 = 1580 → 1680（2026-10-10〜）。A200 = 2980、F200 = 540 は変更なし。日付のみで時刻やタイムゾーンはない |
+| `data/orders.csv` | 列 `order_id,customer_id,ordered_at,sku,qty,status`。24件（order_id はすべて別々で、1注文=1SKU）。行は時系列順に並んでいない |
+
+- 文字コードは **UTF-8（BOM なし）**、改行は **CRLF**、ヘッダー行あり。
+- `ordered_at` は **UTC（末尾 `Z`）の ISO 8601**。
+- `status` の値は `completed`(16) / `shipped`(4) / `returned`(2) / `cancelled`(2)。
+- **UTC と JST で結果が変わる注文がある**（境界をまたぐように置かれている）:
+  - 月の判定が変わる: `O1021`（UTC 10-31 16:00 → JST 11-01 01:00）、`O1002`（UTC 09-30 15:30 → JST 10-01 00:30）
+  - 適用単価が変わる: `O1008`（F100、UTC 10-09 → JST 10-10。1580 か 1680 か）、`O1012`（A100、UTC 10-15 → JST 10-16。1200 か 1300 か）
+- 2026-10、completed+shipped のみ、の場合の税抜小計（参考の試算）:
+  - UTC 基準: C001 = 一般 14,360 / 食品 14,420、C003 = 一般 6,580 / 食品 9,640
+  - JST 基準: C001 = 一般 15,060 / 食品 12,120、C003 = 一般 6,580 / 食品 14,380
+  - C002（一般 5,960 / 食品 6,600）と C004（一般 8,600 / 食品 1,680）はどちらでも同じ。C005 の10月の注文は returned/cancelled だけ。
+- `solution.py`、テスト、仕様書、README、期待値のファイルは**ない**。
+- 割引率、税率、端数処理、請求書番号の形式を定義したファイルは**ない**。
+
+### 1.2 仮定（質問で上書きされない限り、この前提で進める）
+
+- A1. 税率は category で決める: `general` = 10%、`food` = 8%（軽減税率）。
+- A2. 割引の対象かどうかは `customers.tier` で決める（`gold` が割引あり、`standard` は割引なし）。具体的な率と計算方法は Q2 で決める。
+- A3. 1顧客×1か月で請求書を1件作る。その月に請求対象の明細がない顧客の請求書は作らない（0円の請求書は出さない）。
+- A4. 注文の単価は、`effective_from <= 注文日` を満たす行のうち `effective_from` が最も新しい行の `unit_price` とする。`effective_from` は Q1 で決めたタイムゾーンの日付として扱う。
+- A5. `amount = qty × unit_price`（整数）。
+- A6. `invoice_id` は `INV-{YYYYMM}-{customer_id}`（例: `INV-202610-C001`）とする。同じ入力からは毎回同じ ID になる。
+- A7. 並び順: 請求書は `customer_id` の昇順、`lines` は注文日時の昇順（同じ日時なら `order_id` の昇順）。
+- A8. 返す dict のキーは依頼で指定されたものだけにする（invoice_id, customer_id, lines, subtotal, discount, tax, total / lines は order_id, sku, qty, unit_price, amount）。
+- A9. `total = subtotal - discount + tax`。
+- A10. CLI の出力 CSV は UTF-8（BOM なし）、ヘッダーあり、列順は `invoice_id,customer_id,subtotal,discount,tax,total`、行の順番は A7 と同じ。
+- A11. 次の場合は例外を出して止める（黙って飛ばさない）: 存在しない customer_id / sku、適用できる価格がない、`month` が `YYYY-MM` の形式でない。CLI では終了コードを 0 以外にする。
+- A12. 使うのは Python 標準ライブラリだけ（csv, datetime, zoneinfo など）。
+
+### 1.3 不足情報
+
+- タイムゾーン（月の判定と価格の適用日）→ **Q1**
+- 割引の率と計算方法、税との計算順、端数処理 → **Q2**
+- 請求対象にする status（特に returned の扱い）→ **Q3**
+- 次の項目は仮定 A6・A7・A10 で進める（外れても直しやすい）: invoice_id の形式、並び順、出力 CSV の文字コード
+
+---
+
+## 2. 質問（最大3問。回答によって実装が変わり、外れたときの手戻りが大きいもの）
+
+### Q1. 「指定月」と「価格の適用日」はどのタイムゾーンで判定しますか？
+`ordered_at` は UTC です。どちらを選ぶかで、4件（O1021, O1002, O1008, O1012）の請求月または単価が変わります。
+- (a) **JST（Asia/Tokyo）に変換して判定する** ← **推奨の既定案**（日本円・消費税の請求なので、日本時間の暦月とするのが自然）
+- (b) UTC のまま判定する
+- (c) その他（タイムゾーンを引数で受け取る、など）
+
+### Q2. 割引（discount）と消費税（tax）はどう計算しますか？
+データには tier（gold/standard）しかなく、割引率と計算順を決める根拠がありません。
+- (a) **gold は税抜小計の 5% を割引（1円未満切り捨て）。割引額は税率ごと（10% 対象/8% 対象）の小計の比率で按分する（端数は 10% 側に寄せる）。税は請求書ごと・税率ごとに「(税率別小計 − 按分した割引) × 税率」を計算し、1円未満を切り捨てる** ← **推奨の既定案**（インボイス制度の「1請求書につき税率ごとに1回端数処理」に合わせる）
+- (b) 割引率は (a) と同じだが、明細の行ごとに税を計算して切り捨て、合計する
+- (c) 割引率や条件が違う（例: gold 10%、または小計が一定額以上で割引）。具体的な率・条件・端数処理を指定してください
+
+### Q3. どの status の注文を請求に含めますか？
+- (a) **`completed` と `shipped` を含め、`returned` と `cancelled` は含めない** ← **推奨の既定案**
+- (b) `completed` だけを含める
+- (c) `returned` をマイナスの明細として含める（返品分を差し引く）
+
+---
+
+## 3. Task Contract 案
+
+### Outcome
+`solution.py` に `make_invoices(data_dir, month)` を実装する。指定月の顧客別請求書（dict のリスト）を、決まった順序で毎回同じ内容になるように返す。あわせて `python solution.py <data_dir> <YYYY-MM> <out.csv>` で請求書の一覧を CSV に書き出せるようにする。
+
+### Scope
+- `data_dir` 内の4つの CSV（customers / products / prices / orders）を読み込む。
+- 月の判定（Q1）、status による絞り込み（Q3）、期間別単価の適用（A4）。
+- 明細（lines）、subtotal、discount、tax、total の計算。すべて整数の円とする（Q2・A1・A9）。
+- CLI（引数3つ、CSV 出力）。
+- 不正な入力のときのエラー（A11）。
+
+### Out of scope
+- PDF や帳票レイアウトの出力、請求書の採番の永続化、外部のデータベース・API との連携。
+- 入金、前月繰越、送料、手数料。
+- 顧客名・商品名の出力（返す dict と CSV のどちらにも含めない）。
+- `data/` 配下のファイルの変更。
+- 外部ライブラリ（pandas など）の導入。
+
+### Data sources
+- `data/customers.csv`（tier → 割引の判定）
+- `data/products.csv`（category → 税率）
+- `data/prices.csv`（sku × effective_from → unit_price）
+- `data/orders.csv`（請求明細の元データ）
+- いずれも UTF-8、ヘッダーあり、CRLF。
+
+### Constraints
+- 金額はすべて `int`。途中の計算でも float を使わない（整数演算で丸める）。
+- Python 標準ライブラリだけを使う。
+- 同じ入力からは同じ出力になる（並び順と ID を固定する）。
+- 作業ディレクトリの外のファイルは読み書きしない。
+
+### Definition of Done（検証できる条件）
+1. `from solution import make_invoices` ができ、`make_invoices("data", "2026-10")` が `list[dict]` を返す。
+2. どの請求書も、キーがちょうど `invoice_id, customer_id, lines, subtotal, discount, tax, total` で、金額はすべて `int`。どの明細も、キーがちょうど `order_id, sku, qty, unit_price, amount` で、値は `int`（order_id と sku は `str`）。
+3. 整合性: `amount == qty * unit_price`、`subtotal == sum(amount)`、`total == subtotal - discount + tax`、`discount >= 0`、`tax >= 0`。
+4. 月の判定（Q1 = JST の場合）: 2026-10 の請求書に O1002 が含まれ、O1021 は含まれない。2026-11 の C001 の請求書に O1021 が含まれる。
+5. 価格の適用（Q1 = JST の場合）: O1008 の unit_price = 1680、O1012 の unit_price = 1300。
+6. status の絞り込み（Q3 = 推奨案の場合）: O1010, O1017（returned）と O1006, O1013（cancelled）がどの明細にも含まれない。2026-10 に C005 の請求書がない。
+7. 税抜小計（Q1 = JST、Q3 = 推奨案の場合）: 2026-10 で C001 = 27,180、C002 = 12,560、C003 = 20,960、C004 = 10,280。
+8. discount と tax が D2 のルールどおりに計算される。2026-10 の手計算の期待値（discount / tax / total）は次のとおり。
+   C001 = 1,359 / 2,351 / 28,172、C002 = 0 / 1,124 / 13,684、C003 = 1,048 / 1,717 / 21,629、C004 = 0 / 994 / 11,274。
+9. CLI: `python solution.py data 2026-10 out.csv` が終了コード 0 で終わり、out.csv のヘッダーが `invoice_id,customer_id,subtotal,discount,tax,total`、行数が請求書の件数と同じで、値が `make_invoices` の戻り値と一致する。
+10. 不正な month（例: `2026-1`、`abc`）を渡すと例外になり、CLI は終了コード 0 以外で終わる。
+11. 注文がない月（例: `2025-01`）では空のリストを返し、CLI はヘッダーだけの CSV を出力する。
+
+### Evidence（完了時に提示するもの）
+- 1〜11 を確認するテストの実行ログ（全件成功）。
+- `python solution.py data 2026-10 out.csv` の実行ログと out.csv の中身。
+- 2026-10 の顧客ごとの手計算表（税率別の小計 → 割引 → 税 → 合計）と、実装の出力との突き合わせ。
+- 境界ケースの注文（O1002, O1021, O1008, O1012）の扱いを確認した結果。
+
+### Open questions
+- Q1〜Q3 は回答が得られなかったため、推奨の既定案で確定した（D1〜D3）。実際の業務ルールと合っているかは、人間による事後確認が必要。
+- 補足: invoice_id の形式（A6）、0円の請求書を作らないこと（A3）、出力 CSV の文字コード（A10）は仮定のまま採用した。

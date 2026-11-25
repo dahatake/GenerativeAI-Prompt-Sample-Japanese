@@ -1,0 +1,45 @@
+condition,run_id,task,R0,R1,R2,R2_future_valid,R3,R4,R5,R6,T5S_window28,active_seconds_total,errors,followup_used,hidden_pass,n_req,p1_T5S_window28,p1_hidden_pass,phase_seconds,rework_changed_lines
+TCP,E3-T1-TCP-1,T1,True,True,True,,True,True,,,,163.7,{},False,4,4,,,"[59.7, 104.0]",
+TCP,E3-T1-TCP-2,T1,True,True,True,,True,True,,,,150.7,{},False,4,4,,,"[53.1, 97.6]",
+TCP,E3-T1-TCP-3,T1,True,True,True,,True,True,,,,184.5,{},True,4,4,,,"[55.3, 38.2, 91.0]",
+BPOST,E3-T1-BPOST-1,T1,True,True,True,,True,True,,,,66.7,{},False,4,4,,2,"[30.8, 35.9]",28
+BPOST,E3-T1-BPOST-2,T1,True,True,True,,True,True,,,,78.8,{},False,4,4,,2,"[40.8, 37.9]",31
+BPOST,E3-T1-BPOST-3,T1,True,True,True,,True,True,,,,69.0,{},False,4,4,,2,"[28.8, 40.2]",26
+NOASK,E3-T1-NOASK-1,T1,True,True,True,,False,False,,,,113.2,{},False,2,4,,,"[44.5, 68.7]",
+NOASK,E3-T1-NOASK-2,T1,True,True,True,,False,False,,,,134.2,{},False,2,4,,,"[60.4, 73.8]",
+NOASK,E3-T1-NOASK-3,T1,True,True,True,,False,False,,,,131.9,{},False,2,4,,,"[60.7, 71.2]",
+TCP,E3-T3-TCP-1,T3,True,True,True,True,True,True,,,,121.6,{},False,4,4,,,"[49.5, 72.1]",
+TCP,E3-T3-TCP-2,T3,True,True,True,True,True,True,,,,130.9,{},False,4,4,,,"[52.3, 78.6]",
+TCP,E3-T3-TCP-3,T3,True,True,True,True,True,True,,,,124.9,{},False,4,4,,,"[55.6, 69.4]",
+BPOST,E3-T3-BPOST-1,T3,True,True,True,True,True,True,,,,44.6,{},False,4,4,,3,"[22.1, 22.6]",4
+BPOST,E3-T3-BPOST-2,T3,True,True,True,True,True,True,,,,44.4,{},False,4,4,,3,"[25.3, 19.1]",2
+BPOST,E3-T3-BPOST-3,T3,True,True,True,True,True,True,,,,42.5,{},False,4,4,,3,"[21.4, 21.1]",2
+NOASK,E3-T3-NOASK-1,T3,True,True,False,True,True,True,,,,131.6,{},False,3,4,,,"[53.9, 77.7]",
+NOASK,E3-T3-NOASK-2,T3,True,True,False,True,True,True,,,,119.1,{},False,3,4,,,"[51.6, 67.6]",
+NOASK,E3-T3-NOASK-3,T3,True,True,False,True,True,True,,,,122.2,{},False,3,4,,,"[63.0, 59.2]",
+BPOST,E3-T4-BPOST-1,T4,True,True,True,,True,True,,,,62.9,{},False,4,4,,1,"[32.8, 30.1]",17
+BPOST,E3-T4-BPOST-2,T4,True,True,True,,True,True,,,,78.8,{},False,4,4,,1,"[33.4, 45.4]",25
+BPOST,E3-T4-BPOST-3,T4,True,True,True,,True,True,,,,91.8,{},False,4,4,,1,"[40.5, 51.3]",26
+TC,E3-T4-TC-1,T4,True,True,True,,True,True,,,,188.9,{},False,4,4,,,"[58.4, 130.5]",
+TC,E3-T4-TC-2,T4,True,True,True,,True,True,,,,168.7,{},False,4,4,,,"[62.2, 106.5]",
+TC,E3-T4-TC-3,T4,True,True,True,,True,True,,,,159.9,{},False,4,4,,,"[61.6, 98.3]",
+TCP,E3-T4-TCP-1,T4,True,True,True,,True,True,,,,169.6,{},False,4,4,,,"[76.6, 93.0]",
+TCP,E3-T4-TCP-2,T4,True,True,True,,True,True,,,,148.3,{},False,4,4,,,"[62.3, 85.9]",
+TCP,E3-T4-TCP-3,T4,True,True,True,,True,True,,,,165.9,{},False,4,4,,,"[60.1, 105.8]",
+NOASK,E3-T4-NOASK-1,T4,True,True,False,,False,False,,,,131.2,{},False,1,4,,,"[46.4, 84.8]",
+NOASK,E3-T4-NOASK-2,T4,True,True,False,,False,False,,,,125.5,{},False,1,4,,,"[59.1, 66.4]",
+NOASK,E3-T4-NOASK-3,T4,True,True,False,,False,False,,,,145.4,{},False,1,4,,,"[74.3, 71.1]",
+FULL,E3-T4-FULL-1,T4,True,True,True,,True,True,,,,34.6,{},False,4,4,,,[34.6],
+BPOST,E3-T5-BPOST-1,T5,True,True,True,,True,True,True,False,True,79.0,{},False,5,6,False,6,"[45.0, 34.1]",29
+BPOST,E3-T5-BPOST-2,T5,True,True,True,,True,True,True,True,True,83.6,{},False,6,6,False,6,"[48.3, 35.4]",4
+BPOST,E3-T5-BPOST-3,T5,True,True,True,,True,True,True,True,True,90.5,{},False,6,6,False,6,"[47.3, 43.1]",2
+TC,E3-T5-TC-1,T5,True,True,True,,True,True,True,True,True,235.8,{},False,6,6,,,"[65.2, 170.6]",
+TC,E3-T5-TC-2,T5,True,True,True,,True,True,True,True,True,226.9,{},False,6,6,,,"[81.3, 145.6]",
+TC,E3-T5-TC-3,T5,True,True,True,,True,True,True,True,True,237.5,{},False,6,6,,,"[76.9, 160.7]",
+TCP,E3-T5-TCP-1,T5,True,True,True,,True,True,True,True,True,208.4,{},False,6,6,,,"[76.1, 132.3]",
+TCP,E3-T5-TCP-2,T5,True,True,True,,True,True,True,True,True,228.5,{},False,6,6,,,"[88.1, 140.4]",
+TCP,E3-T5-TCP-3,T5,True,True,True,,True,True,True,True,True,245.0,{},False,6,6,,,"[78.6, 166.4]",
+NOASK,E3-T5-NOASK-1,T5,True,True,True,,True,True,True,False,False,165.4,{},False,5,6,,,"[72.9, 92.5]",
+NOASK,E3-T5-NOASK-2,T5,True,True,True,,True,True,True,True,True,147.0,{},False,6,6,,,"[65.3, 81.7]",
+NOASK,E3-T5-NOASK-3,T5,True,True,True,,True,True,True,False,False,157.0,{},False,5,6,,,"[64.7, 92.3]",
+FULL,E3-T5-FULL-1,T5,True,True,True,,True,True,True,True,True,54.5,{},False,6,6,,,[54.5],

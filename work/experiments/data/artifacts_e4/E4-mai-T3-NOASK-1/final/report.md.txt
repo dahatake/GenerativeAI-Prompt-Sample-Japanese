@@ -1,0 +1,55 @@
+# 実行結果レポート
+
+## 各 Definition of Done 条件の状態
+
+| DoD | 状態 | 証拠 |
+|---|---|---|
+| 1. 作業開始時刻と終了時刻が `timing.txt` に各1行追記される | 完了 | 開始時刻と終了時刻をそれぞれ追記済み。 |
+| 2. `solution.py` に `validate_invoice_id(value)` が実装される | 完了 | 実装を確認済み。ASCII数字、固定区切り、月01〜12、連番0001〜9999を判定。 |
+| 3. サンプル4件がすべて `True` | 完了 | `test_samples` が全サンプルで成功。 |
+| 4. 不正形式、月・連番範囲、型、空白・全角・改行の境界テスト | 完了 | `test_invalid_format`、`test_invalid_months`、`test_invalid_sequence`、`test_invalid_types` が成功。 |
+| 5. テスト実行コマンドと出力を証拠として記録 | 完了 | 下記のコマンドと出力を記録。 |
+| 6. 仮定一覧と各DoD状態を `report.md` に記録 | 完了 | 本ファイルに記録済み。 |
+
+## 採用した仮定
+
+- 年はASCII数字4桁（`0000`を含む）とする。
+- 月はASCII数字2桁かつ数値01〜12とする。
+- 連番はASCII数字4桁かつ`0001`〜`9999`とする。
+- 入力は`str`のみ受け付ける。その他は例外なく`False`を返す。
+- 前後空白、全角文字、改行、余分な区切りは正規化せず無効とする。
+- 接頭辞は厳密に大文字の`INV`、区切りはハイフンとする。
+- 年は暦上の年範囲を検証しない。
+- 型不正時は例外ではなく`False`を返す。
+
+## 自己検証コマンドと出力
+
+コマンド:
+
+```text
+python -m unittest -v test_solution.py
+```
+
+出力:
+
+```text
+test_invalid_format (test_solution.ValidateInvoiceIdTests.test_invalid_format) ... ok
+test_invalid_months (test_solution.ValidateInvoiceIdTests.test_invalid_months) ... ok
+test_invalid_sequence (test_solution.ValidateInvoiceIdTests.test_invalid_sequence) ... ok
+test_invalid_types (test_solution.ValidateInvoiceIdTests.test_invalid_types) ... ok
+test_samples (test_solution.ValidateInvoiceIdTests.test_samples) ... ok
+test_valid_boundaries (test_solution.ValidateInvoiceIdTests.test_valid_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.000s
+
+OK
+```
+
+## 証拠対象ファイル
+
+- `contract.md`: 推奨既定案で確定した承認済み契約。
+- `solution.py`: 実装。
+- `test_solution.py`: 境界値とサンプルを含む自己検証テスト。
+- `timing.txt`: 作業開始・終了時刻。
+

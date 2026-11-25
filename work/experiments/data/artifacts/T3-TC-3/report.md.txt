@@ -1,0 +1,45 @@
+# 実行レポート: validate_invoice_id
+
+対象: `solution.py` の `validate_invoice_id(value) -> bool`（契約: `contract.md`、承認済み）
+
+## 実行した検証
+
+```
+> python -B -m unittest -v test_solution
+test_all_samples_are_valid (test_solution.TestDoD1Samples.test_all_samples_are_valid) ... ok
+test_invalid_cases_return_false (test_solution.TestDoD2Invalid.test_invalid_cases_return_false) ... ok
+test_boundary_cases_return_true (test_solution.TestDoD3Boundary.test_boundary_cases_return_true) ... ok
+test_always_bool_without_exception (test_solution.TestDoD4BoolAndNoException.test_always_bool_without_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
+exit=0
+```
+
+各ケースは `subTest` で 1 件ずつ検証している。ケースごとの結果（`python -B -c ...` で出力）:
+- True: samples.txt の 4 件。境界値 `INV-202601-9999`、`INV-202612-0001`、`INV-200001-0001`、`INV-209912-0001`
+- False: 負例 18 件。空文字、13 月、00 月、連番 0000、連番 3 桁・5 桁、小文字、先頭空白、末尾改行、全角数字、`_` 区切り、余分な先頭文字、`None`、`int`、`bytes`、1999 年、2100 年、0000 年
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | samples.txt の 4 件がすべて True | 完了 | `TestDoD1Samples`（件数 4 も確認）ok |
+| 2 | 負例 18 件がすべて False | 完了 | `TestDoD2Invalid` ok。`assertIs(..., False)` で判定 |
+| 3 | 境界値（連番 9999、12 月、2000 年、2099 年＝未来）が True | 完了 | `TestDoD3Boundary` ok |
+| 4 | 戻り値は常に bool で、例外が出ない | 完了 | `TestDoD4BoolAndNoException` ok（`list`、`dict`、`float`、`bool`、`object`、1500 文字の文字列も含む）。ただし任意入力を網羅したわけではない |
+| 5 | 作成・変更したファイルは `solution.py`、`test_solution.py`、`contract.md`、`report.md` だけで、samples.txt は不変 | 完了 | ファイル一覧は contract.md、samples.txt（113 bytes、最終更新 16:57。作業開始前の時刻で、サイズも初回調査時と同じ）、solution.py、test_solution.py（と本レポート）。`-B` を付けて実行したため `__pycache__` は作られていない |
+| — | 年の範囲 2000〜2099 が業務上正しいか | **人間の確認が必要** | 具体値の指示がなかったため既定案を採用した。`MIN_YEAR` / `MAX_YEAR` 定数で変更できる |
+| — | 仕様が実際の採番ルールと一致しているか（月ごとの連番、0000 不使用など） | **人間の確認が必要** | 根拠は正例 4 件だけで、公式仕様と負例はない |
+
+## 採用した仮定
+- A1: samples.txt の 4 件はすべて正しい番号である。
+- A2: 中央の 6 桁は発行年月（YYYYMM）である。月は 01〜12 だけを許す。
+- A3: 末尾 4 桁は連番で、`0000` は使わない（0001〜9999）。
+- A4: プレフィックスは大文字の `INV` だけ。連番は 4 桁ちょうどで、チェックディジットはない（Q3-A）。
+- A5: 判定するのは形式上の妥当性だけ。台帳との実在照合や重複チェックはしない。
+- A6: 標準ライブラリだけで実装する（Python 3.12.10 で検証）。
+- A7: 年の許容範囲は 2000〜2099（Q1-C で年の範囲を確認する指示はあったが、具体値の指定がなかったため既定案を採用）。未来年月は判定しない。
+- A8: 入力は厳密に扱う（Q2-A）。空白・小文字・全角・改行は正規化せず False。`str` 以外は例外にせず False。`str` のサブクラスは `str` として扱う。

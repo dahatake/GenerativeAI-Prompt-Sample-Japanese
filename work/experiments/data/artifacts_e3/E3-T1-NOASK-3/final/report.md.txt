@@ -1,0 +1,90 @@
+# 実行レポート: monthly_sales(path)
+
+- 契約: `contract.md`（推奨既定案で確定・承認済み）
+- 成果物: `solution.py`（実装）、`test_solution.py`（検証テスト、15 件）
+- 実行環境: Python 3.12.10（Windows）、標準ライブラリのみ
+
+## 確定した規則
+- 月の判定: JST（UTC+9 の固定オフセット）
+- 集計対象: `status == "completed"` の行だけ。負の金額は差し引く（ネット売上）
+- 金額: `amount_incl_tax`（税込）をそのまま合算する
+
+## 証拠（コマンドと出力）
+
+```
+> python -c "from solution import monthly_sales; print('import ok')"
+import ok
+
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+
+> python -m unittest -v
+test_bom_input ... ok
+test_cancelled_excluded ... ok
+test_column_order_independent ... ok
+test_empty_month_absent ... ok
+test_explicit_offset_timestamp ... ok
+test_input_file_not_modified ... ok
+test_invalid_amount_raises ... ok
+test_invalid_timestamp_raises ... ok
+test_jst_month_boundary ... ok
+test_month_with_only_cancelled_is_absent ... ok
+test_naive_timestamp_raises ... ok
+test_negative_amount_netted ... ok
+test_pathlike_accepted ... ok
+test_sales_csv_expected ... ok
+test_types_and_key_format ... ok
+----------------------------------------------------------------------
+Ran 15 tests in 0.253s
+OK
+exit=0
+```
+
+### 期待値の算出根拠（sales.csv の行ごとの所属月と採否）
+
+| order_id | UTC | JST の月 | 金額 | status | 採否 |
+|---|---|---|---|---|---|
+| A-1001 | 01-05 02:15 | 2026-01 | 11000 | completed | 採用 |
+| A-1002 | 01-12 09:40 | 2026-01 | 5500 | completed | 採用 |
+| A-1003 | 01-20 23:30 | 2026-01 | 22000 | cancelled | 除外 |
+| A-1004 | 01-31 16:20 | **2026-02** | 3300 | completed | 採用 |
+| A-1005 | 02-03 05:00 | 2026-02 | 8800 | completed | 採用 |
+| A-1006 | 02-14 11:11 | 2026-02 | -1100 | completed | 採用（差し引き） |
+| A-1007 | 02-27 13:45 | 2026-02 | 4400 | cancelled | 除外 |
+| A-1008 | 04-02 00:30 | 2026-04 | 16500 | completed | 採用 |
+| A-1009 | 04-18 08:05 | 2026-04 | 2200 | completed | 採用 |
+| A-1010 | 04-30 15:30 | **2026-05** | 7700 | completed | 採用 |
+
+合計: 2026-01 = 11000 + 5500 = **16500** ／ 2026-02 = 3300 + 8800 − 1100 = **11000** ／ 2026-04 = 16500 + 2200 = **18700** ／ 2026-05 = **7700**
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import monthly_sales` が成功する | **完了** | `import ok` |
+| 2 | `monthly_sales("sales.csv")` が期待値と完全一致する | **完了**（ただし期待値の前提である業務ルールは**人間の確認が必要**） | 実行出力、`test_sales_csv_expected`、上の算出根拠表 |
+| 3 | 値がすべて `int`、キーがすべて `^\d{4}-\d{2}$` に一致する | **完了** | `test_types_and_key_format`（昇順であることも確認） |
+| 4a | 月末の UTC 深夜の注文が JST の月に入る | **完了** | `test_jst_month_boundary`（14:59:59Z と 15:00:00Z の境界、年またぎ）、`test_explicit_offset_timestamp` |
+| 4b | cancelled の行を除外する | **完了** | `test_cancelled_excluded`、`test_month_with_only_cancelled_is_absent` |
+| 4c | 負の金額を差し引く | **完了** | `test_negative_amount_netted` |
+| 4d | 0 件の月（2026-03）を出力しない | **完了** | `test_empty_month_absent` |
+| 4e | BOM 付き CSV や列の順序が異なる CSV でも同じ結果になる | **完了** | `test_bom_input`、`test_column_order_independent` |
+| 5 | `python -m unittest` がすべて成功する | **完了** | 15 件 OK、exit=0 |
+| — | 入力ファイルを変更しない（Constraints） | **完了** | `test_input_file_not_modified` |
+
+補足: 条件 2 と 4 のテストは、実装と同じ担当者（私）が書いたものです。業務ルールの解釈（JST・completed のみ・返金を差し引く・税込）が正しいかどうかは、テストでは保証できません。依頼者の確認が必要です。
+
+## 採用した仮定の一覧
+
+| ID | 仮定 | 根拠 / 確認状況 |
+|---|---|---|
+| Q1 | 月は Asia/Tokyo（JST）で判定する。tzdata に依存しないよう UTC+9 の固定オフセットを使う（JST には夏時間がない） | 推奨既定案。未回答のため**人間の確認が必要** |
+| Q2 | `completed` の行だけを集計し、負の金額（返金と推定）は差し引く | 推奨既定案。未回答のため**人間の確認が必要** |
+| Q3 | `amount_incl_tax`（税込）をそのまま合算する。税抜への換算はしない | 推奨既定案。未回答のため**人間の確認が必要** |
+| A1 | 標準ライブラリだけを使う（`csv`, `datetime`） | 契約で確定 |
+| A2 | データのある月だけを出力する（0 件の月は含めない）。キーは昇順で挿入する | 契約で確定 |
+| A3 | 金額は `int` で扱い、浮動小数は使わない | 契約で確定 |
+| A4 | `path` は `str` と `os.PathLike` の両方を受け取る。`utf-8-sig` で読む | 契約で確定 |
+| A5 | 列はヘッダ名で参照し、列の順序には依存しない | 契約で確定 |
+| A6 | 不正な行（日時・金額が解析できない、タイムゾーンのない日時、列が欠けている）は `ValueError` を送出する | 契約で確定。黙ってスキップしたい運用なら変更が必要 |
+| A7 | status の判定は前後の空白を除いたうえでの完全一致とし、大文字と小文字を区別する。`completed` 以外の未知の status はすべて除外する | 実装時の追加仮定。現データには `completed` と `cancelled` しかない |

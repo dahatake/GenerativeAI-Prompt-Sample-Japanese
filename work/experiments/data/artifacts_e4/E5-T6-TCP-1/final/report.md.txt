@@ -1,0 +1,74 @@
+# 実行レポート: `make_invoices(data_dir, month)`
+
+- 契約: `contract.md`（answers.md の回答を反映し、承認済み）
+- 成果物:
+  - `solution.py`（実装と CLI）
+  - `test_solution.py`（検証用のテスト。unittest で 10 ケース）
+- answers.md の回答には、実装に必要な値がすべて書かれていました。そのため followup.md は作っていません。
+
+## DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | list を返し、各請求書が7つのキーを持ち、金額はすべて `int` | **完了** | `test_dod1_structure_and_int_types` |
+| 2 | `amount=qty×unit_price`、`subtotal=Σamount`、`total=subtotal−discount+tax`（9〜11月で確認） | **完了** | `test_dod2_invariants` |
+| 3 | 2026-10 の値が契約の表と一致する。C005 の請求書がない。境界にかかる4件の扱いと lines の並び順が正しい | **完了** | `test_dod3_october_expected_values`, `test_dod3_boundary_orders`, `test_dod3_lines_sorted_by_ordered_at` |
+| 4 | 注文のない月は `[]` を返す。CLI はヘッダーだけの CSV を出力する | **完了** | `test_dod4_empty_month` |
+| 5 | CLI が終了コード0で終わり、CSV が表と一致する（UTF-8、BOM なし） | **完了** | `test_dod5_cli_october` と、下の CLI の実行結果 |
+| 6 | 不正な month は `ValueError` になる。CLI は引数が足りないと使い方を表示し、0以外の終了コードで終わる | **完了** | `test_dod6_invalid_month`, `test_dod6_cli_usage_and_bad_month` |
+
+**人間の確認が必要な点**: 期待値（DoD 3 の表）は、私が仕様から計算した値です。経理側の正解データとは照合していません。また、A1（単価は税抜）と A10（CSV の形式）は、回答で「指定なし」だったため推奨案を採用しました。
+
+## 証拠（実行したコマンドと出力）
+
+```
+> python -m unittest test_solution -v
+test_a11_unknown_sku_and_missing_price ... ok
+test_dod1_structure_and_int_types ... ok
+test_dod2_invariants ... ok
+test_dod3_boundary_orders ... ok
+test_dod3_lines_sorted_by_ordered_at ... ok
+test_dod3_october_expected_values ... ok
+test_dod4_empty_month ... ok
+test_dod5_cli_october ... ok
+test_dod6_cli_usage_and_bad_month ... ok
+test_dod6_invalid_month ... ok
+----------------------------------------------------------------------
+Ran 10 tests in 0.575s
+OK
+
+> python solution.py data 2026-10 out.csv   (exit=0)
+invoice_id,customer_id,subtotal,discount,tax,total
+INV-202610-0001,C001,27180,1359,2351,28172
+INV-202610-0002,C002,12560,0,1124,13684
+INV-202610-0003,C003,20960,1048,1717,21629
+INV-202610-0004,C004,10280,0,994,11274
+```
+
+境界にかかる注文の扱い（9〜11月の明細から抜き出し）:
+```
+INV-202610-0001 C001 O1008 F100 qty=4 unit_price=1680 amount=6720   # JST 10/10 00:10 → 改定後の価格
+INV-202610-0001 C001 O1012 A100 qty=7 unit_price=1300 amount=9100   # JST 10/16 00:20 → 改定後の価格
+INV-202610-0003 C003 O1002 F100 qty=3 unit_price=1580 amount=4740   # JST 10/01 00:30 → 10月に計上
+INV-202611-0001 C001 O1021 F200 qty=5 unit_price=540  amount=2700   # JST 11/01 01:00 → 11月に計上
+```
+
+## 採用した仮定・決定の一覧
+
+| ID | 内容 | 出典 |
+|---|---|---|
+| Q1 | `ordered_at`（UTC）を JST（UTC+9）に変換し、その日付で計上月と価格の適用日の両方を判定する | 回答 |
+| Q2 | `completed` と `shipped` を請求する。`returned` と `cancelled` は除外する | 回答 |
+| Q3 | gold は税率区分ごとの小計から 5% を値引きし、区分ごとに切り捨てる。standard は 0 | 回答 |
+| A1 | `unit_price` は税抜 | 推奨案（回答は「指定なし」） |
+| A2 | 税率は general 10%、food 8% | 回答で確定 |
+| A3 | 税額は区分ごとに「(区分小計 − 区分値引き) × 税率」を計算して切り捨て、合計する | 回答で確定 |
+| A4 | 値引きは税計算の前に、区分ごとに切り捨てる | 回答で確定 |
+| A5 | `amount=qty×unit_price`、`total=subtotal−discount+tax`。計算はすべて整数演算 | 契約 |
+| A6 | 単価は、`effective_from ≤ 注文日（JST）` を満たす行のうち最新のもの（`effective_from` 当日から有効） | 契約 |
+| A7 | 請求対象の明細がない顧客には請求書を作らない | 回答で確定 |
+| A8 | `invoice_id = INV-YYYYMM-NNNN`。customer_id の昇順で 0001 から連番を振る | 回答（変更） |
+| A9 | 請求書は customer_id の昇順。lines は ordered_at の昇順で、同時刻なら order_id の昇順 | 回答で確定（同時刻の扱いは推奨案） |
+| A10 | CSV は UTF-8（BOM なし）でヘッダー付き。0件ならヘッダーだけを出力する | 推奨案（回答は「指定なし」） |
+| A11 | 次の場合は `ValueError` にする（CLI では終了コード1）: 不正な month、存在しない customer_id / sku の参照、有効な価格がない。返品・キャンセルの注文はこの検証の対象外（先に除外する） | 推奨案（回答は「指定なし」） |
+| A12 | Python 標準ライブラリだけで実装する | 契約 |

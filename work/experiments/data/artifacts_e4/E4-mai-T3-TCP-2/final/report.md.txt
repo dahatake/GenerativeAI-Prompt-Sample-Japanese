@@ -1,0 +1,60 @@
+# 実行結果レポート
+
+## Definition of Done 状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| 1. `contract.md` が承認済み仕様へ更新されている | 完了 | `contract.md` 冒頭に `Execution Mode / 扨認済み`、回答確定仕様を記載。テスト `DOD-1` 系がPASS。 |
+| 2. `validate_invoice_id('INV-202601-0001')` が `True` | 完了 | `test_solution.py` の `PASS DOD-2 valid sample 1`。 |
+| 3. `validate_invoice_id('INV-202512-0347')` が `True` | 完了 | `test_solution.py` の `PASS DOD-3 valid sample 2`。 |
+| 4. `samples.txt` の全4例が `True` | 完了 | `test_solution.py` のサンプル抽出・全件判定PASS。抽出した4件はサンプルヘッダーを除いた番号のみ。 |
+| 5. 無効な入力が `False` | 完了 | `test_solution.py` の `DOD-5 invalid case 1`〜`15` がすべてPASS。空文字、`None`、数値、前後空白、桁不正、小文字、月不正、範囲外年、全角数字、連番 `0000`を検証。 |
+| 6. 最小限のテストを作成・実行し、コマンドと出力を証拠として残す | 完了 | 下記のコマンド・出力を証拠として記録。 |
+
+## テスト証拠
+
+実行コマンド：
+
+```text
+python test_solution.py
+```
+
+実行出力：
+
+```text
+PASS DOD-2 valid sample 1
+PASS DOD-3 valid sample 2
+PASS DOD-4 samples.txt sample extraction
+PASS DOD-4 all samples valid
+PASS DOD-5 invalid case 1: ''
+PASS DOD-5 invalid case 2: None
+PASS DOD-5 invalid case 3: 2026010001
+PASS DOD-5 invalid case 4: ' INV-202601-0001'
+PASS DOD-5 invalid case 5: 'INV-202601-0001 '
+PASS DOD-5 invalid case 6: 'INV-20261-0001'
+PASS DOD-5 invalid case 7: 'INV-2026011-0001'
+PASS DOD-5 invalid case 8: 'INV202601-0001'
+PASS DOD-5 invalid case 9: 'inv-202601-0001'
+PASS DOD-5 invalid case 10: 'INV-202613-0001'
+PASS DOD-5 invalid case 11: 'INV-202600-0001'
+PASS DOD-5 invalid case 12: 'INV-201912-0001'
+PASS DOD-5 invalid case 13: 'INV-210001-0001'
+PASS DOD-5 invalid case 14: 'INV-２０2601-0001'
+PASS DOD-5 invalid case 15: 'INV-202601-0000'
+PASS DOD-1 contract.md exists
+PASS DOD-1 approved contract marker
+PASS DOD-1 resolved year range
+PASS DOD-1 resolved serial range
+RESULT 25 PASS, 0 FAIL
+```
+
+## 採用した仮定
+- 有効形式は完全一致の `INV-YYYYMM-NNNN`。
+- 英字は大文字 `INV` のみ有効。
+- 年は `2020`〜`2099`。
+- 月は `01`〜`12`。
+- 年・月・連番はASCII数字のみ使用。
+- 連番は `0001`〜`9999`（`0000` は不正）。
+- `str` 以外の入力は例外なく `False`。
+- 前後空白は除去せず、空白付き文字列は不正。
+- 将来月の拒否、実在確認、重複確認、発行順序確認は行わない。

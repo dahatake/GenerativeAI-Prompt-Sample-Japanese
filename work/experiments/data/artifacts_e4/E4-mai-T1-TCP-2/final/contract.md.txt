@@ -1,0 +1,49 @@
+# Task Contract（Execution Mode — 承認済み・最終）
+
+## Outcome
+`solution.py` に `monthly_sales(path)` を実装し、指定 CSV の売上を JST 月次集計して `{"YYYY-MM": int}` の dict を返す。
+
+## Scope
+- `solution.py` に `monthly_sales(path)` を実装する。
+- `completed` のみを集計し、`cancelled` は除外する。
+- UTC 時刻を JST（UTC+9）へ変換して月を判定する。
+- 最初の有効な月から最後の有効な月まで欠損月を 0 として含める。
+- 金額は整数文字列として読み、負額を通常の加算対象とする。
+
+## Out of scope
+- 入力 CSV の変更。
+- 作業ディレクトリ外のファイルの読取・書込。
+- 可視化や永続化。
+
+## Data sources
+- 作業ディレクトリの `sales.csv`
+- ヘッダー: `order_id,ordered_at,amount_incl_tax,status`
+
+## Constraints
+- 標準ライブラリのみ使用。
+- 相対パス・絶対パスを受け付ける。
+- 戻り値は dict、キーは `YYYY-MM`、値は int。
+- 金額が整数表記でない場合は `ValueError`。
+- 未知のステータスは集計対象外。
+
+## Definition of Done（検証できる条件）
+1. `solution.py` に `monthly_sales(path)` が定義されている。
+2. 相対パスでサンプルを実行できる。
+3. サンプルの JST 集計値を返す。
+4. キャンセル除外・負額加算・JST 境界を反映する。
+5. 欠損月を最初の有効月から最後の有効月まで 0 として含める。
+6. 絶対パスと繰り返し呼び出しで再現可能な結果を返す。
+
+## Evidence
+- 回答反映済み: Q1=A、Q2=B、Q3は推奨案。
+- 欠損月は回答に従いゼロで含める。
+- 未知ステータスは推奨案どおり集計対象外。
+- 不正な金額は推奨案どおり `ValueError`。
+
+## Approved defaults
+- 整数文字列以外の金額は `ValueError`。
+- 未知ステータスは無視。
+- 不正な日時は明示的に失敗させる。
+
+## Open questions
+- なし。

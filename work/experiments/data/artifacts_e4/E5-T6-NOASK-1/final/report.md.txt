@@ -1,0 +1,89 @@
+# 実行レポート: `make_invoices(data_dir, month)`
+
+- 実装: `solution.py`（Python 3.12.10、標準ライブラリのみ）
+- テスト: `test_solution.py`（unittest、16件）
+- 契約: `contract.md`（確定版。Q1〜Q3 には回答がなかったため、すべて推奨既定案で確定）
+- CLI の出力例: `out.csv`（`python solution.py data 2026-10 out.csv` で生成）
+
+## 検証コマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_month_by_jst ... ok
+test_price_by_jst_order_date ... ok
+test_status_filter ... ok
+test_cli_bad_args ... ok
+test_cli_writes_csv ... ok
+test_hand_calculated ... ok
+test_bad_month ... ok
+test_no_effective_price ... ok
+test_unknown_customer ... ok
+test_unknown_sku ... ok
+test_empty_month ... ok
+test_no_overlap_or_gap ... ok
+test_november ... ok
+test_september ... ok
+test_invariants_all_months ... ok
+test_keys_and_int_amounts ... ok
+Ran 16 tests in 0.517s
+OK
+
+> python solution.py data 2026-10 out.csv   (exit=0)
+invoice_id,customer_id,subtotal,discount,tax,total
+INV-202610-C001,C001,27180,1359,2351,28172
+INV-202610-C002,C002,12560,0,1124,13684
+INV-202610-C003,C003,20960,1048,1717,21629
+INV-202610-C004,C004,10280,0,994,11274
+```
+
+境界注文の判定結果（月 / 請求書 / 注文 / SKU / 数量 / 単価 / 金額）:
+
+```
+2026-10 INV-202610-C001 O1008 F100 4 1680 6720   # 10-09T15:10Z = 10/10 JST → 新価格
+2026-10 INV-202610-C001 O1012 A100 7 1300 9100   # 10-15T15:20Z = 10/16 JST → 新価格
+2026-10 INV-202610-C002 O1022 A200 1 2980 2980   # 10-31T14:50Z = 10/31 JST → 10月
+2026-10 INV-202610-C003 O1002 F100 3 1580 4740   # 09-30T15:30Z = 10/01 JST → 10月
+2026-11 INV-202611-C001 O1021 F200 5  540 2700   # 10-31T16:00Z = 11/01 JST → 11月
+```
+
+### 2026-10 の手計算（期待値）と実際の出力の対照
+
+期待値はテストの中に直接書き込んだ値で、実装とは別に手で計算したものです。
+
+| 顧客 | tier | 8% 対象 | 10% 対象 | subtotal | discount（8% 分 / 10% 分） | tax（8% + 10%） | total | 一致 |
+|---|---|---|---|---|---|---|---|---|
+| C001 | gold | 12120 | 15060 | 27180 | 1359（606 / 753） | 921 + 1430 = 2351 | 28172 | ✅ |
+| C002 | standard | 6600 | 5960 | 12560 | 0 | 528 + 596 = 1124 | 13684 | ✅ |
+| C003 | gold | 14380 | 6580 | 20960 | 1048（719 / 329） | 1092 + 625 = 1717 | 21629 | ✅ |
+| C004 | standard | 1680 | 8600 | 10280 | 0 | 134 + 860 = 994 | 11274 | ✅ |
+| C005 | standard | — | — | 請求書なし（cancelled と returned だけ） | | | | ✅ |
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | 例外なく終わる、必要なキーがそろっている、金額が int | **完了** | `test_keys_and_int_amounts` |
+| 2 | subtotal・amount・total の整合性 | **完了** | `test_invariants_all_months`（9月・10月・11月すべて） |
+| 3 | 境界ケース（月の判定、単価、status） | **完了**（ルール自体は要確認。下記参照） | `test_month_by_jst`、`test_price_by_jst_order_date`、`test_status_filter`、上の境界注文の一覧 |
+| 4 | 2026-10 の金額が手計算と一致 | **完了**（ただし期待値は既定案のルールに基づく。**人間の確認が必要**） | `test_hand_calculated`、上の対照表 |
+| 5 | 9月と11月、漏れや重複がない、注文のない月は空リスト | **完了** | `test_september`、`test_november`、`test_no_overlap_or_gap`、`test_empty_month` |
+| 6 | 不正入力で ValueError | **完了** | `test_bad_month`、`test_unknown_sku`、`test_unknown_customer`、`test_no_effective_price` |
+| 7 | CLI で CSV を出力し、関数の戻り値と一致 | **完了** | `test_cli_writes_csv`、`test_cli_bad_args`、上の `out.csv` |
+| 8 | 自動テストがすべて通る | **完了** | 16件すべて OK |
+
+**人間の確認が必要な点:** テストで確かめられるのは「採用したルールどおりに実装されていること」までです。ルールそのものが業務として正しいかは確かめられません。値引き率（gold 5%）、税率の区分（food 8% / general 10%）、端数処理（切り捨て）、値引きの按分方法、タイムゾーン（JST）、returned の除外は、どれもデータに根拠がなく、私が提案した既定案です。業務担当者が確認してください。
+
+## 採用した仮定・ルール一覧
+
+- **Q1** 月と価格適用日は、`ordered_at`（UTC）を JST（UTC+9 の固定オフセット）に変換して判定します。Windows には zoneinfo が使うタイムゾーンデータ（tzdata）がない場合があるため、`timezone(timedelta(hours=9))` を使いました。日本に夏時間はないので、結果は Asia/Tokyo と同じになります。
+- **Q2** 請求対象は `completed` と `shipped` です。`cancelled` と `returned` は除外します（返金のマイナス行は作りません）。これ以外の status は ValueError にします。
+- **Q3** 値引き: gold は `floor(subtotal × 5 / 100)`、standard は 0。税率: food 8%、general 10%。値引きの按分: 8% 対象分 = `floor(discount × 8%対象小計 / subtotal)`、残りは 10% 対象分。税: 請求書ごと・税率ごとに `floor((小計 − 按分値引き) × 税率)` を計算して合計します。すべて整数演算です。
+- **A1** 単価は、`effective_from <= 注文日（JST）` を満たす最新の価格です。
+- **A2** 請求書は顧客ごとに月1枚です。対象の注文がない顧客には請求書を作りません。
+- **A3** `amount = unit_price × qty`、`subtotal = Σ amount`（税抜、値引き前）。
+- **A4** `total = subtotal − discount + tax`。
+- **A5** `invoice_id = INV-YYYYMM-<customer_id>`。
+- **A6** 請求書は customer_id の昇順、lines は注文日時の昇順（同時刻なら order_id の昇順）に並べます。
+- **A7** CSV は UTF-8（BOM なし）、改行 LF、ヘッダー `invoice_id,customer_id,subtotal,discount,tax,total` 付きです。
+- **A8** 存在しない customer_id や sku、有効な価格がない注文、不正な month、未知の tier・category・status は ValueError にします（CLI では終了コード 1 と標準エラー出力）。対象月以外の注文も含め、すべての注文の参照を検査します。
+- **A9** 標準ライブラリだけで実装しました。

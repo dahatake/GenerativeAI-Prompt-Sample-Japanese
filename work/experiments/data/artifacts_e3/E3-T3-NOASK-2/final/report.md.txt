@@ -1,0 +1,79 @@
+# 実行レポート: `validate_invoice_id`
+
+- 契約: `contract.md`（確定版。Q1=b / Q2=a / Q3=a の既定案で承認）
+- 実装: `solution.py`
+- テスト: `test_solution.py`（unittest）
+- 実行環境: Python 3.12.10 / Windows
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `samples.txt` の4件がすべて `True` | **完了** | `test_dod1_samples_are_valid` が ok。4件とも True（下の一覧を参照） |
+| 2 | 契約に列挙した不正入力16件がすべて `False` | **完了** | `test_dod2_invalid_inputs_are_rejected` が ok。16件とも False（下の一覧を参照）。境界値のテスト `test_dod2_boundaries_are_valid`（12月、連番9999、年0000）も ok |
+| 3 | 戻り値は常に `type(result) is bool` | **完了** | `test_dod3_return_type_is_bool` が ok。正例・不正例に加え、`[]`、`{}`、`1.5`、`object()` でも bool を返す |
+| 4 | テストを実行し全件合格 | **完了** | `python -m unittest -v test_solution` の結果: 4 tests OK、終了コード 0 |
+| — | 仕様（既定案）そのものが業務上正しいか | **人間の確認が必要** | Q1〜Q3 に回答がなく、既定案で確定したため。テストが確かめているのは「既定案どおりに動くこと」だけで、既定案が業務ルールに合っているかは確かめていない |
+
+### 証拠 1: テスト実行
+
+```
+> python -m unittest -v test_solution
+test_dod1_samples_are_valid (test_solution.TestValidateInvoiceId.test_dod1_samples_are_valid) ... ok
+test_dod2_boundaries_are_valid (test_solution.TestValidateInvoiceId.test_dod2_boundaries_are_valid) ... ok
+test_dod2_invalid_inputs_are_rejected (test_solution.TestValidateInvoiceId.test_dod2_invalid_inputs_are_rejected) ... ok
+test_dod3_return_type_is_bool (test_solution.TestValidateInvoiceId.test_dod3_return_type_is_bool) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK
+```
+
+### 証拠 2: 入力ごとの判定結果
+
+```
+> python -c "from test_solution import *; [print(ascii(v), '->', validate_invoice_id(v)) for v in load_samples()+INVALID_INPUTS]"
+'INV-202601-0001' -> True
+'INV-202601-0002' -> True
+'INV-202512-0347' -> True
+'INV-202603-1200' -> True
+'' -> False
+None -> False
+123 -> False
+b'INV-202601-0001' -> False
+'INV-202613-0001' -> False
+'INV-202600-0001' -> False
+'INV-202601-0000' -> False
+'INV-20261-0001' -> False
+'INV-202601-001' -> False
+'INV-202601-00001' -> False
+'inv-202601-0001' -> False
+' INV-202601-0001' -> False
+'INV-202601-0001\n' -> False
+'INV_202601_0001' -> False
+'INV-202601\u20130001' -> False
+'INV-\uff12\uff10\uff12\uff16\uff10\uff11-0001' -> False
+```
+
+（補足）最初に `print(repr(v))` で一覧を出したときは、Windows コンソール（cp932）が en dash を表示できず `UnicodeEncodeError` になりました。これは表示上の問題で、判定結果には影響しません。`ascii()` を使って出し直したのが上の一覧です。
+
+## 採用した仮定
+
+既定案（回答がなかったため推奨案を採用）:
+- **Q1=b**: 年月部分は月が 01〜12 であることだけを検証します。年は4桁の数字なら何でも通します（`0000` や `9999` も可）。未来の年月かどうかは確認しません。
+- **Q2=a**: 連番はちょうど4桁で `0001`〜`9999`。`0000` と5桁以上は False です。
+- **Q3=a**: 厳密に判定します。`str` 以外の入力は False で、例外は投げません。大文字小文字、空白、全角文字の正規化はしません。
+
+前提の仮定:
+- **A1**: 「正しい」とは書式（＋月の範囲）が正しいという意味です。台帳との照合、重複検出、チェックディジットは扱いません。
+- **A2**: 区切り文字は半角ハイフン `-` だけです。
+- **A3**: 文字列全体が一致する必要があります（`re.fullmatch` を使うので、末尾の改行も不一致になります）。
+- **A4**: 数字は ASCII の `0-9` だけです（`\d` は使いません）。
+- **A5**: どんな入力でも bool を返し、例外は投げません。
+- **A6**: 標準ライブラリだけで実装します（Python 3）。
+- 追加の判断: `str` のサブクラスは `str` として判定します（`isinstance` を使うため）。
+
+## 人間に確認してほしい点
+1. Q1〜Q3 の既定案が業務ルールに合っているか。特に、年の範囲を決めるか、未来の年月を拒否するか。
+2. 番号が実在するか（台帳との照合）や、チェックディジットの検証が必要か。必要ならスコープの変更になります。

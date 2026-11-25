@@ -1,0 +1,76 @@
+# Task Contract: monthly_sales(path)
+
+ステータス: **Approved（2026-11-25 17:08 JST、ユーザー回答で確定）→ Execution Mode**
+
+## 1. 調査結果
+
+### 確認できた事実
+- 着手時点で作業ディレクトリにあったのは `sales.csv` だけ（488 bytes）。
+- `sales.csv` は UTF-8（BOM なし）、改行は CRLF、ヘッダー 1 行とデータ 10 行。
+- 列は `order_id,ordered_at,amount_incl_tax,status`。
+- `ordered_at` は ISO 8601 の UTC 表記（`Z` 付き）。
+- `amount_incl_tax` は税込の整数。全件が 11 の倍数なので、÷1.1 で端数が出ない。
+- `status` の値は `completed`（8 件）と `cancelled`（2 件: A-1003、A-1007）。
+- 負の金額がある: A-1006 `-1100`（completed）。
+- 2026-03 の行はない。
+- JST に変換すると集計月が変わる行: A-1004（UTC では 1 月 → JST では 2 月）、A-1010（UTC では 4 月 → JST では 5 月）。
+- 実行環境は Python 3.12.10。
+
+### 確定した決定（ユーザー回答）
+- D1（Q1）: `ordered_at` を **JST（UTC+9）** に変換してから月を判定する。
+- D2（Q2）: **cancelled の注文は除外**する。
+- D3（Q3）: **税抜金額（税込金額 ÷ 1.1）** を返す。端数処理は指定なし（下の A6 を参照）。
+- D4: 売上が 0 件の月は **0 で埋める**。
+
+### 採用した仮定（指定がなかった点は推奨既定案を採用）
+- A1: 標準ライブラリ（`csv`、`datetime`）だけで実装する。
+- A2: 集計対象は `status == "completed"` の行だけ。未知の status（例: `refunded`）は集計しない（推奨既定案）。
+- A3: 負の金額（返金）はそのまま差し引いて純額にする（推奨既定案）。
+- A4: 読み取れない行（日時・金額が解析できない、タイムゾーン情報がない、必須列がない）は、スキップせずに `ValueError` を送出する（推奨既定案）。エラーメッセージには行番号を含める。この検証は cancelled などを含む全行に適用する。
+- A5: 税抜への換算は**月ごとの税込合計**に対して行い、整数演算で `合計 × 10 / 11` を**最も近い整数に丸める**。分母が 11（奇数）なので、ちょうど .5 になる同点は発生しない。float は使わない。
+- A6: 0 で埋める範囲は、ファイル内の有効な全行（status に関係なく）のうち**最も古い月から最も新しい月まで**の連続した月とする。
+- A7: 戻り値の dict はキー（`YYYY-MM`）の昇順に並べる。
+- A8: `utf-8-sig` で読み込み、BOM が付いていても扱えるようにする。
+- A9: データ行が 0 件（ヘッダーだけ）なら `{}` を返す。
+
+## 2. Task Contract
+
+### Outcome
+`solution.py` に `monthly_sales(path) -> dict[str, int]` を実装する。CSV を読み、JST の暦月ごとに、completed 行の税込金額（負数を含む）を合計して税抜に換算した整数を `{"YYYY-MM": int}` で返す。期間内で売上がない月は 0 にする。
+
+### Scope / Out of scope
+- Scope: `solution.py` の新規作成、検証用テスト `test_solution.py` の作成、`report.md` の作成、この `contract.md` の更新
+- Out of scope: CLI やファイル出力、`sales.csv` の変更、外部依存の追加、税率の可変化（10% 固定）、通貨換算
+
+### Data sources
+- `sales.csv`（列: `order_id, ordered_at, amount_incl_tax, status`）
+- 関数は引数 `path` で受け取ったファイルを読む。パスはハードコードしない。
+
+### Constraints
+- Python 3.12、標準ライブラリだけを使う。JST は固定オフセット `timezone(timedelta(hours=9))` で扱う（夏時間がなく、tzdata に依存しないため）。
+- 金額の計算は整数だけで行う（float は使わない）。
+- 作業ディレクトリの外にはファイルを読み書きしない。テストの一時ファイルも作業ディレクトリ内に作り、終了時に削除する。
+
+### Definition of Done（検証できる条件）
+1. `from solution import monthly_sales` が成功する。
+2. `monthly_sales("sales.csv")` が次の値と**完全一致**する（キーの順序も含む）。
+   ```python
+   {"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}
+   ```
+3. すべての値の型が `int`、すべてのキーが `^\d{4}-\d{2}$` に一致する。
+4. cancelled の行（A-1003、A-1007）が除外されている（全月の合計が 49000 = 53900 ÷ 1.1。cancelled の行だけの CSV では値がすべて 0 になる）。
+5. JST の月境界が正しい（A-1004 は 2026-02、A-1010 は 2026-05 に入る。UTC 14:59:59 と 15:00:00 の境界も確認する）。
+6. 0 件の月（2026-03）が 0 で埋められ、年をまたぐ場合（12 月 → 翌年 2 月）も 0 で埋められる。
+7. 税抜への換算で端数が出る場合、最も近い整数に丸められる（例: 100 → 91、105 → 95、-100 → -91）。
+8. ヘッダーだけの CSV なら `{}` を返す。読み取れない行があれば `ValueError` を送出する。
+9. 作業ディレクトリの最終的なファイル構成は `sales.csv`（変更なし）、`contract.md`、`solution.py`、`test_solution.py`、`report.md` だけである。
+
+### Evidence
+- `python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"` の出力
+- `python -B -m unittest -v test_solution` の出力
+- `sales.csv` の SHA256 が着手前と同じであること、および最終的なファイル一覧
+
+### Open questions（人間の確認が望ましい点）
+- 税抜換算の端数処理（現在は月計で四捨五入相当。行ごとに処理するか、切り捨てにするか）
+- 0 で埋める範囲の始点と終点（現在はデータに含まれる月の範囲。会計期間で固定するか）
+- 未知の status の扱い（現在は集計しない。エラーにするか）

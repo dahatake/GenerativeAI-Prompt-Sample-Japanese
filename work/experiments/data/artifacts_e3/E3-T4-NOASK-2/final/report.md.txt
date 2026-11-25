@@ -1,0 +1,61 @@
+# 実行レポート: `monthly_work_hours(path)`
+
+## 1. 成果物
+- `solution.py`: `monthly_work_hours(path) -> dict[str, float]` の実装（標準ライブラリの `csv` と `datetime` のみ使用）
+- `test_solution.py`: DoD を検証する unittest。10 ケース。一時ファイルは作業ディレクトリ内の `_test_scratch/` に作り、終了時に削除する。
+- `contract.md`: 推奨既定案で確定版に更新した。
+
+## 2. 検証コマンドと出力
+
+```
+> python -c "from solution import monthly_work_hours as f; print(f('shifts.csv'))"
+{'E001': 14.833333333333332, 'E002': 14.0, 'E003': 9.25}
+
+> python -m unittest -v test_solution
+test_overnight_is_8h ... ok
+test_paid_leave_is_zero ... ok
+test_sample_file ... ok
+test_end_equals_start_is_24h ... ok
+test_header_only_returns_empty ... ok
+test_malformed_time_raises ... ok
+test_missing_time_in_work_raises ... ok
+test_month_end_overnight_counted_in_start_month ... ok
+test_multiple_months_raise ... ok
+test_unknown_type_raises ... ok
+----------------------------------------------------------------------
+Ran 10 tests in 0.174s
+OK
+```
+
+`shifts.csv` は実装前と同じ 224 bytes で、変更していない。SHA256 は `00C7C0D3…BFC56028`。
+
+## 3. DoD の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `python -c ...` が例外なく実行できる | 完了 | 上記 1 つ目のコマンド出力 |
+| 2 | `shifts.csv` → E001=9+35/6、E002=14.0、E003=9.25（誤差 1e-9 以内）。夜勤は 8h、paid_leave は 0h | 完了（ただし期待値自体は推奨既定案に依存するため、**業務上の正しさは人間の確認が必要**） | `test_sample_file`, `test_overnight_is_8h`, `test_paid_leave_is_zero` |
+| 3a | `end == start` を 24h とする | 完了（仮定 A1。**人間の確認が必要**） | `test_end_equals_start_is_24h` |
+| 3b | 月末の日またぎ勤務を開始日の月に計上する | 完了（仮定 A2） | `test_month_end_overnight_counted_in_start_month` |
+| 3c | 複数月の CSV で `ValueError` | 完了 | `test_multiple_months_raise` |
+| 3d | 未知の type、時刻欠落、時刻不正で `ValueError` | 完了 | `test_unknown_type_raises`, `test_missing_time_in_work_raises`, `test_malformed_time_raises` |
+| 3e | ヘッダのみの CSV で `{}` | 完了 | `test_header_only_returns_empty` |
+| 4 | Q1=(b) の場合の休憩控除の境界テスト | 対象外（Q1=(a) で確定） | — |
+
+**証拠不足:** 実運用 CSV のバリエーション（文字コード、列順、追加列、`work`/`paid_leave` 以外の type）については、手元に見本が 1 件しかないため検証できていない。
+
+## 4. 採用した決定と仮定
+- Q1=(a): 休憩時間は控除しない。start〜end の実時間をそのまま使う。
+- Q2=(a): `paid_leave` は 0h とする。ファイルに登場する従業員は、勤務がなくてもキー（値 0.0）に含める。
+- Q3=(a): 1 ファイル = 1 か月とする。複数月を検出したら `ValueError`。
+- A1: `end <= start` は翌日終了とみなし +24h（`end == start` は 24h）。
+- A2: 日またぎ勤務は開始日（`date`）の月に計上する。
+- A3: 値は丸めない float で返す。
+- A4: 標準ライブラリのみ使用。
+- A5: 勤務のない従業員も 0.0 で返す（Q2=(a) と同じ）。
+- A6: 不正な入力（未知の type、日付や時刻の不正、work 行の時刻欠落、必須列の欠落）は `ValueError`。読み込みは `utf-8-sig` なので BOM 付きでも読める。
+
+## 5. 人間に確認してほしい点
+1. 休憩控除なし（Q1）、有給 0h（Q2）で業務要件を満たすか。特に E001 の 9h 勤務、E003 の 9.25h 勤務に休憩が含まれていないか。
+2. `end == start` を 24h 勤務と解釈してよいか。打刻ミスとしてエラーにすべきではないか。
+3. 月をまたぐ夜勤を、分割せずに開始日の月へ計上してよいか。

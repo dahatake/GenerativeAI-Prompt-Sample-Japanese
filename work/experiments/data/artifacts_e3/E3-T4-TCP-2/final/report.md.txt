@@ -1,0 +1,73 @@
+# report: `monthly_work_hours(path)`
+
+## 実行コマンドと出力（証拠）
+
+```
+> python -c "from solution import monthly_work_hours; print('import OK'); print(monthly_work_hours('shifts.csv'))"
+import OK
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+
+> python -m unittest -v test_solution
+test_bom_and_newline_variants ... ok
+test_break_and_rounding_boundaries ... ok
+test_invalid_rows_raise ... ok
+test_missing_column_raises ... ok
+test_overnight_shift ... ok
+test_paid_leave_only_employee ... ok
+test_sample_file ... ok
+----------------------------------------------------------------------
+Ran 7 tests in 0.311s
+OK
+```
+
+`shifts.csv` に対する計算の内訳（シフトごとに、休憩控除 → 15 分切り捨て）:
+
+| 従業員 | 行 | 拘束 | 控除 | 実労働（15 分切り捨て後） |
+|---|---|---|---|---|
+| E001 | 10/01 09:00-18:00 | 9h00m | 60m | 8.00 |
+| E001 | 10/02 09:00-14:50 | 5h50m | なし | 5.75 |
+| E001 | 10/03 paid_leave | - | - | 7.50 |
+| E002 | 10/01 22:00-06:00（翌日） | 8h00m | 60m | 7.00 |
+| E002 | 10/02 13:00-19:00 | 6h00m（ちょうど） | なし | 6.00 |
+| E003 | 10/01 08:30-17:45 | 9h15m | 60m | 8.25 |
+
+合計は E001 = 21.25、E002 = 13.0、E003 = 8.25 です。
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import monthly_work_hours` が成功する | 完了 | `import OK` の出力 |
+| 2 | キーの集合が {E001,E002,E003} で、値がすべて float | 完了 | `test_sample_file` |
+| 3 | E001 == 21.25、E002 == 13.0、E003 == 8.25 | 完了 | `test_sample_file` と上の出力 |
+| 4 | 22:00-06:00 → 7.0h（拘束 8h − 休憩 60 分） | 完了 | `test_overnight_shift` |
+| 5 | 有給だけの従業員が 7.5h × 行数で含まれる | 完了 | `test_paid_leave_only_employee`（2 行で 15.0） |
+| 5a | 境界値: 6h → 6.0、6h01m → 5.0、5h59m → 5.75 | 完了 | `test_break_and_rounding_boundaries` |
+| 6 | 時刻の空欄・未知の type・start == end・時刻や日付の形式不正で ValueError | 完了 | `test_invalid_rows_raise`、`test_missing_column_raises` |
+| 7 | BOM 付き UTF-8 と LF/CRLF 改行で同じ結果 | 完了 | `test_bom_and_newline_variants` |
+
+人間の確認が必要な項目: なし。ただし、下の仮定 A2 と A4 は業務ルールとして妥当かどうか、利用時に確認することをお勧めします。
+
+## 採用した仮定・仕様の一覧
+
+- Q1（回答）: 1 シフトの拘束時間が 6 時間を**超える**場合は、一律で 60 分を控除します。ちょうど 6 時間なら控除しません。
+- Q2（回答）: `paid_leave` は 1 行あたり 7.5 時間として計上します。
+- Q3（回答）: シフトごとに、休憩控除後の実労働時間を 15 分単位で切り捨ててから合計します。計算は整数の分で行い、最後に `/ 60` します。
+- A1（回答で承認）: end < start のときは翌日終了とし、全時間を開始日（`date`）に計上します。
+- A2（推奨案）: 入力は 1 か月分とみなします。複数の月が含まれていても、月で分けずに合算します。
+- A3（推奨案 + Q2）: 有給だけの従業員も dict に含めます（7.5h × 行数）。
+- A4（推奨案）: 次の場合は `ValueError` にします。
+  - 必須列がない
+  - `work` 行の時刻が空欄、または形式不正（`HH:MM` 以外）
+  - 日付が `YYYY-MM-DD` 以外
+  - `employee` が空
+  - 未知の `type`
+  - `start == end`
+- A5（推奨案）: `utf-8-sig` で読み込み、BOM の有無と CRLF/LF のどちらにも対応します。各値の前後の空白は除去し、完全な空行は無視します。
+- A6（推奨案）: 標準ライブラリ（`csv`、`datetime`）だけを使います。
+- A7（推奨案）: 同じ従業員・同じ日付の行が複数あっても、すべて合算します。
+
+## 成果物
+- `solution.py`: 実装
+- `test_solution.py`: DoD 検証用のテスト（`python -m unittest -v test_solution`）
+- `contract.md`: 回答を反映して承認済みに更新した契約

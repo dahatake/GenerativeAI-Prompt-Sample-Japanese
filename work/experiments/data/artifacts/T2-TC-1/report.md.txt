@@ -1,0 +1,41 @@
+# Report: `dedupe(records)` 実装結果
+
+## 成果物
+- `solution.py`: `dedupe(records)` の実装。
+- `test_solution.py`: DoD 1〜6 に1対1で対応する unittest。
+- `contract.md`: Q1〜Q3 の回答（すべて (a)）を反映し、承認済みに更新。
+
+## 検証コマンド
+```powershell
+python -m unittest -v test_solution
+```
+結果: `Ran 6 tests ... OK`（6件すべて成功）。
+
+`members.json` を処理したときの出力（id のみ抜粋）: `3, 2, 4, 5, 7`。id3 の email は `" Taro.Yamada@example.co.jp"` のまま。
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | `members.json` を渡すと、返るレコードの id が `[3, 2, 4, 5, 7]` になる | 完了 | `test_dod1_members_json_ids` が ok、実際の出力も確認 |
+| 2 | 返るレコードは元の値のまま（正規化しない） | 完了 | `test_dod2_values_unchanged` が ok |
+| 3 | email が空・`null`・空白のみのレコードはすべて残る | 完了 | `test_dod3_empty_and_null_emails_all_kept` が ok |
+| 4 | `updated_at` が同じ場合は、入力で先に出てくるレコードが残る | 完了 | `test_dod4_tie_keeps_first` が ok（タイムゾーンが違っても同じ時刻なら同値として扱う） |
+| 5 | 実行後も入力が変わっていない | 完了 | `test_dod5_input_not_mutated` が ok（deepcopy と比較） |
+| 6 | 空のリストを渡すと `[]` が返る | 完了 | `test_dod6_empty_list` が ok |
+
+「証拠不足」「人間の確認が必要」の DoD 条件はありません。
+
+## 採用した仮定
+1. 判定キーは email を strip + lower した値とする（Q1-a）。strip した結果が空文字になる email（空白だけのもの）は、空文字と同じく判定の対象にしない。
+2. 重複の中では `updated_at` が最も新しいレコードを残す（Q2-a）。比較は `datetime.fromisoformat` で読み取った時刻で行う。
+3. 出力はグループが入力で最初に出てくる位置の順に並べる。返すのは入力の dict オブジェクトそのもので、コピーはしない（Q3-a）。
+4. 入力のリストと dict は変更しない。
+5. 標準ライブラリだけを使う（Python 3.12.10 で検証）。
+6. `updated_at` が同じ場合は、入力で先に出てくるレコードを残す。
+7. 同じ email で `name` が違うレコードは、同一人物とみなして1件にまとめる。
+8. `updated_at` が欠けている、または形式が不正な場合は、例外をそのまま上げる。ただし、`updated_at` を読み取るのは同じグループのレコード同士を比較するときだけ。そのため、重複がないレコードや email が空のレコードで不正な値があっても、例外は起きない。
+9. 名前の表記ゆれ（全角・半角など）は扱わない（Out of scope）。
+
+## 補足（DoD の対象外。必要なら確認してください）
+- 仮定8: `updated_at` をすべてのレコードで事前に検証したい場合は、仕様の追加が必要です。
+- タイムゾーンなしの日時とタイムゾーンありの日時が混ざっていると、比較で `TypeError` が起きます。今回のデータはすべて `+09:00` 付きなので問題ありません。

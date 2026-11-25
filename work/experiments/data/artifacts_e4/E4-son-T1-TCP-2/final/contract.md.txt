@@ -1,0 +1,41 @@
+# Task Contract（承認済み・最終版） — monthly_sales(path)
+
+## Outcome
+`solution.py` に `monthly_sales(path)` を実装し、`sales.csv` から月別の税抜売上 `{"YYYY-MM": int}` を返す。
+
+## 回答で確定した仕様
+| 項目 | 確定内容 | 出典 |
+|---|---|---|
+| 月の判定 | `ordered_at`(UTC) を JST(UTC+9) に変換して年月を決める | Q1=B |
+| 金額 | 税抜換算 = 税込 ÷ 1.1、整数 | Q2 |
+| 丸め | 各行を四捨五入（0.5 は +∞ 方向へ切り上げ）して整数化し、月ごとに合算 | Q2-追加（推奨案を採用） |
+| cancelled | 除外（`completed` のみ集計） | Q3=A |
+| 負の金額 | そのまま合算（-1100 → -1000） | Q4（推奨案） |
+| 注文のない月 | 最初の月〜最後の月の範囲で 0 を必ず含める | Q5（仮定を訂正） |
+| キー・型・依存 | ゼロ埋め `YYYY-MM`・昇順・値は int・標準ライブラリのみ・不正行は特別扱いしない | Q6（推奨案） |
+
+## Scope / Out of scope
+- Scope: `solution.py` の `monthly_sales`（内部ヘルパー可）と検証用 `test_solution.py`。
+- Out of scope: CLI、ファイル出力、グラフ、日付範囲指定、通貨換算、CSV 以外の入力、`sales.csv` の変更、不正行の処理。
+
+## Data sources
+- `sales.csv`（作業ディレクトリ内のみ）。列 `order_id, ordered_at(UTC ISO8601), amount_incl_tax(int), status`。
+
+## Constraints
+- 標準ライブラリのみ。作業ディレクトリ外は読み書きしない。戻り値の値は `int`。
+
+## Definition of Done
+- DoD1: `monthly_sales("sales.csv")` が `{"2026-01": 15000, "2026-02": 10000, "2026-03": 0, "2026-04": 17000, "2026-05": 7000}` と一致する。
+- DoD2: 全値が `int`、キーが `YYYY-MM`、昇順。
+- DoD3: JST 月境界（A-1004 → 2月、A-1010 → 5月、`15:00:00Z` ちょうどで翌月）が正しい。
+- DoD4: cancelled が除外される。
+- DoD5: 負の金額が合算される。
+- DoD6: 注文のない月が 0 で含まれる（年またぎ含む）。
+- DoD7: 各行で四捨五入してから合算される（合計後丸めと区別できるケースで確認）。
+
+## Evidence
+- `python -m unittest -v test_solution` と `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"` の出力（report.md に記載）。
+
+## Open questions
+- なし（これ以上の確認はできないため、残りは推奨既定案で確定）。
+- この仮定で進めました: 0 埋めの範囲は、除外後（completed のみ）の最初の月〜最後の月。completed が1件もなければ `{}`。

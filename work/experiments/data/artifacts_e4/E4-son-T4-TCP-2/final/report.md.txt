@@ -1,0 +1,34 @@
+# Report
+
+## 実行した検証
+```
+python -m unittest -v test_solution
+Ran 8 tests in 0.196s  OK
+python -c "from solution import monthly_work_hours as m; print(m('shifts.csv'))"
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+（テストは `test_solution.py`。DoD 番号と `test_dod*` が対応）
+
+## DoD の状態
+| # | 条件 | 状態 | 証拠 |
+|---|------|------|------|
+| 1 | shifts.csv が {"E001":21.25,"E002":13.0,"E003":8.25} | 完了 | test_dod1_2_sample、上記実行出力 |
+| 2 | キー str / 値 float | 完了 | test_dod1_2_sample |
+| 3 | 22:00-06:00 → 7.0h | 完了 | test_dod3_overnight |
+| 4 | ちょうど6h 控除なし／6h01m で60分控除 | 完了 | test_dod4_break_threshold |
+| 5 | 実労働を15分単位切り捨て | 完了 | test_dod5_floor_15min |
+| 6 | paid_leave = 7.5h 加算（有給のみも） | 完了 | test_dod6_paid_leave |
+| 7 | `\r\n` / 末尾改行なしで同結果 | 完了 | test_dod7_newlines |
+| 8 | 不正行は ValueError | 完了 | test_dod8_invalid |
+
+人間の確認が必要な点: 業務ルールの解釈（下記の仮定 A・B）。実データでの妥当性は未確認。
+
+## 採用した仮定
+- 回答に基づく仕様: 拘束>6h で一律60分控除、各シフトの実労働を15分切り捨て、paid_leave=7.5h、全行合計（月絞り込みなし）、end<start は日跨ぎ、不正行は ValueError。
+- A: 15分切り捨ては休憩控除後の実労働に適用し、paid_leave には適用しない（7.5h は 15 分の倍数なので結果は同じ）。
+- B: paid_leave は休憩控除なしで 7.5h 固定。start/end が入っていても無視。
+- `end == start` は 0 時間。同日複数 work 行は合算。
+- 列名で参照、従業員ID は前後空白除去、空行は無視、dict は初出順、BOM付きUTF-8可。
+- date は YYYY-MM-DD 形式のみ検証（月での絞り込み・月跨ぎ分割はしない）。
+- ファイルなしは FileNotFoundError、不正行（時刻欠落/形式不正、未知の type、不正な date、空の従業員ID、必須列欠落）は ValueError。
+- 補足: 前回の開始時刻記録は不備があり遅れて記録された。今回の timing.txt は開始・終了とも正常に記録。

@@ -1,0 +1,40 @@
+# Report: validate_invoice_id
+
+## 成果物
+- `solution.py`: `validate_invoice_id(value) -> bool`。`re.fullmatch` で `INV-20[2-9][0-9](0[1-9]|1[0-2])-(?!0000)[0-9]{4}` に一致する str のみ True。
+- `test_solution.py`: DoD 検証テスト（33 ケース）。
+- `contract.md`: answers.md を反映した承認済み契約。
+
+## 検証コマンドと結果
+```
+python -m pytest test_solution.py -v -p no:cacheprovider
+============================= 33 passed in 0.10s ==============================
+```
+（Python 3.12.10, pytest 9.1.1。全出力は実行ログのとおりで、全ケース PASSED）
+
+## DoD の状態
+| DoD | 内容 | 状態 | 証拠 |
+|---|---|---|---|
+| DoD1 | samples.txt の 4 件が True | 完了 | `test_dod1_samples_valid` ×4 PASSED（ファイルから読み込み） |
+| DoD2 | 月 13 / 00 が False | 完了 | `test_dod2_bad_month` ×2 PASSED |
+| DoD3 | 連番 0000 / 桁不足 / 桁過多が False | 完了 | `test_dod3_bad_sequence` ×3 PASSED |
+| DoD4 | 年 2019 / 2100 / 5 桁目なしが False、境界 2020 / 2099 は True | 完了 | `test_dod4_bad_year` ×3、`test_dod4_boundaries_valid` ×3 PASSED |
+| DoD5 | 小文字・空白・末尾改行・全角・全角ハイフン・空文字が False | 完了 | `test_dod5_bad_format` ×10 PASSED |
+| DoD6 | 非 str が例外なく False | 完了 | `test_dod6_non_str_false_no_exception` ×6 PASSED |
+| DoD7 | 戻り値は常に bool | 完了 | `test_dod7_always_bool` PASSED（`type(...) is bool`） |
+
+人間の確認が必要な項目・証拠不足の項目: なし。ただし下記の仮定は、実運用の仕様と違えば見直しが必要。
+
+## 採用した仮定
+1. 接頭辞は大文字 `INV` 固定、区切りは半角 `-` のみ（answers.md で承認）。
+2. 年は 2020〜2099（answers.md で指定。当初の「範囲制限なし」から変更）。
+3. 月は 01〜12、連番は 0001〜9999（answers.md の Q1・Q2）。
+4. 完全一致のみ。前後空白、末尾改行、小文字、全角は False（Q3）。
+5. str 以外は例外なく False（Q3）。bytes も False。
+6. 発行実績との照合はしない（形式検証のみ。推奨案で進めた）。
+7. チェックディジットはない（samples.txt から規則が読み取れないため）。
+8. `str` のサブクラスは str として扱う。このケースのテストは書いていない。
+9. 末尾改行を通さないため `re.fullmatch` を使用。`\d` は全角数字を通すので `[0-9]` を使用。
+
+## その他
+- `timing.txt` に開始・終了時刻を追記済み。

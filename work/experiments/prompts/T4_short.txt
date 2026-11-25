@@ -1,0 +1,1 @@
+勤怠データ(shifts.csv のような CSV)から、従業員ごとの月間労働時間を集計する関数 monthly_work_hours(path) を solution.py に実装してください。戻り値は {従業員ID: 労働時間(時間, float)} の dict です。

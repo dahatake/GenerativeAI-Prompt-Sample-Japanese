@@ -1,0 +1,44 @@
+# Report — monthly_work_hours(path)
+
+成果物: `solution.py`（実装）、`test_solution.py`（検証）、`contract.md`（確定済み契約）。
+
+## 検証コマンドと出力
+
+```
+> python -m unittest test_solution -v
+test_invalid_work_row_raises ... ok
+test_overnight_not_negative ... ok
+test_paid_leave_only_is_zero ... ok
+test_sample ... ok
+Ran 4 tests in 0.073s
+OK
+
+> python -c "from solution import monthly_work_hours as m; print(m('shifts.csv'))"
+{'E001': 14.833333333333332, 'E002': 14.0, 'E003': 9.25}
+```
+
+## DoD の状態
+
+| DoD 条件 | 状態 | 証拠 |
+|---|---|---|
+| E001 ≒ 14.8333 | 完了 | 出力 14.8333…、`test_sample` |
+| E002 = 14.0（夜勤 8h + 6h） | 完了 | 出力 14.0、`test_sample` |
+| E003 = 9.25 | 完了 | 出力 9.25、`test_sample` |
+| 戻り値は dict、値は float、キーは str | 完了 | `test_sample` の型アサーション |
+| 日跨ぎ行が負値にならない | 完了 | `test_overnight_not_negative`（22:00–06:00 = 8.0） |
+| paid_leave のみの従業員が 0.0 で現れる | 完了 | `test_paid_leave_only_is_zero` |
+| 不正行（時刻欠損・形式不正）で ValueError | 完了 | `test_invalid_work_row_raises`（空欄・`9am`） |
+| 実運用データの前提（休憩・按分・有給扱い・文字コード等）が業務上正しいか | 人間の確認が必要 | 質問未回答のため既定案で実装。同梱サンプル6行のみで検証 |
+| 大規模/実データでの動作（秒付き時刻、`24:00`、同日複数行、他 type） | 証拠不足 | 実データ未提供。未テスト（`24:00`・秒付きは ValueError になる） |
+
+## 採用した仮定
+
+1. 休憩は控除しない（end − start をそのまま採用）。
+2. 日跨ぎ（end < start）は end に24時間を加算。夜勤は開始日側に全時間を計上し、月またぎの按分はしない。
+3. CSV の全行を月で区別せず従業員ごとに合計する（月絞り込み引数なし）。
+4. `type == "work"` 以外（paid_leave 等）は 0 時間。ただし従業員キーは 0.0 で結果に含める。
+5. work 行の start/end が欠損・`HH:MM` 形式でない場合、および employee が空の行は ValueError。
+6. 入力は UTF-8（BOM 許容）、ヘッダあり、値の前後空白は除去。
+7. 丸めは行わない（分単位の float）。start == end は 0 時間（24時間ではない）。
+8. 同一従業員・同一日の複数行は単純合算。
+9. 標準ライブラリのみ使用。`shifts.csv` は変更していない。

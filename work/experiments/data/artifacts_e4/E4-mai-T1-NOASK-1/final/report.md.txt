@@ -1,0 +1,59 @@
+# 実行レポート（Execution Mode）
+
+## Definition of Done の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `monthly_sales(sales.csv)` が `dict` を返す | 完了 | `python -m unittest -v test_monthly_sales.py` の `test_sample_data` がOK。実行結果は `{'2026-01': 19800, '2026-02': 7700, '2026-04': 26400}`。直接検証コマンド `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"` も同じdictを出力。 |
+| キーが `YYYY-MM` 形式、値がint | 完了 | `test_keys_and_integer_values` がOK。正規表現 `^\d{4}-\d{2}$` と `isinstance(value, int)` を検証。 |
+| キャンセル行を集計から除外する | 完了 | `test_cancelled_and_unknown_statuses_are_excluded` がOK。キャンセル900とpending800を除外し、completed100だけを集計。 |
+| completed行の金額を月ごと加算し、負数も加算する | 完了 | `test_negative_completed_amount_is_added` がOK。500 + (-200) = 300を検証。サンプルの負数 -1100も含め、`2026-02` が7700になることを`test_sample_data`で検証。 |
+| サンプルの月次集計が正しい | 完了 | `test_sample_data` がOK。期待値は `2026-01: 19800`、`2026-02: 7700`、`2026-04: 26400`。直接出力でも一致。 |
+| 2026-03 をキーに含めない | 完了 | `test_missing_month_is_not_filled` がOK。期待どおり `2026-03` は存在しない。 |
+| 作業ディレクトリ外のファイルを参照・変更しない | 完了 | 実装・テスト・契約のファイル操作はすべて作業ディレクトリ内。テストで作成した一時CSVも作業ディレクトリ内へ作成し、終了時に削除済み。 |
+
+## 検証コマンドと出力
+
+### コマンド1
+```text
+python -m unittest -v test_monthly_sales.py
+```
+
+出力:
+```text
+test_cancelled_and_unknown_statuses_are_excluded (test_monthly_sales.MonthlySalesTests.test_cancelled_and_unknown_statuses_are_excluded) ... ok
+test_keys_and_integer_values (test_monthly_sales.MonthlySalesTests.test_keys_and_integer_values) ... ok
+test_missing_month_is_not_filled (test_monthly_sales.MonthlySalesTests.test_missing_month_is_not_filled) ... ok
+test_negative_completed_amount_is_added (test_monthly_sales.MonthlySalesTests.test_negative_completed_amount_is_added) ... ok
+test_sample_data (test_monthly_sales.MonthlySalesTests.test_sample_data) ... ok
+test_timezone_offset_is_converted_to_utc_month (test_monthly_sales.MonthlySalesTests.test_timezone_offset_is_converted_to_utc_month) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.086s
+
+OK
+```
+
+### コマンド2
+```text
+python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+出力:
+```text
+{'2026-01': 19800, '2026-02': 7700, '2026-04': 26400}
+```
+
+## 採用した仮定
+1. 売上対象は `status=completed` の行のみ。
+2. `cancelled` とその他のステータスは集計しない。
+3. 負数の `amount_incl_tax` はマイナス売上として合計に加算する。
+4. タイムスタンプはUTCとして解釈し、`YYYY-MM`キーにする。
+5. タイムゾーン付き以外のnaiveな時刻はUTCとして扱う。
+6. 対象行のある月だけをdictに含め、欠損月はゼロ埋めしない。
+7. 金額は整数に変換できるものとして処理する。
+
+## 結論
+- すべてのDefinition of Done条件は「完了」。
+- 「証拠不足」なし。
+- 人間の確認が必要な未解決事項なし。

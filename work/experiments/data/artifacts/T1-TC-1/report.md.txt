@@ -1,0 +1,76 @@
+# 実行レポート: monthly_sales(path)
+
+対象 Contract: `contract.md`（承認済み、Execution Mode）
+実行環境: Python 3.12.10（Windows）、標準ライブラリのみ
+
+## 成果物
+- `solution.py` — `monthly_sales(path)` の実装
+- `test_solution.py` — DoD を検証する unittest（9 テスト）
+- `contract.md` — 回答を反映した Task Contract
+- `report.md` — このレポート
+
+## 実行した検証コマンドと出力
+
+```
+> python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+exit=0
+
+> python -m unittest -v test_solution
+test_bom_and_crlf_accepted ... ok
+test_dod2_sales_csv_expected ... ok
+test_dod3_types_and_key_format ... ok
+test_dod4_cancelled_excluded ... ok
+test_dod5_jst_month_boundary ... ok
+test_dod6_tax_excluded_rounding_and_negative ... ok
+test_dod7_header_only_returns_empty ... ok
+test_dod7_zero_months_filled_across_year ... ok
+test_dod8_invalid_data_raises ... ok
+Ran 9 tests in 0.056s
+OK
+exit=0
+```
+
+`sales.csv` の期待値を手計算で照合した結果（JST、cancelled を除外、÷1.1）:
+
+| 月 | 対象注文（税込） | 税抜合計 |
+|---|---|---|
+| 2026-01 | 11000 + 5500 | 15000 |
+| 2026-02 | 3300（A-1004）+ 8800 − 1100 | 10000 |
+| 2026-03 | なし | 0 |
+| 2026-04 | 16500 + 2200 | 17000 |
+| 2026-05 | 7700（A-1010） | 7000 |
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import monthly_sales` が成功する | 完了 | `python -c` が exit=0 で終了 |
+| 2 | `sales.csv` の結果が期待値と完全に一致する | 完了 | `python -c` の出力、`test_dod2_sales_csv_expected` |
+| 3 | 返り値が dict、キーが `YYYY-MM` 形式で昇順、値が `int` | 完了 | `test_dod3_types_and_key_format` |
+| 4 | cancelled を除外する | 完了 | `test_dod4_cancelled_excluded`、DoD2 の値（A-1003, A-1007 は含まれない） |
+| 5 | JST で月境界を判定する | 完了 | `test_dod5_jst_month_boundary`（A-1004 → 02、A-1010 → 05、UTC 14:59:59 → 前月） |
+| 6 | 税抜換算を整数で行う（割り切れない金額・負の金額を含む） | **人間の確認が必要** | 実装した規則どおりに動くことは `test_dod6_tax_excluded_rounding_and_negative` で確認済み。ただし丸め方法（注文ごとに内税額を切り捨て）は依頼で指定されておらず、仮定 A10 として採用した。現データは全件割り切れるため、結果に影響はない。 |
+| 7 | 注文のない月を 0 で補完する（年またぎを含む）、データ行が 0 件なら `{}` | 完了（範囲の定義は要確認） | `test_dod7_zero_months_filled_across_year`、`test_dod7_header_only_returns_empty`。補完する月の範囲は仮定 A3'（cancelled を含む全注文の最初の月〜最後の月）に基づく。 |
+| 8 | 想定外のデータで `ValueError` を送出する | 完了 | `test_dod8_invalid_data_raises`（未知の status、非整数の金額、不正な日時、タイムゾーンなしの日時、列数の不足、必須列の欠落） |
+
+補足として、BOM と CRLF を含むファイルを読めることも `test_bom_and_crlf_accepted` で確認した。
+
+## 採用した仮定
+
+| ID | 内容 | 根拠 |
+|---|---|---|
+| A1 | 標準ライブラリのみを使う（`csv`、`datetime`） | 推奨既定案 |
+| A2 | 売上には `amount_incl_tax` 列を使う | 列名から判断 |
+| A3' | 補完する月の範囲は、cancelled を含む全注文の最初の月〜最後の月。データ行が 0 件なら `{}` | 回答「注文がない月も 0」に基づく解釈 |
+| A4 | キーは `YYYY-MM` で昇順、値は `int` | 依頼の仕様 |
+| A5 | `utf-8-sig` で読み込む（BOM があっても可） | 推奨既定案 |
+| A6 | 重複した `order_id` を除外せず、そのまま合算する | 指定なしのため推奨既定案 |
+| A7 | JST は固定オフセット UTC+9 として扱う | JST に夏時間はない。`tzdata` に依存しない |
+| A8 | 想定外のデータは `ValueError` にする | 指定なしのため推奨既定案 |
+| A9 | 集計するのは `completed` のみ。負の金額は差し引く | 指定なしのため推奨既定案 |
+| A10 | 税抜換算は注文ごとに行う。内税額（税込 × 10/110）を 1 円未満切り捨てし、税込から引く。負の金額は絶対値に同じ規則を適用する。整数演算のみ | Q3 で丸め方法が未指定だったため |
+
+## 人間の確認が必要な点
+1. **A10 の丸め方法**: 注文ごとか月の合計ごとか、切り捨て・四捨五入・切り上げのどれにするか。
+2. **A3' の月の範囲**: cancelled の注文しかない月を範囲に含めてよいか。決算期などの固定期間で範囲を決める必要はないか。

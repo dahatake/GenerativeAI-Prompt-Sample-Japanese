@@ -1,0 +1,31 @@
+run_id,phase1_or_single_elapsed_s,total_elapsed_s_incl_idle,note
+T1-B-1,40,40,
+T1-B-2,40,40,
+T1-B-3,36,36,
+T2-B-1,35,35,
+T2-B-2,41,41,
+T2-B-3,37,37,
+T3-B-1,26,26,
+T3-B-2,39,39,
+T3-B-3,33,33,
+T1-FULL-1,41,41,
+T2-FULL-1,44,44,
+T3-FULL-1,32,32,
+T1-TC-1,70,333,total includes idle wait for oracle and orchestrator
+T1-TC-2,71,283,total includes idle wait
+T1-TC-3,66,,
+T2-TC-1,56,266,total includes idle wait
+T2-TC-2,48,268,total includes idle wait
+T2-TC-3,46,207,total includes idle wait
+T3-TC-1,56,296,total includes idle wait
+T3-TC-2,61,258,total includes idle wait
+T3-TC-3,70,,
+E2-B-1,41,41,
+E2-B-2,35,35,
+E2-B-3,38,38,
+E2-G-1,92,92,
+E2-G-2,87,87,
+E2-G-3,96,96,
+E2-GTB-1,82,82,
+E2-GTB-2,98,98,
+E2-GTB-3,91,91,

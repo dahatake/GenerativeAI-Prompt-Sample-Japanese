@@ -1,0 +1,25 @@
+# 実装レポート
+
+## 実装内容
+- `solution.py` に `make_invoices(data_dir, month, discount_rates=None)` を実装しました。
+- CLI は `python solution.py <data_dir> <YYYY-MM> <out.csv>` です。出力列は invoice_id, customer_id, subtotal, discount, tax, total です。
+- 請求書は対象月に請求対象の注文がある顧客ごとに1件作り、customer_id の昇順に並べます。請求対象の注文がない顧客の請求書は作りません。
+- invoice_id は `INV-YYYYMM-<customer_id>` です。lines は注文日時の順（同じ日時なら order_id の順）に並べます。
+- 対象月に請求対象がない場合は、空のリストを返します（CSV はヘッダーのみ）。
+- customers.csv にない顧客、products.csv にない SKU、注文日時点で有効な価格がない注文があると、ValueError で止めます。
+
+## 前提にしたこと（仕様に書かれていなかった点）
+1. **月の判定**: `ordered_at` は UTC で記録されているので、日本時間（JST, UTC+9）に変換してから判定します。たとえば O1021（10/31 16:00Z）は11月分、O1002（9/30 15:30Z）は10月分になります。
+2. **請求対象のステータス**: `completed` と `shipped` だけを請求します。`cancelled` と `returned` は請求しません。
+3. **単価**: JST の注文日以前に適用が始まった価格のうち、最も新しいものを使います。amount は unit_price × qty です。
+4. **消費税**: category が `food` の商品は軽減税率8%、それ以外は10%にしました。税率ごとに合計してから1円未満を切り捨て、その合計を tax とします（端数処理は請求書ごと・税率ごとに1回）。
+5. **値引き**（answers.md Q1 で確定）: tier が `gold` の顧客だけ5%値引きします。税率区分ごとの小計からそれぞれ5%を値引きし、区分ごとに1円未満を切り捨てます。discount はその合計です。値引き率は `DISCOUNT_RATES` または引数 `discount_rates` で変えられます。
+6. tax は税率区分ごとに (小計 − 値引き) × 税率 を計算して1円未満を切り捨て、その合計です。total = subtotal − discount + tax です。
+
+上の 1〜4 は answers.md の Q2〜Q4 で確認が取れました。
+
+## 今回の修正点（answers.md への対応）
+- `DISCOUNT_RATES` を `{}`（値引きなし）から `{"gold": Decimal("0.05")}` に変えました（Q1）。
+- 値引きの計算方法を変えました。以前は請求書全体の subtotal × 率を切り捨て、税率区分ごとに按分していました。今は**税率区分ごとに小計 × 5% を切り捨てて**合計し、区分ごとの値引き後金額に税をかけます（Q1・Q3）。
+- 月の判定（JST）、税の切り捨て、請求するステータス（completed・shipped）は、回答どおりだったので変えていません（Q2〜Q4）。
+- 修正後の結果（2026-10）: C001 は値引き 1359、税 2351、請求額 28172。C003 は値引き 1048、税 1717、請求額 21629。

@@ -1,0 +1,50 @@
+# 実行・検証レポート：従業員別の月間労働時間
+
+`contract.md` を推奨既定案で承認済みに更新し、`solution.py` に `monthly_work_hours(path)` を実装した。検証テストは `test_solution.py` に収録。入力 `shifts.csv` は変更していない（作業前後で SHA256 が一致）。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| 1. `shifts.csv` の従業員 3 名の時間が期待値と一致し、すべて `float` | 完了 | `test_sample`：`E001 = 890 / 60`、`E002 = 14.0`、`E003 = 9.25` を許容誤差 `1e-12` で照合 |
+| 2. 月末夜勤 `22:00` → 翌月 `06:00` の全時間を開始月に計上 | 完了 | `test_month_end_overnight_counts_full_shift`：10 月 31 日の 1 行から `8.0` |
+| 3. 異なる年月の日付が混在すれば `ValueError` | 完了 | `test_rejects_mixed_months`：同年の別月と、同月の別年の両方を拒否 |
+| 4. 有休のみの従業員は `0.0` | 完了 | `test_paid_leave_only_includes_zero_hours`：時刻空欄の有休行で `float` の `0.0` |
+| 5. 正しいヘッダーだけなら `{}` | 完了 | `test_header_only_returns_empty_dict` |
+| 6. 不正な勤務時刻は行番号付きの `ValueError` | 完了 | `test_bad_work_time_reports_row`：`25:00`、秒付き、空欄の各ケースで `line 3` を確認 |
+
+## 検証コマンドと出力
+
+作業ディレクトリで実行した。サンプルは実ファイルを、境界・エラーケースはテスト内の CSV データを使用した。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_bad_rows_report_line_number (test_solution.MonthlyWorkHoursTests.test_bad_rows_report_line_number) ... ok
+test_bad_work_time_reports_row (test_solution.MonthlyWorkHoursTests.test_bad_work_time_reports_row) ... ok
+test_equal_times_count_as_zero_and_id_is_preserved (test_solution.MonthlyWorkHoursTests.test_equal_times_count_as_zero_and_id_is_preserved) ... ok
+test_header_only_returns_empty_dict (test_solution.MonthlyWorkHoursTests.test_header_only_returns_empty_dict) ... ok
+test_missing_required_column_is_rejected (test_solution.MonthlyWorkHoursTests.test_missing_required_column_is_rejected) ... ok
+test_month_end_overnight_counts_full_shift (test_solution.MonthlyWorkHoursTests.test_month_end_overnight_counts_full_shift) ... ok
+test_paid_leave_only_includes_zero_hours (test_solution.MonthlyWorkHoursTests.test_paid_leave_only_includes_zero_hours) ... ok
+test_rejects_mixed_months (test_solution.MonthlyWorkHoursTests.test_rejects_mixed_months) ... ok
+test_sample (test_solution.MonthlyWorkHoursTests.test_sample) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.008s
+
+OK
+```
+
+`shifts.csv` の作業前後の SHA256：`00C7C0D32C998203671520610F84CABF5F01FEEF9AB86C6A87029AD4BFC56028`。
+
+## 採用した仮定
+
+- 全データ行の `date` は単一の年月とし、別の年月が混在すればエラー。夜勤は月をまたいでも開始月に全時間を計上する。
+- 休憩は控除しない。終了が開始より早ければ翌日、同時刻なら 0 分。各行を独立に集計し、分の合計を 60 で割る。表示用の丸めや重複排除は行わない。
+- 有休は時間を加算せず、有休のみの従業員も `0.0` で返す。有休の時刻欄は使わない。
+- 入力は UTF-8（BOM 可）のカンマ区切り。必須列は `employee,date,type,start,end`。重複ヘッダーやヘッダーと列数が異なるデータ行は拒否し、追加の名前付き列と完全な空行は無視する。
+- ID は空・空白のみを拒否し、それ以外は文字列のまま保持する。日付は `YYYY-MM-DD`、勤務時刻は 24 時間制の `HH:MM`。タイムゾーン変換は行わない。
+- `work` と `paid_leave` のみ扱う。必須列の欠落や不正な値は `ValueError` とし、データ行の内容の検証エラーには行番号を付ける。正しいヘッダーのみなら `{}`。

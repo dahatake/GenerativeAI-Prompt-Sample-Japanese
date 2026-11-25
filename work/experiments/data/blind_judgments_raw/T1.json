@@ -1,0 +1,344 @@
+{
+  "T1-0287dc": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-09d324": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-0f4e86": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-1012b4": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-1a733e": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-366780": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-3ad20f": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-560e86": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-63467b": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-79fa6a": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-7f108a": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-a04a85": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-a769c3": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-b26845": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-bf71d7": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-d4f663": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-d7fe6a": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  },
+  "T1-e6eb0d": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "met"
+    }
+  },
+  "T1-fce71a": {
+    "R1": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R2": {
+      "disclosed": "yes",
+      "verdict": "met"
+    },
+    "R3": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    },
+    "R4": {
+      "disclosed": "yes",
+      "verdict": "unmet"
+    }
+  }
+}

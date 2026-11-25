@@ -1,0 +1,15 @@
+run_id,phase,S56,S7,E2E,E2E_mismatch_months,errors
+E5-T6-BPOST-1,final,True,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-BPOST-1,p1,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-BPOST-2,final,True,True,True,,{}
+E5-T6-BPOST-2,p1,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-BPOST-3,final,True,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-BPOST-3,p1,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-FULL-1,final,True,True,True,,{}
+E5-T6-FULL-1,p1,True,True,True,,{}
+E5-T6-NOASK-1,final,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-NOASK-2,final,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-NOASK-3,final,False,True,False,2026-09;2026-10;2026-11,{}
+E5-T6-TCP-1,final,True,True,True,,{}
+E5-T6-TCP-2,final,True,True,True,,{}
+E5-T6-TCP-3,final,True,True,True,,{}

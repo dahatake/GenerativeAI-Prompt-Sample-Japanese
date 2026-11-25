@@ -1,0 +1,1 @@
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。

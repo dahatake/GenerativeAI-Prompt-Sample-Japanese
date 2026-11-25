@@ -1,0 +1,7 @@
+run_id,condition,R1,R2,R3,R4,R5,R6,T5S_window28,changed_lines,seconds,wrote_tests,flagged_equality_question
+RT-CTRL-1,CTRL,True,True,True,True,True,False,True,16,46.5,False,True
+RT-CTRL-2,CTRL,True,True,True,True,True,False,True,26,42.8,False,True
+RT-CTRL-3,CTRL,True,True,True,True,True,False,True,25,39.7,False,True
+RT-RT-1,RT,True,True,True,True,True,False,True,22,81.8,True,True
+RT-RT-2,RT,True,True,True,True,True,False,True,19,85.5,True,True
+RT-RT-3,RT,True,True,True,True,True,False,True,22,95.3,True,True

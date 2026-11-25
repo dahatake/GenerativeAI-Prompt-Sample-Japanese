@@ -1,0 +1,1 @@
+請求書番号が正しいかを判定する関数 validate_invoice_id(value) を solution.py に実装してください。戻り値は bool です。samples.txt に番号の例があります。

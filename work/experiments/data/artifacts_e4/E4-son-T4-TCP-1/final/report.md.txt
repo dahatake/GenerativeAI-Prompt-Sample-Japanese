@@ -1,0 +1,29 @@
+# Report
+
+実装: `solution.py`（`monthly_work_hours(path)`）、テスト: `test_solution.py`
+
+検証コマンド: `python -m pytest -v test_solution.py` → **6 passed**
+追加確認: `python -c "from solution import monthly_work_hours as m; print(m('shifts.csv'))"` → `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}`
+
+## Definition of Done の状態
+| 条件 | 状態 | 証拠 |
+|---|---|---|
+| shifts.csv の結果が E001=21.25 / E002=13.0 / E003=8.25 | 完了 | `test_sample_csv`、上記の実行出力 |
+| 6 時間超のみ 60 分控除（ちょうど 6h は控除なし） | 完了 | `test_break_threshold`（6h00→6.0、6h15→5.25、5h01→5.0） |
+| シフト単位で 15 分切り捨て後に合算 | 完了 | `test_floor_15_minutes_per_shift`（5h50 ×2 → 11.5） |
+| 日跨ぎ勤務（end < start）が翌日終了として計算される | 完了 | `test_overnight`（22:00-06:00→7.0、22:00-02:00→4.0） |
+| paid_leave が 7.5 時間で加算され、例外が出ない | 完了 | `test_paid_leave` |
+| ヘッダのみの CSV で `{}` | 完了 | `test_header_only_and_invalid_rows` |
+| 作業ディレクトリ内のみ・標準ライブラリのみ | 完了 | solution.py は csv/datetime のみ |
+| 休憩控除と 15 分切捨ての順序（控除後に切り捨て）が意図どおりか | 人間の確認が必要 | 回答は「実労働時間を切り捨て」と読んで実装。順序が逆なら結果が変わりうる |
+
+## 採用した仮定
+1. 「実労働時間」= 拘束時間 − 休憩（控除後）。その値を 15 分単位で切り捨てる。
+2. 6 時間超 = 360 分を超える場合（360 分ちょうどは控除なし）。
+3. end < start は翌日終了（24 時間加算）。
+4. 月での絞り込み・月別分割はしない。全行を合算する。
+5. `work` 以外の未知の type は 0 時間。start/end が空・不正な work 行は 0 時間（例外なし）。
+6. 勤務が 0 時間でも行のある従業員は `0.0` で戻り値に含める。
+7. paid_leave は 1 行 7.5 時間で、休憩控除・切り捨ての対象外。
+8. CSV は UTF-8（BOM 可）。内部では分の整数で計算し、最後に時間へ変換する。
+9. 同一従業員・同一日の重複行は重複排除せず、そのまま加算する。

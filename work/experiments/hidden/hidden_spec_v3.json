@@ -1,0 +1,18 @@
+{
+ "T6": {
+  "function": "make_invoices(data_dir: str, month: str) -> list[dict]",
+  "file": "solution.py",
+  "requirements": {
+   "R1": "注文の計上月は日本時間(JST, UTC+9)で判定する。ordered_at は UTC で記録されている。",
+   "R2": "status が completed と shipped の注文を請求対象とし、cancelled と returned は除外する。",
+   "R3": "単価は prices.csv のうち、注文日(JST)時点で有効な価格(effective_from が注文日以前で最も新しいもの)を使う。",
+   "R4": "消費税率は、category が food の商品は 8%(軽減税率)、それ以外は 10% とする。",
+   "R5": "tier が gold の顧客は、税計算の前に、税率区分ごとの小計から 5% を値引きする。",
+   "R6": "値引き額は、税率区分ごとに1円未満を切り捨てる。",
+   "R7": "消費税は、行ごとではなく、請求書ごと・税率区分ごとに (小計 − 値引き) × 税率 を計算し、1円未満を切り捨てる。",
+   "R8": "invoice_id は INV-YYYYMM-NNNN とし、その月の請求書を customer_id の昇順に 0001 から連番で振る。",
+   "R9": "その月に請求対象の注文がない顧客には、請求書を作らない。",
+   "R10": "各請求書の lines は ordered_at の昇順に並べる。"
+  }
+ }
+}

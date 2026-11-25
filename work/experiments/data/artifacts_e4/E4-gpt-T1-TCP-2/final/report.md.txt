@@ -1,0 +1,65 @@
+# 実行報告 — `monthly_sales(path)`
+
+`answers.md` と `answers2.md` を反映して `contract.md` を承認済みに更新し、`solution.py` に実装した。
+
+## Definition of Done
+
+| ID | 状態 | 検証証拠（`test_solution.py`） |
+| --- | --- | --- |
+| D1 | 完了 | `test_given_path_bom_reordered_columns_and_types`: 別パスの BOM 付き CSV、列順、戻り値の型、入力ファイルの不変性を確認。 |
+| D2 | 完了 | `test_bundled_sales`: `sales.csv` の全 5 か月について期待辞書と完全一致。実行値は下記。 |
+| D3 | 完了 | `test_status_exact_match_signed_amounts_and_duplicate_order_ids`: `cancelled` のみ除外し、`pending`・`refunded`・空欄・`Cancelled`・末尾空白付きステータスも計上。負額と同一注文 ID の複数行も確認。 |
+| D4 | 完了 | `test_jst_boundary_and_fill_only_eligible_range_across_year`、`test_no_eligible_rows`: JST 境界の前後 1 秒、年またぎ、範囲内だけのゼロ補完、対象行なしを確認。 |
+| D5 | 完了 | `test_required_column_missing`、`test_invalid_eligible_row_raises_instead_of_returning_partial_total`: 必須列・フィールドの欠落、不正な日時・金額は `ValueError`。有効行の後でエラーが起きても部分集計を返さない。 |
+| D6 | 完了 | `test_io_error_is_not_converted`: 存在しないパスで `FileNotFoundError` がそのまま送出される。 |
+
+## 実行コマンドと出力
+
+作業ディレクトリで Python 3.12.10 を使用。8 件成功（終了コード `0`）。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_bundled_sales (test_solution.MonthlySalesTests.test_bundled_sales) ... ok
+test_given_path_bom_reordered_columns_and_types (test_solution.MonthlySalesTests.test_given_path_bom_reordered_columns_and_types) ... ok
+test_invalid_eligible_row_raises_instead_of_returning_partial_total (test_solution.MonthlySalesTests.test_invalid_eligible_row_raises_instead_of_returning_partial_total) ... ok
+test_io_error_is_not_converted (test_solution.MonthlySalesTests.test_io_error_is_not_converted) ... ok
+test_jst_boundary_and_fill_only_eligible_range_across_year (test_solution.MonthlySalesTests.test_jst_boundary_and_fill_only_eligible_range_across_year) ... ok
+test_no_eligible_rows (test_solution.MonthlySalesTests.test_no_eligible_rows) ... ok
+test_required_column_missing (test_solution.MonthlySalesTests.test_required_column_missing) ... ok
+test_status_exact_match_signed_amounts_and_duplicate_order_ids (test_solution.MonthlySalesTests.test_status_exact_match_signed_amounts_and_duplicate_order_ids) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.259s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 16500, '2026-02': 11000, '2026-03': 0, '2026-04': 18700, '2026-05': 7700}
+```
+
+Pylance はこの作業先のファイルを認識できなかったため、両ファイルの構文は同じ Python の `compile` で検証した。
+
+```powershell
+python -B -c "from pathlib import Path; paths = ('solution.py', 'test_solution.py'); [compile(Path(path).read_bytes(), path, 'exec') for path in paths]; print('Syntax OK: solution.py, test_solution.py')"
+```
+
+```text
+Syntax OK: solution.py, test_solution.py
+```
+
+## 採用した仮定・確定ルール
+
+- カンマ区切り・ヘッダー付きの UTF-8 入力（BOM 可）。必須は `ordered_at`、`amount_incl_tax`、`status`。列順は任意、追加列は集計に使わない。
+- 入力日時は `YYYY-MM-DDTHH:MM:SSZ` の UTC。月の判定は JST（UTC+09:00 固定）に変換してから行う。
+- `cancelled` との完全一致だけを除外し、除外行の日時・金額は評価しない。大文字・小文字や空白を正規化せず、空欄のステータスも対象とする。
+- 金額は符号付き半角十進整数（符号省略可）。元の単位・符号のまま、行単位で集計し、換算・丸め・重複排除はしない。
+- 集計対象の最初から最後の月までを両端込みで返す。範囲内の欠月は `0`、対象行なしは `{}`、辞書の順序は非要件とする。
+- 必須列・ステータスフィールドの欠落、対象行の不正日時・非整数金額は `ValueError`。ファイルを開けない場合は元の I/O 例外を送出する。

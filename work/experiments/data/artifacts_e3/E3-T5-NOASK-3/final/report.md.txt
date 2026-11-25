@@ -1,0 +1,68 @@
+# 実行レポート: `reorder_plan`
+
+- 契約: `contract.md`（推奨既定案で確定・承認済み）
+- 実装: `solution.py`（標準ライブラリのみ: `csv`, `datetime`, `fractions`, `math`）
+- テスト: `test_solution.py`（unittest、10ケース）
+
+## 検証コマンドと出力
+
+```
+> python -m unittest -v test_solution
+test_dod1_import ... ok
+test_dod2_bundled_data ... ok
+test_dod3_today_as_string_and_datetime ... ok
+test_dod4_qty_positive_lot_multiple_no_discontinued ... ok
+test_dod5_order_covers_shortfall_minimally ... ok
+test_dod6_boundary_position_equals_rop ... ok
+test_dod6_fractional_demand_is_exact ... ok
+test_dod7_window_and_future_rows ... ok
+test_dod8_sku_without_shipments_and_unknown_sku ... ok
+test_dod9_sorted_by_sku ... ok
+----------------------------------------------------------------------
+Ran 10 tests in 0.278s
+OK
+
+> python -c "from solution import reorder_plan; print(reorder_plan('inventory.csv','shipments.csv','2026-11-10'))"
+[{'sku': 'A100', 'qty': 50}]
+```
+
+## 同梱データでの計算表（today = 2026-11-10、需要期間 2026-10-11〜11-09）
+
+| sku | 30日出荷計 | 日平均 | ROP | ポジション | 判定 | qty |
+|---|---|---|---|---|---|---|
+| A100 | 90 | 3.0 | 3×7+20 = 41 | 40+0 = 40 | 40 < 41（不足1） | **50** |
+| A200 | 30 | 1.0 | 1×5+10 = 15 | 15+30 = 45 | 発注不要 | – |
+| B300 | 0 | – | – | – | 廃番のため除外 | – |
+| C400 | 0 | 0.0 | 0×14+6 = 6 | 12+0 = 12 | 発注不要 | – |
+
+## Definition of Done の状態
+
+| # | 条件 | 状態 | 証拠 |
+|---|---|---|---|
+| 1 | `from solution import reorder_plan` が成功 | 完了 | `test_dod1_import` |
+| 2 | 同梱データ・`date(2026,11,10)` で `[{"sku":"A100","qty":50}]` | 完了（値の業務的な妥当性は下記「人間の確認」） | `test_dod2_bundled_data`、上記 `python -c` 出力 |
+| 3 | `today` を文字列で渡しても同じ結果（`datetime` も確認） | 完了 | `test_dod3_today_as_string_and_datetime` |
+| 4 | 全要素 `qty > 0`・`qty % lot == 0`・廃番を含まない | 完了 | `test_dod4_...`（同梱データ＋発注が必要な廃番品を含む合成データ） |
+| 5 | 発注後ポジション `>= ROP`（かつ lot 1つ少なければ `< ROP` ＝最小） | 完了 | `test_dod5_...`（期待値 X1=50, X2=72 は手計算） |
+| 6 | ポジション == ROP では発注しない | 完了 | `test_dod6_boundary_position_equals_rop`、`test_dod6_fractional_demand_is_exact`（1/3×3 のような端数でも厳密） |
+| 7 | `today` 以降の出荷行を足しても結果不変 | 完了 | `test_dod7_...`（`today` 当日・未来日・`today-31` を追加しても不変、`today-30` は期間内に入ることも確認） |
+| 8 | 出荷履歴が無い SKU でもエラーにならない（需要0） | 完了 | `test_dod8_...`（inventory に無い SKU の出荷は無視されることも確認） |
+| 9 | 結果は `sku` 昇順 | 完了 | `test_dod9_sorted_by_sku` |
+
+### 人間の確認が必要な点
+- **業務ルールの妥当性**: 以下の仮定は質問に回答が無かったため推奨既定案で確定したものです。テストは「契約どおりに実装されているか」を証明するだけで、「この発注ルールが業務として正しいか」は証明しません。特に C400 は直近30日の出荷が0のため発注なしになります（全期間平均を使うと 20 個の発注になります）。
+- 想定外の入力（空欄・不正値・重複 SKU 行・負の出荷数量）はテストしていません（不正値は `ValueError` になりますが、重複 SKU 行は別々の行として評価されます）。
+
+## 採用した仮定の一覧
+
+1. 需要 = `today` の前日までの直近30暦日（`today-30`〜`today-1`）の出荷合計 ÷ 30。出荷ゼロの日も分母に含める。
+2. 発注点 `ROP = 日平均 × lead_time_days + safety_stock`、在庫ポジション = `stock + on_order`。
+3. `ポジション < ROP` のときだけ発注（等しい場合は発注しない）。
+4. 発注数 = `ceil((ROP − ポジション) / lot) × lot`（不足分を lot の倍数に切り上げ）。
+5. 日平均は小数のまま（`Fraction` で厳密に）計算し、最後に切り上げる。
+6. `discontinued` が `true`/`1`/`yes`（大文字小文字無視）なら除外。
+7. `today` 当日以降の日付の出荷は需要計算から除外。
+8. `today` は `date` / `datetime`（日付部分のみ使用）/ `"YYYY-MM-DD"` 文字列を受け付ける。
+9. 出荷履歴が無い SKU は需要0。inventory に無い SKU の出荷は無視。
+10. 戻り値は `qty > 0` の品目のみ、`sku` 昇順。`qty` は `int`。
+11. CSV は UTF-8（BOM 付きも可）、ヘッダー付き。数値の不正値・`lot <= 0` は `ValueError`。
