@@ -1,0 +1,54 @@
+# 月間労働時間集計 — 検証報告
+
+`answers.md` の回答で `contract.md` を承認済みに更新し、`solution.py` に `monthly_work_hours(path)` を実装した。追確認は不要だった。
+
+## Definition of Done の状態
+
+| DoD | 状態 | 実行したテストと確認結果 |
+| --- | --- | --- |
+| 1. インポート・サンプル・CSVと出力形式 | 完了 | `test_dod_1_*`：サンプルの値・キー順・`float` 型、BOM、列順、余分な `status` 列の無視、IDの空白・先頭ゼロ、複数行の合算を確認。 |
+| 2. 夜勤・月境界 | 完了 | `test_dod_2_*`：10月末開始の夜勤は7.0時間全量が10月に入り、同月の1.0時間と合算して8.0時間。11月の勤務行または有給行を混ぜると `ValueError`。 |
+| 3. 休憩と勤務単位の切り捨て | 完了 | `test_dod_3_*`：359・360・361・480・481分は正味345・360・300・420・420分。14分は0分、15分は15分。14分が2行あっても月合計は0分。 |
+| 4. 有給・ゼロ・ヘッダーのみ | 完了 | `test_dod_4_*`：時刻欄が空でも有給1行7.5時間、2行15.0時間。開始＝終了はキーを残して `0.0`、ヘッダーのみは `{}`。 |
+| 5. 異常入力・最大の勤務時間 | 完了 | `test_dod_5_*`：空ファイル・必須列や値の欠損・重複ヘッダー・列数不一致・不正な日付や時刻・未知の種別は `ValueError`。`00:00` → `23:59` は22.75時間、存在しないファイルは `FileNotFoundError`。 |
+
+## 実行コマンドと出力
+
+作業ディレクトリで実行した。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_dod_1_bom_column_order_ids_and_status (test_solution.MonthlyWorkHoursTests.test_dod_1_bom_column_order_ids_and_status) ... ok
+test_dod_1_sample_values_order_and_types (test_solution.MonthlyWorkHoursTests.test_dod_1_sample_values_order_and_types) ... ok
+test_dod_2_month_end_overnight_in_start_month (test_solution.MonthlyWorkHoursTests.test_dod_2_month_end_overnight_in_start_month) ... ok
+test_dod_2_reject_mixed_months_even_with_only_leave_in_second (test_solution.MonthlyWorkHoursTests.test_dod_2_reject_mixed_months_even_with_only_leave_in_second) ... ok
+test_dod_3_break_and_rounding_boundaries (test_solution.MonthlyWorkHoursTests.test_dod_3_break_and_rounding_boundaries) ... ok
+test_dod_3_round_each_shift_before_summing (test_solution.MonthlyWorkHoursTests.test_dod_3_round_each_shift_before_summing) ... ok
+test_dod_4_paid_leave_zero_hours_and_header_only (test_solution.MonthlyWorkHoursTests.test_dod_4_paid_leave_zero_hours_and_header_only) ... ok
+test_dod_5_invalid_headers_and_rows (test_solution.MonthlyWorkHoursTests.test_dod_5_invalid_headers_and_rows) ... ok
+test_dod_5_maximum_duration_and_file_error (test_solution.MonthlyWorkHoursTests.test_dod_5_maximum_duration_and_file_error) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.571s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+```text
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+
+## 採用した仮定と回答の指定値
+
+- **期間・日時：** `date` はJST（UTC+09:00固定）での開始日。会計締め日ではなく暦月（月初以上・翌月初未満）で扱う。有給を含め開始月が1種類のCSVのみ集計。終了が開始より早ければ翌日、同時刻なら0分。月をまたぐ勤務は分割せず開始月に計上する。
+- **対象・除外：** `work` と `paid_leave` のみ有効。前後の空白を除いて大小文字を区別する。`status` で除外せず、重複・重なりは補正しない。
+- **控除・換算・丸め：** 勤務の控除前が360分以下なら0分、361分以上なら一律60分を控除し、その後1行ごとに15分単位で切り捨てる。有給は時刻欄・休憩控除を適用せず1行450分。整数分を従業員別に合算後、60で割り、月合計は追加で丸めない。
+- **入力形式・欠損・上下限：** UTF-8（BOM可）、カンマ区切り、必須5列は順不同で余分な列は無視。`employee,date,type` と勤務行の `start,end` は必須。有給行の時刻欄は検証しない。日付は実在する `YYYY-MM-DD`、勤務時刻は `00:00`〜`23:59`（両端含む）。控除前の1行は0〜1439分、月合計に上限なし。空行は無視、ヘッダーのみは `{}`、空ファイル・列不備・不正値は `ValueError`。ファイルを開けない場合は元の例外を送出する。
+- **形式・順序：** IDは前後空白を除いた文字列のまま、先頭ゼロ・大小文字を保持し文字列昇順で挿入する。合計0分でも対象行があれば `0.0` として残す。値は時間単位の `float`。金額・税込／税抜・金額の丸めは対象外。

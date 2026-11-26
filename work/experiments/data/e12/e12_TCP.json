@@ -1,0 +1,81 @@
+[
+ {
+  "run_id": "E12-TCP-1",
+  "p1_conversationId": "3157c4c1-c970-41b8-8b59-e8711ec08345",
+  "p2_conversationId": "e97dc11e-ca92-4de0-a4da-d474778e2fe8",
+  "p1_questions": "status / タイムゾーン / 欠損月（各 A 推奨）。税は Out of scope（税抜金額への変換、消費税の再計算）",
+  "oracle": "Q1=A, Q2=B(JST), Q3=B(0補完); 仮定はすべて推奨案",
+  "p2_data_handling": "元 CSV がないため、Contract の事実から CSV を再構成して実行し、元 CSV との一致は『人間による確認が必要』と報告",
+  "p2_reported_dict": {
+   "2026-01": 16500,
+   "2026-02": 11000,
+   "2026-03": 0,
+   "2026-04": 18700,
+   "2026-05": 7700
+  },
+  "local_run_on_real_csv": {
+   "2026-01": 16500,
+   "2026-02": 11000,
+   "2026-03": 0,
+   "2026-04": 18700,
+   "2026-05": 7700
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": true,
+    "R3": false,
+    "R4": true
+   }
+  ]
+ },
+ {
+  "run_id": "E12-TCP-2",
+  "p1_conversationId": "a2c124ae-51c2-4b81-825f-798a7672870f",
+  "p2_conversationId": "5931b178-5673-4d89-9c39-85bf09d6a310",
+  "p1_questions": "status / タイムゾーン / 欠損月（各 A 推奨）。税は Out of scope（税抜金額への変換）",
+  "oracle": "Q1=A, Q2=B(JST), Q3=B(0補完); 仮定はすべて推奨案",
+  "p2_data_handling": "最初の送信は Work IQ のタスクの結果が取得できず失敗（D-v4-5）。同じ文面で1回再送。元 CSV がないため検証用の別データを作り、元データとの突合は『証拠不足』と報告（元データの dict は示さなかった）",
+  "p2_reported_dict": null,
+  "local_run_on_real_csv": {
+   "2026-01": 16500,
+   "2026-02": 11000,
+   "2026-03": 0,
+   "2026-04": 18700,
+   "2026-05": 7700
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": true,
+    "R3": false,
+    "R4": true,
+    "rounding": null
+   }
+  ]
+ },
+ {
+  "run_id": "E12-TCP-3",
+  "p1_conversationId": "5ee586f7-602b-42e2-869c-9ccf1ff86b8d",
+  "p2_conversationId": "(see raw)",
+  "p1_questions": "status / タイムゾーン / 負額（各 A 推奨）。欠損月は『この仮定で進めます』。税は Out of scope（消費税の再計算、税抜金額への変換）",
+  "oracle": "Q1=A, Q2=B(JST), Q3 推奨案, 仮定『欠損月を含めない』を訂正(0補完)",
+  "p2_data_handling": "元 CSV がないため、元データの金額は式で示し『証拠不足』と報告（値の捏造なし）",
+  "p2_reported_dict": null,
+  "local_run_on_real_csv": {
+   "2026-01": 16500,
+   "2026-02": 11000,
+   "2026-03": 0,
+   "2026-04": 18700,
+   "2026-05": 7700
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": true,
+    "R3": false,
+    "R4": true
+   }
+  ]
+ }
+]

@@ -1,0 +1,52 @@
+# 月次売上集計 実行報告
+
+`answers.md` の Q1～Q3 と `answers2.md` の A1 + B1 を `contract.md` に反映し、`solution.py` に `monthly_sales(path)` を実装した。Python 3.12.10 で検証した。
+
+## Definition of Done
+
+| 条件 | 状態 | 検証した内容 |
+| --- | --- | --- |
+| D1 実データと出力形式 | 完了 | `test_d1`：実データの全月・税抜額、キーの順序、`dict` と値の `int` 型が一致。 |
+| D2 月境界 | 完了 | `test_d2`：JST 月初の直前とちょうど月初を分離し、同じ瞬間の UTC 表記と `+09:00` 表記で結果が一致。 |
+| D3 選別・負額・ゼロ | 完了 | `test_d3`：`cancelled` とその他のステータスを除外。負額を差し引き、ゼロ行だけの月と相殺でゼロになる月を保持。除外行で補完範囲が広がらない。 |
+| D4 空の集計 | 完了 | `test_d4`：ヘッダーだけの場合も、有効な除外行だけの場合も `{}`。 |
+| D5 入力エラー | 完了 | `test_d5`：不足・重複列、欠損値（除外行を含む）、小数、不正日時・オフセット、JST 換算時の上下限超過で `ValueError`。 |
+| D6 税抜換算 | 完了 | `test_d6`：同月の `6 + 6` は `11`、`100` と `-100` は `91` と `-91`、大きな整数も正確に処理。 |
+| D7 欠け月の補完 | 完了 | `test_d7`：11 月～翌年 1 月で 12 月を `0` にし、年 `0001` と `9999` の有効な月キーも確認。 |
+
+## 実行コマンドと出力
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_d1_sample_totals_order_and_types (test_solution.MonthlySalesTests.test_d1_sample_totals_order_and_types) ... ok
+test_d2_jst_month_boundary_and_equivalent_offset (test_solution.MonthlySalesTests.test_d2_jst_month_boundary_and_equivalent_offset) ... ok
+test_d3_filter_negatives_and_keep_zero_months (test_solution.MonthlySalesTests.test_d3_filter_negatives_and_keep_zero_months) ... ok
+test_d4_empty_selection_and_header_only (test_solution.MonthlySalesTests.test_d4_empty_selection_and_header_only) ... ok
+test_d5_missing_columns_and_invalid_values (test_solution.MonthlySalesTests.test_d5_missing_columns_and_invalid_values) ... ok
+test_d6_round_once_per_month_with_exact_arithmetic (test_solution.MonthlySalesTests.test_d6_round_once_per_month_with_exact_arithmetic) ... ok
+test_d7_fill_across_year_end_and_format_limiting_years (test_solution.MonthlySalesTests.test_d7_fill_across_year_end_and_format_limiting_years) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.184s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## 採用した仮定・確定ルール
+
+- JST は固定 UTC+09:00。月初を含み翌月初を含まない。`Z` または明示的な数値オフセット付きの日時を受け付け、入力・換算結果の年は `0001`～`9999`。秒の小数部は任意で 1～6 桁。指定の集計期間は設けない。
+- ステータスは前後空白を除き、大文字・小文字を区別して `completed` のみ集計。負額は差し引き、ゼロは対象に含める。取引種別での追加除外、注文 ID での重複排除、数量・時間による控除や換算は行わない。
+- 税込入力は元の通貨単位の符号付き十進整数。通貨名は特定せず、業務上の上限・下限は設けない。税込税率 10% として月の税込合計に正確な比 `10 / 11` を掛け、最も近い整数（ちょうど中間の場合は 0 から遠い方）に丸める。入力が整数なので、この比ではちょうど中間の値は発生しない。
+- UTF-8（BOM は任意）のヘッダー付き CSV。`ordered_at`・`amount_incl_tax`・`status` が各 1 列必要。余分な列と完全な空行は無視し、必須値の前後空白を除く。欠損・不正値は対象外の行にあっても `ValueError`。
+- 年月は `YYYY-MM` の昇順で `dict` に挿入し、値は `int`。対象行がある最初と最後の月の間だけを `0` で補完する。対象行がなくても期間を延ばさず、対象行がゼロ件なら `{}` を返す。

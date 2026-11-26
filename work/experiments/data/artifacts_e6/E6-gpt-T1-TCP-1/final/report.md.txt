@@ -1,0 +1,50 @@
+# 月次売上集計：実行報告
+
+`contract.md` を `answers.md` と `answers2.md` に従って承認済みに更新し、`solution.py` と `test_solution.py` を作成した。Python 3.12.10 で検証した。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| 1. サンプルと戻り値の型 | 完了 | `test_dod1_sample_dictionary_and_types` が通過。実行結果も契約の5か月分と一致。 |
+| 2. JST 月境界・対象行・ゼロ補完 | 完了 | `test_dod2_jst_boundary_status_and_gap` と `test_dod2_historical_tokyo_month_boundaries` が通過。月末の JST 15:00 UTC 境界、負額、取消のみの月、範囲の外の除外を検証。 |
+| 3. 月合計後に税抜換算・丸め | 完了 | `test_dod3_rounds_signed_month_sums_exactly` が通過。税込 `6 + 6 → 11`、`-6 - 6 → -11`、単独の `-6 → -5`、大きな整数の精度を検証。 |
+| 4. 対象なしとゼロ合計 | 完了 | `test_dod4_header_only_and_filtered_out` と `test_dod4_retains_zero_sum_month` が通過。 |
+| 5. CSV の検証と入力の保全 | 完了 | DoD 5 の3テストが通過。不正入力、BOM、列順、追加列、重複行を検証。元 CSV の内容・更新時刻は呼び出し前後で一致し、内容の SHA-256 は調査時と同じ。 |
+
+## 採用した仮定・決定
+
+- 日時は実在する `YYYY-MM-DDTHH:MM:SSZ` の UTC 日時のみ。月は `Asia/Tokyo` の現地暦月で判定する。実行先のタイムゾーンデータに依存しないよう、過去の東京のオフセットも実装内に保持した。現行のオフセットは UTC `+09:00`。
+- `status == "completed"` の行だけを採用し、負額・ゼロを含めて合計する。1データ行を1件とし、同じ `order_id` の行も別々に数える。
+- 最初と最後の採用月の間にある空白月は `0`。採用行がなければ `{}`。採用行の合計がゼロの月はキーを残す。キーの順序は契約上不問。
+- 税率10%。税込の月合計に `10/11` を掛け、月に1回だけ最近接整数へ丸める。中間は絶対値の大きい方。浮動小数点数や通貨換算を使わない。
+- `path` は文字列またはパスオブジェクト。UTF-8（BOM 可）・カンマ区切り、4つの必須列は一意、列順自由、追加列・空行は無視。金額は ASCII の10進整数（符号は任意）。採用対象外の行も書式を検証し、CSV 構文・必須値・書式の不正、現地で4桁年に収まらない採用行は `ValueError`。I/O 例外はそのまま伝える。
+
+## 検証コマンドと出力
+
+指定作業ディレクトリで実行。Pylance の構文チェックはタイムアウトしたため、Python 自身の `compile` で両ファイルの構文を検証した。
+
+```powershell
+python -B -c "from pathlib import Path; names = ('solution.py', 'test_solution.py'); [compile(Path(name).read_bytes(), name, 'exec') for name in names]; print('Syntax OK: ' + ', '.join(names))"
+python -B -m unittest -v test_solution
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+Syntax OK: solution.py, test_solution.py
+test_dod1_sample_dictionary_and_types (test_solution.MonthlySalesTests.test_dod1_sample_dictionary_and_types) ... ok
+test_dod2_historical_tokyo_month_boundaries (test_solution.MonthlySalesTests.test_dod2_historical_tokyo_month_boundaries) ... ok
+test_dod2_jst_boundary_status_and_gap (test_solution.MonthlySalesTests.test_dod2_jst_boundary_status_and_gap) ... ok
+test_dod3_rounds_signed_month_sums_exactly (test_solution.MonthlySalesTests.test_dod3_rounds_signed_month_sums_exactly) ... ok
+test_dod4_header_only_and_filtered_out (test_solution.MonthlySalesTests.test_dod4_header_only_and_filtered_out) ... ok
+test_dod4_retains_zero_sum_month (test_solution.MonthlySalesTests.test_dod4_retains_zero_sum_month) ... ok
+test_dod5_bom_column_order_and_repeated_order (test_solution.MonthlySalesTests.test_dod5_bom_column_order_and_repeated_order) ... ok
+test_dod5_malformed_inputs_raise_value_error (test_solution.MonthlySalesTests.test_dod5_malformed_inputs_raise_value_error) ... ok
+test_dod5_sample_csv_is_unchanged (test_solution.MonthlySalesTests.test_dod5_sample_csv_is_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.268s
+
+OK
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```

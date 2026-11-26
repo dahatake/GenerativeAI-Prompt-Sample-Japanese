@@ -1,0 +1,56 @@
+# 実行レポート
+
+## Definition of Done 状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| `solution.py` が存在し、`monthly_work_hours(path)` を定義している | 完了 | 実装ファイルの存在と `python -m py_compile solution.py test_solution.py` の成功。 |
+| `shifts.csv` の集計値が `E001=22.25`、`E002=14.0`、`E003=9.25`、全値が `float` | 完了 | `python -c "from solution import monthly_work_hours; r=monthly_work_hours('shifts.csv'); print(r); print({k: isinstance(v, float) for k,v in r.items()})"` の出出力: `{'E001': 22.25, 'E002': 14.0, 'E003': 9.25}`、各値 `True`。`python -m unittest -v test_solution.py` の4テストすべて成功。 |
+| `paid_leave` は7.5時間として加算する | 完了 | サンプルの `E001` は勤務2シフトの合計14.75時間と有給7.5時間から22.25時間となり、`test_paid_leave_is_7_5_hours` が成功。 |
+| 各シフトを15分単位で切り捨ててから合算する | 完了 | `E001` の `09:00-14:50` は350分を15分単位で345分（5.75時間）に切り捨て、総計22.25時間。`test_each_shift_is_floored_to_quarter_hour` が成功。 |
+| `HH:MM` を解釈し、終了時刻が開始時刻より前なら翌日終了とする | 完了 | `E002` の `22:00-06:00` を8時間として集計し、`test_overnight_shift_crosses_midnight` が成功。 |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```text
+python -m unittest -v test_solution.py
+```
+
+出出力:
+
+```text
+test_each_shift_is_floored_to_quarter_hour (test_solution.MonthlyWorkHoursTests.test_each_shift_is_floored_to_quarter_hour) ... ok
+test_overnight_shift_crosses_midnight (test_solution.MonthlyWorkHoursTests.test_overnight_shift_crosses_midnight) ... ok
+test_paid_leave_is_7_5_hours (test_solution.MonthlyWorkHoursTests.test_paid_leave_is_7_5_hours) ... ok
+test_sample_shifts (test_solution.MonthlyWorkHoursTests.test_sample_shifts) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.003s
+
+OK
+```
+
+コマンド:
+
+```text
+python -m py_compile solution.py test_solution.py
+python -c "from solution import monthly_work_hours; r=monthly_work_hours('shifts.csv'); print(r); print({k: isinstance(v, float) for k,v in r.items()})"
+```
+
+出出力:
+
+```text
+{'E001': 22.25, 'E002': 14.0, 'E003': 9.25}
+{'E001': True, 'E002': True, 'E003': True}
+```
+
+## 採用した仮定
+- 入力時刻は `HH:MM` 形式とする。
+- 固定ヘッダーは `employee,date,type,start,end` とする。
+- CSV全体を同一月として、従業員ごとに全行を合算する。
+- 返却dictのキー順序は問わない。
+- 異常な勤務時刻行は集計対象外としてスキップする。
+- 必須ヘッダーが欠落する場合は `ValueError` を発生させる。
+- 異常行以外の `type` は集計対象外とする。

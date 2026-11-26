@@ -1,0 +1,61 @@
+# 月間労働時間集計 — 実行報告
+
+`answers.md` の回答を反映した承認済み `contract.md` に従い、`solution.py` に `monthly_work_hours(path)` を実装した。不足する具体値はなかったため、追加確認は行っていない。
+
+## Definition of Done の状態
+
+| ID | 状態 | テスト／確認結果 |
+| --- | --- | --- |
+| D1 | 完了 | `test_d1_*`: `shifts.csv` の3人分の値・型・順序が一致。実行結果は `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}` 時間。 |
+| D2 | 完了 | `test_d2_*`: 360分前後、480分前後、最大1439分の勤務を検証。29分の2行をそれぞれ15分に切り捨て、合計30分になる。 |
+| D3 | 完了 | `test_d3_*`: 10月末の夜勤は10月分7.0時間。11月開始の `work` または `paid_leave` が混ざると行番号付き `ValueError`。 |
+| D4 | 完了 | `test_d4_*`: 打刻が空・不正でも有休は各7.5時間。対象外種別は除外し、必要な値の欠損や不正は行番号付き `ValueError`。 |
+| D5 | 完了 | `test_d5_*`: 同時刻は `0.0`。ヘッダーだけの場合と対象行なしの場合は `{}`。 |
+| D6 | 完了 | `test_d6_*`: 入力順を変えても文字列昇順で先頭のゼロを保持。BOM・並べ替えた列・追加列・空行を受理し、不正なヘッダー・列数・CSV形式・時刻を拒否。 |
+
+## 採用した仮定・確定ルール
+
+**回答で確定したルール**
+
+- `paid_leave` は打刻にかかわらず、1行あたり450分を休憩控除なしで計上する。
+- `work` は控除前が360分を厳密に超える場合に限り、60分を控除する。控除後の各勤務を15分単位で切り捨てる。
+- 終了が開始より前なら翌日終了と扱う。
+
+**指定がない点に採用した既定値**
+
+- 対象は `work` と `paid_leave`。他の種別は除外し、別の `status` 列や重複・重なりで補正しない。
+- 日時は日本標準時（UTC+09:00、夏時間なし）。有効な `YYYY-MM-DD` と `HH:MM`（`00:00`〜`23:59`）を使用する。同時刻は0分、1行の控除前時間は0〜1439分、月計の上限はなし。
+- 対象行の開始日は単一の暦月に限り、月またぎ勤務を開始月に全量計上する。対象外行は対象月決定に使わない。
+- UTF-8のカンマ区切り（BOM可）、必須5列は各1回で列順不問。追加列と空行は無視する。種別・IDの前後空白を除く。種別は大文字小文字を区別。ヘッダー不備や不正行は `ValueError`、行に起因する場合は行番号を添える。対象外行のID・日付・打刻は検証しない。
+- 控除後の下限は0分。整数分を従業員別に合計し、最後に60で割って `float` に変換。月計を再丸めしない。
+- 文字列IDの先頭のゼロを保持し、キーは文字列昇順。対象行がある従業員の0時間は `0.0` とし、対象行がない従業員は含めない。
+- 金額・給与は対象外。税込・税抜、通貨および金額の丸めは適用しない。
+
+## 実行証拠
+
+作業ディレクトリで実行したコマンド（PowerShell）：
+
+```powershell
+python -B -m unittest -v test_solution && python -B -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+出力（終了コード `0`）：
+
+```text
+test_d1_sample_totals_types_and_order (test_solution.MonthlyWorkHoursTests.test_d1_sample_totals_types_and_order) ... ok
+test_d2_break_boundaries_and_maximum_shift (test_solution.MonthlyWorkHoursTests.test_d2_break_boundaries_and_maximum_shift) ... ok
+test_d2_round_each_shift_before_summing (test_solution.MonthlyWorkHoursTests.test_d2_round_each_shift_before_summing) ... ok
+test_d3_overnight_shift_is_attributed_to_start_month (test_solution.MonthlyWorkHoursTests.test_d3_overnight_shift_is_attributed_to_start_month) ... ok
+test_d3_rejects_multiple_start_months_for_included_types (test_solution.MonthlyWorkHoursTests.test_d3_rejects_multiple_start_months_for_included_types) ... ok
+test_d4_counts_leave_without_reading_punches_and_ignores_other_types (test_solution.MonthlyWorkHoursTests.test_d4_counts_leave_without_reading_punches_and_ignores_other_types) ... ok
+test_d4_reports_line_for_missing_or_invalid_required_values (test_solution.MonthlyWorkHoursTests.test_d4_reports_line_for_missing_or_invalid_required_values) ... ok
+test_d5_keeps_zero_time_and_returns_empty_dict_without_included_rows (test_solution.MonthlyWorkHoursTests.test_d5_keeps_zero_time_and_returns_empty_dict_without_included_rows) ... ok
+test_d6_bom_reordered_headers_extra_fields_and_id_order (test_solution.MonthlyWorkHoursTests.test_d6_bom_reordered_headers_extra_fields_and_id_order) ... ok
+test_d6_rejects_invalid_csv_structure_and_time_format (test_solution.MonthlyWorkHoursTests.test_d6_rejects_invalid_csv_structure_and_time_format) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.494s
+
+OK
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```

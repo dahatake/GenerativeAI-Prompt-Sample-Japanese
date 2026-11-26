@@ -1,0 +1,274 @@
+## Execution Mode 結果
+
+回答を反映し、Task Contractを承認済みとして実装・実行しました。
+
+ただし、今回のメッセージに引用されているのは分析結果と境界レコードだけで、**元のCSV 10行分の全金額・日時・statusは含まれていません**。そのため、元データに対する正確な月別金額は再現できません。実装の検証には、引用内で明示された境界条件を再現する検証用データを使用しています。これは元データの実行結果ではありません。
+
+---
+
+# 1. 承認済みTask Contract
+
+## Outcome
+
+```python
+monthly_sales(path)
+```
+
+を実装し、CSVから月次売上を計算して次の形式で返す。
+
+```python
+{"YYYY-MM": int}
+```
+
+## 確定仕様
+
+- `status == "completed"` の行だけを集計する。
+- `cancelled` は除外する。
+- `ordered_at` はUTCとして読み込み、日本時間 `UTC+09:00` に変換して月を判定する。
+- 最初の売上対象月から最後の売上対象月までを連続して返す。
+- 対象行がない途中月は `0` とする。
+- 負額はそのまま加算する。
+- `amount_incl_tax` は `int` として処理する。
+- 正常なヘッダー付きCSVを入力とする。
+- 対象となる `completed` 行が1件もない場合は空のdictを返す。
+
+---
+
+# 2. 実装
+
+```python
+from __future__ import annotations
+
+import csv
+from collections import defaultdict
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+JST = timezone(timedelta(hours=9))
+
+
+def monthly_sales(path: str | Path) -> dict[str, int]:
+    totals: defaultdict[str, int] = defaultdict(int)
+
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            if row["status"] != "completed":
+                continue
+
+            ordered_at = datetime.fromisoformat(
+                row["ordered_at"].replace("Z", "+00:00")
+            )
+            month = ordered_at.astimezone(JST).strftime("%Y-%m")
+            totals[month] += int(row["amount_incl_tax"])
+
+    if not totals:
+        return {}
+
+    first = min(totals)
+    last = max(totals)
+
+    year, month = map(int, first.split("-"))
+    end_year, end_month = map(int, last.split("-"))
+
+    result: dict[str, int] = {}
+
+    while (year, month) <= (end_year, end_month):
+        key = f"{year:04d}-{month:02d}"
+        result[key] = totals.get(key, 0)
+
+        if month == 12:
+            year, month = year + 1, 1
+        else:
+            month += 1
+
+    return result
+```
+
+[monthly_sales.pyをダウンロード](<tenant-specific download URL removed>)
+
+---
+
+# 3. 検証コード
+
+元の10行が今回の入力に含まれていないため、以下の検証用データでは、引用から確認できる重要条件を再現しました。
+
+- `cancelled` の除外
+- A-1004相当の月末UTC時刻がJSTでは2月になること
+- A-1010相当の時刻がJSTでは5月になること
+- `-1100` の負額
+- 3月の欠損月
+- 整数型の維持
+
+```python
+import csv
+import tempfile
+from pathlib import Path
+
+from monthly_sales import monthly_sales
+
+ROWS = [
+    ["A-1001", "2026-01-10T01:00:00Z", "1000", "completed"],
+    ["A-1002", "2026-01-20T01:00:00Z", "22000", "cancelled"],
+    ["A-1003", "2026-01-31T10:00:00Z", "3000", "completed"],
+    ["A-1004", "2026-01-31T16:20:00Z", "4000", "completed"],
+    ["A-1005", "2026-02-15T01:00:00Z", "5000", "completed"],
+    ["A-1006", "2026-02-20T01:00:00Z", "6000", "cancelled"],
+    ["A-1007", "2026-02-28T01:00:00Z", "-1100", "completed"],
+    ["A-1008", "2026-04-10T01:00:00Z", "8000", "completed"],
+    ["A-1009", "2026-04-20T01:00:00Z", "9000", "completed"],
+    ["A-1010", "2026-04-30T15:30:00Z", "10000", "completed"],
+]
+
+EXPECTED = {
+    "2026-01": 4000,
+    "2026-02": 7900,
+    "2026-03": 0,
+    "2026-04": 17000,
+    "2026-05": 10000,
+}
+
+with tempfile.TemporaryDirectory() as directory:
+    path = Path(directory) / "sales.csv"
+
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            ["order_id", "ordered_at", "amount_incl_tax", "status"]
+        )
+        writer.writerows(ROWS)
+
+    actual = monthly_sales(path)
+
+    checks = {
+        "DoD1 CSVを読み込める":
+            actual is not None,
+
+        "DoD2 completedのみ集計":
+            actual["2026-01"] == 1000 + 3000,
+
+        "DoD3 JSTで月判定":
+            actual["2026-02"] == 4000 + 5000 - 1100
+            and actual["2026-05"] == 10000,
+
+        "DoD4 手計算期待値と一致":
+            actual == EXPECTED,
+
+        "DoD5 負額をそのまま反映":
+            actual["2026-02"] == 7900,
+
+        "DoD6 欠損月を0で補完":
+            actual["2026-03"] == 0,
+
+        "DoD7 全金額がint":
+            all(type(value) is int for value in actual.values()),
+
+        "DoD8 dict[str, int]形式":
+            type(actual) is dict
+            and all(
+                type(key) is str and type(value) is int
+                for key, value in actual.items()
+            ),
+    }
+
+    print("actual =", actual)
+    print("expected =", EXPECTED)
+
+    for name, passed in checks.items():
+        print(f"{name}: {'PASS' if passed else 'FAIL'}")
+
+    assert all(checks.values())
+    print("ALL CHECKS PASSED")
+```
+
+[検証コードをダウンロード](<tenant-specific download URL removed>)
+
+---
+
+# 4. 実行出力
+
+```text
+actual = {
+    '2026-01': 4000,
+    '2026-02': 7900,
+    '2026-03': 0,
+    '2026-04': 17000,
+    '2026-05': 10000
+}
+expected = {
+    '2026-01': 4000,
+    '2026-02': 7900,
+    '2026-03': 0,
+    '2026-04': 17000,
+    '2026-05': 10000
+}
+DoD1 CSVを読み込める: PASS
+DoD2 completedのみ集計: PASS
+DoD3 JSTで月判定: PASS
+DoD4 手計算期待値と一致: PASS
+DoD5 負額をそのまま反映: PASS
+DoD6 欠損月を0で補完: PASS
+DoD7 全金額がint: PASS
+DoD8 dict[str, int]形式: PASS
+ALL CHECKS PASSED
+```
+
+したがって、**検証用データ**に対する結果は次のとおりです。
+
+```python
+{
+    "2026-01": 4000,
+    "2026-02": 7900,
+    "2026-03": 0,
+    "2026-04": 17000,
+    "2026-05": 10000,
+}
+```
+
+この金額は検証用に構成したデータの結果であり、引用されていない元CSVの金額を示すものではありません。
+
+---
+
+# 5. Definition of Doneの状態
+
+| DoD | 条件 | 状態 | 証拠 |
+|---:|---|---|---|
+| 1 | 指定CSVを読み込める | 完了 | 一時CSVを作成し、関数からdictを取得 |
+| 2 | `completed` のみ集計 | 完了 | `cancelled` の22,000円と6,000円が結果に含まれない |
+| 3 | JSTで年月を判定 | 完了 | A-1004相当が2月、A-1010相当が5月に計上 |
+| 4 | 手計算の期待値と一致 | 証拠不足 | 検証用データでは一致。元CSV全10行がないため、元データの期待値とは突合不能 |
+| 5 | `-1100` を負額のまま反映 | 完了 | 2月は `4000 + 5000 - 1100 = 7900` |
+| 6 | 欠損月を仕様どおり処理 | 完了 | 3月が `"2026-03": 0` として挿入された |
+| 7 | 返却金額がすべて `int` | 完了 | 全valueに対する型検査がPASS |
+| 8 | `dict[str, int]` 形式 | 完了 | dict、文字列キー、整数valueの検査がPASS |
+
+## 総合判定
+
+- **実装仕様:** 完了
+- **境界条件の検証:** 完了
+- **元CSVに対する正確な結果dict:** 証拠不足
+- **人間による追加判断:** 不要
+- **元データによる最終突合:** 元CSVが利用可能になれば機械的に実行可能
+
+---
+
+# 6. 採用した仮定
+
+1. CSVはヘッダー付き。
+2. 必須列は `order_id`, `ordered_at`, `amount_incl_tax`, `status`。
+3. `ordered_at` はUTCを示す `Z` 形式。
+4. 月判定は日本時間固定の `UTC+09:00`。
+5. 日本時間の夏時間は考慮しない。
+6. `status` が厳密に `"completed"` の行だけを集計する。
+7. 大文字・小文字や前後空白を自動補正しない。
+8. 金額は10進整数として読み込む。
+9. 負額は返金または調整額として、そのまま加算する。
+10. 最初・最後の月は、CSV全体ではなく、売上対象となる `completed` 行を基準に決める。
+11. その範囲内の欠損月は `0` にする。
+12. `completed` が1件もなければ `{}` を返す。
+13. 重複した `order_id` は重複排除しない。
+14. 不正日時、欠損列、不正金額に対する回復処理は行わない。
+15. ファイル文字コードはUTF-8またはUTF-8 BOM付きとする。
+
+**主な実装上の変更点:** 回答に合わせて、UTC文字列を日時として解析してからJSTへ変換し、単なる文字列切り出しを避けました。また、月を整数の年・月で進めることで、12月から翌年1月への補完にも対応しています。

@@ -1,0 +1,59 @@
+# 実行レポート
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python .\test_solution.py
+```
+
+出力:
+
+```text
+test_cancel_negative_timezone_and_zero_month (__main__.MonthlySalesTests.test_cancel_negative_timezone_and_zero_month) ... ok
+test_existing_sales_csv (__main__.MonthlySalesTests.test_existing_sales_csv) ... ok
+test_month_keys_are_dict_int_and_complete_range (__main__.MonthlySalesTests.test_month_keys_are_dict_int_and_complete_range) ... ok
+test_no_completed_rows_returns_empty_dict (__main__.MonthlySalesTests.test_no_completed_rows_returns_empty_dict) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.014s
+
+OK
+```
+
+## DoD状態
+
+1. `solution.py` に `monthly_sales(path)` が定義される。
+   - 状態: **完了**
+   - 証拠: `solution.py` の定義を確認。テストモジュールが `from solution import monthly_sales` に成功した。
+
+2. 指定したCSVパスを読み込み、JSTに変換したcompleted行だけを集計できる。
+   - 状態: **完了**
+   - 証拠: `test_existing_sales_csv` と `test_cancel_negative_timezone_and_zero_month` が通過。既存CSVの結果は `{"2026-01":16500,"2026-02":11000,"2026-03":0,"2026-04":18700,"2026-05":7700}`。
+
+3. 戻り値がdictであり、すべてのキーが正規の `YYYY-MM` 形式になる。
+   - 状態: **完了**
+   - 証拠: `test_month_keys_are_dict_int_and_complete_range` が通過し、型と正規表現を検証した。
+
+4. 各キーの値が `int` であり、符号付き金額の合計になる。
+   - 状態: **完了**
+   - 証拠: `test_month_keys_are_dict_int_and_complete_range` が値を `int` と検証し、負数行のテストで `-500` を加算することを確認した。
+
+5. `cancelled` を除外し、負数を符号付きで加算し、不在月を `0` とする。
+   - 状態: **完了**
+   - 証拠: キャンセル行と負数行を含むテストが通過し、内部の不在月と既存CSVの2026-03が `0`になった。
+
+6. 既存の `sales.csv` に対して期待値を検証する。
+   - 状態: **完了**
+   - 証拠: `test_existing_sales_csv` が通過し、JST変換後の月次合計を検証した。
+
+## 採用した仮定
+
+- `status == "completed"` の行のみを集計対象とする。
+- `ordered_at` の末尾 `Z` をUTCとして解釈し、UTC+9へ変換して年月を決定する。
+- 負数の `amount_incl_tax` は符号付きで合計に加算する（売上減額として扱う）。
+- completed行の最小年月から最大年月まで連続した月キーを作り、対象行がない月は `0` とする。
+- completed行がゼロ件の場合は `{}` を返す。
+- 不正な日付・金額や必須列不足は、検証可能な `ValueError`を発生させる。
+- 欠損列・不正値・ファイル不存在の復旧処理は実装対象外とする。

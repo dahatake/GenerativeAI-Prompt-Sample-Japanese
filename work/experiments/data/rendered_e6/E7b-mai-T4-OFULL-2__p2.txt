@@ -1,0 +1,7 @@
+作業ディレクトリ: C:\Users\dahatake\AppData\Local\Temp\tc-exp6\E7b-mai-T4-OFULL-2
+このディレクトリの外にあるファイルは読まない・書かないでください。ask_user などユーザーに問い合わせるツールは使わないでください（質問がある場合は最終回答に書いて終了してください）。
+作業の最初と最後に、それぞれ python -c "import time;print(time.time())" を実行し、出力を timing.txt に1行ずつ追記してください。
+依頼: 勤怠データ(shifts.csv のような CSV)から、従業員ごとの月間労働時間を集計する関数 monthly_work_hours(path) を solution.py に実装してください。戻り値は {従業員ID: 労働時間(時間, float)} の dict です。
+この依頼について、作業ディレクトリに solution.py と report.md がすでにあります。report.md に書かれた確認事項・前提への回答が answers.md にあります。読んでください。
+回答に合わせて、必要なら solution.py を修正してください。回答がない点は、今の実装のままで構いません。
+最後に report.md を更新し、今回修正した点を一覧にしてください。

@@ -1,0 +1,41 @@
+# 月間労働時間集計 — 実行報告
+
+`answers.md` の回答で `contract.md` を承認済みに更新し、`solution.py` に `monthly_work_hours(path)` を実装しました。
+
+## Definition of Done の状態
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| 1. サンプルのキー、型、集計値 | 完了 | `test_dod_1_sample`: `E001` 21.25、`E002` 13.0、`E003` 8.25 時間。すべて `float`。 |
+| 2. 月末夜勤、同時刻、有休のみ、空データ、CSV 形式 | 完了 | `test_dod_2_*` の 3 件: 月末夜勤 7.0 時間、同時刻 0.0 時間、有休のみ 7.5 時間、ヘッダーのみは `{}`。BOM・列順・追加列・先頭ゼロ付き ID・重複行も検証。 |
+| 3. 不正入力とファイルエラー | 完了 | `test_dod_3_invalid_csv` の 8 ケースで `ValueError`、`test_dod_3_missing_file` で `FileNotFoundError` を確認。 |
+| 4. 休憩の閾値と行単位の丸め | 完了 | `test_dod_4_*` の 2 件: 360 分→6.0 時間、361 分→5.0 時間、14 分×2 行→0.0 時間。 |
+
+## 実行コマンドと出力
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_dod_1_sample (test_solution.MonthlyWorkHoursTests.test_dod_1_sample) ... ok
+test_dod_2_bom_column_order_id_and_duplicates (test_solution.MonthlyWorkHoursTests.test_dod_2_bom_column_order_id_and_duplicates) ... ok
+test_dod_2_header_only (test_solution.MonthlyWorkHoursTests.test_dod_2_header_only) ... ok
+test_dod_2_month_end_same_time_and_leave_only (test_solution.MonthlyWorkHoursTests.test_dod_2_month_end_same_time_and_leave_only) ... ok
+test_dod_3_invalid_csv (test_solution.MonthlyWorkHoursTests.test_dod_3_invalid_csv) ... ok
+test_dod_3_missing_file (test_solution.MonthlyWorkHoursTests.test_dod_3_missing_file) ... ok
+test_dod_4_break_threshold (test_solution.MonthlyWorkHoursTests.test_dod_4_break_threshold) ... ok
+test_dod_4_rounds_each_shift_before_summing (test_solution.MonthlyWorkHoursTests.test_dod_4_rounds_each_shift_before_summing) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.333s
+
+OK
+Exit code: 0
+```
+
+## 採用した仮定
+
+- 1 ファイルは `date` の年月が共通の 1 か月分。日付は `YYYY-MM-DD`、時刻は 24 時間制・ローカルな `HH:MM`。終了時刻が開始時刻より前なら翌日終了（回答で確認済み）、同時刻なら 0 分。月末をまたいでも開始日の月に全時間を計上する。
+- ヘッダー付きの UTF-8 で BOM は任意。必須の 5 列は列名で判定し、追加列は無視する。従業員 ID は文字列のまま、重複行も 1 行につき 1 回集計する。有休の時刻欄は使わない。
+- 不正なデータや未知の種別は `ValueError` とし、途中結果は返さない。入力ファイルを開けない場合はファイル操作の例外をそのまま送出する。

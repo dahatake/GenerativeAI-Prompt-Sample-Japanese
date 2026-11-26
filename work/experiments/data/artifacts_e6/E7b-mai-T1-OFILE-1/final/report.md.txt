@@ -1,0 +1,18 @@
+# 実装内容
+
+- `solution.py` の `monthly_sales(path)` を実装し、CSV を読み込んで `status == "completed"` の行だけを集計します。
+- `ordered_at` を UTC として解釈し、JST（UTC+9）へ変換してから `YYYY-MM` をキーとして集計します。
+- `amount_incl_tax` を整数として合計し、`dict[str, int]` を返します。
+- `status` の前後空白と大小文字は正規化します。
+
+# 前提
+
+- 入力はヘッダー `order_id,ordered_at,amount_incl_tax,status` を持つ UTF-8 系の CSVです。
+- `ordered_at` は ISO 8601形式のUTC時刻として扱い、JSTへ変換して月を判定します。
+- 金額は整数文字列であることを推奨案として扱います。
+
+# 今回修正した点
+
+- `ordered_at` が UTCの時刻表記から先頭7文字を取る実装を、JSTへ変換後の年月を使用する実装に修正しました。
+- タイムゾーン付きISO 8601時刻の変換と、タイムゾーン省略時はUTCとして扱う処理を追加しました。
+- CSVの値が欠けている場合や金額が整数でない場合のエラー処理を追加しました。

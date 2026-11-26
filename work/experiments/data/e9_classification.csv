@@ -1,0 +1,33 @@
+id,cue_A,value_A,cue_B,value_B,evidence_A,evidence_B
+T1-R1,yes,yes,yes,no,"sales.csv の status 列に cancelled の行（A-1003, A-1007）があり、取消注文は売上から除外するのが自然に導ける。",sales.csv に cancelled の注文があるが、それを除外するかは示されていない。
+T1-R2,yes,no,yes,no,sales.csv の ordered_at に Z（UTC）が付き、A-1004（2026-01-31T16:20:00Z）は JST だと2月になるが、どのタイムゾーンで月を判定するかは資料にない。,ordered_at に Z 付きの日時があるが、JST で月を判定するとは導けない。
+T1-R3,yes,no,yes,no,sales.csv の列名 amount_incl_tax が税込を示すが、税抜で返すことや税率・丸め方は依頼文にも資料にもない。,金額列は amount_incl_tax だが、税率や税抜への換算方法は示されていない。
+T1-R4,yes,no,yes,no,sales.csv に 2026-03 の注文がなく欠損月があるが、0 で埋めるか省くかは資料から決まらない。,2026年3月の注文がなく月が飛んでいるが、欠損月を0で含めるとは導けない。
+T2-R1,yes,no,yes,no,members.json の id 3 のメールに先頭空白と大文字（' Taro.Yamada@...'）、id 6 に大文字のメールがあるが、名前でも同じ重複になるため判定キーがメールだとは一意に決まらない。,同名の人物に空白付き・大文字小文字違いのメールがあるが、比較時の正規化方法は示されていない。
+T2-R2,yes,no,yes,no,members.json の重複レコード（id 1/3、2/6）の updated_at が異なるが、最新・最初・最古のどれを残すかは資料にない。,同じメールとみなし得る人物のレコードに異なる updated_at があるが、どれを残すかは示されていない。
+T2-R3,yes,no,yes,no,members.json では新しい方の id 3 が id 1 より後ろにあり出力位置が論点になるが、どの位置に置くかは資料から決まらない。,重複候補のレコードが異なる位置にあるが、出力順の規則は示されていない。
+T2-R4,yes,no,yes,no,members.json の id 4 の email が空文字、id 5 が null だが、これらを残すか・同一扱いするか・除くかは資料にない。,email が空文字または null のレコードがあるが、その扱いは示されていない。
+T3-R1,yes,yes,yes,no,samples.txt の例がすべて大文字の 'INV-YYYYMM-NNNN' 形式（例: INV-202601-0001）なので、形式は例から導ける。,例は INV-YYYYMM-NNNN 形式だが、小文字や区切り違いを許すかは導けない。
+T3-R2,yes,no,yes,no,samples.txt の 202512 や 202601 から年月の部分だと分かるが、有効な年の範囲 2020〜2099 は資料から導けない。,番号例に年月部分があるが、有効な年・月の範囲は示されていない。
+T3-R3,no,no,no,no,samples.txt には有効な例しかなく、連番 0000 の扱いが論点になることを示すものがない。,例に連番 0000 はなく、0000 を不正とする手がかりはない。
+T3-R4,no,no,no,no,依頼文にも samples.txt にも文字列以外の入力を示すものがない。,依頼文・番号例に文字列以外の入力を扱う手がかりはない。
+T4-R1,yes,yes,yes,no,shifts.csv の E002 の行（22:00〜06:00）で end が start より前であり、日付をまたぐ夜勤として一意に解釈できる。,E002 の勤務は終了時刻が開始時刻より前だが、翌日終了として扱うとは示されていない。
+T4-R2,no,no,yes,no,shifts.csv にも依頼文にも休憩の列や休憩控除への言及がない。,6時間を超える勤務があるが、休憩控除の条件や時間は示されていない。
+T4-R3,yes,no,yes,no,shifts.csv の E001 の 14:50 終了など15分単位でない時刻があり端数処理が論点になるが、15分単位で切り捨てることは資料から決まらない。,15分単位でない勤務時間があるが、丸めの単位・方法は示されていない。
+T4-R4,yes,no,yes,no,shifts.csv に type=paid_leave で start と end が空の行（E001 2026-10-03）があるが、7.5時間として計上することは資料にない。,type に paid_leave があるが、その計上時間は示されていない。
+T5-R1,yes,no,yes,no,引数 today と shipments.csv の日別出荷履歴から平均出荷数を求める期間が論点になるが、直近28日間で当日を含めないことは資料にない。,日付付きの出荷履歴と today 引数があるが、平均の対象期間や計算方法は示されていない。
+T5-R2,yes,yes,yes,no,inventory.csv に on_order 列（A200=30）があり、発注済み未入荷分を在庫に加えるのは標準的な解釈として導ける。,stock と on_order の列があるが、在庫判定で合算するとは示されていない。
+T5-R3,yes,no,yes,no,inventory.csv に lead_time_days、safety_stock、lot 列があるが、発注数の式（発注点との差を lot の倍数に切り上げ）は一意に決まらない。,lead_time_days・safety_stock・lot の列があるが、発注点や発注数の式は示されていない。
+T5-R4,yes,yes,yes,no,inventory.csv に discontinued 列があり B300 が true なので、廃番品を発注対象から除くことが導ける。,discontinued が true の品目があるが、発注対象から除外するとは示されていない。
+T5-R5,no,no,yes,no,依頼文は戻り値をリストと述べるだけで、並び順や qty の型が論点になる具体的な手がかりはない（inventory.csv はもともと sku 順）。,複数品目と qty を返す依頼だが、並び順と型は示されていない。
+T5-R6,no,no,yes,no,資料に有効在庫が発注点とちょうど等しくなる境界ケースを示すものがなく、today も与えられていない。,発注計画に必要な在庫・出荷値はあるが、発注点と等しい場合の扱いは示されていない。
+T6-R1,yes,no,yes,no,data/orders.csv の ordered_at に Z が付き、O1021（2026-10-31T16:00:00Z）や O1002（2026-09-30T15:30:00Z）は JST だと月が変わるが、判定に使うタイムゾーンは資料にない。,ordered_at に Z 付きの日時があるが、計上月をJSTで判定するとは示されていない。
+T6-R2,yes,no,yes,no,data/orders.csv の status に completed、shipped、cancelled、returned があるが、shipped と returned を請求対象にするかは一意に決まらない。,status に completed・shipped・cancelled・returned があるが、対象 status は示されていない。
+T6-R3,yes,yes,yes,no,data/prices.csv に effective_from 付きの複数価格（A100 は 2026-10-16 に 1300、F100 は 2026-10-10 に 1680）があり、注文日時点で有効な価格を使うことが導ける。,SKUごとに異なる effective_from の価格があるが、注文日との対応規則は示されていない。
+T6-R4,yes,no,yes,no,data/products.csv の category に food と general があり、依頼文は消費税額を求めているが、8% と 10% の税率は資料にない。,商品に food と general の category があるが、category ごとの税率は示されていない。
+T6-R5,yes,no,yes,no,data/customers.csv の tier に gold があり、依頼文が discount を求めているが、値引き率 5% や適用方法は資料にない。,顧客に gold と standard の tier があるが、tier による値引き規則は示されていない。
+T6-R6,yes,no,no,no,依頼文が値引き額を整数（円）で求めるので端数処理が論点になるが、税率区分ごとに切り捨てることは資料にない。,値引きの端数処理を論点として示す入力上の手がかりはない。
+T6-R7,yes,no,yes,no,依頼文が tax を整数（円）で求め、商品カテゴリが混在するので計算単位と丸め方が論点になるが、請求書ごと・税率区分ごとに切り捨てることは資料にない。,tax を含む請求額と複数 category が示されているが、税の集計単位や端数処理は示されていない。
+T6-R8,yes,no,yes,no,依頼文が invoice_id を求め、data/customers.csv は customer_id 順に並んでいないが、ID の形式と採番順は資料にない。,invoice_id と複数顧客が示されているが、番号の形式・採番順は導けない。
+T6-R9,yes,no,yes,no,data/orders.csv では C005 の10月の注文が returned と cancelled だけで請求対象がないが、その顧客に請求書を作るかは資料にない。,C005 の注文は returned のみだが、請求対象のない顧客に請求書を作るかは示されていない。
+T6-R10,yes,no,yes,no,data/orders.csv の行が順不同のため lines の並び順が論点になるが、ordered_at 順か order_id 順かは資料から決まらない。,同一顧客に複数の注文日時があるが、lines の並び順は示されていない。

@@ -1,0 +1,826 @@
+[
+ {
+  "run_id": "E6-mai-T1-TCP-1",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T1-TCP-2",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T1-TCPCL-1",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T1-TCPCL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T1-TCPCL-2",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T1-TCPCL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T1-TCPCL-3",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T1-TCPCL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T1-BALL-1",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T1-BALL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T1-BALL-2",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T1-BALL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T1-BALL-3",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T1-BALL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T1-OFULL-1",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "OFULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T1-OFULL-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T1-OFILE-1",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "OFILE",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T1-OFILE-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T1-OFULL-2",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "OFULL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T1-OFULL-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T1-OFILE-2",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T1",
+  "condition": "OFILE",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T1-OFILE-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T4-TCP-1",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T4-TCP-2",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T4-TCPCL-1",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T4-TCPCL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T4-TCPCL-2",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T4-TCPCL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-mai-T4-TCPCL-3",
+  "experiment": "E6",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E6-mai-T4-TCPCL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T4-BALL-1",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T4-BALL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T4-BALL-2",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T4-BALL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-mai-T4-BALL-3",
+  "experiment": "E7a",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7a-mai-T4-BALL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T4-OFULL-1",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "OFULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T4-OFULL-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T4-OFILE-1",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "OFILE",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T4-OFILE-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T4-OFULL-2",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "OFULL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T4-OFULL-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-mai-T4-OFILE-2",
+  "experiment": "E7b",
+  "model": "mai-code-2-flash",
+  "task": "T4",
+  "condition": "OFILE",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E7b-mai-T4-OFILE-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T1-TCP-1",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T1-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T1-TCP-2",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T1-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T1-TCPCL-1",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T1-TCPCL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T1-TCPCL-2",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T1-TCPCL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T1-TCPCL-3",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "TCPCL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T1-TCPCL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T1-BALL-1",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T1-BALL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T1-BALL-2",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T1-BALL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T1-BALL-3",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "BALL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T1-BALL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7b-gpt-T1-OFULL-1",
+  "experiment": "E7b",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "OFULL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7b-gpt-T1-OFULL-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-gpt-T1-OFILE-1",
+  "experiment": "E7b",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "OFILE",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7b-gpt-T1-OFILE-1",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-gpt-T1-OFULL-2",
+  "experiment": "E7b",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "OFULL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7b-gpt-T1-OFULL-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E7b-gpt-T1-OFILE-2",
+  "experiment": "E7b",
+  "model": "gpt-6.2-sol",
+  "task": "T1",
+  "condition": "OFILE",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7b-gpt-T1-OFILE-2",
+  "steps": [
+   "oracle_report",
+   "p2"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T4-TCP-1",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T4-TCP-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T4-TCP-2",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCP",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T4-TCP-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T4-TCPCL-1",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T4-TCPCL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T4-TCPCL-2",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T4-TCPCL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E6-gpt-T4-TCPCL-3",
+  "experiment": "E6",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "TCPCL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E6-gpt-T4-TCPCL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "p3",
+   "oracle_contract",
+   "oracle_followup"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T4-BALL-1",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T4-BALL-1",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T4-BALL-2",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T4-BALL-2",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E7a-gpt-T4-BALL-3",
+  "experiment": "E7a",
+  "model": "gpt-6.2-sol",
+  "task": "T4",
+  "condition": "BALL",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\tc-sandbox6\\E7a-gpt-T4-BALL-3",
+  "steps": [
+   "p1",
+   "p2",
+   "oracle_report"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-G-1",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-G-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-G-2",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-G-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-G-3",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-G-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-G-4",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 4,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-G-4",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-G-5",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "G",
+  "rep": 5,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-G-5",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB-1",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB-2",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB-3",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB-4",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 4,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB-4",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB-5",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB",
+  "rep": 5,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB-5",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB2-1",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB2",
+  "rep": 1,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB2-1",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB2-2",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB2",
+  "rep": 2,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB2-2",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB2-3",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB2",
+  "rep": 3,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB2-3",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB2-4",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB2",
+  "rep": 4,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB2-4",
+  "steps": [
+   "p1"
+  ]
+ },
+ {
+  "run_id": "E8-mai-E2c-GTB2-5",
+  "experiment": "E8",
+  "model": "mai-code-2-flash",
+  "task": "E2c",
+  "condition": "GTB2",
+  "rep": 5,
+  "sandbox": "C:\\Users\\dahatake\\AppData\\Local\\Temp\\tc-exp6\\E8-mai-E2c-GTB2-5",
+  "steps": [
+   "p1"
+  ]
+ }
+]

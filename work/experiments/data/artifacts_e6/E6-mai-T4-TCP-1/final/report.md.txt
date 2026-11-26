@@ -1,0 +1,67 @@
+# 実装検証レポート
+
+## DoD条件の状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| 1. `solution.py` が存在し、import可能 | 完了 | `python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"` が成功し、結果を出力 |
+| 2. `shifts.csv` を正しく集計 | 完了 | 出力は `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}`。`test_sample_csv` もPASS |
+| 3. 同一従業員の複数行を合算 | 完了 | `test_sample_csv`、`test_floor_each_shift_to_fifteen_minutes`、`test_paid_leave_is_7_5_hours_and_aggregates` がPASS |
+| 4. 日跨ぎを正しく処理 | 完了 | `test_break_exactly_six_hours_and_overnight` がPASS（E→end前の開始時刻を翌日終了として計算） |
+| 5. 休憩規則を適用 | 完了 | 360分ちょうどは控除なし、超過時は60分控除。`test_break_exactly_six_hours_and_overnight` がPASS |
+| 6. 各シフトを15分単位で切り捨て | 完了 | `test_floor_each_shift_to_fifteen_minutes` がPASS（14分は0分、16分は15分） |
+| 7. `paid_leave` を7.5時間として加算 | 完了 | `test_paid_leave_is_7_5_hours_and_aggregates` がPASS（2行で15時間） |
+| 8. 戻り値の値がfloat | 完了 | `test_sample_csv` が全従業員の値に対して `isinstance(value, float)` を検証してPASS |
+| 9. 不正時刻・必須列欠落で行番号付きValueError等 | 完了 | `test_invalid_work_time_raises_row_numbered_value_error`、`test_missing_required_column_raises_value_error` がPASS |
+
+## 検証コマンドと出力
+
+### サンプル集計
+
+コマンド:
+```text
+python -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+出力:
+```text
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+
+### テストスイート
+
+コマンド:
+```text
+python -m unittest -v test_solution.py
+```
+
+出力:
+```text
+test_break_exactly_six_hours_and_overnight (test_solution.MonthlyWorkHoursTests.test_break_exactly_six_hours_and_overnight) ... ok
+test_floor_each_shift_to_fifteen_minutes (test_solution.MonthlyWorkHoursTests.test_floor_each_shift_to_fifteen_minutes) ... ok
+test_invalid_work_time_raises_row_numbered_value_error (test_solution.MonthlyWorkHoursTests.test_invalid_work_time_raises_row_numbered_value_error) ... ok
+test_missing_required_column_raises_value_error (test_solution.MonthlyWorkHoursTests.test_missing_required_column_raises_value_error) ... ok
+test_paid_leave_is_7_5_hours_and_aggregates (test_solution.MonthlyWorkHoursTests.test_paid_leave_is_7_5_hours_and_aggregates) ... ok
+test_sample_csv (test_solution.MonthlyWorkHoursTests.test_sample_csv) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.050s
+
+OK
+```
+
+## 採用した仮定一覧
+- CSV内の全行を対象に、従業員ごとに単一dictへ集計する。
+- 日付は集計期間判定やシフト計算に使用しない。
+- `end < start` の場合のみ翌日跨ぎとする。
+- `start == end` は0時間とする。
+- 不正な `work` 時刻、欠損時刻、必須列欠落、欠損従業員は行番号付き `ValueError` とする。
+- 休憩は、拘束時間が360分を超えるシフトにだけ60分控除する。
+- 各シフトの実労働時間を控除後に15分単位で切り捨てる。
+- `paid_leave` は従業員ごとに450分として加算する。
+- `work` 以外の未知区分は無視する。
+- 結果は分の合計を60で割ったfloatとする。
+
+## 確認状態
+- 人間の追加確認が必要な項目: なし
+- 証拠不足の項目: なし

@@ -1,0 +1,19 @@
+# 実装内容
+
+- `solution.py` の `monthly_sales(path)` を実装し、CSV を読み込んで月次売上を集計します。
+- `cancelled` の注文だけを集計から除外し、`cancelled` 以外の注文を含めます。
+- `ordered_at` を UTC として解釈し、日本時間（UTC+9）へ変換してから `YYYY-MM` を判定します。
+- `amount_incl_tax` を税込10%として扱い、`税込金額 / 1.1` の整数値を税抜金額として合計します。
+
+# 今回修正した点
+
+- 集計対象を `status == "completed"` のみに限定する実装から、`cancelled` のみを除外する実装へ変更しました。
+- `ordered_at` の先頭文字列から年月を取得する方法を、UTCからJSTへのタイムゾーン変換後に年月を取得する方法へ変更しました。
+- `amount_incl_tax` をそのまま合計する実装から、`1.1` で割った税抜金額の整数値を合計する実装へ変更しました。
+
+# 前提
+
+- 入力はヘッダー `order_id,ordered_at,amount_incl_tax,status` を持つUTF-8系のCSVです。
+- `ordered_at` は ISO 8601形式で、UTCとして記録されているものを日本時間へ変換します。
+- 金額は税込10%で記録された整数文字列です。
+- `cancelled` は前後空白と大小文字を正規化したうえで判定します。

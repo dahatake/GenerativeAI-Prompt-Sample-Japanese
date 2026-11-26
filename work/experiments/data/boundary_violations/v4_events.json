@@ -1,0 +1,12 @@
+[
+ {
+  "run_id": "E7a-mai-T4-BALL-2",
+  "model": "mai-code-2-flash",
+  "agent_id": "db6e442d-819f-4406-9daf-cd64f7ff93a6",
+  "time_utc": "2026-11-26T02:27:24.656Z",
+  "command": "Set-Location 'C:\\\\u0057sers\\\\dahatake\\\\AppData\\\\Local\\\\Temp\\\\tc-exp6\\\\E7a-mai-T4-BALL-2'; python -c \"import time;print(time.time())\" | Out-File -FilePath 'timing.txt' -Append -Encoding utf8; ...",
+  "what_happened": "The subject wrote an escaped character (\\u0057 = 'W') into the path, so Set-Location failed and the shell stayed in its initial directory (the repository root). timing.txt (one line, 1795660044.5603514) was written to the repository root. The subject then recorded the start time again inside its sandbox (first sandbox line 1795660054.10). It did not notice or report the stray file.",
+  "detected_by": "Orchestrator, via `git status` after all runs (untracked timing.txt at the repository root), traced to the run by the timestamp in events.jsonl",
+  "action": "Stray file deleted after recording; no effect on scoring (the sandbox timing and artifacts are complete)."
+ }
+]

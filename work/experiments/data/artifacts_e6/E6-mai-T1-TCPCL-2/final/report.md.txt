@@ -1,0 +1,56 @@
+# 実行レポート
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python -m unittest -v test_monthly_sales.py
+```
+
+出力:
+
+```text
+test_cancelled_excluded_and_other_status_included (test_monthly_sales.MonthlySalesTests.test_cancelled_excluded_and_other_status_included) ... ok
+test_empty_result_is_empty_dict (test_monthly_sales.MonthlySalesTests.test_empty_result_is_empty_dict) ... ok
+test_jst_month_boundary_and_gap_month (test_monthly_sales.MonthlySalesTests.test_jst_month_boundary_and_gap_month) ... ok
+test_row_rounding_missing_and_zero (test_monthly_sales.MonthlySalesTests.test_row_rounding_missing_and_zero) ... ok
+test_sample_sales (test_monthly_sales.MonthlySalesTests.test_sample_sales) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.045s
+
+OK
+```
+
+## Definition of Done 状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| 1. `monthly_sales(path)` が辞書を返す | 完了 | `test_sample_sales` は `dict` を検証し、全テストがOK |
+| 2. キーが `YYYY-MM` 形式 | 完了 | `test_sample_sales` はキー形式・月キー昇順を検証 |
+| 3. 値が `int` | 完了 | `test_sample_sales` は全値が `int`であることを検証 |
+| 4. `sales.csv` の月次期待値 | 完了 | サンプルは `{"2026-01":15000,"2026-02":10000,"2026-03":0,"2026-04":17000,"2026-05":7000}` を検証 |
+| 5. 欠落月を0で補完し昇順 | 完了 | サンプルの2026-03および境界テストの欠落月を検証 |
+| 6. `cancelled` を除外しその他を集計 | 完了 | キャンセル除外・`pending` 集計を検証 |
+| 7. 税抜換算と行ごとの丸め | 完了 | サンプル集計とROUND_HALF_UP相当の境界テストを検証 |
+
+## 採用した仮定
+
+- `status` が空白または欠損なら、欠損セルとして行を除外する。
+- `cancelled`以外のすべてのstatusを集計する（大文字小文字は無視する）。
+- `ordered_at` はUTCで記録されており、日本時間 UTC+09:00へ変換して暦月を判定する。タイムゾーン情報がない場合はUTCとして扱う。
+- `amount_incl_tax / 1.1` をDecimalで計算し、各行をROUND_HALF_UPで最も近い整数へ丸めてから合計する。
+- 欠損セルは行を除外し、ゼロは集計対象として月を作る。負数はキャンセルでなければ通常の金額として加算する。
+- 最初と最後の集計対象月の間の欠落月は0を補完する。集計対象行がなければ空のdictを返す。
+- 日付または金額が欠損ではなく不正な場合は `ValueError`を返す。
+- 必須ヘッダー `ordered_at`、`amount_incl_tax`、`status`がない場合は `ValueError`を返す。
+- 上限・下限、時間換算、数量換算、通貨換算は設けない。
+
+## 最終状態
+
+- 実装ファイル: `solution.py`
+- 承認済み契約: `contract.md`
+- 検証テスト: `test_monthly_sales.py`
+- 人間の追加確認: 不要
+

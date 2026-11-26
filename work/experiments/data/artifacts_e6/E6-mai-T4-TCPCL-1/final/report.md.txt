@@ -1,0 +1,65 @@
+# 実行レポート
+
+## 検証コマンド
+```text
+python -m unittest -v test_solution.py
+```
+
+## 検証出力
+```text
+test_confirmed_shifts_csv_contract (test_solution.MonthlyWorkHoursTests.test_confirmed_shifts_csv_contract) ... ok
+test_each_shift_is_floored_to_fifteen_minutes_after_break (test_solution.MonthlyWorkHoursTests.test_each_shift_is_floored_to_fifteen_minutes_after_break) ... ok
+test_employee_order_is_csv_first_appearance (test_solution.MonthlyWorkHoursTests.test_employee_order_is_csv_first_appearance) ... ok
+test_exactly_six_hours_has_no_break (test_solution.MonthlyWorkHoursTests.test_exactly_six_hours_has_no_break) ... ok
+test_night_shift_receives_break_and_is_overnight (test_solution.MonthlyWorkHoursTests.test_night_shift_receives_break_and_is_overnight) ... ok
+test_paid_leave_adds_7_5_hours_even_when_times_are_empty (test_solution.MonthlyWorkHoursTests.test_paid_leave_adds_7_5_hours_even_when_times_are_empty) ... ok
+test_same_missing_invalid_and_unknown_rows_are_handled (test_solution.MonthlyWorkHoursTests.test_same_missing_invalid_and_unknown_rows_are_handled) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.041s
+
+OK
+```
+
+## DoD 条件の状態
+1. `monthly_work_hours('shifts.csv')` が従業員ごとのdictを返す。
+   - 状態: 完了
+   - 証拠: `test_confirmed_shifts_csv_contract` が通過し、結果が `{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}` であることを検証。
+2. E001の合計が21.25時間になる。
+   - 状態: 完了
+   - 証拠: `09:00-18:00` は休憩後8.0時間、`09:00-14:50` は5.75時間、有給休暇7.5時間で、合計21.25時間。
+3. E002の合計が13.0時間になる。
+   - 状態: 完了
+   - 証拠: 夜勤は休憩後7.0時間、通常勤務6.0時間で合計13.0時間。
+4. E003の合計が8.25時間になる。
+   - 状態: 完了
+   - 証拠: `08:30-17:45` は拘束9.25時間から休憩60分を控除し、実労働8.25時間。
+5. `type=paid_leave` を時刻欄が空でも7.5時間として加算する。
+   - 状態: 完了
+   - 証拠: `test_paid_leave_adds_7_5_hours_even_when_times_are_empty` が通過。
+6. 夜勤 `22:00-06:00` を7.0時間として計算する。
+   - 状態: 完了
+   - 証拠: `test_night_shift_receives_break_and_is_overnight` が通過。
+7. 6時間ちょうどは休憩なし、実労働を15分単位で切り捨てる。
+   - 状態: 完了
+   - 証拠: `test_exactly_six_hours_has_no_break` と `test_each_shift_is_floored_to_fifteen_minutes_after_break` が通過。
+8. 欠損・不正時刻の `work` をスキップし、処理を停止しない。
+   - 状態: 完了
+   - 証拠: 欠損時刻・不正時刻・空の従業員ID・未知種別を含むテストが通過。欠損・不正時刻の従業員は結果に含めない。
+9. 出力dictのキーをCSV初出順にする。
+   - 状態: 完了
+   - 証拠: `test_employee_order_is_csv_first_appearance` が通過。
+
+## 採用した仮定
+- 対象期間はCSV内の全行を一つの月間集計とし、日付による月フィルタを行わない。
+- タイムゾーン変換は行わず、CSV記載の現地壁時計として扱う。
+- `type=work` のみ勤務実績として集計する。
+- `type=paid_leave` は時刻に関係なく従業員ごとに7.5時間を加算する。
+- 終了時刻が開始時刻より前なら翌日終了とする。
+- 開始時刻と終了時刻が同じ場合は0時間とする。
+- 拘束時間が6時間を超える場合のみ60分休憩を控除し、ちょうど6時間は控除しない。
+- 休憩控除後の各シフトを15分単位で切り捨て、合計時はシフトごとの切り捨て済み分数を加算する。
+- 欠損時刻・不正時刻の `work` 行はスキップし、従業員を結果に追加しない。
+- 空の従業員ID、未知の `type` は集計対象外とする。
+- 戻り値は従業員IDをキー、労働時間floatを値とするdictで、キー順はCSV初出順とする。
+- 金額・税・時差・Excel形式・外部データソースは対象外とする。

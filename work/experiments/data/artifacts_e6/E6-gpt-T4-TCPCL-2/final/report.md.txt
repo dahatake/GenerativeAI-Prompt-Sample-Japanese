@@ -1,0 +1,48 @@
+# 実行レポート — 月間労働時間の集計
+
+`answers.md` の回答を `contract.md` に反映し、`solution.py` に `monthly_work_hours(path)` を実装した。不足情報はなく、追加確認は行っていない。
+
+## Definition of Done
+
+| ID | 状態 | 検証結果 |
+| --- | --- | --- |
+| D1 | 完了 | サンプルは `E001: 21.25`、`E002: 13.0`、`E003: 8.25`。キーの順序・値の `float` 型を確認し、入力のバイト列は変化しなかった。 |
+| D2 | 完了 | 月末夜勤を開始月に全量計上して `8.0`。翌月または別年同月の `work`・`paid_leave` を加えると `ValueError`。 |
+| D3 | 完了 | 拘束 `5:50`、`6:00`、`6:01`、`8:00`、`8:01` の結果は `5.75`、`6.0`、`5.0`、`7.0`、`7.0`。 |
+| D4 | 完了 | 時刻が空欄または不正な有休でも 1 行 `7.5`、2 行 `15.0`。ヘッダーだけなら `{}`。 |
+| D5 | 完了 | 同時刻と 14 分勤務の従業員を `0.0`（`float`）で残し、最長拘束 1,439 分の結果は `22.75`。 |
+| D6 | 完了 | 不正ヘッダー・列数・CSV 引用符、必須値欠損、`24:00`、書式違反、不正日付、未知の種別で `ValueError`。正常行が先行しても結果は返らず、存在しないパスでは `FileNotFoundError`。 |
+| D7 | 完了 | ID は `001`、`2` の順。`001` の各 74 分を 60 分に切り捨ててから合算し、`2.0` 時間になる。 |
+| D8 | 完了 | BOM、列順の変更、空行、値の前後空白、引用符内のコンマを許容し、`status=rejected` の同一行 2 件を除外せず `2.0` 時間とした。 |
+
+## 採用した仮定・確定値
+
+- **対象月・日時:** `date` は固定 UTC+09:00 の開始日で、タイムゾーン変換はしない。対象月は年と月の組（現地月初 `00:00` を含み翌月初を含まない）。集計行が複数月ならエラー。夜勤は開始月に全量計上し、時刻が逆順なら翌日終了、同一なら 0 分。拘束の範囲は 0–1,439 分で、月合計に追加上限はない。
+- **対象・除外:** 大小文字を区別して `work` と `paid_leave` のみ。未知の種別はエラー。`status` で除外せず、重複・重なりも行単位で算入する。有休は時刻を参照せず 1 行 450 分で、控除・丸めをしない。
+- **控除・換算:** `work` の拘束が 360 分以下なら控除なし、361 分以上なら 60 分控除する。その後に勤務ごとに 15 分単位で切り捨て、従業員別に合算して 60 で割る。その他の控除・換算・月合計の丸めはない。
+- **欠損・不正:** UTF-8（BOM 任意）のコンマ区切り CSV。必須 5 列は順不同で追加列は無視し、重複列名はエラー。完全な空行は読み飛ばし、データ行の列数はヘッダーと一致させる。必須値は前後空白を除いて判定する。ID・日付・種別と `work` の時刻は必須で、不正な入力は `ValueError`、I/O エラーは伝播する。
+- **出力:** 先頭ゼロを保持した文字列 ID を昇順で挿入する。値は時間の `float`。有効行がある従業員はゼロでも `0.0` として残し、対象行がなければ `{}`。
+- **金額:** 入出力に金額はなく、税込・税抜、通貨丸め、給与計算は対象外。
+
+## テストの実行証拠
+
+コマンド: `python -B -m unittest -v test_solution`
+
+```text
+test_d1_sample_hours_type_order_and_read_only (test_solution.MonthlyWorkHoursTests.test_d1_sample_hours_type_order_and_read_only) ... ok
+test_d2_month_end_overnight_and_mixed_months (test_solution.MonthlyWorkHoursTests.test_d2_month_end_overnight_and_mixed_months) ... ok
+test_d3_break_threshold_and_rounding (test_solution.MonthlyWorkHoursTests.test_d3_break_threshold_and_rounding) ... ok
+test_d4_leave_without_times_and_header_only (test_solution.MonthlyWorkHoursTests.test_d4_leave_without_times_and_header_only) ... ok
+test_d5_zero_and_maximum_shift (test_solution.MonthlyWorkHoursTests.test_d5_zero_and_maximum_shift) ... ok
+test_d6_invalid_csv_and_values (test_solution.MonthlyWorkHoursTests.test_d6_invalid_csv_and_values) ... ok
+test_d6_missing_path_propagates_io_error (test_solution.MonthlyWorkHoursTests.test_d6_missing_path_propagates_io_error) ... ok
+test_d7_id_order_and_round_each_shift_before_summing (test_solution.MonthlyWorkHoursTests.test_d7_id_order_and_round_each_shift_before_summing) ... ok
+test_d8_bom_reordered_header_ignored_status_and_duplicate_rows (test_solution.MonthlyWorkHoursTests.test_d8_bom_reordered_header_ignored_status_and_duplicate_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.509s
+
+OK
+```
+
+終了コード: `0`。

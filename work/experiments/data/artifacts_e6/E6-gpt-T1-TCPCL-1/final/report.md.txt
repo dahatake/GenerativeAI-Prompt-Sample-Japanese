@@ -1,0 +1,59 @@
+# 月次売上集計 実行レポート
+
+## Definition of Done
+
+| 条件 | 状態 | 検証内容 |
+|---|---|---|
+| DoD 1：実データの月別税抜金額・順序・型 | 完了 | `test_dod1_*`：実ファイルを集計し、3月の `0` を含む5か月の値とキー順、および全値の `int` 型を照合。 |
+| DoD 2：JSTの月・年境界と出力順 | 完了 | `test_dod2_*`：月初直前とちょうど月初の時刻を、1月末と年末の両方で検証。未整列の入力でも月の昇順で返る。 |
+| DoD 3：丸め・対象行・補完・ゼロ件 | 完了 | `test_dod3_*`：正負それぞれの月単位の切り捨て、整数精度、対象外の行が期間を延ばさないこと、ゼロ行・相殺・空き月、ヘッダーのみ・対象行なしを検証。 |
+| DoD 4：入力不備と部分集計の禁止 | 完了 | `test_dod4_*`：必須列3種の欠落、空欄・空白のみのステータス、日時・金額の欠損と形式違反、実在しない日付、年範囲の超過で `ValueError`。直前に正常行があっても部分結果を返さない。 |
+
+## 採用した仮定・業務ルール
+
+- 日時は秒精度のUTC表記（`YYYY-MM-DDTHH:MM:SSZ`）に限り、固定UTC+09:00に換算する。日時の年は換算前後とも `0001`〜`9999`。月初ちょうどは新しい月に入れ、入力の期間を日付で切り詰めない。
+- `status` が `completed` と完全一致する行だけを計上する。負額は減額として扱い、ゼロも有効。注文種別による追加選別や注文IDの重複排除は行わない。
+- 金額は符号付き10進整数。月内の税込額を合算した後、税率10%に対応する `10/11` を整数演算で適用し、1回だけ0方向へ切り捨てる。明細単位の丸め、追加の値引き、通貨・数量・時間の換算は行わない。業務上の金額上下限は設けない。
+- `completed` 行のJST最初月から最後月まで両端を含めて月の昇順で返す。途中の対象行がない月は `0`、相殺などで合計が `0` の月も残す。対象行が一件もなければ `{}`。
+- CSVはUTF-8（BOM可）、ヘッダー付き、カンマ区切り。必須の3列以外は無視する。必須列がない場合、`status` が空欄または空白のみの場合、対象行の日付や金額が欠損・不正な場合は `ValueError`。対象外の行の日付・金額は検証しない。
+
+## 検証コマンドと出力
+
+Python 3.12.10。作業ディレクトリで実行し、テストはすべて終了コード `0`。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_dod1_sample_totals_order_and_integer_types (test_solution.MonthlySalesTests.test_dod1_sample_totals_order_and_integer_types) ... ok
+test_dod2_jst_month_and_year_boundaries_in_unsorted_input (test_solution.MonthlySalesTests.test_dod2_jst_month_and_year_boundaries_in_unsorted_input) ... ok
+test_dod3_completed_only_span_preserves_zero_rows_and_months (test_solution.MonthlySalesTests.test_dod3_completed_only_span_preserves_zero_rows_and_months) ... ok
+test_dod3_header_only_or_no_completed_rows_returns_empty_dict (test_solution.MonthlySalesTests.test_dod3_header_only_or_no_completed_rows_returns_empty_dict) ... ok
+test_dod3_rounds_monthly_toward_zero_and_keeps_integer_precision (test_solution.MonthlySalesTests.test_dod3_rounds_monthly_toward_zero_and_keeps_integer_precision) ... ok
+test_dod4_invalid_rows_do_not_return_partial_results (test_solution.MonthlySalesTests.test_dod4_invalid_rows_do_not_return_partial_results) ... ok
+test_dod4_missing_required_columns_raise_value_error (test_solution.MonthlySalesTests.test_dod4_missing_required_columns_raise_value_error) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.551s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+Pylanceの構文チェックはタイムアウトしたため、Pythonコンパイラでも両ファイルの構文を別途確認した。
+
+```powershell
+python -B -c "from pathlib import Path; names = ('solution.py', 'test_solution.py'); [compile(Path(name).read_bytes(), name, 'exec') for name in names]; print('Syntax OK: ' + ', '.join(names))"
+```
+
+```text
+Syntax OK: solution.py, test_solution.py
+```

@@ -1,0 +1,45 @@
+run_id,experiment,model,task,condition,rep,R0,R1,R2,R3,R4,hidden_pass,errors,phase_seconds,active_seconds_total,followup_used,answer_items,answer_items_specific,p1_hidden_pass,regressions,rework_changed_lines
+E6-mai-T1-TCP-1,E6,mai-code-2-flash,T1,TCP,1,True,True,True,False,True,3,{},"[76.1, 162.2]",238.3,False,4,3,,,
+E6-mai-T1-TCP-2,E6,mai-code-2-flash,T1,TCP,2,True,True,True,False,True,3,{},"[49.4, 163.6]",213.0,False,5,3,,,
+E6-mai-T1-TCPCL-1,E6,mai-code-2-flash,T1,TCPCL,1,True,True,True,True,True,4,{},"[56.6, 38.0, 129.4]",224.0,True,8,6,,,
+E6-mai-T1-TCPCL-2,E6,mai-code-2-flash,T1,TCPCL,2,True,True,True,True,True,4,{},"[52.0, 34.8, 112.1]",198.9,True,9,4,,,
+E6-mai-T1-TCPCL-3,E6,mai-code-2-flash,T1,TCPCL,3,True,True,True,True,True,4,{},"[59.3, 41.2, 293.2]",393.8,True,4,3,,,
+E7a-mai-T1-BALL-1,E7a,mai-code-2-flash,T1,BALL,1,True,True,True,False,True,3,{},"[50.1, 108.1]",158.2,False,14,3,1,,54
+E7a-mai-T1-BALL-2,E7a,mai-code-2-flash,T1,BALL,2,True,True,True,False,False,2,{},"[62.2, 60.1]",122.4,False,9,3,1,,23
+E7a-mai-T1-BALL-3,E7a,mai-code-2-flash,T1,BALL,3,True,True,True,True,True,4,{},"[62.4, 84.1]",146.5,False,11,5,1,,45
+E7b-mai-T1-OFULL-1,E7b,mai-code-2-flash,T1,OFULL,1,True,True,True,True,False,3,{},[76.5],76.5,False,4,4,1,,30
+E7b-mai-T1-OFILE-1,E7b,mai-code-2-flash,T1,OFILE,1,True,True,True,False,False,2,{},[79.3],79.3,False,3,1,1,,27
+E7b-mai-T1-OFULL-2,E7b,mai-code-2-flash,T1,OFULL,2,True,True,True,True,True,4,{},[81.0],81.0,False,5,4,1,,49
+E7b-mai-T1-OFILE-2,E7b,mai-code-2-flash,T1,OFILE,2,True,True,False,False,False,1,{},[40.8],40.8,False,3,0,1,,0
+E6-mai-T4-TCP-1,E6,mai-code-2-flash,T4,TCP,1,True,True,True,True,True,4,{},"[65.2, 113.6]",178.9,False,7,4,,,
+E6-mai-T4-TCP-2,E6,mai-code-2-flash,T4,TCP,2,True,True,False,True,True,3,{},"[44.0, 109.8]",153.8,False,4,3,,,
+E6-mai-T4-TCPCL-1,E6,mai-code-2-flash,T4,TCPCL,1,True,True,True,True,True,4,{},"[78.4, 149.7]",228.0,False,3,2,,,
+E6-mai-T4-TCPCL-2,E6,mai-code-2-flash,T4,TCPCL,2,True,True,True,True,True,4,{},"[43.7, 141.8]",185.6,False,9,4,,,
+E6-mai-T4-TCPCL-3,E6,mai-code-2-flash,T4,TCPCL,3,True,True,False,True,True,3,{},"[72.3, 92.4]",164.7,False,10,3,,,
+E7a-mai-T4-BALL-1,E7a,mai-code-2-flash,T4,BALL,1,True,True,True,True,True,4,{},"[64.8, 90.8]",155.7,False,12,4,1,,45
+E7a-mai-T4-BALL-2,E7a,mai-code-2-flash,T4,BALL,2,True,True,True,True,True,4,{},"[90.8, 108.5]",199.3,False,18,6,1,,31
+E7a-mai-T4-BALL-3,E7a,mai-code-2-flash,T4,BALL,3,True,True,True,True,True,4,{},"[125.8, 128.6]",254.4,False,14,2,1,,11
+E7b-mai-T4-OFULL-1,E7b,mai-code-2-flash,T4,OFULL,1,True,True,True,True,True,4,{},[80.2],80.2,False,6,3,1,,29
+E7b-mai-T4-OFILE-1,E7b,mai-code-2-flash,T4,OFILE,1,True,True,False,False,True,2,{},[82.6],82.6,False,4,0,1,,37
+E7b-mai-T4-OFULL-2,E7b,mai-code-2-flash,T4,OFULL,2,True,True,False,False,True,2,{},[85.7],85.7,False,3,3,1,,9
+E7b-mai-T4-OFILE-2,E7b,mai-code-2-flash,T4,OFILE,2,True,True,False,False,True,2,{},[70.0],70.0,False,3,1,1,,10
+E6-gpt-T1-TCP-1,E6,gpt-6.2-sol,T1,TCP,1,True,True,True,True,True,4,{},"[89.4, 37.2, 352.7]",479.3,True,5,4,,,
+E6-gpt-T1-TCP-2,E6,gpt-6.2-sol,T1,TCP,2,True,True,True,False,True,3,{},"[47.9, 106.4]",154.3,False,6,2,,,
+E6-gpt-T1-TCPCL-1,E6,gpt-6.2-sol,T1,TCPCL,1,True,True,True,True,True,4,{},"[87.8, 34.9, 319.3]",442.0,True,3,2,,,
+E6-gpt-T1-TCPCL-2,E6,gpt-6.2-sol,T1,TCPCL,2,True,True,True,True,True,4,{},"[73.1, 25.4, 162.3]",260.8,True,8,4,,,
+E6-gpt-T1-TCPCL-3,E6,gpt-6.2-sol,T1,TCPCL,3,True,True,True,True,True,4,{},"[74.7, 29.3, 333.4]",437.5,True,5,4,,,
+E7a-gpt-T1-BALL-1,E7a,gpt-6.2-sol,T1,BALL,1,True,True,True,True,True,4,{},"[62.8, 62.4]",125.2,False,7,4,1,,25
+E7a-gpt-T1-BALL-2,E7a,gpt-6.2-sol,T1,BALL,2,True,True,True,True,True,4,{},"[64.6, 51.0]",115.6,False,7,4,2,,18
+E7a-gpt-T1-BALL-3,E7a,gpt-6.2-sol,T1,BALL,3,True,True,True,True,True,4,{},"[67.7, 57.7]",125.5,False,6,4,2,,19
+E7b-gpt-T1-OFULL-1,E7b,gpt-6.2-sol,T1,OFULL,1,True,True,True,True,True,4,{},[53.9],53.9,False,4,4,2,,22
+E7b-gpt-T1-OFILE-1,E7b,gpt-6.2-sol,T1,OFILE,1,True,True,True,False,False,2,{},[45.9],45.9,False,0,0,2,,0
+E7b-gpt-T1-OFULL-2,E7b,gpt-6.2-sol,T1,OFULL,2,True,True,True,True,True,4,{},[60.8],60.8,False,4,4,2,,23
+E7b-gpt-T1-OFILE-2,E7b,gpt-6.2-sol,T1,OFILE,2,True,True,True,True,True,4,{},[80.4],80.4,False,6,4,2,,20
+E6-gpt-T4-TCP-1,E6,gpt-6.2-sol,T4,TCP,1,True,True,True,True,True,4,{},"[78.1, 312.2]",390.3,False,7,3,,,
+E6-gpt-T4-TCP-2,E6,gpt-6.2-sol,T4,TCP,2,True,True,True,True,True,4,{},"[70.2, 111.7]",181.9,False,6,3,,,
+E6-gpt-T4-TCPCL-1,E6,gpt-6.2-sol,T4,TCPCL,1,True,True,True,True,True,4,{},"[85.7, 142.3]",228.0,False,8,4,,,
+E6-gpt-T4-TCPCL-2,E6,gpt-6.2-sol,T4,TCPCL,2,True,True,True,True,True,4,{},"[92.3, 124.3]",216.6,False,9,3,,,
+E6-gpt-T4-TCPCL-3,E6,gpt-6.2-sol,T4,TCPCL,3,True,True,True,True,True,4,{},"[90.3, 136.2]",226.5,False,3,2,,,
+E7a-gpt-T4-BALL-1,E7a,gpt-6.2-sol,T4,BALL,1,True,True,True,True,True,4,{},"[75.8, 59.9]",135.7,False,7,3,1,,8
+E7a-gpt-T4-BALL-2,E7a,gpt-6.2-sol,T4,BALL,2,True,True,True,True,True,4,{},"[69.5, 43.2]",112.7,False,7,2,1,,13
+E7a-gpt-T4-BALL-3,E7a,gpt-6.2-sol,T4,BALL,3,True,True,True,True,True,4,{},"[74.2, 54.0]",128.2,False,7,0,1,,11

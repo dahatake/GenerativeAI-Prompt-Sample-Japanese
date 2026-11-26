@@ -1,0 +1,17 @@
+前の会話で、あなたは次の Task Contract 案と質問を示しました。
+
+<<<CONTRACT
+{CONTRACT}
+CONTRACT>>>
+
+質問への私の回答です。
+
+<<<ANSWERS
+{ANSWERS}
+ANSWERS>>>
+
+値がそろっている点と回答がない点は、あなたの推奨既定案で進めてください（これ以上の確認はできません）。
+Task Contract を回答で更新し、承認済みとして実行してください（Execution Mode）。
+- monthly_sales(path) を Python で実装し、コードを実際に実行して、上のデータでの結果の dict を示してください。
+- Definition of Done の各条件について、検証用のコードを実行し、そのコードと出力を証拠として示してください。
+- 最後に、各 DoD 条件の状態（完了 / 証拠不足 / 人間の確認が必要）と、採用した仮定の一覧を書いてください。

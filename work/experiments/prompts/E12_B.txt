@@ -1,0 +1,18 @@
+次の sales.csv の売上を月次で集計する関数 monthly_sales(path) を Python で実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+
+sales.csv の内容:
+```
+order_id,ordered_at,amount_incl_tax,status
+A-1001,2026-01-05T02:15:00Z,11000,completed
+A-1002,2026-01-12T09:40:00Z,5500,completed
+A-1003,2026-01-20T23:30:00Z,22000,cancelled
+A-1004,2026-01-31T16:20:00Z,3300,completed
+A-1005,2026-02-03T05:00:00Z,8800,completed
+A-1006,2026-02-14T11:11:00Z,-1100,completed
+A-1007,2026-02-27T13:45:00Z,4400,cancelled
+A-1008,2026-04-02T00:30:00Z,16500,completed
+A-1009,2026-04-18T08:05:00Z,2200,completed
+A-1010,2026-04-30T15:30:00Z,7700,completed
+```
+
+コードを実際に実行して、このデータでの結果の dict を示してください。作業が終わったら、実装内容と前提にしたことを簡潔に書いてください。

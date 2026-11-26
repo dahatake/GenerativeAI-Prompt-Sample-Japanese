@@ -1,0 +1,49 @@
+# 実行結果レポート
+
+## 各 Definition of Done
+
+| 条件 | 状態 | 証拠 |
+|---|---|---|
+| `monthly_work_hours("shifts.csv")` がdictを返す | 完了 | `test_sample_contract` がサンプルdictを検証済み。コマンド: `python -m unittest -v test_solution.py` |
+| サンプル合計が承認ルール通り | 完了 | 期待値は E001=21.25、E002=13.0、E003=8.25。テスト成功。 |
+| 戻り値の値がfloat | 完了 | `test_sample_contract` で全valueが `float` 型であることを検証済み。 |
+| 欠損時刻の `paid_leave` を7.5時間として含める | 完了 | `test_paid_leave_missing_times_and_aggregation` が開始・終了空欄の有給休暇を7.5時間として集計することを検証済み。 |
+| 休憩、跨日、6時間境界、15分切り捨てを検証 | 完了 | `test_threshold_crossing_and_rounding` が、6時間ちょうどは休憩なし、6時間超は60分控除、跨日、15分切り捨てを検証済み。 |
+| 同じ従業員の複数シフトを合計 | 完了 | サンプルテストと `test_paid_leave_missing_times_and_aggregation` が複数行の合計を検証済み。 |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```text
+python -m unittest -v test_solution.py
+```
+
+出力:
+
+```text
+test_invalid_work_time_raises_value_error (test_solution.MonthlyWorkHoursTests.test_invalid_work_time_raises_value_error) ... ok
+test_missing_work_times_are_skipped (test_solution.MonthlyWorkHoursTests.test_missing_work_times_are_skipped) ... ok
+test_paid_leave_missing_times_and_aggregation (test_solution.MonthlyWorkHoursTests.test_paid_leave_missing_times_and_aggregation) ... ok
+test_sample_contract (test_solution.MonthlyWorkHoursTests.test_sample_contract) ... ok
+test_threshold_crossing_and_rounding (test_solution.MonthlyWorkHoursTests.test_threshold_crossing_and_rounding) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.027s
+
+OK
+```
+
+## 採用した仮定一覧
+- 金額要件は適用外。
+- タイムゾーン/DSTは考慮せず、CSV内時刻をローカル時刻として扱う。
+- CSV内の全行を従業員ごとに合計し、月フィルタ・月別dictは行わない。
+- 集計対象は `work` と `paid_leave`。
+- `paid_leave` は時刻欠損にかかわらず各行7.5時間。
+- 終了時刻が開始時刻より前なら翌日終了として加算。
+- 結束時間がちょうど6時間なら休憩0分、6時間超なら60分控除。
+- 各シフトの休憩控除後実労働時間を分で求め、15分単位で切り捨て。
+- 欠損の `work` 行はスキップ、不正な時刻形式は `ValueError`。
+- 開始・終了時刻が同一の `work` は0時間。
+- 出力は従業員IDキー・float値のdict。キー順は保証しない。
+

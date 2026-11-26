@@ -1,0 +1,62 @@
+[
+ {
+  "run_id": "E12-B-1",
+  "conversationId": "bb9c6b11-6404-47b2-b6ad-2a02f5c36260",
+  "reported_dict": {
+   "2026-01": 19800,
+   "2026-02": 7700,
+   "2026-04": 26400
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": false,
+    "R3": false,
+    "R4": false,
+    "rounding": null
+   }
+  ],
+  "stated_assumptions": "completed のみ（cancelled 除外）、負額はそのまま合算、UTC の年月、データのない 2026-03 は含めない、金額は int（3回とも同じ。税への言及なし）",
+  "note": "Response began with the user's personalized 4-point preamble and a rewritten prompt (Copilot personalization), then code and result."
+ },
+ {
+  "run_id": "E12-B-2",
+  "conversationId": "75d79054-de60-4111-a996-4d6b1e3bf034",
+  "reported_dict": {
+   "2026-01": 19800,
+   "2026-02": 7700,
+   "2026-04": 26400
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": false,
+    "R3": false,
+    "R4": false,
+    "rounding": null
+   }
+  ],
+  "stated_assumptions": "completed のみ（cancelled 除外）、負額はそのまま合算、UTC の年月、データのない 2026-03 は含めない、金額は int（3回とも同じ。税への言及なし）",
+  "note": "Response began with the user's personalized 4-point preamble and a rewritten prompt (Copilot personalization), then code and result."
+ },
+ {
+  "run_id": "E12-B-3",
+  "conversationId": "75fc63f7-4e54-4bbc-bc70-7ead9b431e1f",
+  "reported_dict": {
+   "2026-01": 19800,
+   "2026-02": 7700,
+   "2026-04": 26400
+  },
+  "decoded": [
+   {
+    "R1": true,
+    "R2": false,
+    "R3": false,
+    "R4": false,
+    "rounding": null
+   }
+  ],
+  "stated_assumptions": "completed のみ（cancelled 除外）、負額はそのまま合算、UTC の年月、データのない 2026-03 は含めない、金額は int（3回とも同じ。税への言及なし）",
+  "note": "Response began with the user's personalized 4-point preamble and a rewritten prompt (Copilot personalization), then code and result."
+ }
+]

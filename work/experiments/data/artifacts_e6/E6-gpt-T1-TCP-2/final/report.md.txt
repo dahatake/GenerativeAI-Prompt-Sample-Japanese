@@ -1,0 +1,52 @@
+# 月次売上集計 実行報告
+
+`answers.md` の回答で必要な値がそろったため、追加確認は行わず、`contract.md` を承認済みに更新して `solution.py` に `monthly_sales(path)` を実装した。
+
+## Definition of Done
+
+| 条件 | 状態 | 検証した内容・テスト |
+| --- | --- | --- |
+| 1. 実データの結果、整数値、入力の保持 | 完了 | `test_sales_csv`：5 か月の期待値と完全一致、全値が `int`、集計前後で `sales.csv` のバイト列が一致。 |
+| 2. 月・年境界と補完範囲 | 完了 | `test_year_boundary_gap_and_cancelled_bounds`：未整列の入力で JST の月・年境界、空き月の `0`、相殺された月の `0`、キャンセルが範囲に影響しないことを確認。 |
+| 3. 対象行なし | 完了 | `test_no_completed_orders`：ヘッダーのみ・キャンセルのみの両方が `{}`。 |
+| 4. CSV の形式と重複 | 完了 | `test_bom_reordered_columns_blank_lines_and_duplicate_orders`：BOM、列順の違い、空行を処理し、同じ注文 ID の `+7` と `-2` を別々に加算。 |
+| 5. エラー処理 | 完了 | `test_invalid_csv` と `test_missing_file`：ヘッダー・列数・引用符・日時・金額・ステータスの異常は `ValueError`、存在しないファイルは `FileNotFoundError`。 |
+
+## 採用した仮定と決定
+
+- 日時は UTC として読み、固定 JST（`UTC+09:00`）に変換してから月を決める。
+- `completed` のみ集計する。税込金額の負額は符号どおり加算し、換算・丸めはしない。
+- 最初と最後の対象月を含む範囲を返す。対象行がない月は整数 `0`、対象行が一件もなければ `{}`。
+- UTF-8（先頭 BOM 可）のカンマ区切り CSV。列は名前で特定し、必要列は `ordered_at`、`amount_incl_tax`、`status`。実在する日付の `YYYY-MM-DDTHH:MM:SSZ` と符号付き可の十進整数を受け付ける。
+- 完全な空行は無視する。不正な行（キャンセル行も含む）や未定義のステータスは `ValueError`、I/O エラーは呼び出し元にそのまま伝える。
+- 1 行を 1 件として扱い、`order_id` による重複排除はしない。辞書のキー順は要件としない。
+
+## 実行証拠
+
+作業ディレクトリで実行。どちらのコマンドも終了コード `0`。
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_bom_reordered_columns_blank_lines_and_duplicate_orders (test_solution.MonthlySalesTests.test_bom_reordered_columns_blank_lines_and_duplicate_orders) ... ok
+test_invalid_csv (test_solution.MonthlySalesTests.test_invalid_csv) ... ok
+test_missing_file (test_solution.MonthlySalesTests.test_missing_file) ... ok
+test_no_completed_orders (test_solution.MonthlySalesTests.test_no_completed_orders) ... ok
+test_sales_csv (test_solution.MonthlySalesTests.test_sales_csv) ... ok
+test_year_boundary_gap_and_cancelled_bounds (test_solution.MonthlySalesTests.test_year_boundary_gap_and_cancelled_bounds) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.011s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 16500, '2026-02': 11000, '2026-03': 0, '2026-04': 18700, '2026-05': 7700}
+```

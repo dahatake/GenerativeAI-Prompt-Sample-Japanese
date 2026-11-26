@@ -1,0 +1,194 @@
+[
+ {
+  "id": "T1-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "sales.csv に cancelled の注文があるが、それを除外するかは示されていない。"
+ },
+ {
+  "id": "T1-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "ordered_at に Z 付きの日時があるが、JST で月を判定するとは導けない。"
+ },
+ {
+  "id": "T1-R3",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "金額列は amount_incl_tax だが、税率や税抜への換算方法は示されていない。"
+ },
+ {
+  "id": "T1-R4",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "2026年3月の注文がなく月が飛んでいるが、欠損月を0で含めるとは導けない。"
+ },
+ {
+  "id": "T2-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "同名の人物に空白付き・大文字小文字違いのメールがあるが、比較時の正規化方法は示されていない。"
+ },
+ {
+  "id": "T2-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "同じメールとみなし得る人物のレコードに異なる updated_at があるが、どれを残すかは示されていない。"
+ },
+ {
+  "id": "T2-R3",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "重複候補のレコードが異なる位置にあるが、出力順の規則は示されていない。"
+ },
+ {
+  "id": "T2-R4",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "email が空文字または null のレコードがあるが、その扱いは示されていない。"
+ },
+ {
+  "id": "T3-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "例は INV-YYYYMM-NNNN 形式だが、小文字や区切り違いを許すかは導けない。"
+ },
+ {
+  "id": "T3-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "番号例に年月部分があるが、有効な年・月の範囲は示されていない。"
+ },
+ {
+  "id": "T3-R3",
+  "cue": "no",
+  "value": "no",
+  "evidence": "例に連番 0000 はなく、0000 を不正とする手がかりはない。"
+ },
+ {
+  "id": "T3-R4",
+  "cue": "no",
+  "value": "no",
+  "evidence": "依頼文・番号例に文字列以外の入力を扱う手がかりはない。"
+ },
+ {
+  "id": "T4-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "E002 の勤務は終了時刻が開始時刻より前だが、翌日終了として扱うとは示されていない。"
+ },
+ {
+  "id": "T4-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "6時間を超える勤務があるが、休憩控除の条件や時間は示されていない。"
+ },
+ {
+  "id": "T4-R3",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "15分単位でない勤務時間があるが、丸めの単位・方法は示されていない。"
+ },
+ {
+  "id": "T4-R4",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "type に paid_leave があるが、その計上時間は示されていない。"
+ },
+ {
+  "id": "T5-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "日付付きの出荷履歴と today 引数があるが、平均の対象期間や計算方法は示されていない。"
+ },
+ {
+  "id": "T5-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "stock と on_order の列があるが、在庫判定で合算するとは示されていない。"
+ },
+ {
+  "id": "T5-R3",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "lead_time_days・safety_stock・lot の列があるが、発注点や発注数の式は示されていない。"
+ },
+ {
+  "id": "T5-R4",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "discontinued が true の品目があるが、発注対象から除外するとは示されていない。"
+ },
+ {
+  "id": "T5-R5",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "複数品目と qty を返す依頼だが、並び順と型は示されていない。"
+ },
+ {
+  "id": "T5-R6",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "発注計画に必要な在庫・出荷値はあるが、発注点と等しい場合の扱いは示されていない。"
+ },
+ {
+  "id": "T6-R1",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "ordered_at に Z 付きの日時があるが、計上月をJSTで判定するとは示されていない。"
+ },
+ {
+  "id": "T6-R2",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "status に completed・shipped・cancelled・returned があるが、対象 status は示されていない。"
+ },
+ {
+  "id": "T6-R3",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "SKUごとに異なる effective_from の価格があるが、注文日との対応規則は示されていない。"
+ },
+ {
+  "id": "T6-R4",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "商品に food と general の category があるが、category ごとの税率は示されていない。"
+ },
+ {
+  "id": "T6-R5",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "顧客に gold と standard の tier があるが、tier による値引き規則は示されていない。"
+ },
+ {
+  "id": "T6-R6",
+  "cue": "no",
+  "value": "no",
+  "evidence": "値引きの端数処理を論点として示す入力上の手がかりはない。"
+ },
+ {
+  "id": "T6-R7",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "tax を含む請求額と複数 category が示されているが、税の集計単位や端数処理は示されていない。"
+ },
+ {
+  "id": "T6-R8",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "invoice_id と複数顧客が示されているが、番号の形式・採番順は導けない。"
+ },
+ {
+  "id": "T6-R9",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "C005 の注文は returned のみだが、請求対象のない顧客に請求書を作るかは示されていない。"
+ },
+ {
+  "id": "T6-R10",
+  "cue": "yes",
+  "value": "no",
+  "evidence": "同一顧客に複数の注文日時があるが、lines の並び順は示されていない。"
+ }
+]

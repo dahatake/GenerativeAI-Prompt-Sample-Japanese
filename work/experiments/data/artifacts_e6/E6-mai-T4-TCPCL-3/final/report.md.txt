@@ -1,0 +1,54 @@
+# 実行レポート
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python test_solution.py
+```
+
+出力:
+
+```text
+test_each_shift_is_rounded_down_to_15_minutes (__main__.MonthlyWorkHoursTests.test_each_shift_is_rounded_down_to_15_minutes) ... ok
+test_equal_times_and_normal_shift_boundaries (__main__.MonthlyWorkHoursTests.test_equal_times_and_normal_shift_boundaries) ... ok
+test_missing_and_invalid_rows_are_skipped (__main__.MonthlyWorkHoursTests.test_missing_and_invalid_rows_are_skipped) ... ok
+test_overnight_and_multiple_rows (__main__.MonthlyWorkHoursTests.test_overnight_and_multiple_rows) ... ok
+test_paid_leave_is_7_5_hours (__main__.MonthlyWorkHoursTests.test_paid_leave_is_7_5_hours) ... ok
+test_sample_contract_values (__main__.MonthlyWorkHoursTests.test_sample_contract_values) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.170s
+
+OK
+```
+
+## 各Definition of Doneの状態
+
+- DoD 1 — 完了: `solution.py` に `monthly_work_hours(path)` を実装し、テストからimportできる。
+- DoD 2 — 完了: サンプルで `E001=22.25`, `E002=14.0`, `E003=9.25` を確認。
+- DoD 3 — 完了: `paid_leave` を除外せず7.5時間として加算するテストが成功。
+- DoD 4 — 完了: 戻り値の値がすべて `float` であることをサンプルテストで確認。
+- DoD 5 — 完了: `22:00`〜`06:00` を8.0時間として集計するテストが成功。
+- DoD 6 — 完了: 複数のwork行を従業員ごとに合算するテストが成功。
+- DoD 7 — 完了: 欠損時刻、不正時刻、未知type、欠損employeeの行をスキップするテストが成功。
+- DoD 8 — 完了: 同時刻は0時間、通常勤務と00:00境界をテストで確認。
+
+証拠不足の項目: なし。
+人間の確認が必要な項目: なし。
+
+## 採用した仮定一覧
+
+- CSV内の全行を従業員ごとに合算し、年月キーを返さない。
+- タイムゾーンを使わず、ローカル時刻として解釈する。
+- 各シフトの実労働時間を分単位で15分切り捨てする。合算後ではなくシフトごとに切り捨てる。
+- `paid_leave` は従業員ごとに7.5時間を加算する。
+- 終了時刻が開始時刻より前なら翌日またぎとして計算する。
+- work行の従業員・開始時刻・終了時刻が欠損または不正ならその行をスキップする。
+- 欠損employeeと未知typeの行をスキップする。
+- 開始時刻と終了時刻が同じなら0時間。
+- `00:00`は有効、`24:00`は不正時刻としてスキップ。
+- 出力dictのキー順序は先頭出現順を推奨し、順序を保証しない。
+- 金額・税込／税抜は処理対象外。
+

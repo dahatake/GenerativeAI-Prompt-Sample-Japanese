@@ -1,0 +1,11 @@
+# 実装内容
+
+- `solution.py` の `monthly_sales(path)` を実装し、CSV を読み込んで `status == "completed"` の行だけを集計します。
+- `ordered_at` の先頭から年月を抽出し、`YYYY-MM` をキー、`amount_incl_tax` の合計を整数として返します。
+- 取消済み、空白などは除外しません（`status` の前後空白と大小文字は正規化しています）。
+
+# 前提
+
+- 入力はヘッダー `order_id,ordered_at,amount_incl_tax,status` を持つUTF-8系のCSVです。
+- `ordered_at` はISO 8601形式を想定し、先頭の年月を使用します。
+- 金額は整数文字列であることを前提とします。

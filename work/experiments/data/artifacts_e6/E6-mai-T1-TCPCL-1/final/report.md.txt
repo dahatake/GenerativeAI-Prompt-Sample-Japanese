@@ -1,0 +1,55 @@
+# 実装・検証レポート
+
+## 検証コマンドと出力
+
+実行コマンド:
+
+```powershell
+cd C:\Users\dahatake\AppData\Local\Temp\tc-exp6\E6-mai-T1-TCPCL-1
+python test_solution.py
+```
+
+出力:
+
+```text
+PASS sales.csv expected totals: {'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+PASS JST boundaries, negative, cancelled, zero, missing months: {'2026-01': 1000, '2026-02': 0, '2026-03': 0, '2026-04': 0}
+PASS empty CSV: {}
+PASS callable, type, repeatability, and key ordering
+```
+
+テストファイル: `test_solution.py`
+
+## Definition of Done 状態
+
+1. 指定ディレクトリ外を参照せずに動作する。— **完了**
+   証拠: 実装は引数のCSVパスと標準ライブラリのみを使用し、テストは作業ディレクトリ内の `sales.csv` とテストCSVを参照した。テスト用一時CSVは検証後に削除した。
+
+2. `monthly_sales(path)` が呼び出せる。— **完了**
+   証拠: テスト出力で `solution.monthly_sales(...)` を複数回呼び出し、例外なく成功した。
+
+3. 戻り値が `dict`、キーが `YYYY-MM`、値が `int`。— **完了**
+   証拠: テストで `isinstance(actual, dict)`、全キー文字列、全値 `int` を検証した。
+
+4. sales.csvで承認済みの売上を返す。— **完了**
+   証拠: テスト出力で `{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}` を検証した。
+
+5. cancelled除外、負数、欠損月、JST境界を処理する。— **完了**
+   証拠: 境界テストでUTC 2026-01-31T14:59:59ZとT15:00:00ZがJSTで別月になること、`-1100`、`cancelled`、0円、欠損月を検証した。
+
+6. 同じ入力で再実行して同じ結果を返す。— **完了**
+   証拠: テストで同じ `sales.csv` に対する2回の呼び出し結果が等しいことを検証した。
+
+7. 出力月キーを昇順で挿入する。— **完了**
+   証拠: テストで `list(actual) == sorted(actual)` を検証した。
+
+## 採用した仮定一覧
+
+- JST（UTC+09:00）で注文時刻を解釈し、JSTの暦月をキーにする。
+- `status=completed` のみ集計し、`cancelled` は除外する。
+- 負数は符号付きで合算し、税抜換算後も符号を維持する。
+- 税率は10%。各completed注文ごとに税込金額を `int(Decimal(amount_incl_tax) / Decimal("1.1"))` で税抜整数へ変換し、0方向へ切り捨てる。
+- 最初の有効な注文月から最後の有効な注文月まで欠損月を0で出力する。範囲判定には `cancelled` を含む有効な注文時刻も使用する。
+- Naive datetimeはUTC、タイムゾーン付きdatetimeはそのオフセットをJSTへ変換する。
+- 月キーは昇順の `YYYY-MM`。
+- 不正・欠損の日時・金額は推測せず、明示的な `ValueError` とする。

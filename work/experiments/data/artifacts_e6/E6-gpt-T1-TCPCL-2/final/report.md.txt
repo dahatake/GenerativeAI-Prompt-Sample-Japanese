@@ -1,0 +1,51 @@
+# 実行報告 — `monthly_sales(path)`
+
+`answers.md` と `answers2.md` を反映して `contract.md` を承認済みに更新し、`solution.py` に実装した。検証は `test_solution.py` に保存した。
+
+## Definition of Done
+
+| 条件 | 状態 | 証拠 |
+| --- | --- | --- |
+| 1. 実ファイルの結果、型と順序、別名入力と月の補完 | 完了 | `test_dod1_*` 2 件。年をまたぐ空月と、除外行が集計期間を広げないことを確認。実ファイルの戻り値は下記。 |
+| 2. JST の月境界、オフセットと暦の端 | 完了 | `test_dod2_*` 2 件。JST 月初の 1 秒前とちょうど、等価なオフセット、小数秒、年 `0001` / `9999` の内外を確認。 |
+| 3. 対象行とゼロの扱い、月単位の税抜換算・丸め | 完了 | `test_dod3_*` 1 件。負額、相殺、ゼロだけの月、取消除外、行単位と異なる丸め、64 ビット符号付き整数を超える入力を確認。 |
+| 4. 空・不正入力と出力順序 | 完了 | `test_dod4_*` 3 件。空の結果、必須値・列の欠落や不正値での `ValueError`、非対象行の除外、前後空白、昇順を確認。 |
+
+## 実行コマンドと出力
+
+```powershell
+python -B -m unittest -v test_solution.py
+```
+
+```text
+test_dod1_fills_year_boundary_on_another_path (test_solution.MonthlySalesTests.test_dod1_fills_year_boundary_on_another_path) ... ok
+test_dod1_sample_values_types_and_order (test_solution.MonthlySalesTests.test_dod1_sample_values_types_and_order) ... ok
+test_dod2_calendar_limits_are_checked_in_jst (test_solution.MonthlySalesTests.test_dod2_calendar_limits_are_checked_in_jst) ... ok
+test_dod2_jst_month_boundary (test_solution.MonthlySalesTests.test_dod2_jst_month_boundary) ... ok
+test_dod3_rounds_signed_monthly_totals_and_keeps_zero_months (test_solution.MonthlySalesTests.test_dod3_rounds_signed_monthly_totals_and_keeps_zero_months) ... ok
+test_dod4_rejects_missing_or_invalid_fields (test_solution.MonthlySalesTests.test_dod4_rejects_missing_or_invalid_fields) ... ok
+test_dod4_returns_empty_if_no_eligible_rows (test_solution.MonthlySalesTests.test_dod4_returns_empty_if_no_eligible_rows) ... ok
+test_dod4_sorts_unordered_input_and_trims_values (test_solution.MonthlySalesTests.test_dod4_sorts_unordered_input_and_trims_values) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.189s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"
+```
+
+```text
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+## 採用した仮定と回答で確定した規則
+
+- **金額:** 税率は一律 10%。税込整数を月内で合計し、`10/11` を掛けて最近接整数に月 1 回丸める。正負とも中間値はゼロから遠い方。単位は入力と同じで、業務上の上限・下限、追加控除、通貨換算は設けない。
+- **対象と期間:** 前後空白を除いた `status` が `completed` と完全一致する行だけ。負額とゼロも対象。追加の日付フィルターはなく、JST（固定 UTC+09:00）の月初以上・翌月初未満で集計。
+- **日時:** `YYYY-MM-DDTHH:MM:SS`、任意の小数秒 1〜6 桁、必須の `Z` または `±HH:MM`。存在しない日時や JST 換算後に年 `0001`〜`9999` に入らない日時はエラー。
+- **入力と欠損:** UTF-8（BOM は任意）のヘッダー付きカンマ区切り CSV。`ordered_at`、`amount_incl_tax`、`status` が必須。空行は無視し、値の前後空白を除く。欠損した `status`、空ファイル、対象行の不正・欠損値は `ValueError`。ステータスで除外した行の日時や金額は検証しない。小数表記は整数とみなさない。
+- **控除と数量:** 時間・数量による乗除算は行わない。`order_id` で重複排除せず、対象行を 1 行につき 1 回数え、他の列は無視する。
+- **出力:** 対象行の最初の月から最後の月までを含め、途中の空月は `0`、対象行がない場合は `{}`。`YYYY-MM` の昇順で Python の `int` を値に持つ `dict` を返す。

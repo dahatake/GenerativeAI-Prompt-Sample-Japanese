@@ -1,0 +1,53 @@
+# 実行報告：従業員別の月間労働時間
+
+`answers.md` の回答で `contract.md` を更新し、承認済みの仕様を `solution.py` に実装した。追加確認が必要な項目はなかった。
+
+## Definition of Done
+
+| 条件 | 状態 | 検証した内容 |
+| --- | --- | --- |
+| 1. 公開関数、戻り値の型、入力ファイルの不変性 | 完了 | `test_sample_returns_float_hours_without_changing_input` で関数をインポートして呼び出し、辞書・従業員 ID・`float` 値と入力のバイト列が変わらないことを確認。 |
+| 2. サンプルの集計値 | 完了 | 同テストで `21.25`、`13.0`、`8.25` 時間を絶対許容差 `1e-9` で検証。サンプルの直接実行でも同じ結果。 |
+| 3. 日またぎ・月またぎ・開始と終了が同時刻 | 完了 | `test_overnight_work_and_equal_times` と `test_overnight_work_at_month_end_belongs_to_start_month` で、夜勤の経過 480 分・計上 420 分、開始月への全量計上、同時刻で `0.0` を確認。 |
+| 4. 有給・空データ・入力エラー | 完了 | `test_paid_leave_only_counts_450_minutes_per_row`、`test_header_only_returns_empty_dict`、`test_invalid_headers_and_rows_raise_value_error`、`test_different_month_or_year_raises_value_error` で、有給のみの従業員を含む集計、空の辞書、規定の `ValueError` を確認。 |
+| 5. 休憩の閾値・行単位の切り捨て | 完了 | `test_break_threshold_uses_unrounded_elapsed_minutes` で拘束 360 分→計上 360 分、361 分→控除後 301 分→計上 300 分を確認。`test_rounding_is_per_row_and_duplicate_rows_are_counted` で各 8 分の 2 行→計上 0 分、および重複行の加算を確認。 |
+
+## 実行したコマンドと出力
+
+```powershell
+python -B -m unittest -v test_solution
+```
+
+```text
+test_break_threshold_uses_unrounded_elapsed_minutes (test_solution.MonthlyWorkHoursTests.test_break_threshold_uses_unrounded_elapsed_minutes) ... ok
+test_different_month_or_year_raises_value_error (test_solution.MonthlyWorkHoursTests.test_different_month_or_year_raises_value_error) ... ok
+test_header_only_returns_empty_dict (test_solution.MonthlyWorkHoursTests.test_header_only_returns_empty_dict) ... ok
+test_invalid_headers_and_rows_raise_value_error (test_solution.MonthlyWorkHoursTests.test_invalid_headers_and_rows_raise_value_error) ... ok
+test_overnight_work_and_equal_times (test_solution.MonthlyWorkHoursTests.test_overnight_work_and_equal_times) ... ok
+test_overnight_work_at_month_end_belongs_to_start_month (test_solution.MonthlyWorkHoursTests.test_overnight_work_at_month_end_belongs_to_start_month) ... ok
+test_paid_leave_only_counts_450_minutes_per_row (test_solution.MonthlyWorkHoursTests.test_paid_leave_only_counts_450_minutes_per_row) ... ok
+test_rounding_is_per_row_and_duplicate_rows_are_counted (test_solution.MonthlyWorkHoursTests.test_rounding_is_per_row_and_duplicate_rows_are_counted) ... ok
+test_sample_returns_float_hours_without_changing_input (test_solution.MonthlyWorkHoursTests.test_sample_returns_float_hours_without_changing_input) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.461s
+
+OK
+```
+
+```powershell
+python -B -c "from solution import monthly_work_hours; print(monthly_work_hours('shifts.csv'))"
+```
+
+```text
+{'E001': 21.25, 'E002': 13.0, 'E003': 8.25}
+```
+
+## 採用した仮定
+
+1. `date` は単一の暦月（年・月が同一）とした。複数の月が混ざる場合は `ValueError` とする。
+2. `date` は開始日。終了時刻が開始時刻より早い場合は翌日、同時刻は 0 分とした。翌月にまたがる勤務は開始月に全量計上し、タイムゾーン変換は行わない。
+3. 従業員 ID は空白のみを不可とし、有効な ID は元の文字列のまま扱う。0 時間の従業員も出力し、重複・重なりがある行もそれぞれ加算する。
+4. CSV は UTF-8（BOM 可）・カンマ区切り・ヘッダー付き。`employee,date,type,start,end` を必須とし、追加列は無視する。日付は実在する `YYYY-MM-DD`、勤務の両時刻は `00:00`〜`23:59` の `HH:MM`。有給行の時刻欄は使わず、不正な入力は `ValueError` とする。
+
+休憩・有給・丸めは仮定ではなく、回答どおりの承認済み規則（経過 361 分以上で 60 分控除、有給 1 行につき 450 分、行単位で 15 分刻みに切り捨て）を採用した。

@@ -1,0 +1,44 @@
+# 実行レポート
+
+## DoD状態
+
+1. **完了** - `solution.py` に呼出可能な `monthly_sales(path)` を実装した。
+   - 証拠: `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"`
+   - 出力: `{'2026-01': 16500, '2026-02': 11000, '2026-03': 0, '2026-04': 18700, '2026-05': 7700}`
+
+2. **完了** - 相対パス `sales.csv` と絶対パスの両方を検証した。
+   - 証拠: `python test_solution.py` の `test_relative_and_absolute_paths` が `ok`。
+
+3. **完了** - JST変換、キャンセル除外、負数符号付き、欠損月0込みのサンプル集計を検証した。
+   - 証拠: `test_sample_aggregation_jst_missing_month` が `ok`。
+   - `2026-04-30T15:30:00Z` はJSTで `2026-05-01` になるため、サンプル結果は上記1の通り。
+
+4. **完了** - 同月の複数完了行の加算を検証した。
+   - 証拠: `test_same_month_rows_sum` が `ok`。
+
+5. **完了** - キャンセル除外と負数の符号付き加算を検証した。
+   - 証拠: `test_cancelled_and_negative_rows` が `ok`。
+   - 負数 `-1100` は2026-02の合計を11000にする形で減算される。
+
+6. **完了** - 不正行はスキップ、ヘッダー不足は `ValueError`、空ファイル・ヘッダーのみは `{}` とする規則を検証した。
+   - 証拠: `python test_solution.py` の `test_empty_file_and_header_only`、`test_invalid_headers_raise_value_error`、`test_invalid_rows_are_skipped` がすべて `ok`。
+
+## 全体証拠
+- コマンド: `python test_solution.py`
+- 出力: 7 tests, `OK`
+- コマンド: `python -c "from solution import monthly_sales; print(monthly_sales('sales.csv'))"`
+- 出力: `{'2026-01': 16500, '2026-02': 11000, '2026-03': 0, '2026-04': 18700, '2026-05': 7700}`
+
+## 採用した仮定
+- キャンセル済み注文は集計から除外する。
+- 負数は返品・減額として符号付きで加算する。
+- 日時はオフセットまたは `Z` に従って解釈し、オフセットなしはUTCとして解釈した後、`Asia/Tokyo`（UTC+9）へ変換する。
+- 最初から最後まで欠損月を `0` に含める範囲は、有効な日時・金額・ステータスを持つ行（`completed` と `cancelled`）から決定する。
+- 不正な日時、不正な金額、欠損項目、未知ステータスは行をスキップする。
+- ヘッダー不足は `ValueError`、空ファイル・ヘッダーのみは `{}` とする。
+- CSVはUTF-8（BOM可）として読み、項目の前後空白を除去する。
+- ステータスは大小文字を区別せず正規化する。
+
+## 人間の確認が必要な項目
+- なし。回答に具体的な値を必要とする未回答項目は、契約で採用した推奨既定案または安全な既定規則で処理した。
+

@@ -1,0 +1,48 @@
+# 実行レポート
+
+## Definition of Done 状態
+
+| DoD条件 | 状態 | 証拠 |
+|---|---|---|
+| JST変換後の代表値を返す: 2026-01=15000、2026-02=10000、2026-03=0、2026-04=17000、2026-05=7000 | 完了 | `python test_solution.py` の `test_sales_csv_approved_values_and_empty_month` がOK。これはJST境界（1月末と4月末）が反映された承認済み値。 |
+| `cancelled` 行を除外する | 完了 | `test_cancelled_is_excluded_and_month_keys_are_sorted` がOK。キャンセル行の金額が代表値に含まれていないことを確認。 |
+| 最初月から最後月まで連続し、レコードなし月は0 | 完了 | 同テストで `2026-03=0` を含む連続5か月を検証。 |
+| マイナス金額を税抜換算後の符号通り加算する | 完了 | `test_jst_boundary_and_negative_amount` がOK。-1100をJST税抜換算し-1000として集計。 |
+| 戻り値の全金額が `int` | 完了 | `test_all_values_are_int` がOK。 |
+| 月キーが昇順 | 完了 | `test_cancelled_is_excluded_and_month_keys_are_sorted` がOK。 |
+| 欠損必須値は `ValueError` | 完了 | `test_missing_required_value_raises` がOK。空の `amount_incl_tax` を検証。 |
+
+## 検証コマンドと出力
+
+コマンド:
+
+```powershell
+python test_solution.py
+```
+
+出力:
+
+```text
+test_all_values_are_int (__main__.MonthlySalesTests.test_all_values_are_int) ... ok
+test_cancelled_is_excluded_and_month_keys_are_sorted (__main__.MonthlySalesTests.test_cancelled_is_excluded_and_month_keys_are_sorted) ... ok
+test_jst_boundary_and_negative_amount (__main__.MonthlySalesTests.test_jst_boundary_and_negative_amount) ... ok
+test_missing_required_value_raises (__main__.MonthlySalesTests.test_missing_required_value_raises) ... ok
+test_round_each_row_before_month_sum (__main__.MonthlySalesTests.test_round_each_row_before_month_sum) ... ok
+test_sales_csv_approved_values_and_empty_month (__main__.MonthlySalesTests.test_sales_csv_approved_values_and_empty_month) ... ok
+test_zero_value_keeps_month (__main__.MonthlySalesTests.test_zero_value_keeps_month) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.045s
+
+OK
+```
+
+## 採用した仮定
+
+- 最初月・最後月は、全レコード（キャンセルを含む）のJST年月から決定する。
+- 対象行にゼロがある月は、結果に0として保持する。
+- マイナス金額は控除ではなく、税抜換算後の符号通り加算する。
+- オフセットなしの日時はUTCとして解釈し、末尾 `Z` はUTCとして解釈する。
+- 金額文字列はDecimalとして解析し、各行を税込額/1.1で税抜換算してから `ROUND_HALF_UP`で整数化し、月合計する。
+- 対象レコードがない入力では空のdict `{}` を返す。
+- 必須列または必須値の欠損、無効な日時・金額は `ValueError` とする。
