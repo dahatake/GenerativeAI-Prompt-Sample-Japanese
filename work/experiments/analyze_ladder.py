@@ -199,14 +199,6 @@ def main():
         out["rater_agreement"] = {"agree": agree, "n": tot, "rate": round(agree / tot, 3) if tot else None}
         out["mechanism_all_answered_rater"] = {f"surfaced={s}": {"pass": p, "n": n, "rate": round(p / n, 3)} for s, (p, n) in sorted(rm.items())}
         out["mechanism_on_requirements_B_usually_fails_rater"] = {f"surfaced={s}": {"pass": p, "n": n, "rate": round(p / n, 3)} for s, (p, n) in sorted(rf.items())}
-        # added after the protocol was fixed (output only): surfacing rate by condition with the rater's classification
-        sr = collections.defaultdict(lambda: [0, 0])
-        for aid, marks in rater.items():
-            cond = key[aid].split("|")[1]
-            for v in marks.values():
-                sr[cond][0] += int(bool(v))
-                sr[cond][1] += 1
-        out["surfacing_rate_by_condition_rater"] = {c: round(a / n, 3) for c, (a, n) in sorted(sr.items())}
     json.dump(out, open(os.path.join(DATA, "ladder_summary.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(json.dumps({k: out[k] for k in out if k not in ("ladder",)}, ensure_ascii=False, indent=1))
     for l in ladder:

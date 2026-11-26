@@ -844,7 +844,7 @@ v1.0 の7章に挙げた5項目と、v1.0〜v1.3 で「仮説」「未検証」�
 | Microsoft 365 Copilot での実践（v1.3、U18、U19） | **v1.4 で一部検証**: Copilot Chat で、Contract を作るプロンプトの構造、演習1〜4、コードの実行、回答した論点の反映（E12）を確認。Cowork での Contract の実行と、Researcher エージェントでの確認は未実施 | 7.8節、7.9節、付録A.21 |
 | オラクルのモデルを変えたときの影響 | **未検証**: v2〜v4 のオラクルは claude-opus-5.5 に固定。Sonnet-5.5 の被験エージェントとは同じ提供元である | 付録A.17、付録A.20 |
 | 人間の回答者、Workshop（旧7章の3、5） | **未実施（依頼者の在席が必要）** | 下の手順1 |
-| Copilot Cowork での Contract の実行 | **未実施（依頼者の在席が必要）**: 統合ブラウザーからのサインインは条件付きアクセスで拒否され、Computer Use は無人の実行中には有効にできなかった | 下の手順2 |
+| Copilot Cowork での Contract の実行 | **未実施（依頼者の在席が必要）**: 統合ブラウザーからのサインインは条件付きアクセスで拒否され、Computer Use は無人の実行中には有効にできなかった。v1.5 で外部の Edge（Playwright で起動）から再試行したところ、条件付きアクセスは通過してサインイン画面（dahatake@microsoft.com）まで進んだが、Windows Hello（顔、指紋、PIN、セキュリティ キー）の本人確認が必要で、4分待っても完了せず、未ログインのまま終了した。手順の再開には、依頼者がその確認を行う必要がある | 下の手順2 |
 | 大きなタスク（旧7章の1） | **v1.2 で一部検証**: 10の業務ルールの課題で TC+ は満点（補足の検査で、実データの全請求書が参照実装と一致）、NOASK を上回った（p=0.05）。B-POST との差は有意でなく、回帰は起きなかった。**数時間規模の実行時間は再現できない**（本環境のサブエージェントは数分で終える） | 付録A.16、下の手順3 |
 
 **残る3項目の実施手順**（本環境では、依頼者の在席か長時間の実行が必要なため実施できなかった）
@@ -1018,9 +1018,12 @@ cd work/experiments
 # v1〜v4 の全回の要件ごとの採点（data/ladder_req.csv）、段ごとの比較と仕組みの集計（data/ladder_summary.json）、
 # 判定者への入力（data/mechanism_packet.md.txt と対応表 data/mechanism_packet_key.json）を作る。保存した判定を与えると一致率も集計する
 python analyze_ladder.py data/mechanism_rater.json
+# 判定者の分類による、条件ごとの回答に現れた割合を ladder_summary.json に加える（逸脱 D-v1.5-1）
+python analyze_ladder_rater_by_condition.py data/mechanism_rater.json
 # 本文の主な数値をデータから再計算し、本文の記述と照合する（data/claims_ledger.csv）
 python verify_claims.py
 Get-FileHash -Algorithm SHA256 data/ladder_protocol.md          # 6B886EBB…4BA6 と一致すること
+Get-FileHash -Algorithm SHA256 analyze_ladder.py                # 5242CDB5…C0DD と一致すること
 gh api gists/e0c489b5b3185657f56f8c63bc93e4e3 --jq .created_at  # 2026-11-26T03:59:49Z
 ```
 
@@ -1061,7 +1064,7 @@ gh api gists/e0c489b5b3185657f56f8c63bc93e4e3 --jq .created_at  # 2026-11-26T03:
 | `data/rework_vs_scale.csv`、`analyze_rework.py` | 手戻りと規模 |
 | `data/usage_by_agent.csv`、`data/tokens_by_condition.csv`、`build_usage.py`、`analyze_tokens.py` | サブエージェントごとのモデル、トークン、API 時間と、条件ごとの集計 |
 | `data/e11/`、`data/e12/`、`data/e12_protocol.md`、`prompts/E12_*.txt`、`score_e12.py` | Copilot Chat での確認（演習4、コードの実行、同じ課題 T1）の応答と採点 |
-| `data/ladder_protocol.md`、`data/surfacing_rules.json`、`analyze_ladder.py`、`data/ladder_req.csv`、`data/ladder_summary.json` | v1.5 の横断分析の手順、キーワード規則、スクリプト、要件ごとの採点、集計（5章） |
+| `data/ladder_protocol.md`、`data/surfacing_rules.json`、`analyze_ladder.py`、`analyze_ladder_rater_by_condition.py`、`data/ladder_req.csv`、`data/ladder_summary.json` | v1.5 の横断分析の手順、キーワード規則、スクリプト、要件ごとの採点、集計（5章） |
 | `data/mechanism_packet.md.txt`、`data/mechanism_packet_key.json`、`data/mechanism_rater.json` | 「回答に現れたか」の判定者への入力、対応表、判定（5.3節、付録E） |
 | `verify_claims.py`、`data/claims_ledger.csv` | 主張の台帳（付録E） |
 
@@ -1763,7 +1766,7 @@ v1.5 では、v1.4 の本文と、組み替えた v1.5 の原稿を、次の5つ
 
 **事前登録からの逸脱**:
 
-- **D-v1.5-1**: 判定者の判定を集計するとき、条件ごとの「回答に現れた割合」（判定者の分類）の出力を、手順を gist に記録した後に [analyze_ladder.py](./experiments/analyze_ladder.py) に加えた。集計の出力を加えただけで、採点、層、検定、キーワード規則は変えていない。このため、現在の analyze_ladder.py の SHA-256（`3CCE8D44…72B5`）は、gist に記録した値（`5242CDB5…C0DD`）と一致しない。手順書（ladder_protocol.md）とキーワード規則（surfacing_rules.json）のハッシュは、記録した値と一致する。
+- **D-v1.5-1**: 判定者の判定を集計するとき、条件ごとの「回答に現れた割合」（判定者の分類。表R3 の判定者の列）の出力が、手順を gist に記録した後で必要になった。記録したスクリプト [analyze_ladder.py](./experiments/analyze_ladder.py) は変更せず（SHA-256 `5242CDB5…C0DD`、gist の値と一致）、この出力だけを別のスクリプト [analyze_ladder_rater_by_condition.py](./experiments/analyze_ladder_rater_by_condition.py) に分けた。採点、層、検定、キーワード規則は変えていない。手順書（ladder_protocol.md）、キーワード規則（surfacing_rules.json）、analyze_ladder.py の3つのハッシュは、記録した値と一致する。
 - **補足（判定者の数）**: 手順書は判定者の数を定めていなかった。回答の量の都合で、回答を3つに分けて、それぞれ別の判定者に渡した。どの判定者も、条件と合否を伏せた同じ形式の入力と、同じ判定の基準を受け取った。
 
 ---
