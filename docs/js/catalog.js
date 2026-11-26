@@ -21,7 +21,7 @@ const META = [
   { dir: "数理最適化問題", kind: "topic", icon: "🧮", color: "#00b7c3", desc: "シフトスケジュール問題・巡回セールスマン問題を解く。", start: "README.md" },
   { dir: "音声入力", kind: "topic", icon: "🎙️", color: "#8e4ec6", desc: "音声入力した長文を整える活用例。", start: "README.md" },
   { dir: "便利なテクニック", kind: "topic", icon: "💡", color: "#ffb900", desc: "構造化カタログなど、Promptをよりよくするテクニック。", start: "README.md" },
-  { dir: "task contractor", kind: "topic", icon: "📝", color: "#3fb950", desc: "AIに仕事を任せる前に、目的・根拠・完了条件・権限を合意する Task Contract の初心者向けチュートリアル。", start: "README.md" },
+  { dir: "task contractor prompt", kind: "topic", icon: "📝", color: "#3fb950", desc: "AIに仕事を任せる前に、目的・根拠・完了条件・権限を合意する Task Contractor Prompt（Task Contract）の初心者向けチュートリアル。", start: "README.md" },
   { dir: "Workshop", kind: "topic", icon: "🧑‍🏫", color: "#7f85f5", desc: "経営層向けなどワークショップ用のシナリオ。", start: "README.md" },
   { dir: "Workshop_English", kind: "topic", icon: "🌐", color: "#58a6ff", desc: "英語版のワークショップ。", start: "README.md" },
   { dir: "sample", kind: "topic", icon: "🧪", color: "#a4a8bd", desc: "各Promptで使える共通のサンプルデータと、その監査レポート。" }
@@ -55,7 +55,7 @@ export const GROUPS = [
     rpg: { place: "ギョウムの街", kind: "town", king: "まちちょう" } },
   { id: "make", icon: "🛠️", name: "つくる・自動化する", hint: "文書・画像・コード・Agentを作る", dirs: ["Agent", "文書・画像作成", "DALL-E", "Code Interpreter"],
     rpg: { place: "ソウゾウの城", kind: "castle", king: "ソウゾウおう" } },
-  { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "task contractor", "Workshop", "Workshop_English", "sample", ...learnDirs],
+  { id: "learn", icon: "🎓", name: "学ぶ・共通資料", hint: "コツ・研修・共通サンプル", dirs: ["便利なテクニック", "task contractor prompt", "Workshop", "Workshop_English", "sample", ...learnDirs],
     rpg: { place: "マナビの村", kind: "town", king: "むらおさ" } },
   ...automaticGroups
 ].map(g => ({ ...g, dirs: g.dirs.filter(dir => FILES[dir]?.length) }));
