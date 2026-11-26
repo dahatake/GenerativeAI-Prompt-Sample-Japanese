@@ -1,0 +1,11 @@
+﻿id,claim,pass
+CW1-B-mean,3回とも2/4,True
+CW1-TCP-mean,3回とも4/4,True
+TC-family-gap,+32.0ポイント,True
+mechanism-surfaced,99.5%,True
+mechanism-unsurfaced,55.4%,True
+no-harness-loop-name,Harness Loop は公式名称ではない,True
+github-official-loop,agent loop,True
+foundry-runtime-name,Agent Runtime,True
+copilot-studio-harness,Microsoft Copilot harness,True
+full-crash-limit,stored resilient background Responses,True
