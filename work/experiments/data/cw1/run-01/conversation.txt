@@ -1,0 +1,102 @@
+タスク
+詳細パネルが閉じられました
+Python売上月次集計
+クレジット使用中
+99%
+上方向キー、下方向キーを使用してメッセージの間を移動できます。Home キーを押すと、読み込まれている最も古いメッセージに移動します。End キーを押すと、最新のメッセージに移動します。Enter キーを押してメッセージに移動してから、Tab キーを押してその手順、リンク、アクション間を移動します。
+あなたの発言:
+
+次の sales.csv の売上を月次で集計する関数 monthly_sales(path) を Python で実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+
+sales.csv の内容:
+
+```python
+order_id,ordered_at,amount_incl_tax,status
+
+A-1001,2026-01-05T02:15:00Z,11000,completed
+
+A-1002,2026-01-12T09:40:00Z,5500,completed
+
+A-1003,2026-01-20T23:30:00Z,22000,cancelled
+
+A-1004,2026-01-31T16:20:00Z,3300,completed
+
+A-1005,2026-02-03T05:00:00Z,8800,completed
+
+A-1006,2026-02-14T11:11:00Z,-1100,completed
+
+A-1007,2026-02-27T13:45:00Z,4400,cancelled
+
+A-1008,2026-04-02T00:30:00Z,16500,completed
+
+A-1009,2026-04-18T08:05:00Z,2200,completed
+
+A-1010,2026-04-30T15:30:00Z,7700,completed
+```
+
+コードを実際に実行して、このデータでの結果の dict を示してください。作業が終わったら、実装内容と前提にしたことを簡潔に書いてください。
+
+さらに表示
+14:54
+14 秒 間作業しました
+Running the monthly sales calculation
+思考プロセス
+Copilot の発言:
+
+このデータで実行すると、結果は次のとおりです(月は日本時間で区切っています)。
+
+PYTHON
+```python
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+```
+
+実装コード
+
+PYTHON
+```python
+import csv
+from collections import defaultdict
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+JST = ZoneInfo("Asia/Tokyo")
+
+def monthly_sales(path, tz=JST):
+    """completed の注文の税込金額を、指定タイムゾーン(既定: JST)の月ごとに合計する。"""
+    totals = defaultdict(int)
+    with open(path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if not row.get("order_id"):          # 空行をスキップ
+                continue
+            if row["status"].strip() != "completed":
+                continue
+            ts = datetime.fromisoformat(row["ordered_at"].replace("Z", "+00:00"))
+            key = ts.astimezone(tz).strftime("%Y-%m")
+            totals[key] += int(row["amount_incl_tax"])
+    return dict(sorted(totals.items()))
+```
+
+実装内容
+
+標準ライブラリだけで CSV を読み、空行は飛ばします。
+ordered_at の UTC 時刻を指定のタイムゾーンに直してから YYYY-MM ごとに合計します。結果は月の順に並べて返します。
+
+前提にしたこと(結果が変わるもの)
+
+月は日本時間で区切っています。 日時は UTC なので、どこで区切るかで2件が翌月に移ります。
+A-1004(UTC 1/31 16:20)は日本時間で 2/1 なので2月に入ります。
+A-1010(UTC 4/30 15:30)は日本時間で 5/1 なので5月に入ります。
+UTC で区切る場合は monthly_sales(path, tz=timezone.utc) で、結果は {'2026-01': 19800, '2026-02': 7700, '2026-04': 26400} です。
+completed だけを数えています。 cancelled の A-1003 と A-1007 は含めていません。
+マイナスの金額も含めています。 A-1006 の -1,100 は返金とみなし、売上から差し引いています。
+金額は税込のままです。 列名のとおり amount_incl_tax を使っています。税抜にする場合は税率を決める必要があります。
+注文がない月は返しません。 このデータでは 3月がキーに入りません。0 で埋めたい場合はお知らせください。
+
+
+
+
+Cowork にメッセージを送る
+自動
+中
+AI 生成コンテンツは正確でない場合があります
+Tab キーを押して提案を承諾します

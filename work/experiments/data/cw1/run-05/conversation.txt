@@ -1,0 +1,113 @@
+タスク
+詳細パネルが閉じられました
+Python実装で売上の月次集計
+クレジット使用中
+99%
+上方向キー、下方向キーを使用してメッセージの間を移動できます。Home キーを押すと、読み込まれている最も古いメッセージに移動します。End キーを押すと、最新のメッセージに移動します。Enter キーを押してメッセージに移動してから、Tab キーを押してその手順、リンク、アクション間を移動します。
+あなたの発言:
+
+次の sales.csv の売上を月次で集計する関数 monthly_sales(path) を Python で実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+
+sales.csv の内容:
+
+```python
+order_id,ordered_at,amount_incl_tax,status
+
+A-1001,2026-01-05T02:15:00Z,11000,completed
+
+A-1002,2026-01-12T09:40:00Z,5500,completed
+
+A-1003,2026-01-20T23:30:00Z,22000,cancelled
+
+A-1004,2026-01-31T16:20:00Z,3300,completed
+
+A-1005,2026-02-03T05:00:00Z,8800,completed
+
+A-1006,2026-02-14T11:11:00Z,-1100,completed
+
+A-1007,2026-02-27T13:45:00Z,4400,cancelled
+
+A-1008,2026-04-02T00:30:00Z,16500,completed
+
+A-1009,2026-04-18T08:05:00Z,2200,completed
+
+A-1010,2026-04-30T15:30:00Z,7700,completed
+```
+
+コードを実際に実行して、このデータでの結果の dict を示してください。作業が終わったら、実装内容と前提にしたことを簡潔に書いてください。
+
+さらに表示
+15:10
+17 秒 間作業しました
+Running the monthly sales calculation
+Re-running the monthly sales calculation
+思考プロセス
+Copilot の発言:
+
+関数を実装し、このデータで実行しました。注意点が1つあります。注文日時はUTC(末尾が Z)で記録されているので、どのタイムゾーンで月を区切るかによって結果が変わります。今回は日本時間(JST)を既定にしました。
+
+実行結果(JST基準、既定)
+
+PYTHON
+```python
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+```
+
+参考:UTCのまま月を区切った場合(tz=None を指定)
+
+PYTHON
+```python
+{'2026-01': 19800, '2026-02': 7700, '2026-04': 26400}
+```
+
+結果が変わるのは次の2件です。
+
+A-1004(2026-01-31T16:20Z)は日本時間で2月1日 01:20 なので、2月に入ります。
+A-1010(2026-04-30T15:30Z)は日本時間で5月1日 00:30 なので、5月に入ります。
+PYTHON
+```python
+import csv
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta, tzinfo
+from typing import Dict, Optional
+
+JST = timezone(timedelta(hours=9), "JST")
+
+
+def monthly_sales(path: str, tz: Optional[tzinfo] = JST) -> Dict[str, int]:
+    """sales.csv を月次集計し {"YYYY-MM": 金額(int)} を返す。"""
+    totals: Dict[str, int] = defaultdict(int)
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            if not row.get("order_id"):          # 空行をスキップ
+                continue
+            if row["status"].strip().lower() != "completed":
+                continue
+            dt = datetime.fromisoformat(row["ordered_at"].strip().replace("Z", "+00:00"))
+            if tz is not None:
+                dt = dt.astimezone(tz)
+            totals[dt.strftime("%Y-%m")] += int(row["amount_incl_tax"])
+    return dict(sorted(totals.items()))
+```
+
+実装の内容
+
+標準ライブラリの csv.DictReader で読み込み、月ごとに金額を足し上げています。結果は月の昇順で返します。
+データ中の空行と、ファイル先頭のBOMは無視します。
+
+前提にしたこと(違っていれば調整します)
+
+月の区切り: UTCの日時を日本時間に変換してから月を判定しています。UTCで区切る場合は tz=None を指定してください。
+ステータス: completed だけを集計し、cancelled は除外しています(A-1003、A-1007)。
+マイナスの金額: A-1006 の -1100 は返金や値引きとみなし、売上から差し引いています。
+税込/税抜: amount_incl_tax の税込金額をそのまま使っています。税抜にはしていません。
+売上のない月: 2026-03 のように売上のない月は、0 として含めずキー自体を出していません。
+
+
+
+
+Cowork にメッセージを送る
+自動
+中
+AI 生成コンテンツは正確でない場合があります
+Tab キーを押して提案を承諾します

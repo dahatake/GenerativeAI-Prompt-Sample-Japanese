@@ -118,6 +118,12 @@ def claims():
     for cond, label in [("TC", "TC"), ("TCP", "TC+"), ("TCPCL", "TC+CL"), ("BPOST", "B-POST"), ("BALL", "BALL"), ("OFILE", "OFILE"), ("OFULL", "OFULL")]:
         c.append((f"surf-{label}", "5章 表R3", "\\| " + re.escape(label) + r" \|[^\n]*?" + "{}% / {}%",
                   (f'{lad["surfacing_rate_by_condition"][cond] * 100:.0f}', f'{lad["surfacing_rate_by_condition_rater"][cond] * 100:.0f}')))
+    # CW1 (Copilot Cowork): reported-dict score and code re-run on held-out data, per run
+    cw = list(csv.DictReader(open(os.path.join(DATA, "cw1", "cowork_scores.csv"), encoding="utf-8-sig")))
+    man = json.load(open(os.path.join(DATA, "cw1", "run-02", "manual_code_review.json"), encoding="utf-8"))
+    for x in cw:
+        held = x["code_score_heldout"] if x["code_score_heldout"] != "undecidable" or x["run"] != "run-02" else str(man["heldout_score"])
+        c.append((f"cw1-{x['run']}", "付録A.23", "\\| " + x["run"] + r" \|[^\n]*?\| {}/4 \|[^\n]*?/ {}/4", (x["reported_score"], held)))
     return c
 
 

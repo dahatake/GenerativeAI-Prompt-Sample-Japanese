@@ -1,0 +1,106 @@
+タスク
+詳細パネルが閉じられました
+Python売上月次集計
+クレジット使用中
+99%
+上方向キー、下方向キーを使用してメッセージの間を移動できます。Home キーを押すと、読み込まれている最も古いメッセージに移動します。End キーを押すと、最新のメッセージに移動します。Enter キーを押してメッセージに移動してから、Tab キーを押してその手順、リンク、アクション間を移動します。
+あなたの発言:
+
+次の sales.csv の売上を月次で集計する関数 monthly_sales(path) を Python で実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+
+sales.csv の内容:
+
+```python
+order_id,ordered_at,amount_incl_tax,status
+
+A-1001,2026-01-05T02:15:00Z,11000,completed
+
+A-1002,2026-01-12T09:40:00Z,5500,completed
+
+A-1003,2026-01-20T23:30:00Z,22000,cancelled
+
+A-1004,2026-01-31T16:20:00Z,3300,completed
+
+A-1005,2026-02-03T05:00:00Z,8800,completed
+
+A-1006,2026-02-14T11:11:00Z,-1100,completed
+
+A-1007,2026-02-27T13:45:00Z,4400,cancelled
+
+A-1008,2026-04-02T00:30:00Z,16500,completed
+
+A-1009,2026-04-18T08:05:00Z,2200,completed
+
+A-1010,2026-04-30T15:30:00Z,7700,completed
+```
+
+コードを実際に実行して、このデータでの結果の dict を示してください。作業が終わったら、実装内容と前提にしたことを簡潔に書いてください。
+
+さらに表示
+15:04
+16 秒 間作業しました
+Running the monthly sales calculation
+Copilot の発言:
+
+monthly_sales(path) を実装して実行しました。このデータでの結果は次のとおりです(既定では日本時間で月を判定)。
+
+PYTHON
+```python
+{'2026-01': 16500, '2026-02': 11000, '2026-04': 18700, '2026-05': 7700}
+```
+
+ご指定には「どのタイムゾーンで月を区切るか」の指定がありませんでした。そのため日本時間を既定にし、引数で切り替えられるようにしています。UTC の日付で集計した場合は次の結果になります。
+
+PYTHON
+```python
+{'2026-01': 19800, '2026-02': 7700, '2026-04': 26400}
+```
+
+違いが出るのは、日本時間に直すと翌月になる2件です。
+
+A-1004:UTC では 1/31 16:20、日本時間では 2/1 01:20
+A-1010:UTC では 4/30 15:30、日本時間では 5/1 00:30
+PYTHON
+```python
+import csv
+from collections import defaultdict
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+def monthly_sales(path, tz="Asia/Tokyo", exclude_statuses=("cancelled",)):
+    zone = ZoneInfo(tz)
+    totals = defaultdict(int)
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            if not row or not (row.get("order_id") or "").strip():
+                continue  # 空行をスキップ
+            if row["status"].strip().lower() in exclude_statuses:
+                continue
+            ts = datetime.fromisoformat(row["ordered_at"].strip().replace("Z", "+00:00"))
+            month = ts.astimezone(zone).strftime("%Y-%m")
+            totals[month] += int(row["amount_incl_tax"])
+    return dict(sorted(totals.items()))
+```
+
+実装内容
+
+標準ライブラリの csv で読み込み、空行は読み飛ばします。
+ordered_at を UTC の日時として読み、指定したタイムゾーンに変換してから年月を決めます。
+月ごとに amount_incl_tax を int で合計し、年月順に並べた dict を返します。
+
+前提にしたこと
+
+月の区切り: 日本時間を既定にしています。UTC で集計したい場合は tz="UTC" を指定してください。
+キャンセル: cancelled の注文は売上から除いています(A-1003、A-1007)。
+マイナスの金額: 返金などとみなし、そのまま差し引いています(A-1006 の -1100)。
+税: 金額は税込のまま合計しています。
+売上のない月: 3月のように売上のない月は 0 を入れず、dict に含めていません。
+
+
+
+
+Cowork にメッセージを送る
+自動
+中
+AI 生成コンテンツは正確でない場合があります
+Tab キーを押して提案を承諾します

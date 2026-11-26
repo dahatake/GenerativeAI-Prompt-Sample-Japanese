@@ -1,0 +1,407 @@
+タスク
+詳細パネルが開きました。そちらに移動して詳細を確認してください。
+Monthly sales aggregation spec for sales.csv
+クレジット使用中
+99%
+上方向キー、下方向キーを使用してメッセージの間を移動できます。Home キーを押すと、読み込まれている最も古いメッセージに移動します。End キーを押すと、最新のメッセージに移動します。Enter キーを押してメッセージに移動してから、Tab キーを押してその手順、リンク、アクション間を移動します。
+あなたの発言:
+
+依頼: 次の sales.csv の売上を月次で集計する関数 monthly_sales(path) を Python で実装してください。戻り値は {"YYYY-MM": 金額(int)} の dict です。
+
+sales.csv の内容:
+
+```python
+order_id,ordered_at,amount_incl_tax,status
+
+A-1001,2026-01-05T02:15:00Z,11000,completed
+
+A-1002,2026-01-12T09:40:00Z,5500,completed
+
+A-1003,2026-01-20T23:30:00Z,22000,cancelled
+
+A-1004,2026-01-31T16:20:00Z,3300,completed
+
+A-1005,2026-02-03T05:00:00Z,8800,completed
+
+A-1006,2026-02-14T11:11:00Z,-1100,completed
+
+A-1007,2026-02-27T13:45:00Z,4400,cancelled
+
+A-1008,2026-04-02T00:30:00Z,16500,completed
+
+A-1009,2026-04-18T08:05:00Z,2200,completed
+
+A-1010,2026-04-30T15:30:00Z,7700,completed
+```
+
+すぐに実装を始めないでください。まず私と Task Contract を作成します（Spec Mode）。
+
+上のデータを調べ、依頼に関係する事実を整理してください。調べれば分かることは質問しないでください。調べた事実は、質問を具体的にするために使ってください。
+「確認できた事実」「仮定」「不足情報」を分けてください。
+あなたが既定値で埋めようとしている点のうち、外れたときの手戻りが大きい点だけを、最大3問質問してください。
+各質問には選択肢と推奨の既定案を付け、選択肢はそのまま実装できる具体的な値（範囲、単位、丸め方、閾値など）で書いてください。
+選択肢のどれでもない場合は、具体的な値で答えてほしいと明記してください。
+質問にしなかった重要な仮定は、Open questions に「この仮定で進めます」と明記してください。
+次の項目で Task Contract 案を作ってください: Outcome / Scope・Out of scope / Data sources / Constraints / Definition of Done（検証できる条件）/ Evidence / Open questions。
+質問と契約案を示したら、そこで止まってください。私の回答を受けるまで実装しないでください。
+さらに表示
+14:56
+あなたの発言:
+
+前の会話で、あなたは次の Task Contract 案と質問を示しました。
+
+<<<CONTRACT
+
+まだ実装していません。データを確認した結果、どのタイムゾーンで月を区切るか、税込か税抜か、返金(マイナス)の行を足すかの3点で月次の結果が変わります。この3点だけ質問します。
+
+確認できた事実
+
+項目 内容
+
+列 order_id, ordered_at, amount_incl_tax, status の4列
+
+件数 10件(A-1001〜A-1010)。ID の重複なし
+
+日時 すべて末尾が Z の UTC 時刻
+
+金額 整数で、列名どおり税込。全件が11で割り切れるので、税率10%の税込額と見られます(例: 11000 = 10000 × 1.1)
+
+status completed が8件、cancelled が2件(A-1003、A-1007)
+
+マイナスの金額 A-1006 が -1100(status は completed)。返金・返品のように見えます
+
+データのない月 2026-03 は0件
+
+月の境目 2件は日本時間にすると翌月になります。A-1004(UTC 01-31 16:20 → 日本時間 02-01 01:20)と A-1010(UTC 04-30 15:30 → 日本時間 05-01 00:30)
+
+空行 貼り付けられた内容では各行の間に空行があります(貼り付けで入ったものか、実ファイルにもあるかは不明)
+
+端数の注意 税抜額を
+
+1.1
+
+で計算すると 2999.9999… のような誤差が出ます。整数で計算する必要があります
+
+集計方法ごとの結果(completed のみ集計した場合)
+
+月の区切り 金額 マイナス行 結果
+
+UTC 税込 含める {"2026-01": 19800, "2026-02": 7700, "2026-04": 26400}
+
+UTC 税込 除く {"2026-01": 19800, "2026-02": 8800, "2026-04": 26400}
+
+日本時間 税込 含める {"2026-01": 16500, "2026-02": 11000, "2026-04": 18700, "2026-05": 7700}
+
+UTC 税抜 含める {"2026-01": 18000, "2026-02": 7000, "2026-04": 24000}
+
+日本時間 税抜 含める {"2026-01": 15000, "2026-02": 10000, "2026-04": 17000, "2026-05": 7000}
+
+仮定と不足情報
+
+仮定(今の方針)
+
+集計するのは status == "completed" の行だけで、cancelled は除きます。
+
+amount_incl_tax は税込の整数(円)です。
+
+空行は読み飛ばします。
+
+データのない月(2026-03)は dict に入れません(0 で埋めません)。
+
+ファイルは UTF-8 で、BOM があっても読めるようにします。
+
+不足情報
+
+月の区切りに使うタイムゾーン(業務上の「月」の定義)
+
+売上を税込で出すか、税抜で出すか
+
+マイナス金額の行の意味(返金なのか、訂正なのか)と、どの月に計上するか
+
+想定外の status や形式の崩れた行が来たときの扱い
+
+質問(3問)
+
+候補のどれにも当てはまらない場合は、具体的な値でお答えください(例: 「UTC+9 で月を区切る」「税抜で、端数は切り捨て」)。
+
+Q1. 月の区切りに使うタイムゾーン
+
+A. 日本時間(UTC+9)で区切る ← 推奨。A-1004 は 2026-02、A-1010 は 2026-05 に入ります。
+
+B. UTC のまま区切る。A-1004 は 2026-01、A-1010 は 2026-04 に入ります。
+
+理由: 2件の計上月が変わり、2026-05 という月ができるかどうかも決まります。
+
+Q2. 集計する金額
+
+A. 税込額をそのまま足す ← 推奨。列の値を変えずに使えます。
+
+B. 税抜額を足す。1行ごとに
+
+11
+
+(10%で割り戻し、端数は切り捨て)を計算してから合計します。
+
+C. 税抜額を足す。月の税込合計を出してから
+
+11
+
+で割り戻します。
+
+理由: 合計額が全体で約9%変わります。B と C は端数が出たときに結果が変わることがあります。
+
+Q3. マイナス金額の行(A-1006 の -1100)の扱い
+
+A. completed ならマイナスもそのまま足し、注文日時の月から差し引く ← 推奨。2026-02 は税込・日本時間で 11000 になります。
+
+B. マイナスの行は除く。同じ条件で 2026-02 は 12100 になります。
+
+C. マイナスの行が見つかったらエラーを出して止める。
+
+理由: 純売上と総売上のどちらを出すかが変わり、月の金額も変わります。
+
+Task Contract 案
+
+Outcome
+
+Python 関数 monthly_sales(path: str) -> dict[str, int] を作ります。sales.csv を読み、{"YYYY-MM": 金額(int)} を返します。
+
+Scope
+
+CSV の読み込み、行の絞り込み、Q1 で決めたタイムゾーンでの月の決定、Q2・Q3 に従った金額の合計を行います。
+
+戻り値のキーは月の昇順に並べます。
+
+Out of scope
+
+データのない月を 0 で埋めること
+
+通貨の換算や税率の判定(税率は10%に固定)
+
+返金を元の注文の月に付け替えること
+
+ファイルへの出力、グラフ、コマンドとして実行する機能
+
+標準ライブラリ以外を使うこと
+
+Data sources
+
+上に示された sales.csv(10行)だけです。
+
+Constraints
+
+Python 3.9 以上で、標準ライブラリ(csv、datetime、zoneinfo)だけを使います。
+
+金額の計算はすべて整数で行い、float は使いません。
+
+空行は読み飛ばします。
+
+日時、金額、status の形式が崩れた行は、行番号を付けて ValueError を出します。黙って飛ばすことはしません。
+
+Definition of Done(検証できる条件)
+
+推奨案(日本時間・税込・マイナスを含める)の場合、提示されたデータに対する戻り値が {"2026-01": 16500, "2026-02": 11000, "2026-04": 18700, "2026-05": 7700} と完全に一致します。回答に合わせて、上の結果表の該当する値に置き換えます。
+
+戻り値の値がすべて int です。
+
+月末の境目にあたる A-1004 と A-1010 が、Q1 で決めた月に入ることをテストで確かめます。
+
+cancelled の行が合計に入っていないことをテストで確かめます。
+
+空行が混じった入力でも、空行のない入力と同じ結果になります。
+
+形式の崩れた行で ValueError が出ることをテストで確かめます。
+
+pytest のテストがすべて通ります。
+
+Evidence
+
+関数の実装、pytest のテストファイル、テスト実行ログ、提示されたデータでの実際の戻り値を提出します。
+
+Open questions
+
+Q1〜Q3 はご回答をお待ちしています。
+
+以下は質問にしなかった仮定です。この仮定で進めます。
+
+データのない月は dict に入れません。
+
+status が completed と cancelled 以外の値の場合は、集計せずに飛ばします。
+
+文字コードは UTF-8 で、BOM があっても読めるようにします。
+
+区切り文字はカンマ、ヘッダー行は1行目です。
+
+Q1〜Q3 のご回答をいただくまで実装は始めません。
+
+CONTRACT>>>
+
+質問への私の回答です。
+
+<<<ANSWERS
+
+[tz] 月の判定は日本時間(JST, UTC+9)で行ってください。ordered_at は UTC で記録されています。
+[tax] 金額は税込(10%)で記録されています。レポートは税抜金額(税込 ÷ 1.1、整数)で返してください。
+[months] 最初の月から最後の月まで、注文がない月も 0 として必ず含めてください（欠損月を飛ばさない）。
+[other] 特に指定はありません。推奨案で進めてください。
+
+ANSWERS>>>
+
+値がそろっている点と回答がない点は、あなたの推奨既定案で進めてください（これ以上の確認はできません）。
+
+Task Contract を回答で更新し、承認済みとして実行してください（Execution Mode）。
+
+monthly_sales(path) を Python で実装し、コードを実際に実行して、上のデータでの結果の dict を示してください。
+Definition of Done の各条件について、検証用のコードを実行し、そのコードと出力を証拠として示してください。
+最後に、各 DoD 条件の状態（完了 / 証拠不足 / 人間の確認が必要）と、採用した仮定の一覧を書いてください。
+さらに表示
+14:58
+1 分 43 秒 間作業しました
+Building and testing the monthly sales function
+Running the function and its checks
+Building and testing the monthly sales function
+Comparing rounding approaches
+ファイルのコピー
+思考プロセス
+Copilot の発言:
+
+monthly_sales(path) を実装し、実際に実行しました。提示データでの結果は次のとおりです。
+
+PYTHON
+```python
+{'2026-01': 15000, '2026-02': 10000, '2026-03': 0, '2026-04': 17000, '2026-05': 7000}
+```
+
+検証テスト15件はすべて通りました。ただし、テストは pytest ではなく Python 標準の unittest で実行しています。この環境に pytest がなく、追加もできなかったためです。
+
+承認済み Task Contract(回答を反映)
+項目	内容
+Outcome	monthly_sales(path) -> dict[str, int] が {"YYYY-MM": 税抜金額} を返す
+Scope	・月の判定:UTC の ordered_at を日本時間に変換して判定<br>・金額:completed の行だけを税抜で合計<br>・月の範囲:最初の月から最後の月まで、注文のない月も0で入れる
+Out of scope	通貨換算、税率の判定(10%で固定)、返金を元の注文の月へ付け替えること、ファイル出力
+Data sources	提示された sales.csv(10行)
+Constraints	・標準ライブラリのみ使用<br>・金額は整数だけで計算し、小数は使わない<br>・空行は読み飛ばす<br>・形式の崩れた行は行番号付きでエラー(ValueError)にする
+Open questions	ご回答で解決済み。残る点は最後の「採用した仮定」に記載
+
+Definition of Done
+
+提示データでの戻り値が期待値と完全に一致する(更新後)
+戻り値がすべて整数
+月末をまたぐ注文が日本時間の月に入る
+cancelled の行を除く
+空行があってもなくても結果が同じ
+形式の崩れた行でエラーになる
+注文のない月を0で埋める(新規)
+税抜換算が整数で行われ、マイナスの行も計上される(新規)
+全テストが通る
+実装(
+monthly_sales.py
+)
+PYTHON
+```python
+JST = timezone(timedelta(hours=9), "JST")   # 日本時間は夏時間がないため固定で扱う
+REQUIRED_COLUMNS = ("order_id", "ordered_at", "amount_incl_tax", "status")
+COUNTED_STATUS = "completed"
+KNOWN_STATUSES = {"completed", "cancelled"}
+_INT_RE = re.compile(r"-?\d+")
+
+def to_tax_excluded(amount_incl_tax: int) -> int:
+    """税込(10%)→税抜。整数演算で ÷1.1 し、0 方向に切り捨てる。"""
+    q = abs(amount_incl_tax) * 10 // 11
+    return q if amount_incl_tax >= 0 else -q
+
+def monthly_sales(path: str) -> Dict[str, int]:
+    totals: Dict[str, int] = {}
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        if reader.fieldnames is None:
+            return {}
+        header = [h.strip() for h in reader.fieldnames]
+        missing = [c for c in REQUIRED_COLUMNS if c not in header]
+        if missing:
+            raise ValueError(f"missing columns: {missing}")
+        reader.fieldnames = header
+        for row in reader:
+            line_no = reader.line_num
+            if None in row:
+                raise ValueError(f"line {line_no}: too many fields")
+            values = [row[c] for c in REQUIRED_COLUMNS]
+            if all(v is None or not v.strip() for v in values):
+                continue  # 空白だけの行
+            if any(v is None for v in values):
+                raise ValueError(f"line {line_no}: too few fields")
+            status = row["status"].strip()
+            if not status:
+                raise ValueError(f"line {line_no}: empty status")
+            ordered_at = _parse_utc(row["ordered_at"], line_no)    # タイムゾーンのない日時もエラー
+            amount = _parse_amount(row["amount_incl_tax"], line_no)  # 整数以外はエラー
+            if status != COUNTED_STATUS:
+                if status not in KNOWN_STATUSES:
+                    warnings.warn(f"line {line_no}: unknown status {status!r} skipped")
+                continue
+            month = ordered_at.astimezone(JST).strftime("%Y-%m")
+            totals[month] = totals.get(month, 0) + to_tax_excluded(amount)
+    if not totals:
+        return {}
+    return {m: totals.get(m, 0) for m in _month_range(min(totals), max(totals))}
+```
+
+_parse_utc、_parse_amount、_month_range(年をまたいで月を順に並べる処理)を含む全文は、保存したファイルにあります。
+
+Definition of Done ごとの証拠
+
+検証コードは 
+test_monthly_sales.py
+ の抜粋です。
+
+#	条件	検証コード(抜粋)	出力	状態
+1	期待値と完全一致	assertEqual(monthly_sales(DATA), {"2026-01":15000,"2026-02":10000,"2026-03":0,"2026-04":17000,"2026-05":7000})。別の計算方法(10進数の精密計算と、標準の Asia/Tokyo タイムゾーン)で出した値とも一致を確認	ok ×2	完了
+2	値がすべて整数	all(type(v) is int ...) で確認し、キーが YYYY-MM 形式であることも確認	ok	完了
+3	月末の境目	・A-1004 → 2026-02<br>・A-1010 → 2026-05<br>・UTC 14:59:59 → 1月(日本時間 23:59:59)<br>・UTC 15:00:00 → 2月(日本時間 0:00)	ok(4ケース)	完了
+4	cancelled を除く	11000(completed)+22000(cancelled)→ {"2026-01": 10000}	ok	完了
+5	空行の有無で同じ結果	空行を取り除いたファイルと元ファイルで結果が同じで、期待値とも一致	ok	完了
+6	形式の崩れた行でエラー	・日付が不正、タイムゾーンなし、小数、文字、金額が空、status が空、列の過不足、cancelled 行の不正日付の9ケース:行番号付きのエラーになる<br>・必要な列がない:エラーになる	ok ×2	完了
+7	注文のない月を0で埋める	月が ["2026-01",…,"2026-05"] と途切れずに並び、2026-03 == 0。年をまたぐ例(2025-11〜2026-02)も確認	ok ×2	完了
+8	税抜換算・マイナス計上	11000→10000、1000→909、1→0、-1100→-1000、-1000→-909。2026-02 = 3000+8000-1000 = 10000	ok ×2	完了
+9	全テストが通る	
+python3 test_monthly_sales.py
+	
+OK
+	完了。pytest では未実行。テストは pytest からもそのまま実行できる形で書いています
+
+追加で、次の仮定もテストしました:先頭に BOM がある UTF-8、空ファイル、想定外の status に警告を出して飛ばすこと。結果は ok です。
+
+人間の確認が必要な点
+税抜の端数処理の方法:1行ごとに税抜にしてから合計する方法を採りました。端数は0方向に切り捨てます。月の税込合計を出してから割り戻す方法もありますが、今回のデータは全行が11で割り切れるため、どちらでも結果は同じでした。端数が出るデータでは1円単位の差が出ることがあるため、業務のルールをご確認ください。
+採用した仮定
+・集計するのは completed の行だけで、cancelled は除きます。 ・ただし cancelled の行も形式はチェックします。
+マイナスの金額(A-1006)は返金とみなし、注文日の月から差し引きます。
+税抜額は「税込 × 10 ÷ 11」を整数で計算し、行ごとに0方向へ切り捨てます。
+日本時間は UTC+9 で固定して扱います。夏時間がないためで、標準の Asia/Tokyo タイムゾーンで計算した値との一致も確認しました。
+・0で埋める月の範囲は、集計対象(completed)の行がある最初の月から最後の月までです。 ・対象の行が1件もなければ空の dict を返します。
+想定外の status は警告を出して飛ばします。
+・文字コードは UTF-8 で、先頭に BOM があっても読めます。 ・区切りはカンマ、ヘッダーは1行目です。
+日時の末尾が Z 以外でも、タイムゾーンの指定があれば受け付けます。指定がない日時はエラーにします。
+戻り値のキーは月の昇順に並べます。
+
+コード、テスト、サンプルの CSV は、同僚 フォルダー内のこのタスクの出力フォルダー(monthly_sales)に保存しました。ファイルは monthly_sales.py、test_monthly_sales.py、sales.csv の3つです。テスト実行時にできた不要なキャッシュフォルダーも一緒に入っているので、削除してかまいません。
+
+monthly_sales
+コード ファイル
+test_monthly_sales
+コード ファイル
+sales
+CSV ファイル
+monthly_s…-312.pyc
+monthly_sales.cpython-312.pyc
+ファイル
+生成されたファイルは、詳細ペインの出力フォルダーに保存されます。
+
+
+
+
+Cowork にメッセージを送る
+自動
+中
+AI 生成コンテンツは正確でない場合があります
+Tab キーを押して提案を承諾します

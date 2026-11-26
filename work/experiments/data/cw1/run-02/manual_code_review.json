@@ -1,0 +1,27 @@
+{
+ "run": "run-02",
+ "file": "monthly_sales.py",
+ "review": "manual (protocol: code failing the AST allowlist is reviewed by hand). Only stdlib csv, re, warnings, datetime, typing; open() is read-only; warnings.warn only; sys used only under __main__. Judged safe and executed with the same runner (python -I, temp cwd, 30 s timeout).",
+ "supplied_result": {
+  "2026-01": 15000,
+  "2026-02": 10000,
+  "2026-03": 0,
+  "2026-04": 17000,
+  "2026-05": 7000
+ },
+ "supplied_score": 4,
+ "supplied_missing": "",
+ "heldout_result": {
+  "2026-05": 3000,
+  "2026-06": 5454,
+  "2026-07": 4000,
+  "2026-08": 0,
+  "2026-09": 9000,
+  "2026-10": 0,
+  "2026-11": 0,
+  "2026-12": 1000,
+  "2027-01": 6000
+ },
+ "heldout_score": 4,
+ "heldout_missing": ""
+}
