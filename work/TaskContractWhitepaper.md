@@ -844,7 +844,7 @@ v1.0 の7章に挙げた5項目と、v1.0〜v1.3 で「仮説」「未検証」�
 | Microsoft 365 Copilot での実践（v1.3、U18、U19） | **v1.4 で一部検証**: Copilot Chat で、Contract を作るプロンプトの構造、演習1〜4、コードの実行、回答した論点の反映（E12）を確認。Cowork での Contract の実行と、Researcher エージェントでの確認は未実施 | 7.8節、7.9節、付録A.21 |
 | オラクルのモデルを変えたときの影響 | **未検証**: v2〜v4 のオラクルは claude-opus-5.5 に固定。Sonnet-5.5 の被験エージェントとは同じ提供元である | 付録A.17、付録A.20 |
 | 人間の回答者、Workshop（旧7章の3、5） | **未実施（依頼者の在席が必要）** | 下の手順1 |
-| Copilot Cowork での Contract の実行 | **未実施（依頼者の在席が必要）**: 統合ブラウザーからのサインインは条件付きアクセスで拒否され、Computer Use は無人の実行中には有効にできなかった。v1.5 で外部の Edge（Playwright で起動）から再試行したところ、条件付きアクセスは通過してサインイン画面（dahatake@microsoft.com）まで進んだが、Windows Hello（顔、指紋、PIN、セキュリティ キー）の本人確認が必要で、4分待っても完了せず、未ログインのまま終了した。手順の再開には、依頼者がその確認を行う必要がある | 下の手順2 |
+| Copilot Cowork での Contract の実行 | **未実施（依頼者の在席が必要）**: 統合ブラウザーからのサインインは条件付きアクセスで拒否され、Computer Use は無人の実行中には有効にできなかった。v1.5 で外部の Edge（Playwright で起動）から再試行したところ、条件付きアクセスは通過してサインイン画面（dahatake@microsoft.com）まで進んだが、Windows Hello（顔、指紋、PIN、セキュリティ キー）の本人確認が必要で、4分待っても完了せず、未ログインのまま終了した。手順の再開には、依頼者がその確認を行う必要がある。**依頼者が Cowork で実行して結果を返すための手順書として、[TaskContractCoworkRunbook.md](./TaskContractCoworkRunbook.md)（実行手順、固定の回答表、返送の方法）と、実行前に固定した手順 [preregistration_cowork_cw1.md](./experiments/data/preregistration_cowork_cw1.md)（gist [c95ef1dd…](https://gist.github.com/dahatake/c95ef1dd5396c86f532f16772d65d1cd)、2026-11-26T05:22:51Z）、採点スクリプト（`experiments/cowork/`）を用意した。** 返送された結果は、白書に反映する | 下の手順2 |
 | 大きなタスク（旧7章の1） | **v1.2 で一部検証**: 10の業務ルールの課題で TC+ は満点（補足の検査で、実データの全請求書が参照実装と一致）、NOASK を上回った（p=0.05）。B-POST との差は有意でなく、回帰は起きなかった。**数時間規模の実行時間は再現できない**（本環境のサブエージェントは数分で終える） | 付録A.16、下の手順3 |
 
 **残る3項目の実施手順**（本環境では、依頼者の在席か長時間の実行が必要なため実施できなかった）
@@ -1067,6 +1067,7 @@ gh api gists/e0c489b5b3185657f56f8c63bc93e4e3 --jq .created_at  # 2026-11-26T03:
 | `data/ladder_protocol.md`、`data/surfacing_rules.json`、`analyze_ladder.py`、`analyze_ladder_rater_by_condition.py`、`data/ladder_req.csv`、`data/ladder_summary.json` | v1.5 の横断分析の手順、キーワード規則、スクリプト、要件ごとの採点、集計（5章） |
 | `data/mechanism_packet.md.txt`、`data/mechanism_packet_key.json`、`data/mechanism_rater.json` | 「回答に現れたか」の判定者への入力、対応表、判定（5.3節、付録E） |
 | `verify_claims.py`、`data/claims_ledger.csv` | 主張の台帳（付録E） |
+| `cowork/`（`cowork.ps1`、`score_cowork.py`、`heldout_sales.csv`、`selftest_cowork.py`）、`data/preregistration_cowork_cw1.md` | Cowork での確認（CW1）の、手順、実行の補助、採点（結果は未返送。8章） |
 
 ---
 
