@@ -202,16 +202,29 @@ task_contract:
 
 **製品ごとの対応（2026-11-25 時点で一次資料から確認できたこと）**
 
-- **GitHub Copilot（クラウドのエージェント）**: エージェントはクラウドのサンドボックス、GitHub Actions の実行環境、またはリモート環境で作業し、セッションを複数のクライアント（Web、Copilot app、IDE、CLI）の間で引き継げる。Copilot connectors や MCP サーバーで外部の情報を取り込める（[GitHub Docs](https://docs.github.com/en/copilot/concepts/copilot-surfaces/copilot-on-github)）。変更はプルリクエストになり、レビューを依頼できる。表Aの能力をほぼ備え、プルリクエストのレビューが Gate 2 に当たる。
+- **GitHub Copilot（Agent mode / Copilot in the cloud）**: Agent mode は、高レベルの依頼を受けて、ファイルを決め、編集し、必要なコマンドを実行し、タスク完了まで反復する（[GitHub Docs: Agent mode](https://docs.github.com/en/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-agent-mode)）。IDE、CLI、Cloud agent、Copilot in the cloud は同じ Harness Loop を保証する同一製品ではなく、環境ごとにサンドボックス、承認、セッション継続、フックが異なる（[GitHub Copilot on GitHub](https://docs.github.com/en/copilot/concepts/copilot-surfaces/copilot-on-github)、[Hooks](https://docs.github.com/en/copilot/concepts/customizations/hooks)）。Agent Merge は、失敗した Actions ワークフローやマージ競合を検出して修正する具体的なループを提供するが、すべてのタスクに有効な既定の retry 回数を保証するものではない（[Agent Merge](https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/watch-and-fix-pull-requests)）。したがって、GitHub Copilot は今回のハーネス定義で、計画・実行・検証・承認・停止・特定の失敗修正が公式に確認できる。汎用的な再試行上限と失敗注入は、追加実験が必要である。
 - **Microsoft 365 Copilot Cowork**: メール、予定、文書、Teams、ファイルの操作、調査、定期実行を行う（[Microsoft Learn: Copilot Cowork overview](https://learn.microsoft.com/en-us/copilot/cowork/)）。一次資料で確認できた、Task Contract に関係する仕組みは次のとおり（[Application card](https://learn.microsoft.com/copilot/cowork/responsible-ai/copilot-cowork-application-card)、[Use Copilot Cowork](https://learn.microsoft.com/copilot/cowork/use-cowork)）。
   - 送信、投稿、予定の作成、ファイルの変更の前に、一時停止して承認を求める。ただし「以後確認しない」を選ぶと、その会話の中では同じ種類の承認が省略される。
   - Cowork が質問したとき、利用者は Skip でき、その場合 Cowork は手元の情報で続ける。表Aの「質問と回答の往復」は、Skip されると回答なしの実行（付録A.9 の NOASK）になる。
   - 会話の中の記憶は、会話をまたいで残らない。
   - カスタムスキル（OneDrive の `SKILL.md`、最大50個）で、手順を繰り返し使える。作成時に、構造、prompt injection のパターン、確認なしの送信などが自動で評価される。
   - 暗号化や権限保護されたファイルは読めない。
-  - コードを実行して DoD をテストで検証するループの記載はない（確認できた範囲）。
+  - 公式資料では、複数ステップの計画、段階実行、承認、停止・再開・キャンセル、会話中のフィードバックが確認できる。一方、失敗したテストを検知して修正し、試行上限の中で再実行する閉ループと、作業範囲外へ影響しないサンドボックス実行は、公式資料と CW1 だけでは確認できていない。
 
   承認ゲートは製品が担う。Spec Mode の停止、必須の質問、DoD の証拠は、Contract の文面で担う必要がある（7.8節）。本稿では、課題 T1 の Task Contract Prompt を Cowork で各3回実行した（付録A.23）。6回とも承認ゲートは表示されず、Spec Mode の停止と質問は、プロンプトの文面によって起きた。業務記録から作った Contract を Cowork で実行する確認は、まだ行っていない（手順は8章）。
+
+- **Harness Loop 検証（6能力）**: 「最新の Harness Loop」ではなく、計画、実行、観察、失敗時の判断、修正・再試行、停止・完了検証の6能力で判定した。詳細は [HarnessLoopVerification.md](./HarnessLoopVerification.md) にある。
+
+| 能力 | Microsoft 365 Copilot Cowork | GitHub Copilot |
+|---|---|---|
+| 計画 | 公式資料とCW1で、タスクの段階分解とSpec Modeの停止を確認 | Agent modeで計画・ファイル選択を公式資料で確認 |
+| 実行・ツール | M365の操作、ファイル作成、CW1のコード実行を確認 | ファイル編集、コマンド、クラウド環境、MCPを公式資料で確認 |
+| 観察・検証 | CW1でTC+が報告したテスト結果とdictを確認。pytestは代替実行の回があった。出力は自己申告であり、run-02の手動再実行を除き、Cowork自身の実行を独立に再実行して確認したものではない | Agent modeのテスト/lint実行、GitHub hooks、セッションログとPRのレビューを公式資料で確認 |
+| 失敗時の修正・再試行 | **未確認**。CW1は失敗注入や再試行を行っていない | Agent Mergeで失敗workflowや競合の修正ループが公式資料で確認できる。汎用的なretry上限は未確認 |
+| 承認 | 敏感な操作の承認ゲートを公式資料で確認。CW1の合成課題では承認ゲートが出なかった | IDEのterminalは既定で承認、Agent Mergeは人間レビューを要する。環境ごとの設定が必要 |
+| 停止・完了検証 | pause/resume/cancelとTC+のPhase 1停止を確認。bounded retryは未確認 | agentStop/sessionEnd、GitHub Actionsの時間制限、人間レビューを公式資料で確認。完成条件とretry上限は設定に依存 |
+
+したがって、**Cowork を完全な Harness Loop の製品と断定するには、失敗注入、再試行上限、失敗テスト修正、環境レベルの停止条件が不足している**。GitHub Copilotは公式資料と実行機能からループの能力が強く確認できるが、GitHub Agent modeでのTask Contract Promptの直接A/Bは、本稿ではまだ実行していない。
 - **Microsoft 365 Copilot Chat**: Work IQ 経由で、実際の業務記録を使って動作を確かめた（7.8節、7.9節。各1〜2回）。
   - メール、Teams、会議、予定表、文書を横断して調べ、出典つきで答えた（1回の応答で出典24〜67件）。
   - 指示すれば、調査の後で値つきの選択肢で質問して止まり、次の発話の回答を反映した。同じ会話での継続は、Work IQ 経由では失敗することがあった。
@@ -1069,6 +1082,7 @@ gh api gists/e0c489b5b3185657f56f8c63bc93e4e3 --jq .created_at  # 2026-11-26T03:
 | `data/mechanism_packet.md.txt`、`data/mechanism_packet_key.json`、`data/mechanism_rater.json` | 「回答に現れたか」の判定者への入力、対応表、判定（5.3節、付録E） |
 | `verify_claims.py`、`data/claims_ledger.csv` | 主張の台帳（付録E） |
 | `cowork/`（`cowork.ps1`、`score_cowork.py`、`heldout_sales.csv`、`selftest_cowork.py`）、`data/preregistration_cowork_cw1.md`、`data/cw1/` | Cowork での確認（CW1）の、手順、実行の補助、採点、各回の記録（会話、示した dict、観察、生成ファイル、採点結果。付録A.23） |
+| `HarnessLoopVerification.md` | Microsoft Copilot Cowork と GitHub Copilot の Harness Loop 能力の一次資料監査（計画、実行、検証、失敗修正、承認、停止） |
 
 ---
 
@@ -1685,6 +1699,7 @@ v1.3 の7章と本文で「未検証」「範囲外」「判断できない」�
 - **D-CW1-5 リポジトリへの記録**: 画面のスクリーンショット（ほかのタスクの題名が写る）と `.pyc` は、リポジトリに入れなかった。テキストの記録は、利用者の ID と名前を伏せて入れた。このため、リポジトリのファイルのハッシュは、元のフォルダーの `manifest.sha256.txt`（元のファイルのハッシュ、49件、照合済み）とは一致しない。元の記録は依頼者の PC（`C:\CoworkRuns\CW1_results.zip`、SHA-256 `A1A113E8…7629`）にある。
 - 各条件 n=3 の探索的な確認で、課題は T1 だけである。7.8節で業務記録から作った Contract を、過去の案件で Cowork に実行させる確認（7.9節の演習5の (a)〜(e)）は、まだ行っていない。
 - **E12（Copilot Chat）との比較は、製品の効果の比較ではない**: 回答者（E12 は AI のオラクル、CW1 は固定の回答表を使う AI アシスタント）、Phase 2 の会話（E12 は新しい会話で元データなし、CW1 は同じタスク）、主な指標の取り方（E12 の TC+ は著者がコードを再実行、CW1 は Cowork が示した dict）が違う。両者の数値（3/4 と 4/4）は、目安として並べるにとどめる。
+- **Harness Loop の結論は CW1 の Task Contract の採点とは別**: CW1 は、TC+ が回答で既定値を置き換えられたことを示すが、失敗注入・retry・止める回数・失敗テスト修正は示していない。Harness Loop の能力の結論は [HarnessLoopVerification.md](./HarnessLoopVerification.md) に分けて記録した。
 
 ### 付録B 実験で使った全プロンプト
 
