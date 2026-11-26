@@ -52,6 +52,21 @@ export const FILES = {
     "プロトタイプ/README.md",
     "技術調査.md"
   ],
+  "task contract prompt": [
+    "README.md"
+  ],
+  "work": [
+    "20261125-TaskContract-PromptGenerator-AuditReport.md",
+    "20261126-TaskContract-Medium.en.md",
+    "20261126-TaskContract-QiitaArticle.en.md",
+    "20261126-TaskContract-QiitaArticle.md",
+    "HarnessLoopVerification.md",
+    "TaskContractAnalyticsReport.md",
+    "TaskContractCoworkRunbook.md",
+    "TaskContractPromptAndRuntime-AnalyticsReport.md",
+    "TaskContractQiitaArticle.md",
+    "TaskContractWhitepaper.md"
+  ],
   "Workshop_English": [
     "README.md"
   ],
