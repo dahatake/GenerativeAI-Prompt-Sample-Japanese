@@ -1,0 +1,70 @@
+id,section,pattern,recomputed,found_in_text
+N-total,header,計 239 回,239,True
+v2-TC,付録D-1,TC 93\.8%,93.8,True
+v2-NOASK,付録D-1,NOASK 59\.7%,59.7,True
+v2-BPOST,付録D-1,B-POST は 98\.6%,98.6,True
+H8,付録D-1,TC と NOASK の差は 34\.0ポイント,34.0,True
+H8-p,付録D-1,片側 p=0\.0005,0.0005,True
+H7,付録D-1,B-POST が 4\.9ポイント高かった,4.9,True
+H8b-p,付録D-1,NOASK と B の差は検出されなかった（p=0\.20）,0.20,True
+H15,付録D-7,\+47\.2ポイント、モデルと課題で層別,47.2,True
+H17,付録D-8,TC\+ が \+16\.7ポイント上回った,16.7,True
+H17-p,付録D-8,片側 p=0\.0035,0.0035,True
+T6-MAI-2.0 Flash-TCP,表6,\| MAI-2.0 Flash \|[^\n]*83\.3%,83.3,True
+T6-Sonnet-5.5-TCP,表6,\| Sonnet-5.5 \|[^\n]*100%,100,True
+T6-GPT-6.2 Sol-TCP,表6,\| GPT-6.2 Sol \|[^\n]*91\.7%,91.7,True
+E5-BPOST,付録D-11,B-POST は 93\.3%,93.3,True
+E5-NOASK,付録D-11,NOASK は 83\.3%,83.3,True
+H23,付録D-14,"TC\+CL は[^
+]*97\.9%",97.9,True
+H23-ctrl,付録D-14,TC\+ は 84\.4%,84.4,True
+H23-p,付録D-14,片側 p=0\.007,0.007,True
+H23-v4,付録D-14,p=0\.058,0.058,True
+H24,付録D-15,BALL は 93\.8%,93.8,True
+H24-ctrl,付録D-15,B-POST は 53\.1%,53.1,True
+H24-p,付録D-15,片側 p=0\.0008,0.0008,True
+H25-p,付録D-15,片側 p=0\.0625,0.0625,True
+E8,付録D-16,G 4/5、G\+TB 3/5、G\+TB2 0/5,4/3/0,True
+H26-p,付録D-16,片側 p=0\.024,0.024,True
+H26-ref,付録D-16,p=0\.083,0.083,True
+E9-cue-yes,付録D-17,手がかりあり 60\.3%,60.3,True
+E9-cue-no,付録D-17,なし 80\.0%,80.0,True
+rework-ratio,4.20,8\.1行（972行,8.1,True
+mech-surf1,要旨/5章,99\.5%（440/442）,99.5,True
+mech-surf0,要旨/5章,55\.4%（62/112）,55.4,True
+mech-fail-surf0,要旨/5章,0/45,0,True
+mech-fail-surf1,5章 表R2,（205/207）,205,True
+mech-rater-surf1,5章 表R2,99\.8%（438/439）,99.8,True
+rater-agree,要旨/5章,98%,98,True
+rater-agree-n,5章,554件中543件,543,True
+surf-BPOST-ballstrata,5.4節,B-POST の 31%（10/32）,10/32,True
+surf-BALL-ballstrata,5.4節,BALL は 96%（46/48）,46/48,True
+surf-specmode,5.5節,Spec Mode が 94%（221/236）,221/236,True
+surf-posthoc,5.5節,事後確認が 71%（145/204）,145/204,True
+ladder-段1,5章 表R1,"57\.5% 対 58\.9% \|[^
+]*?−1\.4",57.5/58.9/−1.4,True
+ladder-段2,5章 表R1,"93\.9% 対 53\.5% \|[^
+]*?\+40\.3",93.9/53.5/+40.3,True
+ladder-段3,5章 表R1,"100% 対 93\.8% \|[^
+]*?\+6\.2",100/93.8/+6.2,True
+ladder-段4,5章 表R1,"97\.9% 対 84\.4% \|[^
+]*?\+13\.5",97.9/84.4/+13.5,True
+ladder-段5,5章 表R1,"86\.7% 対 58\.9% \|[^
+]*?\+27\.8",86.7/58.9/+27.8,True
+ladder-段6,5章 表R1,"93\.8% 対 53\.1% \|[^
+]*?\+40\.6",93.8/53.1/+40.6,True
+ladder-段7,5章 表R1,"87\.5% 対 54\.2% \|[^
+]*?\+33\.3",87.5/54.2/+33.3,True
+ladder-段8,5章 表R1,"94\.8% 対 87\.5% \|[^
+]*?\+7\.3",94.8/87.5/+7.3,True
+ladder-段9,5章 表R1,"94\.1% 対 62\.1% \|[^
+]*?\+32\.0",94.1/62.1/+32.0,True
+ladder-段10,5章 表R1,"100% 対 68\.1% \|[^
+]*?\+31\.9",100/68.1/+31.9,True
+surf-TC,5章 表R3,\| TC \|[^\n]*?73% / 76%,73/76,True
+surf-TC+,5章 表R3,\| TC\+ \|[^\n]*?93% / 93%,93/93,True
+surf-TC+CL,5章 表R3,\| TC\+CL \|[^\n]*?98% / 98%,98/98,True
+surf-B-POST,5章 表R3,\| B\-POST \|[^\n]*?64% / 61%,64/61,True
+surf-BALL,5章 表R3,\| BALL \|[^\n]*?96% / 94%,96/94,True
+surf-OFILE,5章 表R3,\| OFILE \|[^\n]*?29% / 29%,29/29,True
+surf-OFULL,5章 表R3,\| OFULL \|[^\n]*?88% / 88%,88/88,True

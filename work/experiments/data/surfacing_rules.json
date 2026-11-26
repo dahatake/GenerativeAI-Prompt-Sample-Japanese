@@ -1,0 +1,10 @@
+{
+ "_doc": "Surfacing rule (fixed before computing pass rates conditional on surfacing). A hidden requirement counts as SURFACED in a run when the answers given to the agent (v1: oracle_log.json answers_verbatim; v2-v4: answers.md + answers2.md) contain at least one sentence (split on '。' and newlines) that matches the requirement's pattern (case-insensitive regex) and does not contain '特に指定'. Surfaced means the requirement was conveyed or confirmed to the agent before its final implementation.",
+ "T1": {"R1": "cancelled|取消|キャンセル", "R2": "JST|日本時間|日本標準時|UTC\\s*\\+\\s*0?9|Asia/Tokyo|\\+09:00", "R3": "税抜|1\\.1|÷\\s*1\\.1", "R4": "0\\s*として|0\\s*埋め|0\\s*で(補完|含め|埋め)|0\\s*に|ゼロ|欠損月|注文がない月|空き月|売上のない月|レコードがない月|行がない月|月も\\s*0"},
+ "T2": {"R1": "メール|email|大文字|小文字|空白", "R2": "updated_at|新しい|最新", "R3": "順|出現|位置", "R4": "空文字|空の|null|None|メールアドレスがない"},
+ "T3": {"R1": "大文字|小文字|INV-", "R2": "2020|2099", "R3": "0000", "R4": "文字列以外|None|数値|例外|False"},
+ "T4": {"R1": "翌日|日付をまたい|日またぎ|日跨ぎ|翌日終了|日をまたぐ", "R2": "休憩|60\\s*分|控除", "R3": "15\\s*分", "R4": "7\\.5|paid_leave|有給|有休"},
+ "T5": {"R1": "28", "R2": "on_order|有効在庫|発注済", "R3": "lot|切り上げ", "R4": "discontinued|廃番", "R5": "昇順|\\bint\\b", "R6": "以下|<=|同値|ちょうど|等しい"},
+ "T6": {"R1": "JST|日本時間|UTC\\s*\\+\\s*0?9", "R2": "shipped|returned", "R3": "effective_from|適用日|注文日.*価格|価格.*注文日", "R4": "8\\s*%|軽減|food", "R5": "gold|5\\s*%", "R6": "値引き.*切り捨て|区分ごとに1円未満", "R7": "請求書ごと|税率区分ごと|税率ごと", "R8": "INV-|invoice_id|連番", "R9": "作らない", "R10": "ordered_at の昇順|lines"},
+ "_rater": "Independent check: a rater agent receives, for each answered run, only the task, the requirement texts and the answer text (no scores, no conditions, run ids anonymized) and marks for each requirement whether the answer conveys or confirms it. Agreement with the keyword rule is reported; the main table is computed with both."
+}

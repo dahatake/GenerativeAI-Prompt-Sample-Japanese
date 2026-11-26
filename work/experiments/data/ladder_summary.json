@@ -1,0 +1,410 @@
+{
+ "conditions": {
+  "B": {
+   "n_runs": 38,
+   "mean": 0.621
+  },
+  "BALL": {
+   "n_runs": 12,
+   "mean": 0.938
+  },
+  "BALL_p1": {
+   "n_runs": 12,
+   "mean": 0.292
+  },
+  "BPOST": {
+   "n_runs": 33,
+   "mean": 0.853
+  },
+  "FULL": {
+   "n_runs": 6,
+   "mean": 1.0
+  },
+  "NOASK": {
+   "n_runs": 33,
+   "mean": 0.535
+  },
+  "OFILE": {
+   "n_runs": 6,
+   "mean": 0.542
+  },
+  "OFULL": {
+   "n_runs": 6,
+   "mean": 0.875
+  },
+  "TC": {
+   "n_runs": 15,
+   "mean": 0.95
+  },
+  "TCP": {
+   "n_runs": 41,
+   "mean": 0.939
+  },
+  "TCPCL": {
+   "n_runs": 12,
+   "mean": 0.979
+  }
+ },
+ "ladder": [
+  {
+   "step": "1 contract structure, plan and self-tests without answers",
+   "comparison": "NOASK - B",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6",
+    "claude-sonnet-5.5|T1",
+    "claude-sonnet-5.5|T3",
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T3",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T3",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 29,
+   "n_b": 35,
+   "mean_a": 0.575,
+   "mean_b": 0.589,
+   "diff": -0.014,
+   "p_one_sided": 0.5995,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "2 answers to the agent's questions",
+   "comparison": "TC/TC+ - NOASK",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6",
+    "claude-sonnet-5.5|T1",
+    "claude-sonnet-5.5|T3",
+    "claude-sonnet-5.5|T4",
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T3",
+    "gpt-6.2-sol|T4",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T3",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 53,
+   "n_b": 33,
+   "mean_a": 0.939,
+   "mean_b": 0.535,
+   "diff": 0.403,
+   "p_one_sided": 0.0,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "3 options written as concrete values (+1 follow-up)",
+   "comparison": "TC+ - TC",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5"
+   ],
+   "n_a": 12,
+   "n_b": 12,
+   "mean_a": 1.0,
+   "mean_b": 0.938,
+   "diff": 0.062,
+   "p_one_sided": 0.05,
+   "method": "exact"
+  },
+  {
+   "step": "4 aspect checklist in Spec Mode",
+   "comparison": "TC+CL - TC+",
+   "strata": [
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T4",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 12,
+   "n_b": 16,
+   "mean_a": 0.979,
+   "mean_b": 0.844,
+   "diff": 0.135,
+   "p_one_sided": 0.0071,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "post-hoc answers to report.md and a fix",
+   "comparison": "B-POST - B",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6",
+    "claude-sonnet-5.5|T1",
+    "claude-sonnet-5.5|T3",
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T3",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T3",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 29,
+   "n_b": 35,
+   "mean_a": 0.867,
+   "mean_b": 0.589,
+   "diff": 0.278,
+   "p_one_sided": 0.0,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "list all assumptions before post-hoc answers",
+   "comparison": "BALL - B-POST",
+   "strata": [
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T4",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 12,
+   "n_b": 8,
+   "mean_a": 0.938,
+   "mean_b": 0.531,
+   "diff": 0.406,
+   "p_one_sided": 0.0008,
+   "method": "exact"
+  },
+  {
+   "step": "answerer reads the whole report",
+   "comparison": "OFULL - OFILE",
+   "strata": [
+    "gpt-6.2-sol|T1",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 6,
+   "n_b": 6,
+   "mean_a": 0.875,
+   "mean_b": 0.542,
+   "diff": 0.333,
+   "p_one_sided": 0.0417,
+   "method": "exact"
+  },
+  {
+   "step": "timing: before vs after implementation",
+   "comparison": "Spec Mode (TC+/TC+CL) - post-hoc (B-POST/BALL)",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6",
+    "claude-sonnet-5.5|T1",
+    "claude-sonnet-5.5|T3",
+    "claude-sonnet-5.5|T4",
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T3",
+    "gpt-6.2-sol|T4",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T3",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 53,
+   "n_b": 45,
+   "mean_a": 0.948,
+   "mean_b": 0.875,
+   "diff": 0.073,
+   "p_one_sided": 0.0042,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "overall: Task Contract prompt vs conventional prompt",
+   "comparison": "TC family - B",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T2",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6",
+    "claude-sonnet-5.5|T1",
+    "claude-sonnet-5.5|T3",
+    "gpt-6.2-sol|T1",
+    "gpt-6.2-sol|T3",
+    "mai-code-2-flash|T1",
+    "mai-code-2-flash|T3",
+    "mai-code-2-flash|T4"
+   ],
+   "n_a": 59,
+   "n_b": 38,
+   "mean_a": 0.941,
+   "mean_b": 0.621,
+   "diff": 0.32,
+   "p_one_sided": 0.0,
+   "method": "monte_carlo"
+  },
+  {
+   "step": "reference: all rules written in the request",
+   "comparison": "FULL - B",
+   "strata": [
+    "claude-opus-5.5|T1",
+    "claude-opus-5.5|T2",
+    "claude-opus-5.5|T3",
+    "claude-opus-5.5|T4",
+    "claude-opus-5.5|T5",
+    "claude-opus-5.5|T6"
+   ],
+   "n_a": 6,
+   "n_b": 24,
+   "mean_a": 1.0,
+   "mean_b": 0.681,
+   "diff": 0.319,
+   "p_one_sided": 0.0013,
+   "method": "exact"
+  }
+ ],
+ "mechanism_by_condition": {
+  "BALL|surfaced=0": {
+   "pass": 0,
+   "n": 2,
+   "rate": 0.0
+  },
+  "BALL|surfaced=1": {
+   "pass": 45,
+   "n": 46,
+   "rate": 0.978
+  },
+  "BPOST|surfaced=0": {
+   "pass": 37,
+   "n": 57,
+   "rate": 0.649
+  },
+  "BPOST|surfaced=1": {
+   "pass": 98,
+   "n": 99,
+   "rate": 0.99
+  },
+  "OFILE|surfaced=0": {
+   "pass": 6,
+   "n": 17,
+   "rate": 0.353
+  },
+  "OFILE|surfaced=1": {
+   "pass": 7,
+   "n": 7,
+   "rate": 1.0
+  },
+  "OFULL|surfaced=0": {
+   "pass": 0,
+   "n": 3,
+   "rate": 0.0
+  },
+  "OFULL|surfaced=1": {
+   "pass": 21,
+   "n": 21,
+   "rate": 1.0
+  },
+  "TC|surfaced=0": {
+   "pass": 15,
+   "n": 18,
+   "rate": 0.833
+  },
+  "TC|surfaced=1": {
+   "pass": 48,
+   "n": 48,
+   "rate": 1.0
+  },
+  "TCP|surfaced=0": {
+   "pass": 4,
+   "n": 14,
+   "rate": 0.286
+  },
+  "TCP|surfaced=1": {
+   "pass": 174,
+   "n": 174,
+   "rate": 1.0
+  },
+  "TCPCL|surfaced=0": {
+   "pass": 0,
+   "n": 1,
+   "rate": 0.0
+  },
+  "TCPCL|surfaced=1": {
+   "pass": 47,
+   "n": 47,
+   "rate": 1.0
+  }
+ },
+ "mechanism_all_answered": {
+  "surfaced=0": {
+   "pass": 62,
+   "n": 112,
+   "rate": 0.554
+  },
+  "surfaced=1": {
+   "pass": 440,
+   "n": 442,
+   "rate": 0.995
+  }
+ },
+ "surfacing_rate_by_condition": {
+  "BALL": 0.958,
+  "BPOST": 0.635,
+  "OFILE": 0.292,
+  "OFULL": 0.875,
+  "TC": 0.727,
+  "TCP": 0.926,
+  "TCPCL": 0.979
+ },
+ "mechanism_on_requirements_B_usually_fails": {
+  "surfaced=0": {
+   "pass": 0,
+   "n": 45,
+   "rate": 0.0
+  },
+  "surfaced=1": {
+   "pass": 205,
+   "n": 207,
+   "rate": 0.99
+  }
+ },
+ "packet_sha256": "501cff115d7fa5793a2168c1d3ce2c5050553b4d46ea82ea7a2e607eaf7cff9c",
+ "rater_agreement": {
+  "agree": 543,
+  "n": 554,
+  "rate": 0.98
+ },
+ "mechanism_all_answered_rater": {
+  "surfaced=0": {
+   "pass": 64,
+   "n": 115,
+   "rate": 0.557
+  },
+  "surfaced=1": {
+   "pass": 438,
+   "n": 439,
+   "rate": 0.998
+  }
+ },
+ "mechanism_on_requirements_B_usually_fails_rater": {
+  "surfaced=0": {
+   "pass": 0,
+   "n": 46,
+   "rate": 0.0
+  },
+  "surfaced=1": {
+   "pass": 205,
+   "n": 206,
+   "rate": 0.995
+  }
+ },
+ "surfacing_rate_by_condition_rater": {
+  "BALL": 0.938,
+  "BPOST": 0.609,
+  "OFILE": 0.292,
+  "OFULL": 0.875,
+  "TC": 0.758,
+  "TCP": 0.926,
+  "TCPCL": 0.979
+ }
+}
